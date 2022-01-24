@@ -1,0 +1,9 @@
+﻿@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+@code {
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        NavigationManager.NavigateTo($"/{Configuration["AuthNProvider:LoginPath"]}", forceLoad: true);
+    }
+}

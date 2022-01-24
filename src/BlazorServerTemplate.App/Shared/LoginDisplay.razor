@@ -1,0 +1,17 @@
+﻿@inject IConfiguration Configuration;
+@using BlazorServerTemplate.App.Extensions;
+
+<AuthorizeView>
+    <Authorized>
+        <MudText Class="mr-4">Hello, @context.User.GetFormattedName()</MudText>
+        <MudTooltip Text="Sign out">
+            <MudIconButton Class="mr-3" Link="@Configuration["AuthNProvider:LogoutPath"]" Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
+        </MudTooltip>
+    </Authorized>
+    <NotAuthorized>
+        <MudText Class="mr-4">Not signed in</MudText>
+        <MudTooltip Text="Sign in">
+            <MudIconButton Class="mr-3" Link="@Configuration["AuthNProvider:LoginPath"]" Icon="@Icons.Material.Filled.Login" Color="Color.Inherit" />
+        </MudTooltip>
+    </NotAuthorized>
+</AuthorizeView>
