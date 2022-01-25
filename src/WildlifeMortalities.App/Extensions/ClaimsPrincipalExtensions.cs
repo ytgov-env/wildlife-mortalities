@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 
-namespace BlazorServerTemplate.App.Extensions;
+namespace WildlifeMortalities.App.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
     public static string GetFormattedName(this ClaimsPrincipal claimsPrincipal)
     {
-        return claimsPrincipal.FindFirst("name")?.Value.Replace('.', ' ') ?? "";
+        return claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value.Replace('.', ' ') ?? "";
     }
 }

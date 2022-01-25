@@ -1,4 +1,4 @@
-using BlazorServerTemplate.App.Data;
+using WildlifeMortalities.App.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MudBlazor.Services;
@@ -81,6 +81,14 @@ try
                 return Task.CompletedTask;
             }
         };
+
+        options.Events.OnSignedOutCallbackRedirect = (context) => {
+
+            context.Response.Redirect(options.SignedOutRedirectUri);
+            context.HandleResponse();
+
+            return Task.CompletedTask;
+        };
     });
 
     var app = builder.Build();
@@ -98,6 +106,10 @@ try
     app.UseStaticFiles();
 
     app.UseRouting();
+
+    app.UseCookiePolicy();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     app.MapBlazorHub();
     app.MapFallbackToPage("/_Host");

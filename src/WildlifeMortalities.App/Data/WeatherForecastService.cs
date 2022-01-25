@@ -1,4 +1,4 @@
-namespace BlazorServerTemplate.App.Data
+namespace WildlifeMortalities.App.Data
 {
     public class WeatherForecastService
     {

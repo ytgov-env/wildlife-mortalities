@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BlazorServerTemplate.App.Pages.Authentication
+namespace WildlifeMortalities.App.Pages.Authentication
 {
     public class LogoutModel : PageModel
     {

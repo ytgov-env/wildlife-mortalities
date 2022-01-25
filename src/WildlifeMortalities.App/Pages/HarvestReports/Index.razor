@@ -1,0 +1,60 @@
+﻿@page "/harvest-reports"
+@using WildlifeMortalities.App.Data
+
+<MudDataGrid MultiSelection="true" Items="@HarvestReports" Sortable="true" Filterable="true" QuickFilter="@_quickFilter">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Harvest Reports</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudSpacer />
+        <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" OnClick="(() => Create())" Class="flex-shrink-0">New Report</MudButton>
+    </ToolBarContent>
+    <Columns>
+        <Column T="HarvestReport" Field="ClientId" />
+        <Column T="HarvestReport" Field="Number" Title="Harvest #" />
+        <Column T="HarvestReport" Field="Species" />
+        <Column T="HarvestReport" Field="Status" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="HarvestReport" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private string _searchString;
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+    List<HarvestReport> HarvestReports { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        HarvestReports.Add(new HarvestReport { Id = 1, Number = 451, ClientId = 12301, Species = "Black Bear", Status = "Pending" });
+        HarvestReports.Add(new HarvestReport { Id = 2, Number = 32, ClientId = 3013, Species = "Moose", Status = "Complete" });
+        HarvestReports.Add(new HarvestReport { Id = 3, Number = 5132, ClientId = 54232, Species = "Grizzly Bear", Status = "Complete" });
+
+        await base.OnInitializedAsync();
+    }
+
+    private Func<HarvestReport, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.ClientId.ToString().StartsWith(_searchString))
+            return true;
+
+        if (x.Number.ToString().StartsWith(_searchString))
+            return true;
+
+        if (x.Species.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    private void Create()
+    {
+        Navigation.NavigateTo("/harvest-reports/create/");
+    }
+}
