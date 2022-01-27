@@ -1,6 +1,7 @@
 using WildlifeMortalities.App.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using Serilog;
 using Serilog.Events;
@@ -19,7 +20,15 @@ try
     builder.Host.UseSerilog((context, services, configuration) => configuration
                 .ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(services)
-                .Enrich.FromLogContext());
+                .Enrich.FromLogContext())
+        .UseWindowsService();
+
+
+    builder.WebHost.UseKestrel(opts =>
+    {
+        opts.ListenAnyIP(5002);
+        opts.ListenAnyIP(5003, opts => opts.UseHttps());
+    });
 
     // Add services to the container.
     builder.Services.AddRazorPages();
@@ -81,7 +90,8 @@ try
             }
         };
 
-        options.Events.OnSignedOutCallbackRedirect = (context) => {
+        options.Events.OnSignedOutCallbackRedirect = (context) =>
+        {
 
             context.Response.Redirect(options.SignedOutRedirectUri);
             context.HandleResponse();
@@ -119,6 +129,7 @@ try
 catch (Exception ex)
 {
     Log.Fatal(ex, "Host terminated unexpectedly");
+    Console.WriteLine(ex.Message);
     return 1;
 }
 finally

@@ -1,0 +1,21 @@
+﻿@page "/harvest-reports/details/{id:int}"
+
+<MudText Typo="Typo.h4" Class="mb-4">Harvest Report #: @Id</MudText>
+<MudItem xs="12" sm="6">
+    <MudPaper Elevation="2" Class="pa-4">
+        <MudText Typo="Typo.h6" Class="mb-4">Violations</MudText>
+        <MudCard Elevation="2">
+            <MudAlert Severity="Severity.Warning">Hunting is not permitted in that subzone. Contact CO.</MudAlert>
+        </MudCard>
+        <MudItem Class="mt-4">
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" Link="/harvest-reports">Back to harvest reports</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Disabled="true" />
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Proceed to bio</MudButton>
+        </MudItem>
+    </MudPaper>
+</MudItem>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}
