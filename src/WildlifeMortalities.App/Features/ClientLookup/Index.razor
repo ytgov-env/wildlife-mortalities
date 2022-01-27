@@ -2,7 +2,7 @@
 @using WildlifeMortalities.App.Data
 
 @*<MudText Typo="Typo.h3" Class="mb-8">Select a client</MudText>*@
-<MudDataGrid Items="Clients" QuickFilter="@_quickFilter" Sortable="true" Filterable="true" T="Client" RowClick="@RowClicked" Hover="true">
+<MudDataGrid Items="Clients" QuickFilter="@_quickFilter" Sortable="true" Filterable="true" T="Client" RowClick="@RowClicked" Hover="true" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Clients</MudText>
         <MudSpacer />

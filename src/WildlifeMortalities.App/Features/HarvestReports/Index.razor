@@ -1,7 +1,7 @@
 ﻿@page "/harvest-reports"
 @using WildlifeMortalities.App.Data
 
-<MudDataGrid MultiSelection="true" Hover="true" Items="@HarvestReports" Sortable="true" Filterable="true" QuickFilter="@_quickFilter">
+<MudDataGrid MultiSelection="true" Hover="true" RowClass="cursor-pointer" Items="@HarvestReports" Sortable="true" Filterable="true" QuickFilter="@_quickFilter">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Harvest Reports</MudText>
         <MudSpacer />
