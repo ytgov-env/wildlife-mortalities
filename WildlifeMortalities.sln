@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.App", "src\WildlifeMortalities.App\WildlifeMortalities.App.csproj", "{B307CC64-A74D-41C2-83FD-7A4BA827B1FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.Data", "src\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj", "{EE3411C9-C431-4BF1-A214-3A9875376C27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Data", "src\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj", "{EE3411C9-C431-4BF1-A214-3A9875376C27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
