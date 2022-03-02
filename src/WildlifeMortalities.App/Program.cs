@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using Serilog;
 using Serilog.Events;
+using WildlifeMortalities.Data.Legacy;
 
 Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -34,6 +35,7 @@ try
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
     builder.Services.AddMudServices();
+    builder.Services.AddSingleton<LegacyDbContext>();
 
     var configuration = builder.Configuration;
 

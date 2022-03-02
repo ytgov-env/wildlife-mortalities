@@ -1,4 +1,4 @@
-﻿@page "/clients"
+﻿@page "/v1/clients"
 @using WildlifeMortalities.App.Data
 
 @*<MudText Typo="Typo.h3" Class="mb-8">Select a client</MudText>*@
@@ -55,6 +55,6 @@
 
     public void RowClicked(DataGridRowClickEventArgs<Client> p)
     {
-        Navigation.NavigateTo("/clients/" + p.Item.ClientId + "/seals");
+        Navigation.NavigateTo("/v1/clients/" + p.Item.ClientId + "/seals");
     }
 }

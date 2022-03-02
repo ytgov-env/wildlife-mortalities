@@ -1,0 +1,107 @@
+﻿@page "/"
+@page "/v2/clients"
+@using System.Globalization
+@using WildlifeMortalities.App.Data
+@using WildlifeMortalities.Data.Legacy
+@using WildlifeMortalities.Data.Legacy.Entities
+@using Dapper
+
+@using Client = WildlifeMortalities.Data.Legacy.Entities.EnvdwEnvClient
+
+<MudItem xs="12" sm="6">
+    <MudPaper Elevation="2" Class="pa-4 mb-4">
+        <MudForm>
+            <MudItem Class="d-flex mt-n3">
+                <MudNumericField @bind-Value="searchInt" Placeholder="Search by Client Id" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"
+                                 HideSpinButtons="true" MaxLength="6" />
+                <MudButton Class="ml-10 mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => Search(searchInt ?? 0))">Search</MudButton>
+            </MudItem>
+        </MudForm>
+    </MudPaper>
+    <MudPaper Elevation="2" Class="pa-4">
+        <MudField Label="Client Id">@Client.Envclientid</MudField>
+        <MudField Label="First Name">@Client.Firstname</MudField>
+        <MudField Label="Last Name">@Client.Lastname</MudField>
+        <MudField Label="Date of Birth">@Client.Birthdate?.ToLongDateString()</MudField>
+    </MudPaper>
+</MudItem>
+
+<MudItem Class="mt-3">
+    @if (Client.Envclientid is not null)
+    {
+        <SealsV2 ClientId="@Client.Envclientid"/>
+    }
+</MudItem>
+
+@code {
+    private int? searchInt;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    [Inject]
+    private LegacyDbContext LegacyDbContext { get; set; } = null!;
+
+    [Inject]
+    private ISnackbar SnackBar { get; set; } = null!;
+
+    private TextInfo TextInfo { get; set; } = new CultureInfo("en-CA", false).TextInfo;
+
+    public List<Client> Clients { get; set; } = new();
+
+    private Client Client { get; set; } = new();
+
+    private List<EnvdwEnvFwHarvest> HarvestReports { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async void Search(int clientid)
+    {
+        if (clientid >= 100000 && clientid <= 999999)
+        {
+            var connection = LegacyDbContext.GetConnection();
+
+            string sql = $"select * from ENVDW_ENV_CLIENT WHERE ENVCLIENTID = {clientid}";
+            var temp = await connection.QuerySingleOrDefaultAsync<Client>(sql);
+            if (temp is null)
+            {
+                SnackBar.Add("You have entered an invalid Client ID. Please retry.", severity: Severity.Error);
+            }
+            else
+            {
+                Client = temp;
+            }
+
+            connection.Close();
+
+            GetHarvestReports(clientid);
+        }
+        else
+        {
+            SnackBar.Add("You have entered an invalid Client ID. Please retry.", severity: Severity.Error);
+        }
+    }
+
+    private async void GetHarvestReports(int clientid)
+    {
+        var connection = LegacyDbContext.GetConnection();
+
+        string sql = $"select * from ENVDW_ENV_FW_HARVEST WHERE CLIENTID = {clientid}";
+
+        var temp = await connection.QueryAsync<EnvdwEnvFwHarvest>(sql);
+        if (temp is null)
+        {
+            SnackBar.Add("You have entered an invalid Client ID. Please retry.", severity: Severity.Error);
+        }
+        else
+        {
+            HarvestReports.AddRange(temp);
+        }
+
+        connection.Close();
+    }
+
+}

@@ -1,0 +1,69 @@
+﻿@page "/v2/clients/{clientid:int}/seals"
+@using Dapper
+@using WildlifeMortalities.App.Data
+@using Client = WildlifeMortalities.Data.Legacy.Entities.EnvdwEnvClient
+@using WildlifeMortalities.Data.Legacy
+@using WildlifeMortalities.Data.Legacy.Entities
+
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Hunting">
+        <MudTable Items="@Seals.OrderByDescending(s => s.Season).Where(s => s.Productgroup.Contains("Hunting"))"
+                  ReadOnly="true" T="EnvdwEnvAuthorization" OnRowClick="@RowClicked" Hover="true" RowClass="cursor-pointer">
+            <FooterContent>
+                <MudItem xs="12" Class="d-flex justify-space-between py-2 px-3 mt-2">
+                    <MudSwitch @bind-Checked="@ShowOldSeals" Color="Color.Primary">Show expired seals</MudSwitch>
+                    <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" Class="my-2 mx-2">New Seal</MudButton>
+                </MudItem>
+            </FooterContent>
+        </MudTable>
+    </MudTabPanel>
+    <MudTabPanel Text="Trapping">
+        <MudTable Hover="true" Items="@Seals.OrderByDescending(s => s.Season).Where(s => s.Productgroup.Contains("Trapping"))"
+            ReadOnly="true" T="EnvdwEnvAuthorization" OnRowClick="@RowClicked" RowClass="cursor-pointer">
+            </MudTable>
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+    [Parameter]
+    public int? ClientId { get; set; }
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    [Inject]
+    private LegacyDbContext LegacyDbContext { get; set; } = null!;
+
+    [CascadingParameter]
+    public ISnackbar SnackBar { get; set; }
+
+    private List<EnvdwEnvAuthorization> Seals { get; set; } = new();
+
+    public bool ShowOldSeals { get; set; } = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (ClientId is not null && firstRender == true)
+        {
+            var connection = LegacyDbContext.GetConnection();
+
+            string sql = $"select * from ENVDW_ENV_AUTHORIZATION WHERE ENVCLIENTID = {ClientId}";
+            var temp = await connection.QueryAsync<EnvdwEnvAuthorization>(sql);
+            if (temp is null)
+            {
+                SnackBar.Add("You have entered an invalid Client ID. Please retry.", severity: Severity.Error);
+            }
+            else
+            {
+                Seals.AddRange(temp);
+                StateHasChanged();
+            }
+
+            connection.Close();
+        }
+    }
+
+    public void RowClicked(TableRowClickEventArgs<EnvdwEnvAuthorization> p)
+    {
+    }
+}
