@@ -1,6 +1,12 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="/v1/clients" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Clients v1</MudNavLink>
-    <MudNavLink Href="/v2/clients" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Clients v2</MudNavLink>
-    <MudNavLink Href="/harvest-reports" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Harvest Reports</MudNavLink>
+    @*<MudNavLink Href="/v1/clients" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Clients v1</MudNavLink>*@
+    <MudNavLink Href="/v2/clients" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Harvest Reports and Biological Submissions</MudNavLink>
+    @*<MudNavLink Href="/harvest-reports" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Harvest Reports</MudNavLink>*@
+    <MudNavGroup Icon="@Icons.Material.Filled.Assignment" Title="Other Forms">
+        <MudNavLink Href="/wap" Match="NavLinkMatch.Prefix">Wildlife Act Permits</MudNavLink>
+        <MudNavLink Href="/wep" Match="NavLinkMatch.Prefix">Wildlife Export Permits</MudNavLink>
+        <MudNavLink Href="/wpr" Match="NavLinkMatch.Prefix">Wildlife Purchased or Recieved</MudNavLink>
+    </MudNavGroup>
+
 </MudNavMenu>

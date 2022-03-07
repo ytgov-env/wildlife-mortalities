@@ -6,21 +6,22 @@
 @using WildlifeMortalities.Data.Legacy.Entities
 
 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-    <MudTabPanel Text="Hunting">
-        <MudTable Items="@Seals.OrderByDescending(s => s.Season).Where(s => s.Productgroup.Contains("Hunting"))"
-                  ReadOnly="true" T="EnvdwEnvAuthorization" OnRowClick="@RowClicked" Hover="true" RowClass="cursor-pointer">
-            <FooterContent>
-                <MudItem xs="12" Class="d-flex justify-space-between py-2 px-3 mt-2">
-                    <MudSwitch @bind-Checked="@ShowOldSeals" Color="Color.Primary">Show expired seals</MudSwitch>
-                    <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" Class="my-2 mx-2">New Seal</MudButton>
-                </MudItem>
-            </FooterContent>
-        </MudTable>
+    <MudTabPanel Text="Hunting Seals">
+        <MudDataGrid Items="@Seals.OrderByDescending(s => s.Season).ThenByDescending(s => s.Authorizationtype).Where(s => s.Productgroup.Contains("Hunting Seal"))"
+                     ReadOnly="true" T="EnvdwEnvAuthorization" RowClick="@RowClicked" Hover="true" RowClass="cursor-pointer">
+            <Columns>
+                <Column T="EnvdwEnvAuthorization" Field="Sealnumber" Title="Seal #"></Column>
+                <Column T="EnvdwEnvAuthorization" Field="Authorizationnumber" Title="Auth #"></Column>
+                <Column T="EnvdwEnvAuthorization" Field="Season"></Column>
+                <Column T="EnvdwEnvAuthorization" Field="Authorizationtype" Title="Species"></Column>
+                <Column T="EnvdwEnvAuthorization" Field="Harvestreportstatus" Title="Harvest Report & Bio Status"></Column>
+            </Columns>
+        </MudDataGrid>
     </MudTabPanel>
-    <MudTabPanel Text="Trapping">
+    <MudTabPanel Text="Trapping Licences">
         <MudTable Hover="true" Items="@Seals.OrderByDescending(s => s.Season).Where(s => s.Productgroup.Contains("Trapping"))"
-            ReadOnly="true" T="EnvdwEnvAuthorization" OnRowClick="@RowClicked" RowClass="cursor-pointer">
-            </MudTable>
+                  ReadOnly="true" T="EnvdwEnvAuthorization" RowClass="cursor-pointer">
+        </MudTable>
     </MudTabPanel>
 </MudTabs>
 
@@ -41,20 +42,38 @@
 
     public bool ShowOldSeals { get; set; } = true;
 
+    private string[] harvestReportStatus = new string[] { "Not started", "Awaiting bio", "Complete" };
+
+    private Random Random { get; set; } = new();
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (ClientId is not null && firstRender == true)
+        if (ClientId is not null && firstRender)
         {
             var connection = LegacyDbContext.GetConnection();
 
-            string sql = $"select * from ENVDW_ENV_AUTHORIZATION WHERE ENVCLIENTID = {ClientId}";
+            string sql = $"select * from ENVDW_ENV_AUTHORIZATION where ENVCLIENTID = {ClientId} and SEASON in ('2019-2020', '2020-2021', '2021-2022')";
             var temp = await connection.QueryAsync<EnvdwEnvAuthorization>(sql);
-            if (temp is null)
+            if (temp is not null)
             {
-                SnackBar.Add("You have entered an invalid Client ID. Please retry.", severity: Severity.Error);
-            }
-            else
-            {
+                foreach (var seal in temp)
+                {
+                    seal.Authorizationtype = seal.Authorizationtype.Substring(7);
+                    if (seal.Season == "2021-2022" && seal.Authorizationtype == "Mountain Sheep")
+                    {
+                        seal.Harvestreportstatus = "Not started";
+                    }
+                    else if (seal.Season == "2021-2022")
+                    {
+                        seal.Harvestreportstatus = harvestReportStatus[Random.Next(0, 3)];
+                    }
+                    else
+                    {
+                        seal.Harvestreportstatus = "Complete";
+                    }
+                }
+                Seals.Clear();
                 Seals.AddRange(temp);
                 StateHasChanged();
             }
@@ -63,7 +82,8 @@
         }
     }
 
-    public void RowClicked(TableRowClickEventArgs<EnvdwEnvAuthorization> p)
+    public void RowClicked(DataGridRowClickEventArgs<EnvdwEnvAuthorization> p)
     {
+        Navigation.NavigateTo("/harvest-reports/create/" + p.Item.Envclientid + "/" + p.Item.Sealnumber);
     }
 }

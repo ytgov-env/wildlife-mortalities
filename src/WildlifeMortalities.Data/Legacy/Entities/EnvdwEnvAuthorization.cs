@@ -7,6 +7,7 @@ namespace WildlifeMortalities.Data.Legacy.Entities
 {
     public partial class EnvdwEnvAuthorization
     {
+        public string Harvestreportstatus { get; set; }
         public string Status { get; set; }
         public string Authorizationnumber { get; set; }
         public string Producttype { get; set; }

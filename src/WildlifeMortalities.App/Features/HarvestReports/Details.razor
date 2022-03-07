@@ -4,11 +4,12 @@
 <MudItem xs="12" sm="6">
     <MudPaper Elevation="2" Class="pa-4">
         <MudText Typo="Typo.h6" Class="mb-4">Violations</MudText>
-        <MudCard Elevation="2">
-            <MudAlert Severity="Severity.Warning">Hunting is not permitted in that subzone. Contact CO.</MudAlert>
-        </MudCard>
-        <MudItem Class="mt-4">
-            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" Link="/harvest-reports">Back to harvest reports</MudButton>
+        @*<MudCard Elevation="2">*@
+            <MudAlert Severity="Severity.Warning" Class="mb-2">Harvest Report submitted more than 15 days after the kill date.</MudAlert>
+            <MudAlert Severity="Severity.Error">Subzone 403 is closed to all hunting. Contact CO.</MudAlert>
+        @*</MudCard>*@
+        <MudItem xs="12" Class="d-flex justify-space-between py-2 px-3 mt-4">
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" EndIcon="@Icons.Material.Filled.Edit">Edit</MudButton>
             <MudButton ButtonType="ButtonType.Submit" Disabled="true" />
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Proceed to bio</MudButton>
         </MudItem>

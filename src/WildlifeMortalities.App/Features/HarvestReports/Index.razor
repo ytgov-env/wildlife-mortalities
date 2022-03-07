@@ -10,8 +10,8 @@
         <MudSpacer />
     </ToolBarContent>
     <Columns>
-        <Column T="HarvestReport" Field="ClientId" />
         <Column T="HarvestReport" Field="Number" Title="Harvest #" />
+        <Column T="HarvestReport" Field="ClientId" />
         <Column T="HarvestReport" Field="Species" />
         <Column T="HarvestReport" Field="Status">
         </Column>
@@ -29,9 +29,25 @@
 
     protected override async Task OnInitializedAsync()
     {
-        HarvestReports.Add(new HarvestReport { Id = 1, Number = 451, ClientId = 12301, Species = "Black Bear", Status = "Awaiting bio" });
-        HarvestReports.Add(new HarvestReport { Id = 2, Number = 32, ClientId = 3013, Species = "Moose", Status = "Complete" });
-        HarvestReports.Add(new HarvestReport { Id = 3, Number = 5132, ClientId = 54232, Species = "Grizzly Bear", Status = "Complete" });
+        string[] huntedSpecies = new string[] { "Black Bear", "Moose", "Sheep", "Grizzly Bear" };
+        string[] harvestReportStatus = new string[] { "Not started", "Awaiting bio", "Complete" };
+
+
+        var rand = new Random();
+        for (int i = 0; i < 1000; i++)
+        {
+            HarvestReports.Add(new HarvestReport
+                {
+                    Id = i + 1,
+                    Number = i + 1,
+                    ClientId = rand.Next(200000, 900000),
+                    Species = huntedSpecies[rand.Next(0, 4)],
+                    Status = harvestReportStatus[rand.Next(0, 3)]
+                });
+        }
+        //HarvestReports.Add(new HarvestReport { Id = 1, Number = 451, ClientId = 12301, Species = "Black Bear", Status = "Awaiting bio" });
+        //HarvestReports.Add(new HarvestReport { Id = 2, Number = 32, ClientId = 3013, Species = "Moose", Status = "Complete" });
+        //HarvestReports.Add(new HarvestReport { Id = 3, Number = 5132, ClientId = 54232, Species = "Grizzly Bear", Status = "Complete" });
 
         await base.OnInitializedAsync();
     }

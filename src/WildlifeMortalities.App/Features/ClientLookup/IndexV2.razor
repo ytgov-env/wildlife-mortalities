@@ -1,5 +1,7 @@
-﻿@page "/"
+﻿@*@page "/"
+@page "/{clientid:int}"*@
 @page "/v2/clients"
+@page "/v2/clients/{clientid:int}"
 @using System.Globalization
 @using WildlifeMortalities.App.Data
 @using WildlifeMortalities.Data.Legacy
@@ -8,32 +10,38 @@
 
 @using Client = WildlifeMortalities.Data.Legacy.Entities.EnvdwEnvClient
 
-<MudItem xs="12" sm="6">
-    <MudPaper Elevation="2" Class="pa-4 mb-4">
-        <MudForm>
-            <MudItem Class="d-flex mt-n3">
-                <MudNumericField @bind-Value="searchInt" Placeholder="Search by Client Id" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"
-                                 HideSpinButtons="true" MaxLength="6" />
-                <MudButton Class="ml-10 mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => Search(searchInt ?? 0))">Search</MudButton>
-            </MudItem>
-        </MudForm>
-    </MudPaper>
-    <MudPaper Elevation="2" Class="pa-4">
-        <MudField Label="Client Id">@Client.Envclientid</MudField>
-        <MudField Label="First Name">@Client.Firstname</MudField>
-        <MudField Label="Last Name">@Client.Lastname</MudField>
-        <MudField Label="Date of Birth">@Client.Birthdate?.ToLongDateString()</MudField>
-    </MudPaper>
-</MudItem>
+<MudGrid>
+    <MudItem xs="12" sm="6">
+        <MudPaper Elevation="2" Class="pa-4 mb-4">
+            <MudForm>
+                <MudItem Class="d-flex mt-n3">
+                    <MudNumericField @bind-Value="searchInt" Placeholder="Search by Client Id" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"
+                                     HideSpinButtons="true" MaxLength="6" />
+                    <MudButton Class="ml-10 mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => Search(searchInt ?? 0))">Search</MudButton>
+                </MudItem>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudPaper Elevation="2" Class="pa-4">
+            <MudField Label="Client Id">@Client.Envclientid</MudField>
+            <MudField Label="Name">@Client.Formattedname</MudField>
+            <MudField Label="Birth Date">@Client.Birthdate?.ToLongDateString()</MudField>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 <MudItem Class="mt-3">
     @if (Client.Envclientid is not null)
     {
-        <SealsV2 ClientId="@Client.Envclientid"/>
+        <SealsV2 ClientId="@Client.Envclientid" />
     }
 </MudItem>
 
 @code {
+    [Parameter]
+    public int? ClientId { get; set; } = null!;
+
     private int? searchInt;
 
     [Inject]
@@ -45,8 +53,6 @@
     [Inject]
     private ISnackbar SnackBar { get; set; } = null!;
 
-    private TextInfo TextInfo { get; set; } = new CultureInfo("en-CA", false).TextInfo;
-
     public List<Client> Clients { get; set; } = new();
 
     private Client Client { get; set; } = new();
@@ -55,6 +61,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (ClientId is not null)
+        {
+            Search((int)ClientId);
+        }
         await base.OnInitializedAsync();
     }
 
@@ -72,36 +82,16 @@
             }
             else
             {
+                Navigation.NavigateTo($"/v2/clients/{clientid}");
                 Client = temp;
             }
 
             connection.Close();
-
-            GetHarvestReports(clientid);
+            StateHasChanged();
         }
         else
         {
             SnackBar.Add("You have entered an invalid Client ID. Please retry.", severity: Severity.Error);
         }
     }
-
-    private async void GetHarvestReports(int clientid)
-    {
-        var connection = LegacyDbContext.GetConnection();
-
-        string sql = $"select * from ENVDW_ENV_FW_HARVEST WHERE CLIENTID = {clientid}";
-
-        var temp = await connection.QueryAsync<EnvdwEnvFwHarvest>(sql);
-        if (temp is null)
-        {
-            SnackBar.Add("You have entered an invalid Client ID. Please retry.", severity: Severity.Error);
-        }
-        else
-        {
-            HarvestReports.AddRange(temp);
-        }
-
-        connection.Close();
-    }
-
 }
