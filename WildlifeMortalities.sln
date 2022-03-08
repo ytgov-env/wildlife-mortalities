@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.App", "src\WildlifeMortalities.App\WildlifeMortalities.App.csproj", "{B307CC64-A74D-41C2-83FD-7A4BA827B1FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.Data", "src\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj", "{339319BE-5E55-4D65-8E25-32B5B4270DB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.Test", "src\WildlifeMortalities.Test\WildlifeMortalities.Test.csproj", "{38013A3C-7ED0-4A61-B109-346224B5B8E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{B307CC64-A74D-41C2-83FD-7A4BA827B1FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B307CC64-A74D-41C2-83FD-7A4BA827B1FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B307CC64-A74D-41C2-83FD-7A4BA827B1FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{339319BE-5E55-4D65-8E25-32B5B4270DB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{339319BE-5E55-4D65-8E25-32B5B4270DB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{339319BE-5E55-4D65-8E25-32B5B4270DB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{339319BE-5E55-4D65-8E25-32B5B4270DB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
