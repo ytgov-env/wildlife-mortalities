@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace WildlifeMortalities.Data.Entities
 {
-    public class Mortality
+    public class Moose
     {
         public int Id { get; set; }
-        public Animal Animal { get; set; }
-        public BiologicalSubmission BiologicalSubmission { get; set; }
-        public HarvestReport HarvestReport { get; set; }
+
     }
 }

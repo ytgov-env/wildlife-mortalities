@@ -9,9 +9,11 @@ namespace WildlifeMortalities.Data.Entities
     public class HarvestReport
     {
         public int Id { get; set; }
-        public DateTime DateKilled { get; set; }
+        public int ClientId { get; set; }
         public DateTime DateReported { get; set; }
         public int MortalityId { get; set; }
-        public Mortality Mortality { get; set; }
+        public MortalityBase Mortality { get; set; }
+        public Outfitter? Outfitter { get; set; }
+        public SpecialGuided? SpecialGuided { get; set; }
     }
 }

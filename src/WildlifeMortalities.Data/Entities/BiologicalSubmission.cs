@@ -3,8 +3,7 @@
     public class BiologicalSubmission
     {
         public int Id { get; set; }
-
         public int MortalityId { get; set; }
-        public Mortality Mortality { get; set; }
+        public MortalityBase Mortality { get; set; }
     }
 }

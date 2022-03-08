@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace WildlifeMortalities.Data.Entities
 {
-    public class Deer : Animal
+    public class Bison
     {
-
+        public int Id { get; set; }
+        public bool Pregnant { get; set; }
+        public bool Wounded { get; set; }
     }
 }

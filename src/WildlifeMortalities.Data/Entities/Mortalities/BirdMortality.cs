@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WildlifeMortalities.Data.Entities
 {
-    public class Sheep : Animal 
+    public class BirdMortality : MortalityBase
     {
-
+        public int Quantity { get; set; }
     }
 }

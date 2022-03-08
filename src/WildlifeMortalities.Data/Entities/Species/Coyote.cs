@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WildlifeMortalities.Data.Entities
 {
-    public class Bison : Animal
+    public class Coyote
     {
-        public bool Pregnant { get; set; }
-        public bool Wounded { get; set; }
+        public int Id { get; set; }
+
     }
 }

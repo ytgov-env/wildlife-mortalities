@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace WildlifeMortalities.Data.Entities
 {
-    public class Coyote : Animal 
+    public class GrizzlyBear
     {
+        public int Id { get; set; }
 
     }
 }
