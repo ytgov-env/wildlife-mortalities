@@ -10,14 +10,17 @@ namespace WildlifeMortalities.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Mortality> Mortalities => Set<Mortality>();
-        public DbSet<Animal> Animals => Set<Animal>();
+        //public DbSet<Mortality> Mortalities => Set<Mortality>();
+
+        public DbSet<HuntingMortality> HuntingMortalities => Set<HuntingMortality>();
+        public DbSet<TrappingMortality> TrappingMortalities => Set<TrappingMortality>();
+        public DbSet<BirdMortality> BirdMortalities => Set<BirdMortality>();
         public DbSet<HarvestReport> HarvestReports => Set<HarvestReport>();
         public DbSet<BiologicalSubmission> BiologicalSubmissions => Set<BiologicalSubmission>();
-        public DbSet<Bird> Birds => Set<Bird>();
-        public DbSet<Bison> Bisons => Set<Bison>();
-        public DbSet<BlackBear> BlackBears => Set<BlackBear>();
-        public DbSet<Caribou> Caribous => Set<Caribou>();
+        //public DbSet<Bird> Birds => Set<Bird>();
+        //public DbSet<Bison> Bisons => Set<Bison>();
+        //public DbSet<BlackBear> BlackBears => Set<BlackBear>();
+        //public DbSet<Caribou> Caribous => Set<Caribou>();
         //public DbSet<Coyote> Coyotes => Set<Coyote>();
         //public DbSet<Deer> Deers => Set<Deer>();
         //public DbSet<Elk> Elks => Set<Elk>();
@@ -30,13 +33,28 @@ namespace WildlifeMortalities.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;");
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;")
+                .UseEnumCheckConstraints();
             base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Animal>().HasDiscriminator<string>("Species");
+            modelBuilder.Entity<MortalityBase>().ToTable("Mortalities");
+
+            modelBuilder.Entity<MortalityBase>().Property(m => m.Species).HasConversion<string>().HasMaxLength(50);
+            modelBuilder.Entity<TrappingMortality>().Property(t => t.Sex).HasConversion<string>().HasMaxLength(25);
+            modelBuilder.Entity<HuntingMortality>().Property(h => h.Sex).HasConversion<string>().HasMaxLength(25);
+
+            modelBuilder.Entity<TrappingMortality>().Property(t => t.Sex).HasColumnName("Sex");
+            modelBuilder.Entity<HuntingMortality>().Property(h => h.Sex).HasColumnName("Sex");
+
+            modelBuilder.Entity<TrappingMortality>().Property(t => t.SealNumber).HasColumnName("SealNumber");
+            modelBuilder.Entity<HuntingMortality>().Property(h => h.SealNumber).HasColumnName("SealNumber");
+
+            modelBuilder.Entity<BirdMortality>().Property(b => b.Quantity).HasColumnName("Quantity");
+            modelBuilder.Entity<TrappingMortality>().Property(t => t.Quantity).HasColumnName("Quantity");
+
             //modelBuilder.Entity<Bird>().ToTable("Birds");
             //modelBuilder.Entity<Bison>().ToTable("Bisons");
             //modelBuilder.Entity<BlackBear>().ToTable("BlackBears");
