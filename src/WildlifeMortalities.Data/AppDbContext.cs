@@ -10,64 +10,52 @@ namespace WildlifeMortalities.Data
 {
     public class AppDbContext : DbContext
     {
-        //public DbSet<Mortality> Mortalities => Set<Mortality>();
-
-        public DbSet<HuntingMortality> HuntingMortalities => Set<HuntingMortality>();
-        public DbSet<TrappingMortality> TrappingMortalities => Set<TrappingMortality>();
+        public DbSet<Client> Clients => Set<Client>();
+        public DbSet<Licence> Licences => Set<Licence>();
+        public DbSet<Seal> Seals => Set<Seal>();
+        public DbSet<HuntedMortality> HuntedMortalities => Set<HuntedMortality>();
+        public DbSet<TrappedMortality> TrappingMortalities => Set<TrappedMortality>();
         public DbSet<BirdMortality> BirdMortalities => Set<BirdMortality>();
         public DbSet<HarvestReport> HarvestReports => Set<HarvestReport>();
         public DbSet<BiologicalSubmission> BiologicalSubmissions => Set<BiologicalSubmission>();
-        //public DbSet<Bird> Birds => Set<Bird>();
-        //public DbSet<Bison> Bisons => Set<Bison>();
-        //public DbSet<BlackBear> BlackBears => Set<BlackBear>();
-        //public DbSet<Caribou> Caribous => Set<Caribou>();
-        //public DbSet<Coyote> Coyotes => Set<Coyote>();
-        //public DbSet<Deer> Deers => Set<Deer>();
-        //public DbSet<Elk> Elks => Set<Elk>();
-        //public DbSet<Goat> Goats => Set<Goat>();
-        //public DbSet<GrizzlyBear> GrizzlyBears => Set<GrizzlyBear>();
-        //public DbSet<Moose> Moose => Set<Moose>();
-        //public DbSet<Sheep> Sheep => Set<Sheep>();
-        //public DbSet<Wolf> Wolves => Set<Wolf>();
-        //public DbSet<Wolverine> Wolverines => Set<Wolverine>();
+        public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
+        public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies => Set<GameManagementAreaSpecies>();
+        public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules => Set<GameManagementAreaSchedule>();
+        public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;")
+            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;",
+                x => x.UseNetTopologySuite())
                 .UseEnumCheckConstraints();
             base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Seal>().ToTable("Seals");
             modelBuilder.Entity<MortalityBase>().ToTable("Mortalities");
 
+            modelBuilder.Entity<HuntedMortality>().HasOne(h => h.Seal)
+                .WithMany(s => s.HuntedMortalities).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<TrappedMortality>().HasOne(t => t.Licence)
+                .WithMany(s => s.TrappedMortalities).OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<MortalityBase>().Property(m => m.Species).HasConversion<string>().HasMaxLength(50);
-            modelBuilder.Entity<TrappingMortality>().Property(t => t.Sex).HasConversion<string>().HasMaxLength(25);
-            modelBuilder.Entity<HuntingMortality>().Property(h => h.Sex).HasConversion<string>().HasMaxLength(25);
+            modelBuilder.Entity<TrappedMortality>().Property(t => t.Sex).HasConversion<string>().HasMaxLength(25);
+            modelBuilder.Entity<HuntedMortality>().Property(h => h.Sex).HasConversion<string>().HasMaxLength(25);
+            modelBuilder.Entity<Licence>().Property(l => l.Type).HasConversion<string>().HasMaxLength(25);
+            modelBuilder.Entity<GameManagementAreaSpecies>().Property(s => s.Species).HasConversion<string>().HasMaxLength(25);
+            modelBuilder.Entity<GameManagementUnit>().Property(u => u.Species).HasConversion<string>().HasMaxLength(25);
 
-            modelBuilder.Entity<TrappingMortality>().Property(t => t.Sex).HasColumnName("Sex");
-            modelBuilder.Entity<HuntingMortality>().Property(h => h.Sex).HasColumnName("Sex");
-
-            modelBuilder.Entity<TrappingMortality>().Property(t => t.SealNumber).HasColumnName("SealNumber");
-            modelBuilder.Entity<HuntingMortality>().Property(h => h.SealNumber).HasColumnName("SealNumber");
+            modelBuilder.Entity<TrappedMortality>().Property(t => t.Sex).HasColumnName("Sex");
+            modelBuilder.Entity<HuntedMortality>().Property(h => h.Sex).HasColumnName("Sex");
 
             modelBuilder.Entity<BirdMortality>().Property(b => b.Quantity).HasColumnName("Quantity");
-            modelBuilder.Entity<TrappingMortality>().Property(t => t.Quantity).HasColumnName("Quantity");
+            modelBuilder.Entity<TrappedMortality>().Property(t => t.Quantity).HasColumnName("Quantity");
 
-            //modelBuilder.Entity<Bird>().ToTable("Birds");
-            //modelBuilder.Entity<Bison>().ToTable("Bisons");
-            //modelBuilder.Entity<BlackBear>().ToTable("BlackBears");
-            //modelBuilder.Entity<Caribou>().ToTable("Caribou");
-            //modelBuilder.Entity<Coyote>().ToTable("Coyotes");
-            //modelBuilder.Entity<Deer>().ToTable("Deers");
-            //modelBuilder.Entity<Elk>().ToTable("Elks");
-            //modelBuilder.Entity<Goat>().ToTable("Goats");
-            //modelBuilder.Entity<GrizzlyBear>().ToTable("GrizzlyBears");
-            //modelBuilder.Entity<Moose>().ToTable("Moose");
-            //modelBuilder.Entity<Sheep>().ToTable("Sheep");
-            //modelBuilder.Entity<Wolf>().ToTable("Wolves");
-            //modelBuilder.Entity<Wolverine>().ToTable("Wolverines");
+            modelBuilder.Entity<GameManagementArea>().Property(a => a.ZoneSubzone).HasComputedColumnSql("[Zone] * 100 + [Subzone]", true);
+
             base.OnModelCreating(modelBuilder);
         }
     }

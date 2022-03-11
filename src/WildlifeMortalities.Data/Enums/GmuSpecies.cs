@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace WildlifeMortalities.Data.Enums
 {
-    public enum Sex
+    public enum GmuSpecies
     {
         Uninitialized = 0,
-        Female = 1,
-        Male = 2,
-        Unknown = 3
+        Bear = 1,
+        Caribou = 2,
+        Moose = 3
     }
 }

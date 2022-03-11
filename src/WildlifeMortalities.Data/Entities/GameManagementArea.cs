@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities
 {
-    public class HarvestReport
+    public class GameManagementArea
     {
         public int Id { get; set; }
-        public DateTime DateReported { get; set; }
-        public int MortalityId { get; set; }
-        public List<MortalityBase> Mortalities { get; set; }
+        public int Zone { get; set; }
+        public int Subzone { get; set; }
+        public int ZoneSubzone { get; }
     }
 }

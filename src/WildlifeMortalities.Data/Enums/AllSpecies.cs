@@ -1,6 +1,6 @@
-﻿namespace WildlifeMortalities.Data
+﻿namespace WildlifeMortalities.Data.Enums
 {
-    public enum Species
+    public enum AllSpecies
     {
         Uninitialized = 0,
         Bird = 1,
