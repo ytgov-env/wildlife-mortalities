@@ -22,6 +22,7 @@ namespace WildlifeMortalities.Data
         public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies => Set<GameManagementAreaSpecies>();
         public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules => Set<GameManagementAreaSchedule>();
         public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
+        public DbSet<Region> Regions => Set<Region>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,6 +55,15 @@ namespace WildlifeMortalities.Data
             modelBuilder.Entity<TrappedMortality>().Property(t => t.Quantity).HasColumnName("Quantity");
 
             modelBuilder.Entity<GameManagementArea>().Property(a => a.ZoneSubzone).HasComputedColumnSql("[Zone] * 100 + [Subzone]", true);
+
+            modelBuilder.Entity<HarvestReport>().Property(h => h.DateReported).HasColumnType("date");
+            modelBuilder.Entity<TrappedMortality>().Property(t => t.KillDate).HasColumnType("date");
+            modelBuilder.Entity<GameManagementAreaSchedule>().Property(s => s.PeriodStart).HasColumnType("date");
+            modelBuilder.Entity<GameManagementAreaSchedule>().Property(s => s.PeriodEnd).HasColumnType("date");
+            modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveFrom).HasColumnType("date");
+            modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveTo).HasColumnType("date");
+
+
 
             base.OnModelCreating(modelBuilder);
         }
