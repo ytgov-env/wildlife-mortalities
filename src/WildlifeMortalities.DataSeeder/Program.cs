@@ -2,11 +2,15 @@
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Enums;
 
+Console.WriteLine("Starting data seeding...");
+
 using (var context = new AppDbContext())
 {
     AddAllGameManagementAreas(context);
     AddAllGameManagementAreaSpecies(context);
 }
+
+Console.WriteLine("Data seeding complete");
 
 void AddAllGameManagementAreas(AppDbContext context)
 {
@@ -35,6 +39,10 @@ void AddAllGameManagementAreas(AppDbContext context)
         // 1101-1146
         AddGameManagementAreas(context, 11, 46);
         context.SaveChanges();
+        Console.WriteLine("Added GameManagementAreas");
+    } else
+    {
+        Console.WriteLine("GameManagementAreas already exist");
     }
 
     static void AddGameManagementAreas(AppDbContext context, int zone, int maxSubzone)
@@ -62,5 +70,9 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
             }
         }
         context.SaveChanges();
+        Console.WriteLine("Added GameManagementAreaSpecies");
+    } else
+    {
+        Console.WriteLine("GameManagementAreaSpecies already exist");
     }
 }
