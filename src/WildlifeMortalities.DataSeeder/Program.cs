@@ -3,13 +3,16 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Enums;
 
 Console.WriteLine("Starting data seeding...");
+Console.WriteLine("-----------------------");
 
 using (var context = new AppDbContext())
 {
     AddAllGameManagementAreas(context);
     AddAllGameManagementAreaSpecies(context);
+    AddAllRegions(context);
 }
 
+Console.WriteLine("---------------------");
 Console.WriteLine("Data seeding complete");
 
 void AddAllGameManagementAreas(AppDbContext context)
@@ -74,5 +77,22 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
     } else
     {
         Console.WriteLine("GameManagementAreaSpecies already exist");
+    }
+}
+
+void AddAllRegions(AppDbContext context)
+{
+    if (!context.Regions.Any())
+    {
+        string[] regions = { "Kluane", "Liard", "Northern", "Northern Tutchone", "Southern Lakes" };
+        foreach (string region in regions)
+        {
+            context.Regions.Add(new Region { Name = region });
+        }
+        context.SaveChanges();
+        Console.WriteLine("Added Regions");
+    } else
+    {
+        Console.WriteLine("Regions already exist");
     }
 }
