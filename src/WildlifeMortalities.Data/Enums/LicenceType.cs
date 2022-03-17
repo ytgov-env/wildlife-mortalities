@@ -4,9 +4,9 @@
     {
         Uninitialized = 0,
         Hunting = 1,
-        SpecialGuide = 2,
-        HuntingPermit = 3,
-        HuntingPhaPermit = 4,
+        HuntingPermit = 2,
+        HuntingPhaPermit = 3,
+        SpecialGuide = 4,
         Trapping = 5
     }
 }
