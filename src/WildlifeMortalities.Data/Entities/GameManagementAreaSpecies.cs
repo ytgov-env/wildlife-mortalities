@@ -14,6 +14,6 @@ namespace WildlifeMortalities.Data.Entities
         public GameManagementArea GameManagementArea { get; set; }
         public GmaSpecies Species { get; set; }
         public List<GameManagementAreaSchedule> Schedules { get; set; }
-        public List<GameManagementUnit> GameManagementUnits { get; set; }
+        public List<GameManagementUnit?> GameManagementUnits { get; set; }
     }
 }

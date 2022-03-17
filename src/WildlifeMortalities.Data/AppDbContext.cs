@@ -46,7 +46,6 @@ namespace WildlifeMortalities.Data
             modelBuilder.Entity<HuntedMortality>().Property(h => h.Sex).HasConversion<string>().HasMaxLength(25);
             modelBuilder.Entity<Licence>().Property(l => l.Type).HasConversion<string>().HasMaxLength(25);
             modelBuilder.Entity<GameManagementAreaSpecies>().Property(s => s.Species).HasConversion<string>().HasMaxLength(25);
-            modelBuilder.Entity<GameManagementUnit>().Property(u => u.Species).HasConversion<string>().HasMaxLength(25);
 
             modelBuilder.Entity<TrappedMortality>().Property(t => t.Sex).HasColumnName("Sex");
             modelBuilder.Entity<HuntedMortality>().Property(h => h.Sex).HasColumnName("Sex");
