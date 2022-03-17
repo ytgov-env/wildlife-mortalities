@@ -43,7 +43,8 @@ void AddAllGameManagementAreas(AppDbContext context)
         AddGameManagementAreas(context, 11, 46);
         context.SaveChanges();
         Console.WriteLine("Added GameManagementAreas");
-    } else
+    }
+    else
     {
         Console.WriteLine("GameManagementAreas already exist");
     }
@@ -74,7 +75,8 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
         }
         context.SaveChanges();
         Console.WriteLine("Added GameManagementAreaSpecies");
-    } else
+    }
+    else
     {
         Console.WriteLine("GameManagementAreaSpecies already exist");
     }
@@ -91,7 +93,8 @@ void AddAllRegions(AppDbContext context)
         }
         context.SaveChanges();
         Console.WriteLine("Added Regions");
-    } else
+    }
+    else
     {
         Console.WriteLine("Regions already exist");
     }

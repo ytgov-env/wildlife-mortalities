@@ -1,7 +1,5 @@
-using WildlifeMortalities.App.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.Hosting;
 using MudBlazor.Services;
 using Serilog;
 using Serilog.Events;
@@ -23,7 +21,6 @@ try
                 .ReadFrom.Services(services)
                 .Enrich.FromLogContext())
         .UseWindowsService();
-
 
     builder.WebHost.UseKestrel(opts =>
     {
@@ -93,7 +90,6 @@ try
 
         options.Events.OnSignedOutCallbackRedirect = (context) =>
         {
-
             context.Response.Redirect(options.SignedOutRedirectUri);
             context.HandleResponse();
 

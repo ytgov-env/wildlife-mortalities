@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities;
+﻿using WildlifeMortalities.Data;
 
 var context = new AppDbContext();
 
