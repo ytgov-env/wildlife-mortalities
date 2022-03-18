@@ -58,6 +58,11 @@ namespace WildlifeMortalities.Data
             modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveFrom).HasColumnType("date");
             modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveTo).HasColumnType("date");
 
+            modelBuilder.Entity<HuntedMortality>().Property(h => h.Landmark).HasMaxLength(100);
+            modelBuilder.Entity<TrappedMortality>().Property(t => t.KillType).HasMaxLength(50);
+            modelBuilder.Entity<Region>().Property(r => r.Name).HasMaxLength(50);
+            modelBuilder.Entity<GameManagementUnit>().Property(u => u.Name).HasMaxLength(50);
+
             base.OnModelCreating(modelBuilder);
         }
     }
