@@ -17,7 +17,6 @@ namespace WildlifeMortalities.Data
         public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies => Set<GameManagementAreaSpecies>();
         public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules => Set<GameManagementAreaSchedule>();
         public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
-        public DbSet<Region> Regions => Set<Region>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,7 +59,6 @@ namespace WildlifeMortalities.Data
 
             modelBuilder.Entity<HuntedMortality>().Property(h => h.Landmark).HasMaxLength(100);
             modelBuilder.Entity<TrappedMortality>().Property(t => t.KillType).HasMaxLength(50);
-            modelBuilder.Entity<Region>().Property(r => r.Name).HasMaxLength(50);
             modelBuilder.Entity<GameManagementUnit>().Property(u => u.Name).HasMaxLength(50);
 
             base.OnModelCreating(modelBuilder);
