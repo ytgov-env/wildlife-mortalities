@@ -7,10 +7,10 @@ namespace WildlifeMortalities.Data.Entities
     {
         public Sex Sex { get; set; }
         public int SealId { get; set; }
-        public Seal Seal { get; set; }
-        public GameManagementArea GameManagementArea { get; set; }
-        public string Landmark { get; set; }
-        public Point Location { get; set; }
-        public HuntedHarvestReport HuntedHarvestReport { get; set; }
+        public Seal Seal { get; set; } = null!;
+        public GameManagementArea GameManagementArea { get; set; } = null!;
+        public string Landmark { get; set; } = string.Empty;
+        public Point Location { get; set; } = null!;
+        public HuntedHarvestReport HuntedHarvestReport { get; set; } = null!;
     }
 }

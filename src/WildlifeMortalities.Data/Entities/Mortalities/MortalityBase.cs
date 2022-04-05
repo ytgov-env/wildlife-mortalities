@@ -6,6 +6,6 @@ namespace WildlifeMortalities.Data.Entities
     {
         public int Id { get; set; }
         public AllSpecies Species { get; set; }
-        public BiologicalSubmission BiologicalSubmission { get; set; }
+        public BiologicalSubmission BiologicalSubmission { get; set; } = null!;
     }
 }

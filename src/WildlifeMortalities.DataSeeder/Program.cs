@@ -50,7 +50,7 @@ void AddAllGameManagementAreas(AppDbContext context)
 
     static void AddGameManagementAreas(AppDbContext context, int zone, int maxSubzone)
     {
-        for (int i = 1; i <= maxSubzone; i++)
+        for (var i = 1; i <= maxSubzone; i++)
         {
             context.GameManagementAreas.Add(new GameManagementArea { Zone = zone, Subzone = i });
         }
