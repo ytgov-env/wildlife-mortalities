@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Data", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Test", "src\WildlifeMortalities.Test\WildlifeMortalities.Test.csproj", "{38013A3C-7ED0-4A61-B109-346224B5B8E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.DataSeeder", "src\WildlifeMortalities.DataSeeder\WildlifeMortalities.DataSeeder.csproj", "{BEDF5FB7-87ED-4E35-987F-9173CE7D24FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.DataSeeder", "src\WildlifeMortalities.DataSeeder\WildlifeMortalities.DataSeeder.csproj", "{BEDF5FB7-87ED-4E35-987F-9173CE7D24FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{43D67005-B380-4E90-AAF8-AC4FA24753B5}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
