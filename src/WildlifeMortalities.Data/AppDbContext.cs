@@ -11,7 +11,9 @@ namespace WildlifeMortalities.Data
         public DbSet<HuntedMortality> HuntedMortalities => Set<HuntedMortality>();
         public DbSet<TrappedMortality> TrappingMortalities => Set<TrappedMortality>();
         public DbSet<BirdMortality> BirdMortalities => Set<BirdMortality>();
-        public DbSet<HarvestReport> HarvestReports => Set<HarvestReport>();
+        public DbSet<HarvestReportBase> HarvestReports => Set<HarvestReportBase>();
+        public DbSet<TrappedHarvestReport> TrappedHarvestReports => Set<TrappedHarvestReport>();
+        public DbSet<HuntedHarvestReport> HuntedHarvestReports => Set<HuntedHarvestReport>();
         public DbSet<BiologicalSubmission> BiologicalSubmissions => Set<BiologicalSubmission>();
         public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
         public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies => Set<GameManagementAreaSpecies>();
@@ -48,9 +50,12 @@ namespace WildlifeMortalities.Data
             modelBuilder.Entity<BirdMortality>().Property(b => b.Quantity).HasColumnName("Quantity");
             modelBuilder.Entity<TrappedMortality>().Property(t => t.Quantity).HasColumnName("Quantity");
 
+            modelBuilder.Entity<HuntedHarvestReport>().Property(h => h.MortalityId).HasColumnName("MortalityId");
+
             modelBuilder.Entity<GameManagementArea>().Property(a => a.ZoneSubzone).HasComputedColumnSql("[Zone] * 100 + [Subzone]", true);
 
-            modelBuilder.Entity<HarvestReport>().Property(h => h.DateReported).HasColumnType("date");
+            modelBuilder.Entity<HuntedHarvestReport>().Property(h => h.DateReported).HasColumnType("date");
+            modelBuilder.Entity<TrappedHarvestReport>().Property(t=> t.DateReported).HasColumnType("date");
             modelBuilder.Entity<TrappedMortality>().Property(t => t.KillDate).HasColumnType("date");
             modelBuilder.Entity<GameManagementAreaSchedule>().Property(s => s.PeriodStart).HasColumnType("date");
             modelBuilder.Entity<GameManagementAreaSchedule>().Property(s => s.PeriodEnd).HasColumnType("date");

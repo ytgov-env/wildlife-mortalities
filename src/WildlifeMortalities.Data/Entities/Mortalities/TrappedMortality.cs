@@ -11,5 +11,7 @@ namespace WildlifeMortalities.Data.Entities
         public int RegisteredTrappingConcession { get; set; }
         public int Licenceid { get; set; }
         public Licence Licence { get; set; }
+        public int TrappedHarvestReportId { get; set; }
+        public TrappedHarvestReport TrappedHarvestReport { get; set; }
     }
 }

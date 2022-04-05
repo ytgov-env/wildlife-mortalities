@@ -23,6 +23,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Features\BiologicalSubmissions\" />
+	  <Folder Include="Features\Clients\" />
+	  <Folder Include="Features\HarvestReports\" />
 	  <Folder Include="Logs\" />
 	</ItemGroup>
 

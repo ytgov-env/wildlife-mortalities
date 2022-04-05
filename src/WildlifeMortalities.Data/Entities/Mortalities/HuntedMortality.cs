@@ -11,5 +11,6 @@ namespace WildlifeMortalities.Data.Entities
         public GameManagementArea GameManagementArea { get; set; }
         public string Landmark { get; set; }
         public Point Location { get; set; }
+        public HuntedHarvestReport HuntedHarvestReport { get; set; }
     }
 }
