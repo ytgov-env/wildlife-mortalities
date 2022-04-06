@@ -1,7 +1,6 @@
-﻿namespace WildlifeMortalities.Data.Entities
+﻿namespace WildlifeMortalities.Data.Entities;
+
+public class Moose
 {
-    public class Moose
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

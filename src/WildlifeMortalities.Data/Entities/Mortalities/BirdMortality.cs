@@ -1,7 +1,6 @@
-﻿namespace WildlifeMortalities.Data.Entities
+﻿namespace WildlifeMortalities.Data.Entities;
+
+public class BirdMortality : MortalityBase
 {
-    public class BirdMortality : MortalityBase
-    {
-        public int Quantity { get; set; }
-    }
+    public int Quantity { get; set; }
 }

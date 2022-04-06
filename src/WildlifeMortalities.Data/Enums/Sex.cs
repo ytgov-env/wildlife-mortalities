@@ -1,10 +1,9 @@
-﻿namespace WildlifeMortalities.Data.Enums
+﻿namespace WildlifeMortalities.Data.Enums;
+
+public enum Sex
 {
-    public enum Sex
-    {
-        Uninitialized = 0,
-        Female = 1,
-        Male = 2,
-        Unknown = 3
-    }
+    Uninitialized = 0,
+    Female = 1,
+    Male = 2,
+    Unknown = 3
 }

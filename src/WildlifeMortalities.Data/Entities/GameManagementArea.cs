@@ -1,10 +1,9 @@
-﻿namespace WildlifeMortalities.Data.Entities
+﻿namespace WildlifeMortalities.Data.Entities;
+
+public class GameManagementArea
 {
-    public class GameManagementArea
-    {
-        public int Id { get; set; }
-        public int Zone { get; set; }
-        public int Subzone { get; set; }
-        public int ZoneSubzone { get; }
-    }
+    public int Id { get; set; }
+    public int Zone { get; set; }
+    public int Subzone { get; set; }
+    public int ZoneSubzone { get; }
 }

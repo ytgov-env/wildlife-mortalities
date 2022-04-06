@@ -1,20 +1,19 @@
-﻿namespace WildlifeMortalities.Data.Enums
+﻿namespace WildlifeMortalities.Data.Enums;
+
+public enum AllSpecies
 {
-    public enum AllSpecies
-    {
-        Uninitialized = 0,
-        Bird = 1,
-        Bison = 2,
-        BlackBear = 3,
-        Caribou = 4,
-        Coyote = 5,
-        Deer = 6,
-        Elk = 7,
-        Goat = 8,
-        GrizzlyBear = 9,
-        Moose = 10,
-        Sheep = 11,
-        Wolf = 12,
-        Wolverine = 13
-    }
+    Uninitialized = 0,
+    Bird = 1,
+    Bison = 2,
+    BlackBear = 3,
+    Caribou = 4,
+    Coyote = 5,
+    Deer = 6,
+    Elk = 7,
+    Goat = 8,
+    GrizzlyBear = 9,
+    Moose = 10,
+    Sheep = 11,
+    Wolf = 12,
+    Wolverine = 13
 }

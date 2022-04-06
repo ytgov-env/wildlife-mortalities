@@ -1,8 +1,7 @@
-﻿namespace WildlifeMortalities.Data.Entities
+﻿namespace WildlifeMortalities.Data.Entities;
+
+public class HarvestReportBase
 {
-    public class HarvestReportBase
-    {
-        public int Id { get; set; }
-        public DateTime DateReported { get; set; }
-    }
+    public int Id { get; set; }
+    public DateTime DateReported { get; set; }
 }

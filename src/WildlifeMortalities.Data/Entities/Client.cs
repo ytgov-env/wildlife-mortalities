@@ -1,9 +1,8 @@
-﻿namespace WildlifeMortalities.Data.Entities
+﻿namespace WildlifeMortalities.Data.Entities;
+
+public class Client
 {
-    public class Client
-    {
-        public int Id { get; set; }
-        public int EnvClientId { get; set; }
-        public List<Licence> Licences { get; set; } = new();
-    }
+    public int Id { get; set; }
+    public int EnvClientId { get; set; }
+    public List<Licence> Licences { get; set; } = new();
 }
