@@ -4,4 +4,5 @@ public class HarvestReportBase
 {
     public int Id { get; set; }
     public DateTime DateReported { get; set; }
+    public bool IsComplete { get; set; }
 }
