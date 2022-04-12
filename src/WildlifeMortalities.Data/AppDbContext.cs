@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<Licence> Licences => Set<Licence>();
     public DbSet<Seal> Seals => Set<Seal>();
     public DbSet<HuntedMortality> HuntedMortalities => Set<HuntedMortality>();
+    public DbSet<SubsistenceHuntedMortality> SubsistenceHuntedMortalities => Set<SubsistenceHuntedMortality>();
     public DbSet<TrappedMortality> TrappingMortalities => Set<TrappedMortality>();
     public DbSet<BirdMortality> BirdMortalities => Set<BirdMortality>();
     public DbSet<HarvestReportBase> HarvestReports => Set<HarvestReportBase>();
