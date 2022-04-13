@@ -1,8 +1,7 @@
 ﻿namespace WildlifeMortalities.Data.Entities;
 
-public class Client
+public class Client : Reporter
 {
-    public int Id { get; set; }
-    public int EnvClientId { get; set; }
+    public string EnvClientId { get; set; } = string.Empty;
     public List<Licence> Licences { get; set; } = new();
 }
