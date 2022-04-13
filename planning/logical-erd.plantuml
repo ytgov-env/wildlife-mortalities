@@ -1,0 +1,128 @@
+@startuml logical-erd
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "HuntedHarvestReport" as hunted_harvest_report {
+    *Id: number <<generated>>
+    --
+    *DateStarted: datetime
+    *DateCompleted: datetime
+    *IsComplete: bool
+}
+
+entity "TrappedHarvestReport" as trapped_harvest_report {
+    *Id: number <<generated>>
+    --
+    *DateStarted: datetime
+    *DateCompleted: datetime
+    *IsComplete: bool
+}
+
+entity "Mortality" as mortality {
+    *Id: number <<generated>>
+    --
+    *Species: enum
+}
+
+entity "HuntedMortality" as hunted_mortality {
+    *Id: number <<generated>>
+    --
+    *Species: enum
+    *Sex: enum
+    Landmark: string
+    Location: geography (lat/long)
+    HuntedHarvestReportId: number <<FK>>
+    SealId: number <<FK>>
+}
+
+entity "TrappedMortality" as trapped_mortality {
+    *Id: number <<generated>>
+    --
+    *Species: enum
+    *Sex: enum
+    *KillType: enum
+    *KillDate: date
+    TrappedHarvestReportId: number <<FK>>
+    LicenceId: number <<FK>>
+}
+
+entity "BiologicalSubmission" as biological_submission {
+    *Id: number <<generated>>
+    --
+    *MortalityId: number <<FK>>
+}
+
+entity "ClientReporter" as client {
+    *EnvClientId: string
+}
+
+entity "ConservationOfficerReporter" as conservation_officer {
+    *BadgeNumber: string
+}
+
+entity "Reporter" as reporter {
+    *Id: number <<generated>>
+}
+
+reporter <|-- client
+reporter <|-- conservation_officer
+
+hunted_mortality ||..o| biological_submission
+trapped_mortality ||..o| biological_submission
+
+hunted_mortality ||..o| reporter
+
+trapped_mortality ||..o| reporter
+
+enum "AllSpecies" as all_species {
+    Uninitialized
+    Bird
+    Bison
+    BlackBear
+    Caribou
+    Coyote
+    Deer
+    Elk
+    Goat
+    GrizzlyBear
+    Moose
+    Sheep
+    Wolf
+    Wolverine
+}
+
+enum "GmaSpecies" as gma_species {
+    Uninitialized
+    Bison
+    BlackBear
+    Caribou
+    Deer
+    Goat
+    GrizzlyBear
+    Moose
+    Sheep
+}
+
+enum "GmaStatus" as gma_status {
+    Uninitialized
+    Closed
+    Open
+    OpenPermitRequired
+}
+
+enum "LicenceType" as licence_type {
+    Uninitialized
+    Hunting
+    HuntingPermit
+    HuntingPhaPermit
+    SpecialGuide
+    Trapping
+}
+
+enum "Sex" as sex {
+    Uninitialized
+    Female
+    Male
+    Unknown
+}
+@enduml
