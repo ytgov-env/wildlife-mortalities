@@ -3,7 +3,7 @@
 public class GameManagementUnit
 {
     public int Id { get; set; }
-    public int Number { get; set; }
+    public string Number { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public List<GameManagementAreaSpecies> GameManagementAreaSpecies { get; set; } = new();
     public DateTime ActiveFrom { get; set; }

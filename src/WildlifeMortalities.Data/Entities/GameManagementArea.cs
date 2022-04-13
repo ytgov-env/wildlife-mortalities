@@ -3,7 +3,7 @@
 public class GameManagementArea
 {
     public int Id { get; set; }
-    public int Zone { get; set; }
-    public int Subzone { get; set; }
-    public int ZoneSubzone { get; }
+    public string Zone { get; set; } = string.Empty;
+    public string Subzone { get; set; } = string.Empty;
+    public string ZoneSubzone { get; } = string.Empty;
 }

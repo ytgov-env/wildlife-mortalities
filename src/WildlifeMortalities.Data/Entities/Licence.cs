@@ -5,7 +5,7 @@ namespace WildlifeMortalities.Data.Entities;
 public class Licence
 {
     public int Id { get; set; }
-    public int Number { get; set; }
+    public string Number { get; set; } = string.Empty;
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
     public LicenceType Type { get; set; }
