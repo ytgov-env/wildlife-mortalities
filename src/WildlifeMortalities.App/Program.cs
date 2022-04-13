@@ -68,7 +68,7 @@ try
         {
             OnRedirectToIdentityProviderForSignOut = (context) =>
             {
-                var logoutUri = $"https://{configuration["AuthNProvider:Domain"]}/v2/logout?client_id={configuration["AuthNProvider:ClientId"]}";
+                var logoutUri = $"https://{configuration["AuthNProvider:Domain"]}{configuration["AuthNProvider:FederatedLogoutPartialUri"]}{configuration["AuthNProvider:ClientId"]}";
 
                 var postLogoutUri = context.Properties.RedirectUri;
                 if (!string.IsNullOrEmpty(postLogoutUri))
