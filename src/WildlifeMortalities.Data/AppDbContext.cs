@@ -5,11 +5,12 @@ namespace WildlifeMortalities.Data;
 
 public class AppDbContext : DbContext
 {
+    public DbSet<Reporter> Reporters => Set<Reporter>();
     public DbSet<Client> Clients => Set<Client>();
+    public DbSet<ConservationOfficer> ConservationOfficers => Set<ConservationOfficer>();
     public DbSet<Licence> Licences => Set<Licence>();
     public DbSet<Seal> Seals => Set<Seal>();
     public DbSet<HuntedMortality> HuntedMortalities => Set<HuntedMortality>();
-    public DbSet<SubsistenceHuntedMortality> SubsistenceHuntedMortalities => Set<SubsistenceHuntedMortality>();
     public DbSet<TrappedMortality> TrappingMortalities => Set<TrappedMortality>();
     public DbSet<BirdMortality> BirdMortalities => Set<BirdMortality>();
     public DbSet<HarvestReportBase> HarvestReports => Set<HarvestReportBase>();
@@ -39,10 +40,13 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TrappedMortality>().HasOne(t => t.Licence)
             .WithMany(s => s.TrappedMortalities).OnDelete(DeleteBehavior.NoAction);
 
-        //modelBuilder.Entity<HuntedMortality>().HasOne(h => h.HarvestReport)
-        //    .WithOne(h => h.Mortality).OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<HuntedMortality>().HasOne(h => h.HarvestReport)
+            .WithOne(h => h.Mortality).OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<TrappedMortality>().HasOne(h => h.HarvestReport)
             .WithMany(h => h.Mortalities).OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<MortalityBase>().HasOne(m => m.Reporter)
+            .WithMany(r => r.Mortalities).OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<MortalityBase>().Property(m => m.Species).HasConversion<string>().HasMaxLength(50);
         modelBuilder.Entity<TrappedMortality>().Property(t => t.Sex).HasConversion<string>().HasMaxLength(25);
@@ -53,13 +57,11 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TrappedMortality>().Property(t => t.Sex).HasColumnName("Sex");
         modelBuilder.Entity<HuntedMortality>().Property(h => h.Sex).HasColumnName("Sex");
 
-        modelBuilder.Entity<BirdMortality>().Property(b => b.Quantity).HasColumnName("Quantity");
-        modelBuilder.Entity<TrappedMortality>().Property(t => t.Quantity).HasColumnName("Quantity");
+        modelBuilder.Entity<TrappedMortality>().Property(t => t.HarvestReportId).HasColumnName("HarvestReportId");
+        modelBuilder.Entity<HuntedMortality>().Property(t => t.HarvestReportId).HasColumnName("HarvestReportId");
 
         modelBuilder.Entity<GameManagementArea>().Property(a => a.ZoneSubzone).HasComputedColumnSql("[Zone] * 100 + [Subzone]", true);
 
-        modelBuilder.Entity<HuntedHarvestReport>().Property(h => h.DateReported).HasColumnType("date");
-        modelBuilder.Entity<TrappedHarvestReport>().Property(t => t.DateReported).HasColumnType("date");
         modelBuilder.Entity<TrappedMortality>().Property(t => t.KillDate).HasColumnType("date");
         modelBuilder.Entity<GameManagementAreaSchedule>().Property(s => s.PeriodStart).HasColumnType("date");
         modelBuilder.Entity<GameManagementAreaSchedule>().Property(s => s.PeriodEnd).HasColumnType("date");
