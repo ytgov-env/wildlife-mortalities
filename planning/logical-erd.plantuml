@@ -1,49 +1,49 @@
 @startuml logical-erd
+
 ' avoid problems with angled crows feet
 skinparam linetype ortho
 
-entity "HuntedHarvestReport" as hunted_harvest_report {
-    *Id: number <<generated>>
-    --
-    *DateStarted: datetime
-    *DateCompleted: datetime
-    *IsComplete: bool
+' Entities
+
+together {
+    entity "HarvestReport" as harvest_report {
+        *Id: number <<generated>>
+        --
+        *DateStarted: datetime
+        *DateCompleted: datetime
+        *IsComplete: bool
+    }
+
+    entity "HuntedHarvestReport" as hunted_harvest_report {
+    }
+
+    entity "TrappedHarvestReport" as trapped_harvest_report {
+    }
 }
 
-entity "TrappedHarvestReport" as trapped_harvest_report {
-    *Id: number <<generated>>
-    --
-    *DateStarted: datetime
-    *DateCompleted: datetime
-    *IsComplete: bool
-}
+together {
+    entity "Mortality" as mortality {
+        *Id: number <<generated>>
+        --
+        *ReporterId: number <<FK>>
+        *Species: enum
+    }
 
-entity "Mortality" as mortality {
-    *Id: number <<generated>>
-    --
-    *Species: enum
-}
+    entity "HuntedMortality" as hunted_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
 
-entity "HuntedMortality" as hunted_mortality {
-    *Id: number <<generated>>
-    --
-    *Species: enum
-    *Sex: enum
-    Landmark: string
-    Location: geography (lat/long)
-    HuntedHarvestReportId: number <<FK>>
-    SealId: number <<FK>>
-}
-
-entity "TrappedMortality" as trapped_mortality {
-    *Id: number <<generated>>
-    --
-    *Species: enum
-    *Sex: enum
-    *KillType: enum
-    *KillDate: date
-    TrappedHarvestReportId: number <<FK>>
-    LicenceId: number <<FK>>
+    entity "TrappedMortality" as trapped_mortality {
+        HarvestReportId: number <<FK>>
+        *LicenceId: number <<FK>>
+        *Sex: enum
+        *KillType: enum
+        *KillDate: date
+    }
 }
 
 entity "BiologicalSubmission" as biological_submission {
@@ -52,77 +52,155 @@ entity "BiologicalSubmission" as biological_submission {
     *MortalityId: number <<FK>>
 }
 
-entity "ClientReporter" as client {
-    *EnvClientId: string
-}
 
-entity "ConservationOfficerReporter" as conservation_officer {
-    *BadgeNumber: string
-}
 
-entity "Reporter" as reporter {
+together {
+    entity "Reporter" as reporter {
     *Id: number <<generated>>
+    }
+    
+    entity "ConservationOfficer" as conservation_officer {
+    *BadgeNumber: string
+    }
+
+    together {
+        entity "Client" as client {
+        *EnvClientId: string
+        }
+
+        entity "Licence" as licence {
+            *Id: number <<generated>>
+            --
+            *ClientId: number <<FK>>
+            *Number: string
+            *LicenceType: enum
+            *PosseId: number
+        }
+
+        entity "Seal" as seal {
+            *Id: number <<generated>>
+            --
+            *LicenceId: number <<FK>>
+            *PosseId: number
+        }
+    }
 }
+
+'together {
+    entity "GameManagementArea" as game_management_area {
+        *Id: number <<generated>>
+        --
+        *Zone: string
+        *Subzone: string
+        ZoneSubzone: string <<computed>>
+    }
+
+    entity "GameManagementAreaSpecies" as game_management_area_species {
+        *Id: number <<generated>>
+        --
+        *GameManagementAreaId: number <<FK>>
+        *GmaSpecies: enum
+    }
+
+    entity "GameManagementAreaSchedule" as game_management_area_schedule {
+        *Id: number <<generated>>
+        --
+        *GameManagementAreaSpeciesId: number <<FK>>
+        *GmaStatus: enum
+        *PeriodStart: date
+        *PeriodEnd: date
+    }
+
+    entity "GameManagementUnit" as game_management_unit {
+        *Id: number <<generated>>
+        --
+        *Name: string
+        *Number: string
+        *ActiveFrom: date
+        *ActiveTo: date
+    }
+'}
+
+' Inheritance
 
 reporter <|-- client
 reporter <|-- conservation_officer
 
-hunted_mortality ||..o| biological_submission
-trapped_mortality ||..o| biological_submission
+harvest_report <|-- hunted_harvest_report
+harvest_report <|-- trapped_harvest_report
 
-hunted_mortality ||..o| reporter
+mortality <|-- hunted_mortality
+mortality <|-- trapped_mortality
 
-trapped_mortality ||..o| reporter
+' Relationships
+
+mortality ||..o| biological_submission
+mortality }o..|| reporter
+
+trapped_mortality }..o| licence
+trapped_mortality ||..|| trapped_harvest_report
+hunted_mortality ||..|| hunted_harvest_report
+hunted_mortality }o..|| game_management_area
+hunted_mortality |o..o| seal
+
+client ||..o{ licence
+licence ||..o{ seal
+
+game_management_area ||..{ game_management_area_species
+game_management_area_species ||..{ game_management_area_schedule
+game_management_unit }..{ game_management_area_species
+
+' Enums
 
 enum "AllSpecies" as all_species {
-    Uninitialized
-    Bird
-    Bison
-    BlackBear
-    Caribou
-    Coyote
-    Deer
-    Elk
-    Goat
-    GrizzlyBear
-    Moose
-    Sheep
-    Wolf
-    Wolverine
+Uninitialized
+Bird
+Bison
+BlackBear
+Caribou
+Coyote
+Deer
+Elk
+Goat
+GrizzlyBear
+Moose
+Sheep
+Wolf
+Wolverine
 }
 
 enum "GmaSpecies" as gma_species {
-    Uninitialized
-    Bison
-    BlackBear
-    Caribou
-    Deer
-    Goat
-    GrizzlyBear
-    Moose
-    Sheep
+Uninitialized
+Bison
+BlackBear
+Caribou
+Deer
+Goat
+GrizzlyBear
+Moose
+Sheep
 }
 
 enum "GmaStatus" as gma_status {
-    Uninitialized
-    Closed
-    Open
-    OpenPermitRequired
+Uninitialized
+Closed
+Open
+OpenPermitRequired
 }
 
 enum "LicenceType" as licence_type {
-    Uninitialized
-    Hunting
-    HuntingPermit
-    HuntingPhaPermit
-    SpecialGuide
-    Trapping
+Uninitialized
+Hunting
+HuntingPermit
+HuntingPhaPermit
+SpecialGuide
+Trapping
 }
 
 enum "Sex" as sex {
-    Uninitialized
-    Female
-    Male
-    Unknown
+Uninitialized
+Female
+Male
+Unknown
 }
 @enduml
