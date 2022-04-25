@@ -1,0 +1,57 @@
+@startuml new-mortality-initial-flow
+!theme materia
+title New mortality (initial flow)
+
+start
+
+repeat
+    :Search for client
+    by EnvClientId or
+    by Name;
+    backward:Verify in POSSE;
+repeat while (Client found?) is (no)
+->yes;
+:Select species;
+switch (Species?)
+case (bird)
+    :bird-mortality.puml;
+    stop
+case (bison)
+    :bison-mortality.puml;
+    stop
+case (black bear)
+    :black-bear-mortality.puml;
+    stop
+case (caribou)
+    :caribou-mortality.puml;
+    stop
+case (coyote)
+    :coyote-mortality.puml;
+    stop
+case (deer)
+    :deer-mortality.puml;
+    stop
+case (elk)
+    :elk-mortality.puml;
+    stop
+case (goat)
+    :goat-mortality.puml;
+    stop
+case (grizzly bear)
+    :grizzly-bear-mortality.puml;
+    stop
+case (moose)
+    :moose-mortality.puml;
+    stop
+case (sheep)
+    :sheep-mortality.puml;
+    stop
+case (wolf)
+    :wolf-mortality.puml;
+    stop
+case (wolverine)
+    :wolverine-mortality.puml;
+    stop
+endswitch
+
+@enduml
