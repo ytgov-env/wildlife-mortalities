@@ -1,0 +1,108 @@
+@startuml new-mortality-activity-diagram
+!theme materia
+title Create a new mortality (harvest report)
+|User|
+
+start
+repeat
+    :Search for client
+    by EnvClientId or
+    by Name;
+    backward:Open POSSE and
+    verify information;
+repeat while (Client found?) is (no)
+-> yes;
+:Select species;
+repeat
+    switch (Species?)
+    case (bird)
+    fork
+        :Enter quantity;
+    fork again
+        :Select species???;
+    end fork
+    case (bison)
+    fork
+        :Select seal;
+    fork again
+        :Select sex;
+    fork again
+        :Select GMA;
+    fork again
+        :Enter landmark;
+    fork again
+        :Enter location;
+    end fork
+    case (black/grizzly bear)
+    fork
+        :Select seal;
+    fork again
+        :Select sex;
+    fork again
+        :Select GMA;
+    fork again
+        :Enter landmark;
+    fork again
+        :Enter location;
+    end fork
+    case (caribou, deer, elk, goat)
+    fork
+        :Select seal;
+    fork again
+        :Select sex;
+    fork again
+        :Select GMA;
+    fork again
+        :Enter landmark;
+    fork again
+        :Enter location;
+    end fork
+    case (coyote)
+    :Enter quantity;
+    case (moose)
+    fork
+        :Select seal;
+    fork again
+        :Select sex;
+    fork again
+        :Select GMA;
+    fork again
+        :Enter landmark;
+    fork again
+        :Enter location;
+    end fork
+    switch (GMA has subunit?)
+    case (yes)
+    :Select subunit;
+    case (no)
+    endswitch
+    case (sheep)
+    case (wolf or wolverine)
+    fork
+        :Enter sex;
+    fork again
+        :Enter Landmark;
+    fork again
+        :Enter Location;
+    end fork
+    endswitch
+    |System|
+    :Validate;
+    if (Validation passed?) then (yes)
+        :Set harvest report status
+        to **Complete**;
+    else (no)
+        :Set harvest report status
+        to **Pending**;
+        :Display validation
+        errors/warnings;
+    endif
+    |User|
+repeat while (Edit?) is (yes)
+-> no;
+if (Proceed to bio submission?) then (yes)
+
+else (no)
+    stop
+
+    @enduml
