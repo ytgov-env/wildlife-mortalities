@@ -12,78 +12,64 @@ repeat
     verify information;
 repeat while (Client found?) is (no)
 -> yes;
-:Select species;
+:Select: species;
 repeat
     switch (Species?)
     case (bird)
     fork
-        :Enter quantity;
+        :Enter: quantity;
     fork again
-        :Select species???;
+        :Select: species???;
     end fork
+    case (bison, black/grizzly bear, caribou, deer, elk, goat, moose, sheep)
+    fork
+        :Select: seal;
+    fork again
+        :Select: sex;
+    fork again
+        :Select: GMA;
+    fork again
+        :Enter: landmark;
+    fork again
+        :Enter: coordinates;
+    end fork
+    switch (Species?)
     case (bison)
     fork
-        :Select seal;
+    :Select: pregnant;
+    note right: yes, no, unknown, n/a
     fork again
-        :Select sex;
-    fork again
-        :Select GMA;
-    fork again
-        :Enter landmark;
-    fork again
-        :Enter location;
+    :Select: wounded;
+    note right: yes, no, unknown
     end fork
     case (black/grizzly bear)
-    fork
-        :Select seal;
-    fork again
-        :Select sex;
-    fork again
-        :Select GMA;
-    fork again
-        :Enter landmark;
-    fork again
-        :Enter location;
-    end fork
+    :Select: shot in conflict;
+    note right: yes, no
     case (caribou, deer, elk, goat)
-    fork
-        :Select seal;
-    fork again
-        :Select sex;
-    fork again
-        :Select GMA;
-    fork again
-        :Enter landmark;
-    fork again
-        :Enter location;
-    end fork
-    case (coyote)
-    :Enter quantity;
     case (moose)
-    fork
-        :Select seal;
-    fork again
-        :Select sex;
-    fork again
-        :Select GMA;
-    fork again
-        :Enter landmark;
-    fork again
-        :Enter location;
-    end fork
     switch (GMA has subunit?)
     case (yes)
-    :Select subunit;
+    :Select: subunit;
     case (no)
     endswitch
     case (sheep)
+    fork
+    :Select: body colour;
+    note right: white, fannin, dark
+    fork again
+    :Select: tail colour;
+    note right: white, dark
+    end fork
+    endswitch
+    case (coyote)
+    :Enter: quantity;
     case (wolf or wolverine)
     fork
-        :Enter sex;
+        :Select: sex;
     fork again
-        :Enter Landmark;
+        :Enter: landmark;
     fork again
-        :Enter Location;
+        :Enter: coordinates;
     end fork
     endswitch
     |System|
