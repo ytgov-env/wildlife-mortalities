@@ -7,20 +7,21 @@ start
 repeat
     :Search for client
     by EnvClientId or
-    by Name;
+    by LastName;
     backward:Open POSSE and
     verify information;
 repeat while (Client found?) is (no)
 -> yes;
+
 :Select: species;
 repeat
     switch (Species?)
-    case (bird)
-    fork
-        :Enter: quantity;
-    fork again
-        :Select: species???;
-    end fork
+    ' case (bird)
+    ' fork
+    '     :Enter: quantity;
+    ' fork again
+    '     :Select: species???;
+    ' end fork
     case (bison, black/grizzly bear, caribou, deer, elk, goat, moose, sheep)
     fork
         :Select: seal;
@@ -36,11 +37,11 @@ repeat
     switch (Species?)
     case (bison)
     fork
-    :Select: pregnant;
-    note right: yes, no, unknown, n/a
+        :Select: pregnant;
+        note right: yes, no, unknown, n/a
     fork again
-    :Select: wounded;
-    note right: yes, no, unknown
+        :Select: wounded;
+        note right: yes, no, unknown
     end fork
     case (black/grizzly bear)
     :Select: shot in conflict;
@@ -54,17 +55,19 @@ repeat
     endswitch
     case (sheep)
     fork
-    :Select: body colour;
-    note right: white, fannin, dark
+        :Select: body colour;
+        note right: white, fannin, dark
     fork again
-    :Select: tail colour;
-    note right: white, dark
+        :Select: tail colour;
+        note right: white, dark
     end fork
     endswitch
-    case (coyote)
-    :Enter: quantity;
+    case(coyote)
     case (wolf or wolverine)
     fork
+        :Select: Seal;
+        note right:entered after reporting the harvest
+    fork again
         :Select: sex;
     fork again
         :Enter: landmark;
@@ -72,17 +75,29 @@ repeat
         :Enter: coordinates;
     end fork
     endswitch
+    :Submit form;
     |System|
     :Validate;
-    if (Validation passed?) then (yes)
-        :Set harvest report status
-        to **Complete**;
+    if (Seal is valid? (if applicable)) then (yes)
+        if (All other required data is entered?) then (yes)
+            if (All validations passed?) then (yes)
+                :Set harvest report status
+                to **Complete**;
+            else (no)
+                :Set harvest report status
+                to **Complete With Violations**;
+                note right: different statuses for violation types?
+                :Display all violations;
+            endif
+        else (no)
+            :Set harvest report status
+            to **Waiting On Client**;
+        endif
     else (no)
         :Set harvest report status
-        to **Pending**;
-        :Display validation
-        errors/warnings;
+        to **Waiting On Valid Seal**;
     endif
+
     |User|
 repeat while (Edit?) is (yes)
 -> no;
