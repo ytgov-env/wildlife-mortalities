@@ -52,7 +52,7 @@ void AddAllGameManagementAreas(AppDbContext context)
     {
         for (var i = 1; i <= maxSubzone; i++)
         {
-            context.GameManagementAreas.Add(new GameManagementArea { Zone = zone, Subzone = i });
+            context.GameManagementAreas.Add(new GameManagementArea { Zone = zone.ToString(), Subzone = i.ToString()});
         }
     }
 }
