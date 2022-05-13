@@ -72,7 +72,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TrappedMortality>().Property(t => t.KillType).HasMaxLength(50);
         modelBuilder.Entity<GameManagementUnit>().Property(u => u.Name).HasMaxLength(50);
 
-        // Add shadow properties that will be referenced by ETL to sync licence and seal data from their source (POSSE)
+        // These shadow properties are referenced during ETL to sync licence and seal data from their source (POSSE)
         modelBuilder.Entity<Licence>().Property<int?>("PosseId");
         modelBuilder.Entity<Seal>().Property<int?>("PosseId");
 
