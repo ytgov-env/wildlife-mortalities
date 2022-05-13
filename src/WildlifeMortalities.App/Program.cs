@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Serilog;
 using Serilog.Events;
+using WildlifeMortalities.Data;
 
 Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -78,7 +80,7 @@ try
                         var request = context.Request;
                         postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
                     }
-                    logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
+                    logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
                 }
 
                 context.Response.Redirect(logoutUri);
@@ -95,6 +97,15 @@ try
 
             return Task.CompletedTask;
         };
+
+#if DEBUG
+        builder.Services.AddDbContextFactory<AppDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options => options.EnableRetryOnFailure())
+                   .EnableSensitiveDataLogging());
+#else
+    builder.Services.AddDbContextFactory<AppDbContext>(options =>
+        options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options => options.EnableRetryOnFailure()));
+#endif
     });
 
     var app = builder.Build();
