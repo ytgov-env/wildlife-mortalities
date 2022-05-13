@@ -1,0 +1,269 @@
+@startuml logical-erd
+!theme spacelab
+title Logical ERD
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+' Entities
+
+entity "HarvestReport" as harvest_report {
+    *Id: number <<generated>>
+    --
+    *DateStarted: datetime
+    *DateCompleted: datetime
+    *IsComplete: bool
+}
+
+together {
+    entity "Mortality" as mortality {
+        *Id: number <<generated>>
+        --
+        *ReporterId: number <<FK>>
+    }
+    entity "BirdMortality" as bird_mortality {
+    }
+    entity "BisonMortality" as bison_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "BlackBearMortality" as black_bear_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "CaribouMortality" as caribou_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "CoyoteMortality" as coyote_mortality {
+        HarvestReportId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "DeerMortality" as deer_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "ElkMortality" as elk_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "GoatMortality" as goat_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "GrizzlyBearMortality" as grizzly_bear_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "MooseMortality" as moose_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "SheepMortality" as sheep_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+    }
+    entity "WolfMortality" as wolf_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+        *HarvestType: enum
+    }
+    entity "WolverineMortality" as wolverine_mortality {
+        HarvestReportId: number <<FK>>
+        SealId: number <<FK>>
+        *Sex: enum
+        Landmark: string
+        Location: geography
+        *HarvestType: enum
+    }
+}
+
+entity "BiologicalSubmission" as biological_submission {
+    *Id: number <<generated>>
+    --
+    *MortalityId: number <<FK>>
+}
+
+together {
+    entity "Reporter" as reporter {
+    *Id: number <<generated>>
+    }
+    
+    entity "ConservationOfficer" as conservation_officer {
+    *BadgeNumber: string
+    }
+
+    together {
+        entity "Client" as client {
+        *EnvClientId: string
+        }
+
+        entity "Licence" as licence {
+            *Id: number <<generated>>
+            --
+            *ClientId: number <<FK>>
+            *Number: string
+            *LicenceType: enum
+            *PosseId: number <<shadow>>
+        }
+
+        entity "Seal" as seal {
+            *Id: number <<generated>>
+            --
+            *LicenceId: number <<FK>>
+            *PosseId: number <<shadow>>
+        }
+    }
+}
+
+entity "GameManagementArea" as game_management_area {
+    *Id: number <<generated>>
+    --
+    *Zone: string
+    *Subzone: string
+    Area: string <<computed>>
+}
+
+entity "GameManagementAreaSpecies" as game_management_area_species {
+    *Id: number <<generated>>
+    --
+    *GameManagementAreaId: number <<FK>>
+    *GmaSpecies: enum
+}
+
+entity "GameManagementAreaSchedule" as game_management_area_schedule {
+    *Id: number <<generated>>
+    --
+    *GameManagementAreaSpeciesId: number <<FK>>
+    *GmaStatus: enum
+    *PeriodStart: date
+    *PeriodEnd: date
+}
+
+entity "GameManagementUnit" as game_management_unit {
+    *Id: number <<generated>>
+    --
+    *Name: string
+    *Number: string
+    *ActiveFrom: date
+    *ActiveTo: date
+}
+
+' Inheritance
+
+reporter <|-- client
+reporter <|-- conservation_officer
+
+mortality <|-- bird_mortality
+mortality <|-- bison_mortality
+mortality <|-- black_bear_mortality
+mortality <|-- caribou_mortality
+mortality <|-- coyote_mortality
+mortality <|-- deer_mortality
+mortality <|-- elk_mortality
+mortality <|-- goat_mortality
+mortality <|-- grizzly_bear_mortality
+mortality <|-- moose_mortality
+mortality <|-- sheep_mortality
+mortality <|-- wolf_mortality
+mortality <|-- wolverine_mortality
+
+' Relationships
+
+mortality ||..o| biological_submission
+mortality }o..|| reporter
+mortality ||..o| harvest_report
+
+client ||..o{ licence
+licence ||..o{ seal
+
+game_management_area ||..{ game_management_area_species
+game_management_area_species ||..{ game_management_area_schedule
+game_management_unit }..{ game_management_area_species
+
+' Enums
+
+enum "AllSpecies" as all_species {
+Uninitialized
+Bird
+Bison
+BlackBear
+Caribou
+Coyote
+Deer
+Elk
+Goat
+GrizzlyBear
+Moose
+Sheep
+Wolf
+Wolverine
+}
+
+enum "GmaSpecies" as gma_species {
+Uninitialized
+Bison
+BlackBear
+Caribou
+Deer
+Goat
+GrizzlyBear
+Moose
+Sheep
+}
+
+enum "GmaStatus" as gma_status {
+Uninitialized
+Closed
+Open
+OpenPermitRequired
+}
+
+enum "LicenceType" as licence_type {
+Uninitialized
+Hunting
+HuntingPermit
+HuntingPhaPermit
+SpecialGuide
+Trapping
+}
+
+enum "Sex" as sex {
+Uninitialized
+Female
+Male
+Unknown
+}
+@enduml

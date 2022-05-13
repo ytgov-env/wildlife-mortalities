@@ -1,5 +1,6 @@
 @startuml new-mortality-activity-diagram
 !theme materia
+skinparam backgroundColor white
 title Create a new mortality (harvest report)
 |User|
 
@@ -16,12 +17,6 @@ repeat while (Client found?) is (no)
 :Select: species;
 repeat
     switch (Species?)
-    ' case (bird)
-    ' fork
-    '     :Enter: quantity;
-    ' fork again
-    '     :Select: species???;
-    ' end fork
     case (bison, black/grizzly bear, caribou, deer, elk, goat, moose, sheep)
     fork
         :Select: seal;
@@ -37,11 +32,14 @@ repeat
     switch (Species?)
     case (bison)
     fork
+    if (Female?) then (yes)
         :Select: pregnant;
-        note right: yes, no, unknown, n/a
+        note left: yes, no, unknown, n/a
+    else (no)
+    endif
     fork again
         :Select: wounded;
-        note right: yes, no, unknown
+        note right: yes, no
     end fork
     case (black/grizzly bear)
     :Select: shot in conflict;
@@ -65,8 +63,8 @@ repeat
     case(coyote)
     case (wolf or wolverine)
     fork
-        :Select: Seal;
-        note right:entered after reporting the harvest
+        :Select: fur seal;
+        note right:Pull from data source of available furseals?
     fork again
         :Select: sex;
     fork again
