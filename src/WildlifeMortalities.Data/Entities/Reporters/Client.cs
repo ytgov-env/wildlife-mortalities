@@ -1,4 +1,6 @@
-﻿namespace WildlifeMortalities.Data.Entities;
+﻿using WildlifeMortalities.Data.Entities.Licences;
+
+namespace WildlifeMortalities.Data.Entities.Reporters;
 
 public class Client : Reporter
 {
