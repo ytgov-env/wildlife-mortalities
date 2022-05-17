@@ -1,6 +1,9 @@
-﻿namespace WildlifeMortalities.Data.Entities;
+﻿using WildlifeMortalities.Data.Entities.Mortalities;
 
-public class HuntedHarvestReport : HarvestReportBase
+namespace WildlifeMortalities.Data.Entities;
+
+public class HuntedHarvestReport : HarvestReport
 {
-    public HuntedMortality Mortality { get; set; } = null!;
+    public int MortalityId { get; set; }
+    public Mortality Mortality { get; set; }
 }

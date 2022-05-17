@@ -1,6 +1,8 @@
-﻿namespace WildlifeMortalities.Data.Entities;
+﻿using WildlifeMortalities.Data.Entities.Mortalities;
 
-public class TrappedHarvestReport : HarvestReportBase
+namespace WildlifeMortalities.Data.Entities;
+
+public class TrappedHarvestReport : HarvestReport
 {
-    public List<TrappedMortality> Mortalities { get; set; } = new();
+    public List<Mortality> Mortalities { get; set; } = new();
 }
