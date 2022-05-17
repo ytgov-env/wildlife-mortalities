@@ -5,5 +5,5 @@ public class GameManagementArea
     public int Id { get; set; }
     public string Zone { get; set; } = string.Empty;
     public string Subzone { get; set; } = string.Empty;
-    public string ZoneSubzone { get; } = string.Empty;
+    public string Area { get; } = string.Empty;
 }
