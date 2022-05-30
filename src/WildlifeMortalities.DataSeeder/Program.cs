@@ -55,7 +55,9 @@ void AddAllGameManagementAreas(AppDbContext context)
         for (var i = 1; i <= maxSubzone; i++)
         {
             string subzone = i < 10 ? $"0{i}" : i.ToString();
-            context.GameManagementAreas.Add(new GameManagementArea { Zone = zone.ToString(), Subzone = subzone });
+            context.GameManagementAreas.Add(
+                new GameManagementArea { Zone = zone.ToString(), Subzone = subzone }
+            );
         }
     }
 }
@@ -71,7 +73,13 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
                 var gameManagementAreas = context.GameManagementAreas.ToList();
                 foreach (var area in gameManagementAreas)
                 {
-                    context.GameManagementAreaSpecies.Add(new GameManagementAreaSpecies { Species = species, GameManagementArea = area });
+                    context.GameManagementAreaSpecies.Add(
+                        new GameManagementAreaSpecies
+                        {
+                            Species = species,
+                            GameManagementArea = area
+                        }
+                    );
                 }
             }
         }
@@ -105,7 +113,9 @@ void AddFakeClients(AppDbContext context)
         {
             for (var i = 0; i < rand.Next(0, 4); i++)
             {
-                client.Licences.Add(new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}" });
+                client.Licences.Add(
+                    new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}" }
+                );
             }
 
             foreach (var licence in client.Licences.OfType<HuntingLicence>())
@@ -119,7 +129,13 @@ void AddFakeClients(AppDbContext context)
             {
                 for (var i = 0; i < rand.Next(0, 5); i++)
                 {
-                    licence.Seals.Add(new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.Bison });
+                    licence.Seals.Add(
+                        new Seal
+                        {
+                            Number = $"EHS-{rand.Next(1000, 99999)}",
+                            Species = HuntedSpecies.Bison
+                        }
+                    );
                 }
             }
         }

@@ -23,11 +23,12 @@ public class MortalitiesTests
             EnvClientId = "40405",
             Licences = new List<Licence>()
             {
-                new HuntingLicence {
+                new HuntingLicence
+                {
                     Seals = new List<Seal>()
-                            {
-                                new Seal { Species = HuntedSpecies.Bison, Number = "S2105" }
-                            },
+                    {
+                        new Seal { Species = HuntedSpecies.Bison, Number = "S2105" }
+                    },
                     StartDate = new DateTime(2021, 04, 01),
                     EndDate = new DateTime(2022, 03, 31),
                     Number = "HL5023"

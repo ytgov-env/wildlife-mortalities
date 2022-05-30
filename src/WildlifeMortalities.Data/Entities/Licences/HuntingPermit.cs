@@ -1,5 +1,3 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Licences;
 
-public class HuntingPermit : Licence
-{
-}
+public class HuntingPermit : Licence { }

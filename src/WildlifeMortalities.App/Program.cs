@@ -6,11 +6,11 @@ using MudBlazor.Services;
 using Serilog.Events;
 using WildlifeMortalities.Data;
 
-Log.Logger = new LoggerConfiguration()
-        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-        .Enrich.FromLogContext()
-        .WriteTo.Console()
-        .CreateBootstrapLogger();
+Log.Logger = new LoggerConfiguration().MinimumLevel
+    .Override("Microsoft", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
 try
 {
@@ -18,10 +18,13 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Host
-        .UseSerilog((context, services, configuration) => configuration
-                .ReadFrom.Configuration(context.Configuration)
-                .ReadFrom.Services(services)
-                .Enrich.FromLogContext())
+        .UseSerilog(
+            (context, services, configuration) =>
+                configuration.ReadFrom
+                    .Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext()
+        )
         .UseWindowsService();
 
     builder.WebHost.UseKestrel(opts =>
@@ -38,80 +41,100 @@ try
     var configuration = builder.Configuration;
 
     // Add authentication services
-    builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    })
-    .AddCookie(options =>
-    {
-        options.LoginPath = $"/{configuration["AuthNProvider:LoginPath"]}";
-        options.LogoutPath = $"/{configuration["AuthNProvider:LogoutPath"]}";
-    })
-    .AddOpenIdConnect(configuration["AuthNProvider:Name"], options =>
-    {
-        options.Authority = $"https://{configuration["AuthNProvider:Domain"]}";
-        options.ClientId = configuration["AuthNProvider:ClientId"];
-        options.ClientSecret = configuration["AuthNProvider:ClientSecret"];
-        options.ResponseType = "code";
-
-        options.Scope.Clear();
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-        options.Scope.Add("email");
-
-        options.CallbackPath = configuration["AuthNProvider:CallbackPath"];
-        options.SignedOutCallbackPath = configuration["AuthNProvider:SignedOutCallbackPath"];
-        options.SignedOutRedirectUri = configuration["AuthNProvider:SignedOutRedirectUri"];
-        options.ClaimsIssuer = configuration["AuthNProvider:Name"];
-
-        options.Events = new OpenIdConnectEvents
+    builder.Services
+        .AddAuthentication(options =>
         {
-            OnRedirectToIdentityProviderForSignOut = (context) =>
+            options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        })
+        .AddCookie(options =>
+        {
+            options.LoginPath = $"/{configuration["AuthNProvider:LoginPath"]}";
+            options.LogoutPath = $"/{configuration["AuthNProvider:LogoutPath"]}";
+        })
+        .AddOpenIdConnect(
+            configuration["AuthNProvider:Name"],
+            options =>
             {
-                var logoutUri = $"https://{configuration["AuthNProvider:Domain"]}{configuration["AuthNProvider:FederatedLogoutPartialUri"]}{configuration["AuthNProvider:ClientId"]}";
+                options.Authority = $"https://{configuration["AuthNProvider:Domain"]}";
+                options.ClientId = configuration["AuthNProvider:ClientId"];
+                options.ClientSecret = configuration["AuthNProvider:ClientSecret"];
+                options.ResponseType = "code";
 
-                var postLogoutUri = context.Properties.RedirectUri;
-                if (!string.IsNullOrEmpty(postLogoutUri))
+                options.Scope.Clear();
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+
+                options.CallbackPath = configuration["AuthNProvider:CallbackPath"];
+                options.SignedOutCallbackPath = configuration[
+                    "AuthNProvider:SignedOutCallbackPath"
+                ];
+                options.SignedOutRedirectUri = configuration["AuthNProvider:SignedOutRedirectUri"];
+                options.ClaimsIssuer = configuration["AuthNProvider:Name"];
+
+                options.Events = new OpenIdConnectEvents
                 {
-                    if (postLogoutUri.StartsWith("/"))
+                    OnRedirectToIdentityProviderForSignOut = (context) =>
                     {
-                        var request = context.Request;
-                        postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+                        var logoutUri =
+                            $"https://{configuration["AuthNProvider:Domain"]}{configuration["AuthNProvider:FederatedLogoutPartialUri"]}{configuration["AuthNProvider:ClientId"]}";
+
+                        var postLogoutUri = context.Properties.RedirectUri;
+                        if (!string.IsNullOrEmpty(postLogoutUri))
+                        {
+                            if (postLogoutUri.StartsWith("/"))
+                            {
+                                var request = context.Request;
+                                postLogoutUri =
+                                    request.Scheme
+                                    + "://"
+                                    + request.Host
+                                    + request.PathBase
+                                    + postLogoutUri;
+                            }
+                            logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
+                        }
+
+                        context.Response.Redirect(logoutUri);
+                        context.HandleResponse();
+
+                        return Task.CompletedTask;
                     }
-                    logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
-                }
+                };
 
-                context.Response.Redirect(logoutUri);
-                context.HandleResponse();
+                options.Events.OnSignedOutCallbackRedirect = (context) =>
+                {
+                    context.Response.Redirect(options.SignedOutRedirectUri);
+                    context.HandleResponse();
 
-                return Task.CompletedTask;
+                    return Task.CompletedTask;
+                };
             }
-        };
-
-        options.Events.OnSignedOutCallbackRedirect = (context) =>
-        {
-            context.Response.Redirect(options.SignedOutRedirectUri);
-            context.HandleResponse();
-
-            return Task.CompletedTask;
-        };
-    });
+        );
 
 #if DEBUG
-    builder.Services.AddDbContextFactory<AppDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options =>
-            options.EnableRetryOnFailure()
-                   .UseNetTopologySuite())
-               .UseEnumCheckConstraints()
-               .EnableSensitiveDataLogging());
+    builder.Services.AddDbContextFactory<AppDbContext>(
+        options =>
+            options
+                .UseSqlServer(
+                    configuration.GetConnectionString("AppDbContext"),
+                    options => options.EnableRetryOnFailure().UseNetTopologySuite()
+                )
+                .UseEnumCheckConstraints()
+                .EnableSensitiveDataLogging()
+    );
 #else
-    builder.Services.AddDbContextFactory<AppDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options =>
-            options.EnableRetryOnFailure()
-                   .UseNetTopologySuite())
-               .UseEnumCheckConstraints());
+    builder.Services.AddDbContextFactory<AppDbContext>(
+        options =>
+            options
+                .UseSqlServer(
+                    configuration.GetConnectionString("AppDbContext"),
+                    options => options.EnableRetryOnFailure().UseNetTopologySuite()
+                )
+                .UseEnumCheckConstraints()
+    );
 #endif
 
     builder.Services.AddSwaggerDoc();

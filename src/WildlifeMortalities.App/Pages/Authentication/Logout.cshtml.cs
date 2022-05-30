@@ -15,7 +15,13 @@ namespace WildlifeMortalities.App.Pages.Authentication
 
         public async Task OnGet()
         {
-            await HttpContext.SignOutAsync(Configuration["AuthNProvider:Name"], new AuthenticationProperties { RedirectUri = Configuration["AuthNProvider:SignedOutCallbackPath"] });
+            await HttpContext.SignOutAsync(
+                Configuration["AuthNProvider:Name"],
+                new AuthenticationProperties
+                {
+                    RedirectUri = Configuration["AuthNProvider:SignedOutCallbackPath"]
+                }
+            );
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }

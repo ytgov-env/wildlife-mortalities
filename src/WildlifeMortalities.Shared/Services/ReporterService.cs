@@ -23,13 +23,17 @@ public class ReporterService<T> where T : Reporter
     public async Task<ConservationOfficer?> GetConservationOfficerById(int id)
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
-        return await context.Reporters.OfType<ConservationOfficer>().FirstOrDefaultAsync(c => c.Id == id);
+        return await context.Reporters
+            .OfType<ConservationOfficer>()
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<ConservationOfficer?> GetConservationOfficerByBadgeNumber(string badgeNumber)
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
-        return await context.Reporters.OfType<ConservationOfficer>().FirstOrDefaultAsync(c => c.BadgeNumber == badgeNumber);
+        return await context.Reporters
+            .OfType<ConservationOfficer>()
+            .FirstOrDefaultAsync(c => c.BadgeNumber == badgeNumber);
     }
 
     public async Task<IReadOnlyList<ClientDto>> GetClients()

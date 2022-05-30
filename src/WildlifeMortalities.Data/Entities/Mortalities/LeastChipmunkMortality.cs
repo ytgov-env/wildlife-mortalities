@@ -1,5 +1,3 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class LeastChipmunkMortality : Mortality
-{
-}
+public class LeastChipmunkMortality : Mortality { }

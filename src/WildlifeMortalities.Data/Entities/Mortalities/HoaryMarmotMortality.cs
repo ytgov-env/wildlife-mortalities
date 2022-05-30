@@ -1,5 +1,3 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class HoaryMarmotMortality : Mortality
-{
-}
+public class HoaryMarmotMortality : Mortality { }

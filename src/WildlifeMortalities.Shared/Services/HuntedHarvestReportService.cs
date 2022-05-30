@@ -10,7 +10,10 @@ public class HuntedHarvestReportService<T> where T : Mortality
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
     private readonly MortalityService<T> _mortalityService;
 
-    public HuntedHarvestReportService(IDbContextFactory<AppDbContext> dbContextFactory, MortalityService<T> mortalityService)
+    public HuntedHarvestReportService(
+        IDbContextFactory<AppDbContext> dbContextFactory,
+        MortalityService<T> mortalityService
+    )
     {
         _dbContextFactory = dbContextFactory;
         _mortalityService = mortalityService;
@@ -20,6 +23,8 @@ public class HuntedHarvestReportService<T> where T : Mortality
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
 
-        return await context.HarvestReports.OfType<HuntedHarvestReport>().FirstOrDefaultAsync(h => h.Id == id);
+        return await context.HarvestReports
+            .OfType<HuntedHarvestReport>()
+            .FirstOrDefaultAsync(h => h.Id == id);
     }
 }
