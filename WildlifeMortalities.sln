@@ -7,14 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.App", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Data", "src\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj", "{339319BE-5E55-4D65-8E25-32B5B4270DB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Test", "src\WildlifeMortalities.Test\WildlifeMortalities.Test.csproj", "{38013A3C-7ED0-4A61-B109-346224B5B8E1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.DataSeeder", "src\WildlifeMortalities.DataSeeder\WildlifeMortalities.DataSeeder.csproj", "{BEDF5FB7-87ED-4E35-987F-9173CE7D24FF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{43D67005-B380-4E90-AAF8-AC4FA24753B5}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Shared", "src\WildlifeMortalities.Shared\WildlifeMortalities.Shared.csproj", "{7C000AF2-65B7-48EB-B4C3-D0A4782D150E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.Test", "src\WildlifeMortalities.Test\WildlifeMortalities.Test.csproj", "{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,14 +32,18 @@ Global
 		{339319BE-5E55-4D65-8E25-32B5B4270DB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{339319BE-5E55-4D65-8E25-32B5B4270DB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{339319BE-5E55-4D65-8E25-32B5B4270DB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38013A3C-7ED0-4A61-B109-346224B5B8E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BEDF5FB7-87ED-4E35-987F-9173CE7D24FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BEDF5FB7-87ED-4E35-987F-9173CE7D24FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEDF5FB7-87ED-4E35-987F-9173CE7D24FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEDF5FB7-87ED-4E35-987F-9173CE7D24FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C000AF2-65B7-48EB-B4C3-D0A4782D150E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C000AF2-65B7-48EB-B4C3-D0A4782D150E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C000AF2-65B7-48EB-B4C3-D0A4782D150E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C000AF2-65B7-48EB-B4C3-D0A4782D150E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

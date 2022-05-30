@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reporters;
 
 namespace WildlifeMortalities.Shared.Services
 {
-    public class MortalitiesService<T> where T : Mortality
+    public class MortalityService<T> where T : Mortality
     {
         private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-        public MortalitiesService(IDbContextFactory<AppDbContext> dbContextFactory)
+        public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
         }
@@ -29,23 +30,32 @@ namespace WildlifeMortalities.Shared.Services
             }
         }
 
-        public async Task<List<T>> GetMortalitiesByEnvClientId(string envClientId)
+        public async Task<IReadOnlyList<T>> GetMortalitiesByEnvClientId(string envClientId)
         {
             var context = await _dbContextFactory.CreateDbContextAsync();
 
-            return await context.Mortalities.Where(m => m.Reporter is Client && (m.Reporter as Client)!.EnvClientId == envClientId).OfType<T>().ToListAsync();
+            return await context.Mortalities
+                .Where(m => m.Reporter is Client && (m.Reporter as Client)!.EnvClientId == envClientId)
+                .OfType<T>()
+                .AsNoTracking()
+                .ToListAsync();
         }
 
-        public async Task<List<T>> GetMortalitiesByConservationOfficerBadgeNumber(string conservationOfficerBadgeNumber)
+        public async Task<IReadOnlyList<T>> GetMortalitiesByConservationOfficerBadgeNumber(string conservationOfficerBadgeNumber)
         {
             var context = await _dbContextFactory.CreateDbContextAsync();
 
-            return await context.Mortalities.Where(m => m.Reporter is ConservationOfficer && (m.Reporter as ConservationOfficer)!.BadgeNumber == conservationOfficerBadgeNumber).OfType<T>().ToListAsync();
+            return await context.Mortalities
+                .Where(m => m.Reporter is ConservationOfficer && (m.Reporter as ConservationOfficer)!.BadgeNumber == conservationOfficerBadgeNumber)
+                .OfType<T>()
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<T> CreateMortality(T mortality)
         {
             var context = await _dbContextFactory.CreateDbContextAsync();
+            var validationResult = new ValidationResult();
             //switch (mortality) {
             //    case BirdMortality bird:
             //        break;
@@ -75,10 +85,14 @@ namespace WildlifeMortalities.Shared.Services
             //        break;
             //}
 
-            var createdMortality = context.Add(mortality).Entity;
+            context.Add(mortality);
             await context.SaveChangesAsync();
+            return mortality;
+        }
 
-            return createdMortality;
+        public async Task<T> UpdateMortality(T mortality)
+        {
+            throw new NotImplementedException();
         }
     }
 }
