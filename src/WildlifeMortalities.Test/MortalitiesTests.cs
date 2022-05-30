@@ -27,7 +27,7 @@ public class MortalitiesTests
                 {
                     Seals = new List<Seal>()
                     {
-                        new Seal { Species = HuntedSpecies.Bison, Number = "S2105" }
+                        new Seal { Species = HuntedSpecies.WoodBison, Number = "S2105" }
                     },
                     StartDate = new DateTime(2021, 04, 01),
                     EndDate = new DateTime(2022, 03, 31),
