@@ -6,4 +6,6 @@ public class HuntedHarvestReport : HarvestReport
 {
     public int MortalityId { get; set; }
     public Mortality Mortality { get; set; }
+    public string? TemporarySealNumber { get; set; }
+    public Seal? Seal { get; set; }
 }
