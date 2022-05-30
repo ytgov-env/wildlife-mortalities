@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-public class BisonBioSubmission : BioSubmission
+public class BarrenGroundCaribouBioSubmission : BioSubmission
 {
     public int MortalityId { get; set; }
-    public BisonMortality Mortality { get; set; }
+    public BarrenGroundCaribouMortality Mortality { get; set; }
 }
