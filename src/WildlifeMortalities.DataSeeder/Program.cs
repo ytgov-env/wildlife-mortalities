@@ -130,6 +130,5 @@ void AddFakeClients(AppDbContext context)
     else
     {
         Console.WriteLine("Fake Clients already exist");
-
     }
 }

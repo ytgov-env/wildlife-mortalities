@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Shared.Models;
 
 namespace WildlifeMortalities.Shared.Services;
+
 public class ReporterService<T> where T : Reporter
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
@@ -23,6 +19,7 @@ public class ReporterService<T> where T : Reporter
         var context = await _dbContextFactory.CreateDbContextAsync();
         return await context.Reporters.OfType<ConservationOfficer>().AsNoTracking().ToListAsync();
     }
+
     public async Task<ConservationOfficer?> GetConservationOfficerById(int id)
     {
         var context = await _dbContextFactory.CreateDbContextAsync();

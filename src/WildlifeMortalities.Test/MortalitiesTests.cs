@@ -1,17 +1,10 @@
-using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Enums;
-using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Shared.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using WildlifeMortalities.Data.Entities.Reporters;
-using WildlifeMortalities.Data.Entities.Licences;
-using WildlifeMortalities.Data.Entities;
 using FluentAssertions;
-using System;
-using System.Threading.Tasks;
-using Xunit;
-using AutoBogus;
+using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.Licences;
+using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.Reporters;
+using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.Test;
 
@@ -94,6 +87,4 @@ public class MortalitiesTests
         var mortalities = await service.GetMortalitiesByConservationOfficerBadgeNumber(badgeNumber);
         mortalities.Should().HaveCount(1);
     }
-
-
 }
