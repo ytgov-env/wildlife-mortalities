@@ -8,4 +8,5 @@ public class HarvestReport
     public DateTimeOffset DateStarted { get; set; }
     public DateTimeOffset DateCompleted { get; set; }
     public HarvestReportStatus Status { get; set; }
+    public string Comments { get; set; }
 }
