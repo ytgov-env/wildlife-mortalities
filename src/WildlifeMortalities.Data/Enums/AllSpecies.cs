@@ -25,7 +25,7 @@ public enum AllSpecies
     LeastWeasel = 20,
     Lemming = 21,
     LittleBrownBat = 22,
-    MeadowJumpingMouseMortality = 23,
+    MeadowJumpingMouse = 23,
     Moose = 24,
     MountainGoat = 25,
     MuleDeer = 26,
