@@ -1,8 +1,8 @@
+using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
-using Serilog;
 using Serilog.Events;
 using WildlifeMortalities.Data;
 
@@ -97,16 +97,24 @@ try
 
             return Task.CompletedTask;
         };
+    });
 
 #if DEBUG
-        builder.Services.AddDbContextFactory<AppDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options => options.EnableRetryOnFailure())
-                   .EnableSensitiveDataLogging());
+    builder.Services.AddDbContextFactory<AppDbContext>(options =>
+        options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options =>
+            options.EnableRetryOnFailure()
+                   .UseNetTopologySuite())
+               .UseEnumCheckConstraints()
+               .EnableSensitiveDataLogging());
 #else
     builder.Services.AddDbContextFactory<AppDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options => options.EnableRetryOnFailure()));
+        options.UseSqlServer(configuration.GetConnectionString("AppDbContext"), options =>
+            options.EnableRetryOnFailure()
+                   .UseNetTopologySuite())
+               .UseEnumCheckConstraints());
 #endif
-    });
+
+    builder.Services.AddSwaggerDoc();
 
     var app = builder.Build();
 
@@ -130,6 +138,9 @@ try
 
     app.MapBlazorHub();
     app.MapFallbackToPage("/_Host");
+
+    app.UseOpenApi();
+    app.UseSwaggerUi3(s => s.ConfigureDefaults());
 
     app.Run();
     return 0;
