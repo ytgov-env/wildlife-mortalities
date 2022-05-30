@@ -3,6 +3,6 @@
 public enum TrappedSpecies
 {
     Uninitialized = AllSpecies.Uninitialized,
-    GreyWolf = AllSpecies.GreyWolf,
+    Wolf = AllSpecies.Wolf,
     Wolverine = AllSpecies.Wolverine
 }

@@ -3,17 +3,16 @@
 public enum HuntedSpecies
 {
     Uninitialized = AllSpecies.Uninitialized,
-    AmericanBlackBear = AllSpecies.AmericanBlackBear,
-    BarrenGroundCaribou = AllSpecies.BarrenGroundCaribou,
+    Bison = AllSpecies.Bison,
+    BlackBear = AllSpecies.BlackBear,
+    Caribou = AllSpecies.Caribou,
     Coyote = AllSpecies.Coyote,
+    Deer = AllSpecies.Deer,
     Elk = AllSpecies.Elk,
-    GreyWolf = AllSpecies.GreyWolf,
+    Goat = AllSpecies.Goat,
     GrizzlyBear = AllSpecies.GrizzlyBear,
     Moose = AllSpecies.Moose,
-    MountainGoat = AllSpecies.MountainGoat,
-    MuleDeer = AllSpecies.MuleDeer,
-    ThinhornSheep = AllSpecies.ThinhornSheep,
-    Wolverine = AllSpecies.Wolverine,
-    WoodBison = AllSpecies.WoodBison,
-    WoodlandCaribou = AllSpecies.WoodlandCaribou
+    Sheep = AllSpecies.Sheep,
+    Wolf = AllSpecies.Wolf,
+    Wolverine = AllSpecies.Wolverine
 }
