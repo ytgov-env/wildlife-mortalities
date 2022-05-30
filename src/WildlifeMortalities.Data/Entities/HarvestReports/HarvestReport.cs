@@ -9,4 +9,5 @@ public class HarvestReport
     public DateTimeOffset DateCompleted { get; set; }
     public HarvestReportStatus Status { get; set; }
     public string Comments { get; set; }
+    public List<Violation> Violations { get; set; }
 }
