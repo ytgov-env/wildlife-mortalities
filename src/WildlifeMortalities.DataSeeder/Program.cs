@@ -1,14 +1,16 @@
 ﻿using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.Licences;
+using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Data.Enums;
 
 Console.WriteLine("Starting data seeding...");
 Console.WriteLine("-----------------------");
-
 using (var context = new AppDbContext())
 {
     AddAllGameManagementAreas(context);
     AddAllGameManagementAreaSpecies(context);
+    AddFakeClients(context);
 }
 
 Console.WriteLine("---------------------");
@@ -52,7 +54,8 @@ void AddAllGameManagementAreas(AppDbContext context)
     {
         for (var i = 1; i <= maxSubzone; i++)
         {
-            context.GameManagementAreas.Add(new GameManagementArea { Zone = zone.ToString(), Subzone = i.ToString()});
+            string subzone = i < 10 ? $"0{i}" : i.ToString();
+            context.GameManagementAreas.Add(new GameManagementArea { Zone = zone.ToString(), Subzone = subzone });
         }
     }
 }
@@ -78,5 +81,55 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
     else
     {
         Console.WriteLine("GameManagementAreaSpecies already exist");
+    }
+}
+
+void AddFakeClients(AppDbContext context)
+{
+    if (!context.Reporters.OfType<Client>().Any())
+    {
+        var clients = new List<Client>();
+        var rand = new Random();
+
+        for (var i = 1; i < 100; i++)
+        {
+            clients.Add(new Client { EnvClientId = rand.Next(10000, 80000).ToString() });
+        }
+
+        foreach (var client in clients)
+        {
+            AddLicences(client);
+        }
+
+        void AddLicences(Client client)
+        {
+            for (var i = 0; i < rand.Next(0, 4); i++)
+            {
+                client.Licences.Add(new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}" });
+            }
+
+            foreach (var licence in client.Licences.OfType<HuntingLicence>())
+            {
+                licence.StartDate = new DateTime(rand.Next(2019, 2022), 04, 01);
+                licence.EndDate = new DateTime(licence.StartDate.Year + 1, 03, 31);
+                AddSeals(licence);
+            }
+
+            void AddSeals(HuntingLicence licence)
+            {
+                for (var i = 0; i < rand.Next(0, 5); i++)
+                {
+                    licence.Seals.Add(new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.Bison });
+                }
+            }
+        }
+        context.AddRange(clients);
+        context.SaveChanges();
+        Console.WriteLine("Added fake Clients");
+    }
+    else
+    {
+        Console.WriteLine("Fake Clients already exist");
+
     }
 }
