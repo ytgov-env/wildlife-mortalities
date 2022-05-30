@@ -11,6 +11,5 @@ public class Seal
     public HuntedSpecies Species { get; set; }
     public int LicenceId { get; set; }
     public HuntingLicence Licence { get; set; } = null!;
-    public int? MortalityId { get; set; }
-    public Mortality? Mortality { get; set; }
+    public HuntedHarvestReport? HarvestReport { get; set; }
 }
