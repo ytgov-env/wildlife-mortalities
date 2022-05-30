@@ -9,6 +9,10 @@ namespace WildlifeMortalities.Data;
 
 public class AppDbContext : DbContext
 {
+    public AppDbContext()
+    {
+    }
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
@@ -28,6 +32,18 @@ public class AppDbContext : DbContext
     public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules => Set<GameManagementAreaSchedule>();
     public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;", options =>
+            options.EnableRetryOnFailure()
+                   .UseNetTopologySuite())
+               .UseEnumCheckConstraints()
+               .EnableSensitiveDataLogging();
+        }
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Seal>().ToTable("Seals");
@@ -43,7 +59,6 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<WoodBisonMortality>(b =>
         {
-            b.Property(b => b.TemporarySealNumber).HasColumnName(nameof(WoodBisonMortality.TemporarySealNumber));
             b.Property(b => b.Sex).HasConversion<string>().HasColumnName(nameof(WoodBisonMortality.Sex));
             b.Property(b => b.GameManagementAreaId).HasColumnName(nameof(WoodBisonMortality.GameManagementAreaId));
             b.Property(b => b.Landmark).HasColumnName(nameof(WoodBisonMortality.Landmark));
@@ -52,7 +67,6 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<AmericanBlackBearMortality>(b =>
         {
-            b.Property(b => b.TemporarySealNumber).HasColumnName(nameof(AmericanBlackBearMortality.TemporarySealNumber));
             b.Property(b => b.Sex).HasConversion<string>().HasColumnName(nameof(AmericanBlackBearMortality.Sex));
             b.Property(b => b.GameManagementAreaId).HasColumnName(nameof(AmericanBlackBearMortality.GameManagementAreaId));
             b.Property(b => b.Landmark).HasColumnName(nameof(AmericanBlackBearMortality.Landmark));
