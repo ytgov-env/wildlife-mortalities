@@ -31,6 +31,7 @@ public class ReporterService<T> where T : Reporter
     public async Task<ConservationOfficer?> GetConservationOfficerByBadgeNumber(string badgeNumber)
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
+
         return await context.Reporters
             .OfType<ConservationOfficer>()
             .FirstOrDefaultAsync(c => c.BadgeNumber == badgeNumber);

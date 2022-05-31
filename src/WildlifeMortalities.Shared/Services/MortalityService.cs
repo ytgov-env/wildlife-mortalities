@@ -1,8 +1,11 @@
-﻿using FluentValidation.Results;
+﻿using Ardalis.Result;
+using Ardalis.Result.FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reporters;
+using WildlifeMortalities.Shared.Validators;
 
 namespace WildlifeMortalities.Shared.Services;
 
@@ -17,7 +20,7 @@ public class MortalityService<T> where T : Mortality
 
     public async Task<T?> GetMortalityById(int id)
     {
-        var context = await _dbContextFactory.CreateDbContextAsync();
+        using var context = await _dbContextFactory.CreateDbContextAsync();
 
         var mortality = await context.Mortalities.FirstOrDefaultAsync(m => m.Id == id);
         if (mortality?.GetType() == typeof(T))
@@ -32,7 +35,7 @@ public class MortalityService<T> where T : Mortality
 
     public async Task<IReadOnlyList<T>> GetMortalitiesByEnvClientId(string envClientId)
     {
-        var context = await _dbContextFactory.CreateDbContextAsync();
+        using var context = await _dbContextFactory.CreateDbContextAsync();
 
         return await context.Mortalities
             .Where(m => m.Reporter is Client && (m.Reporter as Client)!.EnvClientId == envClientId)
@@ -45,56 +48,33 @@ public class MortalityService<T> where T : Mortality
         string conservationOfficerBadgeNumber
     )
     {
-        var context = await _dbContextFactory.CreateDbContextAsync();
+        using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        return await context.Mortalities
-            .Where(
-                m =>
-                    m.Reporter is ConservationOfficer
-                    && (m.Reporter as ConservationOfficer)!.BadgeNumber
-                        == conservationOfficerBadgeNumber
-            )
+        var temp = await context.Mortalities
             .OfType<T>()
+            .Include(m => m.Reporter)
+            //.Where(m => m.Reporter.Discriminator == nameof(ConservationOfficer))
             .AsNoTracking()
             .ToListAsync();
+
+        return temp.Where(
+                m =>
+                    (m.Reporter as ConservationOfficer)!.BadgeNumber
+                    == conservationOfficerBadgeNumber
+            )
+            .ToList();
     }
 
-    public async Task<T> CreateMortality(T mortality)
+    public async Task<Result<T>> CreateMortality(T mortality)
     {
-        var context = await _dbContextFactory.CreateDbContextAsync();
-        var validationResult = new ValidationResult();
-        //switch (mortality) {
-        //    case BirdMortality bird:
-        //        break;
-        //    case BisonMortality bison:
-        //        break;
-        //    case BlackBearMortality blackbear:
-        //        break;
-        //    case CaribouMortality caribou:
-        //        break;
-        //    case CoyoteMortality coyote:
-        //        break;
-        //    case DeerMortality deer:
-        //        break;
-        //    case ElkMortality elk:
-        //        break;
-        //    case GoatMortality goat:
-        //        break;
-        //    case GrizzlyBearMortality grizzlybear:
-        //        break;
-        //    case MooseMortality moose:
-        //        break;
-        //    case SheepMortality sheep:
-        //        break;
-        //    case WolfMortality wolf:
-        //        break;
-        //    case WolverineMortality wolverine:
-        //        break;
-        //}
-
-        context.Add(mortality);
-        await context.SaveChangesAsync();
-        return mortality;
+        using var context = await _dbContextFactory.CreateDbContextAsync();
+        var validator = new MortalityValidator<T>();
+        var validation = await validator.ValidateAsync(mortality);
+        if (!validation.IsValid)
+        {
+            return Result<T>.Invalid(validation.AsErrors());
+        }
+        return Result<T>.Success(mortality);
     }
 
     public async Task<T> UpdateMortality(T mortality)

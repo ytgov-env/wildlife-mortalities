@@ -5,17 +5,17 @@ namespace WildlifeMortalities.Test;
 
 public class TestDbContextFactory : IDbContextFactory<AppDbContext>
 {
-    //private DbContextOptions<AppDbContext> _options;
+    private readonly DbContextOptions<AppDbContext> _options;
 
-    public TestDbContextFactory(string databaseName = "Test")
+    public TestDbContextFactory(DbContextOptions<AppDbContext> options)
     {
-        //_options = new DbContextOptionsBuilder<AppDbContext>()
-        //    .UseInMemoryDatabase(databaseName)
-        //    .Options;
+        _options = options;
+        using var context = CreateDbContext();
+        context.Database.EnsureClean();
     }
 
     public AppDbContext CreateDbContext()
     {
-        return new AppDbContext();
+        return new AppDbContext(_options);
     }
 }
