@@ -2,7 +2,7 @@
 
 namespace WildlifeMortalities.Data.Entities;
 
-public class HarvestReport
+public abstract class HarvestReport
 {
     public int Id { get; set; }
     public DateTimeOffset DateStarted { get; set; }

@@ -2,7 +2,7 @@
 
 namespace WildlifeMortalities.Data.Entities.Licences;
 
-public class Licence
+public abstract class Licence
 {
     public int Id { get; set; }
     public string Number { get; set; } = string.Empty;

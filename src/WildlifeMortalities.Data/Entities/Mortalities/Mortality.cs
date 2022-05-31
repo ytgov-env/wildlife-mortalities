@@ -2,7 +2,7 @@
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class Mortality
+public abstract class Mortality
 {
     public int Id { get; set; }
     public int ReporterId { get; set; }
