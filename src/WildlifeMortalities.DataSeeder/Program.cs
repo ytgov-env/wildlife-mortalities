@@ -133,7 +133,7 @@ void AddFakeClients(AppDbContext context)
                         new Seal
                         {
                             Number = $"EHS-{rand.Next(1000, 99999)}",
-                            Species = HuntedSpecies.Bison
+                            Species = HuntedSpecies.WoodBison
                         }
                     );
                 }
