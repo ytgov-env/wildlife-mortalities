@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Mortality> Mortalities => Set<Mortality>();
     public DbSet<HarvestReport> HarvestReports => Set<HarvestReport>();
+    public DbSet<Violation> Violations => Set<Violation>();
 
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 
@@ -53,6 +54,9 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<TrappedHarvestReport>().HasMany(t => t.Mortalities).WithOne();
         modelBuilder.Entity<HuntedHarvestReport>().HasOne(t => t.Mortality).WithOne();
+
+        modelBuilder.Entity<Client>().HasIndex(c => c.EnvClientId).IsUnique();
+        modelBuilder.Entity<ConservationOfficer>().HasIndex(c => c.BadgeNumber).IsUnique();
 
         modelBuilder
             .Entity<Mortality>()
