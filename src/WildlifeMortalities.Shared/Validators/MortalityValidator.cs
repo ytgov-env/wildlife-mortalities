@@ -8,7 +8,7 @@ public class MortalityValidator<T> : AbstractValidator<Mortality>
     public MortalityValidator()
     {
         RuleFor(m => m.Latitude)
-            .Must(l => l == null || (l > 58 && l < 71))
+            .Must(latitude => latitude is null || (latitude > 58 && latitude < 71))
             .WithMessage("Latitude must be between 58°N and 71°N");
         RuleFor(m => m.Latitude)
             .Null()
@@ -16,7 +16,7 @@ public class MortalityValidator<T> : AbstractValidator<Mortality>
             .WithMessage("Latitude cannot be set when longitude is null");
 
         RuleFor(m => m.Longitude)
-            .Must(l => l == null || (l > -143 && l < -121))
+            .Must(longitude => longitude is null || (longitude > -143 && longitude < -121))
             .WithMessage("Longitude must be between 121°W and 143°W");
         RuleFor(m => m.Longitude)
             .Null()
@@ -26,7 +26,7 @@ public class MortalityValidator<T> : AbstractValidator<Mortality>
         RuleFor(m => m.ReporterId).NotNull();
         RuleFor(m => m.Sex)
             .IsInEnum()
-            .Must(s => s != Sex.Uninitialized)
+            .Must(sex => sex != Sex.Uninitialized)
             .WithMessage("Sex must be set to Female, Male, or Unknown");
     }
 }
