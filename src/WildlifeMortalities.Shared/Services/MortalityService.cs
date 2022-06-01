@@ -38,8 +38,8 @@ public class MortalityService<T> where T : Mortality
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
         return await context.Mortalities
-            .Where(m => m.Reporter is Client && (m.Reporter as Client)!.EnvClientId == envClientId)
             .OfType<T>()
+            .Where(m => m.Reporter is Client && (m.Reporter as Client)!.EnvClientId == envClientId)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -50,19 +50,16 @@ public class MortalityService<T> where T : Mortality
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        var temp = await context.Mortalities
+        return await context.Mortalities
             .OfType<T>()
-            .Include(m => m.Reporter)
-            //.Where(m => m.Reporter.Discriminator == nameof(ConservationOfficer))
+            .Where(
+                m =>
+                    m.Reporter is ConservationOfficer
+                    && (m.Reporter as ConservationOfficer)!.BadgeNumber
+                        == conservationOfficerBadgeNumber
+            )
             .AsNoTracking()
             .ToListAsync();
-
-        return temp.Where(
-                m =>
-                    (m.Reporter as ConservationOfficer)!.BadgeNumber
-                    == conservationOfficerBadgeNumber
-            )
-            .ToList();
     }
 
     public async Task<Result<T>> CreateMortality(T mortality)
