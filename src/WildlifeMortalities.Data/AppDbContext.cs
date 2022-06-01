@@ -72,7 +72,6 @@ public class AppDbContext : DbContext
             b.Property(b => b.GameManagementAreaId)
                 .HasColumnName(nameof(WoodBisonMortality.GameManagementAreaId));
             b.Property(b => b.Landmark).HasColumnName(nameof(WoodBisonMortality.Landmark));
-            b.Property(b => b.Coordinates).HasColumnName(nameof(WoodBisonMortality.Coordinates));
         });
 
         modelBuilder.Entity<AmericanBlackBearMortality>(b =>
@@ -83,8 +82,6 @@ public class AppDbContext : DbContext
             b.Property(b => b.GameManagementAreaId)
                 .HasColumnName(nameof(AmericanBlackBearMortality.GameManagementAreaId));
             b.Property(b => b.Landmark).HasColumnName(nameof(AmericanBlackBearMortality.Landmark));
-            b.Property(b => b.Coordinates)
-                .HasColumnName(nameof(AmericanBlackBearMortality.Coordinates));
         });
 
         modelBuilder

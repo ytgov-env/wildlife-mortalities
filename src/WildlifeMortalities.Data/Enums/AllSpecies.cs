@@ -47,4 +47,5 @@ public enum AllSpecies
     WoodBison = 42,
     Woodchuck = 43,
     WoodlandCaribou = 44,
+    Bird = 45
 }

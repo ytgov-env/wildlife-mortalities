@@ -1,5 +1,3 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
-
-namespace WildlifeMortalities.Data.Entities;
+﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class BirdMortality : Mortality { }
