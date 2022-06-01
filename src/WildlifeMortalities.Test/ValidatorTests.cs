@@ -122,7 +122,7 @@ public class ValidatorTests
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(m => m.Longitude);
+        result.ShouldHaveValidationErrorFor(m => m.Latitude);
     }
 
     [Fact]
@@ -138,6 +138,6 @@ public class ValidatorTests
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(m => m.Latitude);
+        result.ShouldHaveValidationErrorFor(m => m.Longitude);
     }
 }
