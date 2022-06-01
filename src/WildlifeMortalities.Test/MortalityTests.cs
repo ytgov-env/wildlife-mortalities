@@ -44,7 +44,7 @@ public class MortalityTests
         var service = new MortalityService<WoodBisonMortality>(dbContextFactory);
         var createdMortality = await service.CreateMortality(mortality);
         context.Add(createdMortality.Value);
-        context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         // Assert
         createdMortality.Value.Should().BeEquivalentTo(mortality);
@@ -60,7 +60,7 @@ public class MortalityTests
         var service = new MortalityService<WoodBisonMortality>(dbContextFactory);
 
         var newMortality = await service.CreateMortality(
-            new WoodBisonMortality() { Reporter = new Client() }
+            new WoodBisonMortality() { Reporter = new Client(), Sex = Sex.Female }
         );
         context.Add(newMortality.Value);
         await context.SaveChangesAsync();
@@ -96,7 +96,11 @@ public class MortalityTests
         var service = new MortalityService<WoodBisonMortality>(dbContextFactory);
         const string envClientId = "40405";
         var result = await service.CreateMortality(
-            new WoodBisonMortality() { Reporter = new Client() { EnvClientId = envClientId } }
+            new WoodBisonMortality()
+            {
+                Reporter = new Client() { EnvClientId = envClientId },
+                Sex = Sex.Unknown
+            }
         );
         var mortality = result.Value;
 

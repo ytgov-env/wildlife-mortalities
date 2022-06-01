@@ -32,7 +32,8 @@ public class HuntedHarvestReportTests
             TemporarySealNumber = "4404",
             Mortality = new AmericanBlackBearMortality()
             {
-                Reporter = new Client() { EnvClientId = "50406" }
+                Reporter = new Client() { EnvClientId = "50406" },
+                Sex = Sex.Male
             }
         };
         var result = await service.CreateHuntedHarvestReport(harvestReport);
