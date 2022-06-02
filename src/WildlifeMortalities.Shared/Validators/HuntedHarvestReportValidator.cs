@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Shared.Validators;
 
 public class HuntedHarvestReportValidator<T> : AbstractValidator<HuntedHarvestReport>
+    where T : Mortality
 {
     public HuntedHarvestReportValidator()
     {
@@ -16,7 +18,8 @@ public class HuntedHarvestReportValidator<T> : AbstractValidator<HuntedHarvestRe
         RuleFor(h => h.TemporarySealNumber)
             .Must(
                 (harvestReport, temporarySealNumber) =>
-                    harvestReport.Seal == null || temporarySealNumber.Length >= 5
+                    (temporarySealNumber is null && harvestReport.Seal is not null)
+                    || (temporarySealNumber?.Length >= 5 && harvestReport.Seal is null)
             )
             .WithMessage(
                 "The harvest report must be associated with a valid Seal, or have a temporary seal number"

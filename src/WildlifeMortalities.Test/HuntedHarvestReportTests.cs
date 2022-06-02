@@ -1,14 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.Licences;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Services;
-using Xunit;
 
 namespace WildlifeMortalities.Test;
 
@@ -29,7 +26,7 @@ public class HuntedHarvestReportTests
         // Act
         var harvestReport = new HuntedHarvestReport()
         {
-            TemporarySealNumber = "4404",
+            TemporarySealNumber = "44064",
             Mortality = new AmericanBlackBearMortality()
             {
                 Reporter = new Client() { EnvClientId = "50406" },
