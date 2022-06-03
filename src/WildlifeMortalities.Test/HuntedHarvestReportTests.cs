@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
@@ -6,6 +7,7 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Services;
+using Xunit;
 
 namespace WildlifeMortalities.Test;
 
@@ -55,6 +57,36 @@ public class HuntedHarvestReportTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async void CanUpdateHuntedHarvestReportWIthMortality()
+    {
+        // Arrange
+        var dbContextFactory = CreateTestDbContextFactory();
+        var service = new HuntedHarvestReportService<AmericanBlackBearMortality>(
+            dbContextFactory,
+            new MortalityService<AmericanBlackBearMortality>(dbContextFactory)
+        );
+
+        var harvestReport = new HuntedHarvestReport()
+        {
+            TemporarySealNumber = "44064",
+            Mortality = new AmericanBlackBearMortality()
+            {
+                Reporter = new Client() { EnvClientId = "50406" },
+                Sex = Sex.Male
+            }
+        };
+        var createResult = await service.CreateHuntedHarvestReport(harvestReport);
+        harvestReport = await service.GetHarvestReportById(createResult.Value.Id);
+
+        // Act
+        harvestReport.Status = HarvestReportStatus.Complete;
+        var updateResult = await service.UpdateHuntedHarvestReport(harvestReport);
+
+        // Assert
+        updateResult.IsSuccess.Should().BeTrue();
     }
 
     public IDbContextFactory<AppDbContext> CreateTestDbContextFactory()

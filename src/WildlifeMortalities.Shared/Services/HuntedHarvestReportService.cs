@@ -29,6 +29,7 @@ public class HuntedHarvestReportService<T> where T : Mortality
 
         return await context.HarvestReports
             .OfType<HuntedHarvestReport>()
+            .Include(h => h.Mortality)
             .FirstOrDefaultAsync(h => h.Id == id);
     }
 
@@ -47,16 +48,47 @@ public class HuntedHarvestReportService<T> where T : Mortality
         if (result.IsSuccess)
         {
             var newMortality = result.Value;
-            huntedHarvestReport.Violations = new();
-            var violations = await newMortality.CheckForViolations();
-            if (violations.Count > 0)
-            {
-                huntedHarvestReport.Violations.AddRange(violations);
-            }
+            huntedHarvestReport.Violations = await newMortality.GetViolations();
 
             huntedHarvestReport.Mortality = newMortality;
             var context = await _dbContextFactory.CreateDbContextAsync();
             context.Add(huntedHarvestReport);
+            await context.SaveChangesAsync();
+            return Result<HuntedHarvestReport>.Success(huntedHarvestReport);
+        }
+        else
+        {
+            return Result<HuntedHarvestReport>.Invalid(result.ValidationErrors);
+        }
+    }
+
+    public async Task<Result<HuntedHarvestReport>> UpdateHuntedHarvestReport(
+        HuntedHarvestReport huntedHarvestReport
+    )
+    {
+        if (huntedHarvestReport.Mortality is null)
+        {
+            throw new ArgumentException(
+                $"{nameof(huntedHarvestReport.Mortality)} property on {nameof(huntedHarvestReport)} cannot be null"
+            );
+        }
+
+        var validator = new HuntedHarvestReportValidator<T>();
+        var validation = await validator.ValidateAsync(huntedHarvestReport);
+        if (!validation.IsValid)
+        {
+            return Result<HuntedHarvestReport>.Invalid(validation.AsErrors());
+        }
+
+        var result = await _mortalityService.UpdateMortality((T)huntedHarvestReport.Mortality);
+        if (result.IsSuccess)
+        {
+            var updatedMortality = result.Value;
+            huntedHarvestReport.Violations = await updatedMortality.GetViolations();
+
+            huntedHarvestReport.Mortality = updatedMortality;
+            var context = await _dbContextFactory.CreateDbContextAsync();
+            context.Update(huntedHarvestReport);
             await context.SaveChangesAsync();
             return Result<HuntedHarvestReport>.Success(huntedHarvestReport);
         }

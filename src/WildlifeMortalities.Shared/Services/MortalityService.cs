@@ -64,7 +64,6 @@ public class MortalityService<T> where T : Mortality
 
     public async Task<Result<T>> CreateMortality(T mortality)
     {
-        using var context = await _dbContextFactory.CreateDbContextAsync();
         var validator = new MortalityValidator<T>();
         var validation = await validator.ValidateAsync(mortality);
         if (!validation.IsValid)
@@ -74,8 +73,14 @@ public class MortalityService<T> where T : Mortality
         return Result<T>.Success(mortality);
     }
 
-    public async Task<T> UpdateMortality(T mortality)
+    public async Task<Result<T>> UpdateMortality(T mortality)
     {
-        throw new NotImplementedException();
+        var validator = new MortalityValidator<T>();
+        var validation = await validator.ValidateAsync(mortality);
+        if (!validation.IsValid)
+        {
+            return Result<T>.Invalid(validation.AsErrors());
+        }
+        return Result<T>.Success(mortality);
     }
 }

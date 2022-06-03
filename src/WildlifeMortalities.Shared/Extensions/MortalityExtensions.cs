@@ -10,7 +10,7 @@ namespace WildlifeMortalities.Shared.Extensions;
 
 public static class MortalityExtensions
 {
-    public static async Task<List<Violation>> CheckForViolations(this Mortality mortality)
+    public static async Task<List<Violation>> GetViolations(this Mortality mortality)
     {
         var violations = new List<Violation>();
         switch (mortality)
