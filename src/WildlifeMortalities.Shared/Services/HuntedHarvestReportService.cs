@@ -47,10 +47,11 @@ public class HuntedHarvestReportService<T> where T : Mortality
         var result = await _mortalityService.CreateMortality((T)huntedHarvestReport.Mortality);
         if (result.IsSuccess)
         {
-            var newMortality = result.Value;
-            huntedHarvestReport.Violations = await newMortality.GetViolations();
+            var mortality = result.Value;
+            huntedHarvestReport.Mortality = mortality;
+            huntedHarvestReport.Violations = await mortality.GetViolations();
+            huntedHarvestReport.Violations.AddRange(await huntedHarvestReport.GetViolations());
 
-            huntedHarvestReport.Mortality = newMortality;
             var context = await _dbContextFactory.CreateDbContextAsync();
             context.Add(huntedHarvestReport);
             await context.SaveChangesAsync();
@@ -83,10 +84,12 @@ public class HuntedHarvestReportService<T> where T : Mortality
         var result = await _mortalityService.UpdateMortality((T)huntedHarvestReport.Mortality);
         if (result.IsSuccess)
         {
-            var updatedMortality = result.Value;
-            huntedHarvestReport.Violations = await updatedMortality.GetViolations();
+            var mortality = result.Value;
+            huntedHarvestReport.Mortality = mortality;
+            huntedHarvestReport.Violations.Clear();
+            huntedHarvestReport.Violations = await mortality.GetViolations();
+            huntedHarvestReport.Violations.AddRange(await huntedHarvestReport.GetViolations());
 
-            huntedHarvestReport.Mortality = updatedMortality;
             var context = await _dbContextFactory.CreateDbContextAsync();
             context.Update(huntedHarvestReport);
             await context.SaveChangesAsync();
