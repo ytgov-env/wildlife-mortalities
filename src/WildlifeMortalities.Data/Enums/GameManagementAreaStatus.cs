@@ -1,6 +1,6 @@
 ﻿namespace WildlifeMortalities.Data.Enums;
 
-public enum GmaStatus
+public enum GameManagementAreaStatus
 {
     Uninitialized = 0,
     Closed = 1,

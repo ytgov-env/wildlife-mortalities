@@ -66,9 +66,13 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
 {
     if (!context.GameManagementAreaSpecies.Any())
     {
-        foreach (GmaSpecies species in Enum.GetValues(typeof(GmaSpecies)))
+        foreach (
+            HuntedSpeciesWithGameManagementArea species in Enum.GetValues(
+                typeof(HuntedSpeciesWithGameManagementArea)
+            )
+        )
         {
-            if (species != GmaSpecies.Uninitialized)
+            if (species != HuntedSpeciesWithGameManagementArea.Uninitialized)
             {
                 var gameManagementAreas = context.GameManagementAreas.ToList();
                 foreach (var area in gameManagementAreas)
