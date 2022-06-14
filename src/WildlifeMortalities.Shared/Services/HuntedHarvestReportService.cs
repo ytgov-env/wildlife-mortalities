@@ -86,7 +86,7 @@ public class HuntedHarvestReportService<T> where T : Mortality
         {
             var mortality = result.Value;
             huntedHarvestReport.Mortality = mortality;
-            huntedHarvestReport.Violations.Clear();
+            huntedHarvestReport.Violations?.Clear();
             huntedHarvestReport.Violations = await mortality.GetViolations();
             huntedHarvestReport.Violations.AddRange(await huntedHarvestReport.GetViolations());
 

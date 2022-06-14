@@ -25,10 +25,13 @@ public class AppDbContext : DbContext
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 
     public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
+
     public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies =>
         Set<GameManagementAreaSpecies>();
+
     public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules =>
         Set<GameManagementAreaSchedule>();
+
     public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

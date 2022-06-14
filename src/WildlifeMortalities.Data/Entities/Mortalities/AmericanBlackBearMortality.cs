@@ -1,7 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-using WildlifeMortalities.Data.Enums;
-
-namespace WildlifeMortalities.Data.Entities.Mortalities;
+﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class AmericanBlackBearMortality : Mortality
 {

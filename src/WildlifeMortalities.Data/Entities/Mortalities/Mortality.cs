@@ -1,5 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-using WildlifeMortalities.Data.Entities.Reporters;
+﻿using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
