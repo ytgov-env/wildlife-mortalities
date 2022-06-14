@@ -1,5 +1,5 @@
 @startuml logical-erd
-!theme spacelab
+'!theme spacelab
 title Logical ERD
 
 ' avoid problems with angled crows feet
@@ -7,12 +7,22 @@ skinparam linetype ortho
 
 ' Entities
 
-entity "HarvestReport" as harvest_report {
-    *Id: number <<generated>>
-    --
-    *DateStarted: datetime
-    *DateCompleted: datetime
-    *IsComplete: bool
+together {
+
+    entity "HarvestReport" as harvest_report {
+        *Id: number <<generated>>
+        --
+        *DateStarted: datetime
+        *DateCompleted: datetime
+        *IsComplete: bool
+    }
+    entity "HuntedHarvestReport" as hunted_harvest_report {
+        GameManagementAreaSpeciesId: number <<FK>>
+        SealId: number <<FK>>
+    }
+    entity "TrappedHarvestReport" as trapped_harvest_report {
+
+    }
 }
 
 together {
@@ -20,92 +30,61 @@ together {
         *Id: number <<generated>>
         --
         *ReporterId: number <<FK>>
+        *Sex: enum
+        Latitude: number
+        Longitude: number
     }
     entity "BirdMortality" as bird_mortality {
+        BirdSpecies: enum
     }
     entity "BisonMortality" as bison_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "BlackBearMortality" as black_bear_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "CaribouMortality" as caribou_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "CoyoteMortality" as coyote_mortality {
         HarvestReportId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "DeerMortality" as deer_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "ElkMortality" as elk_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "GoatMortality" as goat_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "GrizzlyBearMortality" as grizzly_bear_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "MooseMortality" as moose_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "SheepMortality" as sheep_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
     }
     entity "WolfMortality" as wolf_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
         *HarvestType: enum
     }
     entity "WolverineMortality" as wolverine_mortality {
         HarvestReportId: number <<FK>>
-        SealId: number <<FK>>
-        *Sex: enum
         Landmark: string
-        Location: geography
         *HarvestType: enum
     }
 }
@@ -118,16 +97,16 @@ entity "BiologicalSubmission" as biological_submission {
 
 together {
     entity "Reporter" as reporter {
-    *Id: number <<generated>>
+        *Id: number <<generated>>
     }
-    
+
     entity "ConservationOfficer" as conservation_officer {
-    *BadgeNumber: string
+        *BadgeNumber: string
     }
 
     together {
         entity "Client" as client {
-        *EnvClientId: string
+            *EnvClientId: string
         }
 
         entity "Licence" as licence {
@@ -183,6 +162,9 @@ entity "GameManagementUnit" as game_management_unit {
 
 ' Inheritance
 
+harvest_report <|-- hunted_harvest_report
+harvest_report <|-- trapped_harvest_report
+
 reporter <|-- client
 reporter <|-- conservation_officer
 
@@ -202,9 +184,12 @@ mortality <|-- wolverine_mortality
 
 ' Relationships
 
+hunted_harvest_report }o..|| game_management_area_species
+hunted_harvest_report |o..|| seal
+
 mortality ||..o| biological_submission
 mortality }o..|| reporter
-mortality ||..o| harvest_report
+mortality ||..o| hunted_harvest_report
 
 client ||..o{ licence
 licence ||..o{ seal
@@ -216,54 +201,118 @@ game_management_unit }..{ game_management_area_species
 ' Enums
 
 enum "AllSpecies" as all_species {
-Uninitialized
-Bird
-Bison
-BlackBear
-Caribou
-Coyote
-Deer
-Elk
-Goat
-GrizzlyBear
-Moose
-Sheep
-Wolf
-Wolverine
+    Uninitialized
+    AmericanBeaver
+    AmericanBlackBear
+    AmericanMartin
+    AmericanMink
+    ArcticFox
+    ArcticGroundSquirrel
+    BarrenGroundCaribou
+    BushyTailedWoodrat
+    CanadaLynx
+    CollaredPika
+    Cougar
+    Coyote
+    Elk
+    Ermine
+    Fisher
+    GreyWolf
+    GrizzlyBear
+    HoaryMarmot
+    LeastChipmunk
+    LeastWeasel
+    Lemming
+    LittleBrownBat
+    MeadowJumpingMouse
+    Moose
+    MountainGoat
+    MuleDeer
+    Muskox
+    Muskrat
+    NorthAmericanDeerMouse
+    NorthAmericanPorcupine
+    NorthernFlyingSquirrel
+    NorthernLongEaredBat
+    NorthernRiverOtter
+    PolarBear
+    RedFox
+    RedSquirrel
+    Shrew
+    SnowshoeHare
+    ThinhornSheep
+    Vole
+    Wolverine
+    WoodBison
+    Woodchuck
+    WoodlandCaribou
 }
 
-enum "GmaSpecies" as gma_species {
-Uninitialized
-Bison
-BlackBear
-Caribou
-Deer
-Goat
-GrizzlyBear
-Moose
-Sheep
+enum "BirdSpecies" as bird_species {
+
 }
 
-enum "GmaStatus" as gma_status {
-Uninitialized
-Closed
-Open
-OpenPermitRequired
+enum "HuntedSpecies" as hunted_species {
+    Uninitialized
+    AmericanBlackBear
+    BarrenGroundCaribou
+    Coyote
+    Elk
+    GreyWolf
+    GrizzlyBear
+    Moose
+    MountainGoat
+    MuleDeer
+    ThinhornSheep
+    Wolverine
+    WoodBison
+    WoodlandCaribou
+}
+
+enum "HuntedSpeciesWithGameManagementArea" as hunted_species_with_gma {
+    Uninitialized
+    AmericanBlackBear
+    BarrenGroundCaribou
+    GrizzlyBear
+    Moose
+    MountainGoat
+    MuleDeer
+    ThinhornSheep
+    WoodBison
+    WoodlandCaribou
+}
+
+enum "TrappedSpecies" as trapped_species {
+    Uninitialized
+    GreyWolf
+    Wolverine
+}
+
+enum "GameManagementAreaStatus" as gma_status {
+    Uninitialized
+    Closed
+    Open
+    OpenPermitRequired
 }
 
 enum "LicenceType" as licence_type {
-Uninitialized
-Hunting
-HuntingPermit
-HuntingPhaPermit
-SpecialGuide
-Trapping
+    Uninitialized
+    Hunting
+    HuntingPermit
+    HuntingPhaPermit
+    SpecialGuide
+    Trapping
+}
+
+enum "HarvestType" as harvest_type {
+    Uninitialized
+
 }
 
 enum "Sex" as sex {
-Uninitialized
-Female
-Male
-Unknown
+    Uninitialized
+    Female
+    Male
+    Unknown
 }
 @enduml
