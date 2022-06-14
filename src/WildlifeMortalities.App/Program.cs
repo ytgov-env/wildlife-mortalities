@@ -101,15 +101,14 @@ try
                         context.HandleResponse();
 
                         return Task.CompletedTask;
+                    },
+                    OnSignedOutCallbackRedirect = (context) =>
+                    {
+                        context.Response.Redirect(options.SignedOutRedirectUri);
+                        context.HandleResponse();
+
+                        return Task.CompletedTask;
                     }
-                };
-
-                options.Events.OnSignedOutCallbackRedirect = (context) =>
-                {
-                    context.Response.Redirect(options.SignedOutRedirectUri);
-                    context.HandleResponse();
-
-                    return Task.CompletedTask;
                 };
             }
         );
@@ -119,8 +118,9 @@ try
         options =>
             options
                 .UseSqlServer(
-                    configuration.GetConnectionString("AppDbContext"),
-                    options => options.EnableRetryOnFailure().UseNetTopologySuite()
+                    //configuration.GetConnectionString("AppDbContext"),
+                    "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;",
+                    options => options.EnableRetryOnFailure()
                 )
                 .UseEnumCheckConstraints()
                 .EnableSensitiveDataLogging()
@@ -131,7 +131,7 @@ try
             options
                 .UseSqlServer(
                     configuration.GetConnectionString("AppDbContext"),
-                    options => options.EnableRetryOnFailure().UseNetTopologySuite()
+                    options => options.EnableRetryOnFailure()
                 )
                 .UseEnumCheckConstraints()
     );
