@@ -19,9 +19,11 @@ together {
     entity "HuntedHarvestReport" as hunted_harvest_report {
         GameManagementAreaSpeciesId: number <<FK>>
         SealId: number <<FK>>
+        TemporarySealNumber: string
+        *Landmark: string
     }
     entity "TrappedHarvestReport" as trapped_harvest_report {
-
+        LicenceId: number <<FK>>
     }
 }
 
@@ -37,55 +39,137 @@ together {
     entity "BirdMortality" as bird_mortality {
         BirdSpecies: enum
     }
-    entity "BisonMortality" as bison_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+    entity "AmericanBeaverMortality" as americanbeaver_mortality {
+
     }
-    entity "BlackBearMortality" as black_bear_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+    entity "AmericanBlackBearMortality" as americanblackbear_mortality {
+
     }
-    entity "CaribouMortality" as caribou_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+    entity "AmericanMartinMortality" as americanmartin_mortality {
+
+    }
+    entity "AmericanMinkMortality" as americanmink_mortality {
+
+    }
+    entity "ArcticFoxMortality" as arcticfox_mortality {
+
+    }
+    entity "ArcticGroundSquirrelMortality" as arcticgroundsquirrel_mortality {
+
+    }
+    entity "BarrenGroundCaribouMortality" as barrengroundcaribou_mortality {
+
+    }
+    entity "BushyTailedWoodratMortality" as bushytailedwoodrat_mortality {
+
+    }
+    entity "CanadaLynxMortality" as canadalynx_mortality {
+
+    }
+    entity "CollaredPikaMortality" as collaredpika_mortality {
+
+    }
+    entity "CougarMortality" as cougar_mortality {
+
     }
     entity "CoyoteMortality" as coyote_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
-    }
-    entity "DeerMortality" as deer_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+
     }
     entity "ElkMortality" as elk_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+
     }
-    entity "GoatMortality" as goat_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+    entity "ErmineMortality" as ermine_mortality {
+
     }
-    entity "GrizzlyBearMortality" as grizzly_bear_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+    entity "FisherMortality" as fisher_mortality {
+
+    }
+    entity "GreyWolfMortality" as greywolf_mortality {
+
+    }
+    entity "GrizzlyBearMortality" as grizzlybear_mortality {
+
+    }
+    entity "HoaryMarmotMortality" as hoarymarmot_mortality {
+
+    }
+    entity "LeastChipmunkMortality" as leastchipmunk_mortality {
+
+    }
+    entity "LeastWeaselMortality" as leastweasel_mortality {
+
+    }
+    entity "LemmingMortality" as lemming_mortality {
+
+    }
+    entity "LittleBrownBatMortality" as littlebrownbat_mortality {
+
+    }
+    entity "MeadowJumpingMouseMortality" as meadowjumpingmouse_mortality {
+
     }
     entity "MooseMortality" as moose_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+
     }
-    entity "SheepMortality" as sheep_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
+    entity "MountainGoatMortality" as mountaingoat_mortality {
+
     }
-    entity "WolfMortality" as wolf_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
-        *HarvestType: enum
+    entity "MuleDeerMortality" as muledeer_mortality {
+
+    }
+    entity "MuskoxMortality" as muskox_mortality {
+
+    }
+    entity "MuskratMortality" as muskrat_mortality {
+
+    }
+    entity "NorthAmericanDeerMouseMortality" as northamericandeermouse_mortality {
+
+    }
+    entity "NorthAmericanPorcupineMortality" as northamericanporcupine_mortality {
+
+    }
+    entity "NorthernFlyingSquirrelMortality" as northernflyingsquirrel_mortality {
+
+    }
+    entity "NorthernLongEaredBatMortality" as northernlongearedbat_mortality {
+
+    }
+    entity "NorthernRiverOtterMortality" as northernriverotter_mortality {
+
+    }
+    entity "PolarBearMortality" as polarbear_mortality {
+
+    }
+    entity "RedFoxMortality" as redfox_mortality {
+
+    }
+    entity "RedSquirrelMortality" as redsquirrel_mortality {
+
+    }
+    entity "ShrewMortality" as shrew_mortality {
+
+    }
+    entity "SnowshoeHareMortality" as snowshoehare_mortality {
+
+    }
+    entity "ThinhornSheepMortality" as thinhornsheep_mortality {
+
+    }
+    entity "VoleMortality" as vole_mortality {
+
     }
     entity "WolverineMortality" as wolverine_mortality {
-        HarvestReportId: number <<FK>>
-        Landmark: string
-        *HarvestType: enum
+
+    }
+    entity "WoodBisonMortality" as woodbison_mortality {
+
+    }
+    entity "WoodchuckMortality" as woodchuck_mortality {
+
+    }
+    entity "WoodlandCaribouMortality" as woodlandcaribou_mortality {
+
     }
 }
 
@@ -109,14 +193,37 @@ together {
             *EnvClientId: string
         }
 
-        entity "Licence" as licence {
-            *Id: number <<generated>>
-            --
-            *ClientId: number <<FK>>
-            *Number: string
-            *LicenceType: enum
-            *PosseId: number <<shadow>>
-        }
+    together {
+            entity "Licence" as licence {
+                *Id: number <<generated>>
+                --
+                *ClientId: number <<FK>>
+                *Number: string
+                *StartDate: date
+                *EndDate: date
+                *PosseId: number <<shadow>>
+            }
+
+            entity "HuntingLicence" as hunting_licence {
+
+            }
+
+            entity "HuntingPermit" as hunting_permit {
+
+            }
+
+            entity "PermitHuntAuthorization" as permit_hunt_authorization {
+
+            }
+
+            entity "SpecialGuideLicence" as special_guide_licence {
+
+            }
+
+            entity "TrappingLicence" as trapping_licence {
+
+            }
+    }
 
         entity "Seal" as seal {
             *Id: number <<generated>>
@@ -139,14 +246,14 @@ entity "GameManagementAreaSpecies" as game_management_area_species {
     *Id: number <<generated>>
     --
     *GameManagementAreaId: number <<FK>>
-    *GmaSpecies: enum
+    *HuntedSpeciesWithGameManagementArea: enum
 }
 
 entity "GameManagementAreaSchedule" as game_management_area_schedule {
     *Id: number <<generated>>
     --
     *GameManagementAreaSpeciesId: number <<FK>>
-    *GmaStatus: enum
+    *GameManagementAreaStatus: enum
     *PeriodStart: date
     *PeriodEnd: date
 }
@@ -168,31 +275,70 @@ harvest_report <|-- trapped_harvest_report
 reporter <|-- client
 reporter <|-- conservation_officer
 
-mortality <|-- bird_mortality
-mortality <|-- bison_mortality
-mortality <|-- black_bear_mortality
-mortality <|-- caribou_mortality
+mortality <|-- americanbeaver_mortality
+mortality <|-- americanblackbear_mortality
+mortality <|-- americanmartin_mortality
+mortality <|-- americanmink_mortality
+mortality <|-- arcticfox_mortality
+mortality <|-- arcticgroundsquirrel_mortality
+mortality <|-- barrengroundcaribou_mortality
+mortality <|-- bushytailedwoodrat_mortality
+mortality <|-- canadalynx_mortality
+mortality <|-- collaredpika_mortality
+mortality <|-- cougar_mortality
 mortality <|-- coyote_mortality
-mortality <|-- deer_mortality
 mortality <|-- elk_mortality
-mortality <|-- goat_mortality
-mortality <|-- grizzly_bear_mortality
+mortality <|-- ermine_mortality
+mortality <|-- fisher_mortality
+mortality <|-- greywolf_mortality
+mortality <|-- grizzlybear_mortality
+mortality <|-- hoarymarmot_mortality
+mortality <|-- leastchipmunk_mortality
+mortality <|-- leastweasel_mortality
+mortality <|-- lemming_mortality
+mortality <|-- littlebrownbat_mortality
+mortality <|-- meadowjumpingmouse_mortality
 mortality <|-- moose_mortality
-mortality <|-- sheep_mortality
-mortality <|-- wolf_mortality
+mortality <|-- mountaingoat_mortality
+mortality <|-- muledeer_mortality
+mortality <|-- muskox_mortality
+mortality <|-- muskrat_mortality
+mortality <|-- northamericandeermouse_mortality
+mortality <|-- northamericanporcupine_mortality
+mortality <|-- northernflyingsquirrel_mortality
+mortality <|-- northernlongearedbat_mortality
+mortality <|-- northernriverotter_mortality
+mortality <|-- polarbear_mortality
+mortality <|-- redfox_mortality
+mortality <|-- redsquirrel_mortality
+mortality <|-- shrew_mortality
+mortality <|-- snowshoehare_mortality
+mortality <|-- thinhornsheep_mortality
+mortality <|-- vole_mortality
 mortality <|-- wolverine_mortality
+mortality <|-- woodbison_mortality
+mortality <|-- woodchuck_mortality
+mortality <|-- woodlandcaribou_mortality
+mortality <|-- bird_mortality
+
+licence <|-- hunting_licence
+licence <|-- hunting_permit
+licence <|-- permit_hunt_authorization
+licence <|-- special_guide_licence
+licence <|-- trapping_licence
 
 ' Relationships
 
 hunted_harvest_report }o..|| game_management_area_species
 hunted_harvest_report |o..|| seal
+trapped_harvest_report }o..|| trapping_licence
 
-mortality ||..o| biological_submission
-mortality }o..|| reporter
+mortality ||.up.o| biological_submission
+mortality }o.right.|| reporter
 mortality ||..o| hunted_harvest_report
 
 client ||..o{ licence
-licence ||..o{ seal
+hunting_licence ||..o{ seal
 
 game_management_area ||..{ game_management_area_species
 game_management_area_species ||..{ game_management_area_schedule
@@ -293,15 +439,6 @@ enum "GameManagementAreaStatus" as gma_status {
     Closed
     Open
     OpenPermitRequired
-}
-
-enum "LicenceType" as licence_type {
-    Uninitialized
-    Hunting
-    HuntingPermit
-    HuntingPhaPermit
-    SpecialGuide
-    Trapping
 }
 
 enum "HarvestType" as harvest_type {
