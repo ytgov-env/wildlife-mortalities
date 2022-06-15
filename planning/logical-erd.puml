@@ -173,11 +173,34 @@ together {
     }
 }
 
-entity "BiologicalSubmission" as biological_submission {
-    *Id: number <<generated>>
-    --
-    *MortalityId: number <<FK>>
-}
+'together {
+    entity "BiologicalSubmission" as biological_submission {
+        *Id: number <<generated>>
+        --
+        *MortalityId: number <<FK>>
+    }
+    entity "AmericanBlackBearBiologicalSubmission" as americanblackbearbiological_submission {
+
+    }
+    entity "ElkBiologicalSubmission" as elkbiological_submission {
+
+        }
+    entity "GrizzlyBearBiologicalSubmission" as grizzlybearbiological_submission {
+
+        }
+    entity "MountainGoatBiologicalSubmission" as mountaingoatbiological_submission {
+
+        }
+    entity "MuleDeerBiologicalSubmission" as muledeerbiological_submission {
+
+        }
+    entity "ThinhornSheepBiologicalSubmission" as thinhornsheepbiological_submission {
+
+        }
+    entity "WoodBisonBiologicalSubmission" as woodbisonbiological_submission {
+
+        }
+'}
 
 together {
     entity "Reporter" as reporter {
@@ -321,6 +344,14 @@ mortality <|-- woodchuck_mortality
 mortality <|-- woodlandcaribou_mortality
 mortality <|-- bird_mortality
 
+biological_submission <|-up- americanblackbearbiological_submission
+biological_submission <|-up- elkbiological_submission
+biological_submission <|-up- grizzlybearbiological_submission
+biological_submission <|-up- mountaingoatbiological_submission
+biological_submission <|-up- muledeerbiological_submission
+biological_submission <|-up- thinhornsheepbiological_submission
+biological_submission <|-up- woodbisonbiological_submission
+
 licence <|-- hunting_licence
 licence <|-- hunting_permit
 licence <|-- permit_hunt_authorization
@@ -333,9 +364,16 @@ hunted_harvest_report }o..|| game_management_area_species
 hunted_harvest_report |o..|| seal
 trapped_harvest_report }o..|| trapping_licence
 
-mortality ||.up.o| biological_submission
 mortality }o.right.|| reporter
 mortality ||..o| hunted_harvest_report
+
+americanblackbearbiological_submission |o.up.|| americanblackbear_mortality
+elkbiological_submission |o.up.|| elk_mortality
+grizzlybearbiological_submission |o.up.|| grizzlybear_mortality
+mountaingoatbiological_submission |o.up.|| mountaingoat_mortality
+muledeerbiological_submission |o.up.|| muledeer_mortality
+thinhornsheepbiological_submission |o.up.|| thinhornsheep_mortality
+woodbisonbiological_submission |o.up.|| woodbison_mortality
 
 client ||..o{ licence
 hunting_licence ||..o{ seal
