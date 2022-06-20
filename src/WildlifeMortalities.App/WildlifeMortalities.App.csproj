@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FastEndpoints.Swagger" Version="4.2.0" />
+		<PackageReference Include="FastEndpoints.Swagger" Version="4.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
 		  <PrivateAssets>all</PrivateAssets>
