@@ -76,7 +76,7 @@ repeat
     :Submit form;
     |System|
     :Validate;
-    if (Seal is valid? (if applicable)) then (yes)
+    if (Seal is valid? (if applicable species)) then (yes)
         if (All other required data is entered?) then (yes)
             if (All validations passed?) then (yes)
                 :Set harvest report status
