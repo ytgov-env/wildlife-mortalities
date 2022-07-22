@@ -43,7 +43,7 @@ together {
 
     }
     entity "AmericanBlackBearMortality" as americanblackbear_mortality {
-
+        *IsShotInConflict: bool
     }
     entity "AmericanMartinMortality" as americanmartin_mortality {
 
@@ -88,7 +88,7 @@ together {
 
     }
     entity "GrizzlyBearMortality" as grizzlybear_mortality {
-
+        *IsShotInConflict: bool
     }
     entity "HoaryMarmotMortality" as hoarymarmot_mortality {
 
@@ -154,7 +154,8 @@ together {
 
     }
     entity "ThinhornSheepMortality" as thinhornsheep_mortality {
-
+        *BodyColour: enum
+        *TailColour: enum
     }
     entity "VoleMortality" as vole_mortality {
 
@@ -163,7 +164,8 @@ together {
 
     }
     entity "WoodBisonMortality" as woodbison_mortality {
-
+        *PregnancyStatus: enum
+        *IsWounded: bool
     }
     entity "WoodchuckMortality" as woodchuck_mortality {
 
@@ -178,28 +180,47 @@ together {
         *Id: number <<generated>>
         --
         *MortalityId: number <<FK>>
+        *Age: number
+        *Confidence: enum
     }
     entity "AmericanBlackBearBiologicalSubmission" as americanblackbearbiological_submission {
-
+        *SkullCondition: string
+        *SkullLength: number
+        *SkullHeight: number
+    }
+    entity "CanadaLynxBiologicalSubmission" as canadalynxbiological_submission {
+        *PeltLength: number
+        *PeltWidth: number
     }
     entity "ElkBiologicalSubmission" as elkbiological_submission {
-
-        }
+        *IsHornIncluded: bool
+        *IsHeadIncluded: bool
+    }
+    entity "GreyWolfBiologicalSubmission" as greywolfbiological_submission {
+        *PeltColour: enum
+    }
     entity "GrizzlyBearBiologicalSubmission" as grizzlybearbiological_submission {
-
-        }
+        *SkullCondition: string
+        *SkullLength: number
+        *SkullHeight: number
+        *IsEvidenceOfSexAttached: bool
+    }
     entity "MountainGoatBiologicalSubmission" as mountaingoatbiological_submission {
-
-        }
+        *IsHornIncluded: bool
+        *IsHeadIncluded: bool
+    }
     entity "MuleDeerBiologicalSubmission" as muledeerbiological_submission {
-
-        }
+        *IsHornIncluded: bool
+        *IsHeadIncluded: bool
+    }
     entity "ThinhornSheepBiologicalSubmission" as thinhornsheepbiological_submission {
-
-        }
+        *Broomed: enum
+        *LengthToThirdAnnulus: number
+        *PlugNumber: string
+    }
     entity "WoodBisonBiologicalSubmission" as woodbisonbiological_submission {
 
-        }
+    }
 '}
 
 together {
@@ -255,6 +276,12 @@ together {
             *PosseId: number <<shadow>>
         }
     }
+}
+
+entity "Violation" as violation {
+    *Id: number <<generated>>
+    --
+
 }
 
 entity "GameManagementArea" as game_management_area {
@@ -345,7 +372,9 @@ mortality <|-- woodlandcaribou_mortality
 mortality <|-- bird_mortality
 
 biological_submission <|-up- americanblackbearbiological_submission
+biological_submission <|-up- canadalynxbiological_submission
 biological_submission <|-up- elkbiological_submission
+biological_submission <|-up- greywolfbiological_submission
 biological_submission <|-up- grizzlybearbiological_submission
 biological_submission <|-up- mountaingoatbiological_submission
 biological_submission <|-up- muledeerbiological_submission
@@ -362,13 +391,16 @@ licence <|-- trapping_licence
 
 hunted_harvest_report }o..|| game_management_area_species
 hunted_harvest_report |o..|| seal
+hunted_harvest_report }o..o{ violation
 trapped_harvest_report }o..|| trapping_licence
 
 mortality }o.right.|| reporter
 mortality ||..o| hunted_harvest_report
 
 americanblackbearbiological_submission |o.up.|| americanblackbear_mortality
+canadalynxbiological_submission |o.up.|| canadalynx_mortality
 elkbiological_submission |o.up.|| elk_mortality
+greywolfbiological_submission |o.up.|| greywolf_mortality
 grizzlybearbiological_submission |o.up.|| grizzlybear_mortality
 mountaingoatbiological_submission |o.up.|| mountaingoat_mortality
 muledeerbiological_submission |o.up.|| muledeer_mortality
@@ -490,4 +522,25 @@ enum "Sex" as sex {
     Male
     Unknown
 }
+
+enum "PregnancyStatus" as pregnancy_status {
+    Uninitialized
+    False
+    True
+    Unknown
+}
+
+enum "ThinhornSheepBodyColour" as thinhorn_sheep_body_colour {
+    Uninitialized
+    Dark
+    Fannin
+    White
+}
+
+enum "ThinhornSheepTailColour" as thinhorn_sheep_tail_colour {
+    Uninitialized
+    Dark
+    White
+}
+
 @enduml
