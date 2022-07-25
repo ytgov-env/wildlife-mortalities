@@ -54,7 +54,7 @@ void AddAllGameManagementAreas(AppDbContext context)
     {
         for (var i = 1; i <= maxSubzone; i++)
         {
-            string subzone = i < 10 ? $"0{i}" : i.ToString();
+            var subzone = i < 10 ? $"0{i}" : i.ToString();
             context.GameManagementAreas.Add(
                 new GameManagementArea { Zone = zone.ToString(), Subzone = subzone }
             );
