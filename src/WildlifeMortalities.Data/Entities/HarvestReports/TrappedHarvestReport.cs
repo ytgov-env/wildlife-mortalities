@@ -5,7 +5,7 @@ namespace WildlifeMortalities.Data.Entities;
 
 public class TrappedHarvestReport : HarvestReport
 {
-    public List<Mortality> Mortalities { get; set; } = new();
+    public List<Mortality> Mortalities { get; set; } = null!;
     public int TrappingLicenceId { get; set; }
-    public TrappingLicence TrappingLicence { get; set; }
+    public TrappingLicence TrappingLicence { get; set; } = null!;
 }
