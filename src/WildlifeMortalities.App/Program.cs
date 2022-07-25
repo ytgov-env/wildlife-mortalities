@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Serilog.Events;
 using WildlifeMortalities.Data;
+using WildlifeMortalities.Shared.Services;
 
 Log.Logger = new LoggerConfiguration().MinimumLevel
     .Override("Microsoft", LogEventLevel.Information)
@@ -37,6 +38,15 @@ try
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
     builder.Services.AddMudServices();
+
+    builder.Services.AddScoped<MortalityService>();
+
+#if DEBUG
+    builder.Services.AddScoped<IClientLookupService, DummyClientLookupService>();
+#else
+    builder.Services.AddScoped<IClientLookupService, ClientLookupService>();
+
+#endif
 
     var configuration = builder.Configuration;
 
@@ -137,7 +147,7 @@ try
     );
 #endif
 
-    builder.Services.AddSwaggerDoc();
+    //builder.Services.AddSwaggerDoc();
 
     var app = builder.Build();
 
@@ -162,8 +172,8 @@ try
     app.MapBlazorHub();
     app.MapFallbackToPage("/_Host");
 
-    app.UseOpenApi();
-    app.UseSwaggerUi3(s => s.ConfigureDefaults());
+    //app.UseOpenApi();
+    //app.UseSwaggerUi3(s => s.ConfigureDefaults());
 
     app.Run();
     return 0;
