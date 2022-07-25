@@ -1,0 +1,31 @@
+﻿@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Shared.Models
+
+<EditForm EditContext="_context">
+    <FluentValidationValidator  Validator="new SelectReporterViewModelValidator()" />
+    <MudSelect @bind-Value="_selectedSelectReporterViewModel.ReporterType" For="@( () => _selectedSelectReporterViewModel.ReporterType)" Label="Reporter Type">
+        @foreach (ReporterType reporter in Enum.GetValues(typeof(ReporterType)))
+        {
+            <MudSelectItem Value="@reporter">@reporter</MudSelectItem>
+        }
+    </MudSelect>
+
+    @if (_selectedSelectReporterViewModel.ReporterType == ReporterType.Client)
+    {
+        <MudAutocomplete T="ClientDto" For="@( () => _selectedSelectReporterViewModel.SelectedClient)" Label="Search by EnvClientId or Last Name" @bind-Value="_selectedSelectReporterViewModel.SelectedClient" ToStringFunc="@( (x) => x is null ? "" : $"{x.EnvClientId} | {x.LastName}" )" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudAutocomplete>
+
+        @if (_selectedSelectReporterViewModel.SelectedClient is not null)
+        {
+            <MudPaper>
+                <MudField Label="Birth Date">@_selectedSelectReporterViewModel.SelectedClient.BirthDate.ToString("yyyy-MM-dd")</MudField>
+            </MudPaper>
+        }
+    }
+    else
+    {
+        <MudAutocomplete T="ConservationOfficer" Label="Search by Badge Number or Last Name" For="@( () => _selectedSelectReporterViewModel.SelectedConservationOfficer)" @bind-Value="_selectedSelectReporterViewModel.SelectedConservationOfficer" ToStringFunc="@( (x) => x is null ? "" : $"{x.BadgeNumber}" )" SearchFunc="@SearchConservationOfficerByBadgeNumber"
+                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudAutocomplete>
+
+    }
+</EditForm>

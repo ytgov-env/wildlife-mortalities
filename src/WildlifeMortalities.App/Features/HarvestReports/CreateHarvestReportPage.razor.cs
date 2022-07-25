@@ -8,27 +8,17 @@ namespace WildlifeMortalities.App.Features.HarvestReports;
 
 public partial class CreateHarvestReportPage
 {
-    [Inject]
-    private IClientLookupService ClientLookupService { get; set; }
+    private Int32 _selectedIndex = 0;
+    private Dictionary<Int32, Boolean> _validationMapper = new Dictionary<int, bool>();
 
-    private enum ReporterType
+    public CreateHarvestReportPage()
     {
-        Client,
-        ConservationOfficer
+        _validationMapper.Add(1, false);
+        _validationMapper.Add(21, false);
     }
 
-    private ReporterType _reporterType;
-    private ClientDto _selectedClient;
-    private ConservationOfficer _selectedConservationOfficer;
+    private void OnNextClicked() => _selectedIndex += 1;
 
-    private async Task<IEnumerable<ClientDto>> SearchClientByEnvClientIdOrLastName(string input) =>
-        (await ClientLookupService.SearchByEnvClientId(input))
-            .Union(await ClientLookupService.SearchByLastName(input))
-            .OrderBy(x => x.LastName);
-
-    private bool IsClientSelected() => _selectedClient is null;
-
-    private async Task<IEnumerable<ConservationOfficer>> SearchConservationOfficerByBadgeNumber(
-        string input
-    ) => throw new NotImplementedException();
+    private void SetStepValidation(Int32 stepNunber, Boolean validationResult) =>
+        _validationMapper[stepNunber] = validationResult;
 }
