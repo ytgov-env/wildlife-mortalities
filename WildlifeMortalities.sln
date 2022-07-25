@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Shared", "src\WildlifeMortalities.Shared\WildlifeMortalities.Shared.csproj", "{7C000AF2-65B7-48EB-B4C3-D0A4782D150E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.Test", "src\WildlifeMortalities.Test\WildlifeMortalities.Test.csproj", "{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Test", "src\WildlifeMortalities.Test\WildlifeMortalities.Test.csproj", "{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

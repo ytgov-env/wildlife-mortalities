@@ -1,0 +1,43 @@
+﻿@page "/harvest-reports/create"
+@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Shared.Models
+
+<MudItem lg="4">
+    <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Info" Class="mt-4">
+        <MudTabPanel Text="Reporter">
+            <MudSelect @bind-Value="_reporterType" Label="Reporter Type">
+                @foreach (ReporterType reporter in Enum.GetValues(typeof(ReporterType)))
+                {
+                    <MudSelectItem Value="@reporter">@reporter</MudSelectItem>
+                }
+            </MudSelect>
+
+            @if (_reporterType == ReporterType.Client)
+            {
+                <MudAutocomplete T="ClientDto" Label="Search by EnvClientId or Last Name" @bind-Value="_selectedClient" ToStringFunc="@( (x) => x is null ? "" : $"{x.EnvClientId} | {x.LastName}" )" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudAutocomplete>
+
+                @if (_selectedClient is not null)
+                {
+                    <MudPaper>
+                        <MudField Label="Birth Date">@_selectedClient.BirthDate.ToString("yyyy-MM-dd")</MudField>
+
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Next</MudButton>
+                    </MudPaper>
+                }
+            }
+            else
+            {
+                <MudAutocomplete T="ConservationOfficer" Label="Search by Badge Number or Last Name" @bind-Value="_selectedConservationOfficer" ToStringFunc="@( (x) => x is null ? "" : $"{x.BadgeNumber}" )" SearchFunc="@SearchConservationOfficerByBadgeNumber"
+                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"></MudAutocomplete>
+
+                @if (_selectedConservationOfficer is not null)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Next</MudButton>
+                }
+            }
+
+        </MudTabPanel>
+        <MudTabPanel Text="Harvest Report" Disabled="@IsClientSelected()"></MudTabPanel>
+    </MudTabs>
+</MudItem>

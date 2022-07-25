@@ -1,0 +1,11 @@
+﻿@page "/harvest-reports/{ClientId:int}"
+
+<MudSelect T="string" Label="Harvest Type">
+    <MudSelectItem Value="@("Hunted")" />
+    <MudSelectItem Value="@("Trapped")" />
+</MudSelect>
+
+@code {
+    [Parameter]
+    public int ClientId { get; set; }
+}
