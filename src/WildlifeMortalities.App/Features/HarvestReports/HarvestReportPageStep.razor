@@ -8,6 +8,6 @@
     <MudSpacer />
     @if (CanGoForward())
     {
-        <MudButton OnClick="@( () => OnNextClicked.InvokeAsync())">Next</MudButton>
+        <MudButton OnClick="@(() => OnNextClicked.InvokeAsync())">Next</MudButton>
     }
 </MudStack>

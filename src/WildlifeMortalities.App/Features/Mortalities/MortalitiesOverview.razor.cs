@@ -12,7 +12,7 @@ public partial class MortalitiesOverview
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
-    List<Mortality> _mortalities = new();
+    private List<Mortality> _mortalities = new();
 
     protected override async Task OnInitializedAsync()
     {

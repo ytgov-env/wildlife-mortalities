@@ -20,11 +20,12 @@ public partial class SelectReporterComponent : IDisposable
     private void _context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         _context.Validate();
-        ValidationChanged.InvokeAsync(_context.GetValidationMessages().Any() == false);
+        ValidationChanged.InvokeAsync(!_context.GetValidationMessages().Any());
     }
 
     [Inject]
     private IClientLookupService ClientLookupService { get; set; } = null!;
+
     private SelectReporterViewModel _selectedSelectReporterViewModel = null!;
 
     private async Task<IEnumerable<ClientDto>> SearchClientByEnvClientIdOrLastName(string input) =>
@@ -38,12 +39,12 @@ public partial class SelectReporterComponent : IDisposable
 
     public void Dispose()
     {
-        if (_context != null)
+        if (_context is not null)
         {
             _context.OnFieldChanged -= _context_OnFieldChanged;
         }
     }
 
     [Parameter]
-    public EventCallback<Boolean> ValidationChanged { get; set; }
+    public EventCallback<bool> ValidationChanged { get; set; }
 }

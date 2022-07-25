@@ -8,19 +8,19 @@ public partial class HarvestReportPageStep
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public Int32 StepNumber { get; set; }
+    public int StepNumber { get; set; }
 
     [Parameter]
-    public Boolean IsValid { get; set; }
+    public bool IsValid { get; set; }
 
-    private Boolean CanGoBackwards()
+    private bool CanGoBackwards()
     {
         return StepNumber >= 2;
     }
 
-    private Boolean CanGoForward()
+    private bool CanGoForward()
     {
-        return IsValid == true;
+        return IsValid;
     }
 
     [Parameter]

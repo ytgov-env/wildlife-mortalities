@@ -1,15 +1,9 @@
-using Microsoft.AspNetCore.Components;
-using WildlifeMortalities.Data.Entities.Reporters;
-using WildlifeMortalities.Data.Enums;
-using WildlifeMortalities.Shared.Models;
-using WildlifeMortalities.Shared.Services;
-
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
 public partial class CreateHarvestReportPage
 {
-    private Int32 _selectedIndex = 0;
-    private Dictionary<Int32, Boolean> _validationMapper = new Dictionary<int, bool>();
+    private int _selectedIndex;
+    private readonly Dictionary<int, bool> _validationMapper = new();
 
     public CreateHarvestReportPage()
     {
@@ -17,8 +11,8 @@ public partial class CreateHarvestReportPage
         _validationMapper.Add(21, false);
     }
 
-    private void OnNextClicked() => _selectedIndex += 1;
+    private void OnNextClicked() => ++_selectedIndex;
 
-    private void SetStepValidation(Int32 stepNunber, Boolean validationResult) =>
-        _validationMapper[stepNunber] = validationResult;
+    private void SetStepValidation(int stepNumber, bool validationResult) =>
+        _validationMapper[stepNumber] = validationResult;
 }

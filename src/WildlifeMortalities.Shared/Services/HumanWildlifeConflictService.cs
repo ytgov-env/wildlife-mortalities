@@ -1,5 +1,3 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
-
-namespace WildlifeMortalities.Shared.Services;
+﻿namespace WildlifeMortalities.Shared.Services;
 
 public class HumanWildlifeConflictService { }
