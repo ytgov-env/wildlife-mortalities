@@ -20,13 +20,14 @@ public class HuntedHarvestReportTests
         using var context = dbContextFactory.CreateDbContext();
         var service = new HuntedHarvestReportService<AmericanBlackBearMortality>(
             dbContextFactory,
-            new MortalityService<AmericanBlackBearMortality>(dbContextFactory)
+            new MortalityService(dbContextFactory)
         );
 
         // Act
         var harvestReport = new HuntedHarvestReport()
         {
             TemporarySealNumber = "44064",
+            GmaSpeciesId = 20,
             Mortality = new AmericanBlackBearMortality()
             {
                 Reporter = new Client() { EnvClientId = "50406" },
@@ -46,7 +47,7 @@ public class HuntedHarvestReportTests
         var dbContextFactory = CreateTestDbContextFactory();
         var service = new HuntedHarvestReportService<AmericanBlackBearMortality>(
             dbContextFactory,
-            new MortalityService<AmericanBlackBearMortality>(dbContextFactory)
+            new MortalityService(dbContextFactory)
         );
 
         // Act
@@ -64,7 +65,7 @@ public class HuntedHarvestReportTests
         var dbContextFactory = CreateTestDbContextFactory();
         var service = new HuntedHarvestReportService<AmericanBlackBearMortality>(
             dbContextFactory,
-            new MortalityService<AmericanBlackBearMortality>(dbContextFactory)
+            new MortalityService(dbContextFactory)
         );
 
         var harvestReport = new HuntedHarvestReport()

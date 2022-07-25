@@ -41,7 +41,7 @@ public class MortalityTests
 
         // Act
         var mortality = new WoodBisonMortality { Sex = Sex.Male, ReporterId = newClient.Id };
-        var service = new MortalityService<WoodBisonMortality>(dbContextFactory);
+        var service = new MortalityService(dbContextFactory);
         var createdMortality = await service.CreateMortality(mortality);
         context.Add(createdMortality.Value);
         await context.SaveChangesAsync();
@@ -57,7 +57,7 @@ public class MortalityTests
         var dbContextFactory = CreateTestDbContextFactory();
         using var context = dbContextFactory.CreateDbContext();
 
-        var service = new MortalityService<WoodBisonMortality>(dbContextFactory);
+        var service = new MortalityService(dbContextFactory);
 
         var newMortality = await service.CreateMortality(
             new WoodBisonMortality() { Reporter = new Client(), Sex = Sex.Female }
@@ -67,7 +67,7 @@ public class MortalityTests
 
         // Act
         const int id = 1;
-        var mortality = await service.GetMortalityById(id);
+        var mortality = await service.GetMortalityById<WoodBisonMortality>(id);
 
         // Assert
         mortality.Id.Should().Be(id);
@@ -78,11 +78,11 @@ public class MortalityTests
     {
         // Arrange
         var dbContextFactory = CreateTestDbContextFactory();
-        var service = new MortalityService<AmericanBlackBearMortality>(dbContextFactory);
+        var service = new MortalityService(dbContextFactory);
 
         // Act
         const int id = 1;
-        var mortality = await service.GetMortalityById(id);
+        var mortality = await service.GetMortalityById<AmericanBlackBearMortality>(id);
 
         // Assert
         mortality.Should().Be(null);
@@ -93,7 +93,7 @@ public class MortalityTests
     {
         // Arrange
         var dbContextFactory = CreateTestDbContextFactory();
-        var service = new MortalityService<WoodBisonMortality>(dbContextFactory);
+        var service = new MortalityService(dbContextFactory);
         const string envClientId = "40405";
         var result = await service.CreateMortality(
             new WoodBisonMortality()
@@ -109,7 +109,9 @@ public class MortalityTests
         await context.SaveChangesAsync();
 
         // Act
-        var mortalities = await service.GetMortalitiesByEnvClientId(envClientId);
+        var mortalities = await service.GetMortalitiesByEnvClientId<WoodBisonMortality>(
+            envClientId
+        );
 
         // Assert
         mortalities.Should().HaveCount(1);
@@ -120,7 +122,7 @@ public class MortalityTests
     {
         // Arrange
         var dbContextFactory = CreateTestDbContextFactory();
-        var service = new MortalityService<WoodBisonMortality>(dbContextFactory);
+        var service = new MortalityService(dbContextFactory);
 
         const string badgeNumber = "43541";
         var conservationOfficer = new ConservationOfficer() { BadgeNumber = badgeNumber };
@@ -130,7 +132,10 @@ public class MortalityTests
         await context.SaveChangesAsync();
 
         // Act
-        var mortalities = await service.GetMortalitiesByConservationOfficerBadgeNumber(badgeNumber);
+        var mortalities =
+            await service.GetMortalitiesByConservationOfficerBadgeNumber<WoodBisonMortality>(
+                badgeNumber
+            );
 
         // Assert
         mortalities.Should().HaveCount(1);
