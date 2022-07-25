@@ -12,11 +12,11 @@ namespace WildlifeMortalities.Shared.Services;
 public class HuntedHarvestReportService<T> where T : Mortality
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
-    private readonly MortalityService<T> _mortalityService;
+    private readonly MortalityService _mortalityService;
 
     public HuntedHarvestReportService(
         IDbContextFactory<AppDbContext> dbContextFactory,
-        MortalityService<T> mortalityService
+        MortalityService mortalityService
     )
     {
         _dbContextFactory = dbContextFactory;

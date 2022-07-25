@@ -8,7 +8,7 @@ using WildlifeMortalities.Shared.Validators;
 
 namespace WildlifeMortalities.Shared.Services;
 
-public class MortalityService<T> where T : Mortality
+public class MortalityService : IMortalityService
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
@@ -17,7 +17,14 @@ public class MortalityService<T> where T : Mortality
         _dbContextFactory = dbContextFactory;
     }
 
-    public async Task<T?> GetMortalityById(int id)
+    public async Task<List<Mortality>> GetAllMortalities()
+    {
+        using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        return await context.Mortalities.ToListAsync();
+    }
+
+    public async Task<T?> GetMortalityById<T>(int id) where T : Mortality
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -32,7 +39,8 @@ public class MortalityService<T> where T : Mortality
         }
     }
 
-    public async Task<IReadOnlyList<T>> GetMortalitiesByEnvClientId(string envClientId)
+    public async Task<IReadOnlyList<T>> GetMortalitiesByEnvClientId<T>(string envClientId)
+        where T : Mortality
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -43,9 +51,9 @@ public class MortalityService<T> where T : Mortality
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T>> GetMortalitiesByConservationOfficerBadgeNumber(
+    public async Task<IReadOnlyList<T>> GetMortalitiesByConservationOfficerBadgeNumber<T>(
         string conservationOfficerBadgeNumber
-    )
+    ) where T : Mortality
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
@@ -61,7 +69,7 @@ public class MortalityService<T> where T : Mortality
             .ToListAsync();
     }
 
-    public async Task<Result<T>> CreateMortality(T mortality)
+    public async Task<Result<T>> CreateMortality<T>(T mortality) where T : Mortality
     {
         var validator = new MortalityValidator<T>();
         var validation = await validator.ValidateAsync(mortality);
@@ -72,7 +80,7 @@ public class MortalityService<T> where T : Mortality
         return Result<T>.Success(mortality);
     }
 
-    public async Task<Result<T>> UpdateMortality(T mortality)
+    public async Task<Result<T>> UpdateMortality<T>(T mortality) where T : Mortality
     {
         var validator = new MortalityValidator<T>();
         var validation = await validator.ValidateAsync(mortality);
