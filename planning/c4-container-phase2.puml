@@ -1,0 +1,55 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS2 https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS2/dotnetcore.puml
+!include DEVICONS2/microsoftsqlserver.puml
+!include FONTAWESOME/users.puml
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title Wildlife Mortalities Phase 2
+
+Person(foa, "Front Office Assistant")
+Person(co, "Conservation Officer")
+Person(harvest_technician, "Harvest Technician")
+Person(biologist, "Biologist")
+Person(admin, "Administrator")
+
+System_Boundary(c1, "Wildlife Mortalities"){
+    Container(app, "Web App", "Blazor Server", "The server-side web application that all users interact with", $sprite="dotnetcore")
+    Container(api, "REST API", "ASP.NET Core", "The interface that allows other services to communicate with Wildlife Mortalities", $sprite="dotnetcore")
+    Container(backend, "Backend Service", "ASP.NET Core", "Contains all business and data access logic", $sprite="dotnetcore")
+    ContainerDb(db, "Database", "Microsoft SQL", "Holds all transactional data", $sprite="microsoftsqlserver")
+}
+Container_Ext(log_store, "Centralized Log Store", "Seq", "Holds all error logs, and logs relating to users connecting, viewing, and updating data")
+
+System_Ext(power_bi, "Power BI Service")
+System_Ext(aimes, "AIMES", "The case management system for Conservation Officer investigations")
+System_Ext(fme, "FME")
+System_Ext(fme2, "FME")
+System_Ext(posse, "POSSE", "The authoritative source for client, licence, and permit data")
+SystemDb_Ext(data_warehouse, "Enterprise Data Warehouse")
+
+Rel(foa, app, "Uses", "HTTPS/WebSocket")
+Rel(co, app, "Uses", "HTTPS/WebSocket")
+Rel(harvest_technician, app, "Uses", "HTTPS/WebSocket")
+Rel(biologist, app, "Uses", "HTTPS/WebSocket")
+Rel(admin, app, "Uses", "HTTPS/WebSocket")
+
+Rel(app, backend, "Uses")
+Rel(api, backend, "Uses")
+
+Rel(backend, db, "Reads/Writes", "SQL/ODBC")
+Rel(power_bi, data_warehouse, "Reads", "HTTPS")
+Rel(fme, data_warehouse, "Writes", "SQL/ODBC")
+Rel(fme, db, "Reads", "SQL/ODBC")
+
+Rel(fme2, posse, "Reads", "SQL/ODBC")
+Rel(fme2, api, "Writes", "HTTPS")
+Rel(backend, log_store, "Writes", "HTTPS")
+
+Rel(aimes, api, "Uses", "HTTPS")
+@enduml
