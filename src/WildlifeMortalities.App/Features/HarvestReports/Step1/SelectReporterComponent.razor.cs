@@ -8,7 +8,7 @@ namespace WildlifeMortalities.App.Features.HarvestReports;
 
 public partial class SelectReporterComponent : IDisposable
 {
-    private EditContext _context;
+    private EditContext _context = null!;
 
     protected override void OnInitialized()
     {

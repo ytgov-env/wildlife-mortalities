@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
-public partial class HarvestReportPageStep
+public partial class PageStepComponent
 {
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment ChildContent { get; set; } = null!;
 
     [Parameter]
     public int StepNumber { get; set; }
@@ -25,4 +25,7 @@ public partial class HarvestReportPageStep
 
     [Parameter]
     public EventCallback OnNextClicked { get; set; }
+
+    [Parameter]
+    public EventCallback OnPreviousClicked { get; set; }
 }

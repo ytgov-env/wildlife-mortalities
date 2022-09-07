@@ -1,0 +1,13 @@
+﻿@ChildContent
+
+<MudStack Row="true" Class="mt-2">
+    @if (CanGoBackwards())
+    {
+        <MudButton OnClick="@(() => OnPreviousClicked.InvokeAsync())" Variant="Variant.Filled" Color="Color.Secondary">Previous</MudButton>
+    }
+    <MudSpacer />
+    @if (CanGoForward())
+    {
+        <MudButton OnClick="@(() => OnNextClicked.InvokeAsync())" Variant="Variant.Filled" Color="Color.Primary">Next</MudButton>
+    }
+</MudStack>

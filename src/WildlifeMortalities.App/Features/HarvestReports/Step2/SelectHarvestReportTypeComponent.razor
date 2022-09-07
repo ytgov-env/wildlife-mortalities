@@ -1,0 +1,12 @@
+﻿@namespace WildlifeMortalities.App.Features.HarvestReports
+
+<MudItem>
+    <MudPaper Class="pa-4 mb-4">
+        <MudSelect @bind-Value="_selectHarvestReportTypeViewModel.HarvestReportType" For="@(() => _selectHarvestReportTypeViewModel.HarvestReportType)" Label="Harvest Report Type">
+            @foreach (HarvestReportType harvestReportType in Enum.GetValues(typeof(HarvestReportType)))
+            {
+                <MudSelectItem Value="@harvestReportType">@harvestReportType</MudSelectItem>
+            }
+        </MudSelect>
+    </MudPaper>
+</MudItem>

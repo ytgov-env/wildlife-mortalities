@@ -1,0 +1,44 @@
+﻿@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Shared.Models
+
+@namespace WildlifeMortalities.App.Features.HarvestReports
+
+<EditForm EditContext="_context">
+    <FluentValidationValidator Validator="new SelectReporterViewModelValidator()" />
+    <MudItem>
+        <MudPaper Class="pa-4 mb-4">
+            <MudSelect @bind-Value="_selectedSelectReporterViewModel.ReporterType" For="@(() => _selectedSelectReporterViewModel.ReporterType)" Label="Reporter Type">
+                @foreach (ReporterType reporter in Enum.GetValues(typeof(ReporterType)))
+                {
+                    <MudSelectItem Value="@reporter">@reporter</MudSelectItem>
+                }
+            </MudSelect>
+
+            @if (_selectedSelectReporterViewModel.ReporterType == ReporterType.Client)
+            {
+                <MudAutocomplete T="ClientDto" For="@(() => _selectedSelectReporterViewModel.SelectedClient)" Label="Search by EnvClientId or Last Name"
+                             @bind-Value="_selectedSelectReporterViewModel.SelectedClient" ToStringFunc="@((x) => x is null ? "" : $"{x.EnvClientId} | {x.LastName}" )" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
+
+
+            }
+            else
+            {
+                <MudAutocomplete T="ConservationOfficer" Label="Search by Badge Number or Last Name" For="@(() => _selectedSelectReporterViewModel.SelectedConservationOfficer)"
+                             @bind-Value="_selectedSelectReporterViewModel.SelectedConservationOfficer" ToStringFunc="@((x) => x is null ? "" : $"{x.BadgeNumber}" )" SearchFunc="@SearchConservationOfficerByBadgeNumber"
+                             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
+
+            }
+        </MudPaper>
+    </MudItem>
+
+    @if (_selectedSelectReporterViewModel.SelectedClient is not null)
+    {
+        <MudPaper Class="pa-4">
+            <MudField Label="ENV Client ID">@_selectedSelectReporterViewModel.SelectedClient.EnvClientId</MudField>
+            <MudField Label="First Name">@_selectedSelectReporterViewModel.SelectedClient.FirstName</MudField>
+            <MudField Label="Last Name">@_selectedSelectReporterViewModel.SelectedClient.LastName</MudField>
+            <MudField Label="Birth Date">@_selectedSelectReporterViewModel.SelectedClient.BirthDate.ToString("yyyy-MM-dd")</MudField>
+        </MudPaper>
+    }
+</EditForm>

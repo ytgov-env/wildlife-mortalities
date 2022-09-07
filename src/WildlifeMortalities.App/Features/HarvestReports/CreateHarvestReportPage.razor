@@ -2,13 +2,20 @@
 @using WildlifeMortalities.Data.Entities.Reporters
 @using WildlifeMortalities.Shared.Models
 
-<MudItem lg="4"> 
+<MudText Typo="Typo.h3" Class="mb-8">New Harvest Report</MudText>
+<MudItem lg="4">
     <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Info" Class="mt-4" KeepPanelsAlive="true" @bind-ActivePanelIndex="_selectedIndex">
         <MudTabPanel Text="Reporter">
-            <HarvestReportPageStep StepNumber="1" IsValid="_validationMapper[1]" OnNextClicked="OnNextClicked">
-                <SelectReporterComponent ValidationChanged="@( (x) => SetStepValidation(1,x))"  />
-            </HarvestReportPageStep>
+            <PageStepComponent StepNumber="1" IsValid="_validationMapper[1]" OnNextClicked="OnNextClicked">
+                <SelectReporterComponent ValidationChanged="@( (x) => SetStepValidation(1,x))" />
+            </PageStepComponent>
         </MudTabPanel>
-        <MudTabPanel Text="Harvest Report" Disabled="@(_validationMapper[2-1] == false)"></MudTabPanel>
+        <MudTabPanel Text="Type" Disabled="@(_validationMapper[1] == false)">
+            <PageStepComponent StepNumber="2" IsValid="_validationMapper[2]" OnNextClicked="OnNextClicked" OnPreviousClicked="OnPreviousClicked">
+                <SelectHarvestReportTypeComponent ValidationChanged="@( (x) => SetStepValidation(2,x))" />
+            </PageStepComponent>
+        </MudTabPanel>
+        <MudTabPanel Text="Report" Disabled="@(_validationMapper[2] == false)">
+        </MudTabPanel>
     </MudTabs>
 </MudItem>
