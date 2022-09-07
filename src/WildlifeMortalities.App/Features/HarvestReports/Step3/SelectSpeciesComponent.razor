@@ -1,0 +1,35 @@
+﻿
+@using WildlifeMortalities.Data.Enums
+
+@namespace WildlifeMortalities.App.Features.HarvestReports
+@inherits ReportTypeComponent<SelectSpeciesViewModel>
+
+<EditForm EditContext="_context">
+    <FluentValidationValidator Validator="new SelectSpeciesViewModelValidator(ReportType)" />
+
+    @if (ReportType == HarvestReportType.Trapping)
+    {
+        <MudSelect T="TrappedSpecies?" @bind-Value="_viewModel.TrappedSpecies" For="@(() => _viewModel.TrappedSpecies)" Label="Harvest Report Type">
+            <MudSelectItem T="TrappedSpecies?" Value="null">Select an option</MudSelectItem>
+            @foreach (TrappedSpecies harvestReportType in Enum.GetValues(typeof(TrappedSpecies)))
+            {
+                <MudSelectItem Value="@harvestReportType" T="TrappedSpecies?">@harvestReportType</MudSelectItem>
+            }
+        </MudSelect>
+    }
+    else
+    {
+        <MudSelect T="HuntedSpecies?" @bind-Value="_viewModel.HuntedSpecies" For="@(() => _viewModel.HuntedSpecies)" Label="Harvest Report Type">
+            <MudSelectItem T="HuntedSpecies?" Value="null">Select an option</MudSelectItem>
+            @foreach (HuntedSpecies harvestReportType in Enum.GetValues(typeof(HuntedSpecies)))
+            {
+                <MudSelectItem Value="@harvestReportType" T="HuntedSpecies?">@harvestReportType</MudSelectItem>
+            }
+        </MudSelect>
+    }
+
+
+</EditForm>
+
+
+

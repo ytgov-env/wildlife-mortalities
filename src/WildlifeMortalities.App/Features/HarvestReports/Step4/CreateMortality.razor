@@ -1,0 +1,20 @@
+﻿@using WildlifeMortalities.Data.Enums
+
+@namespace WildlifeMortalities.App.Features.HarvestReports
+@inherits ReportTypeComponent<CreateMortalityViewModel>
+
+<EditForm EditContext="_context">
+    <FluentValidationValidator Validator="new CreateMortalityViewModelValidator()" />
+
+    <p>@Species</p>
+
+    @if(Species == AllSpecies.AmericanBlackBear)
+    {
+        <BlackBearMortalityComponent />
+    }
+
+</EditForm>
+
+
+
+
