@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Serilog.Events;
@@ -35,6 +36,10 @@ try
 
     // Add services to the container.
     builder.Services.AddRazorPages();
+    builder.Services.Configure<RazorPagesOptions>(o =>
+    {
+        o.RootDirectory = "/Infrastructure";
+    });
     builder.Services.AddServerSideBlazor();
     builder.Services.AddMudServices();
 
