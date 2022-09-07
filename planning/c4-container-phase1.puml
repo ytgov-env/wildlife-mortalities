@@ -12,14 +12,14 @@ LAYOUT_WITH_LEGEND()
 
 title Wildlife Mortalities Phase 1
 
-Person(foa, "Front Office Assistant")
+Person(client_service_rep, "Client Services Rep.")
 Person(co, "Conservation Officer")
 Person(harvest_technician, "Harvest Technician")
 Person(biologist, "Biologist")
 Person(admin, "Administrator")
 
 System_Boundary(c1, "Wildlife Mortalities"){
-    Container(app, "Web App", "Blazor Server/ASP.NET Core", "The server-side web application that all users interact with", $sprite="dotnetcore")
+    Container(app, "Web App", "Blazor Server", "The server-side web application that all users interact with", $sprite="dotnetcore")
     Container(api, "REST API", "ASP.NET Core", "The interface that allows other services to communicate with Wildlife Mortalities. Only basic endpoints are available in phase 1", $sprite="dotnetcore")
     Container(backend, "Backend Service", "ASP.NET Core", "Contains all business and data access logic", $sprite="dotnetcore")
     ContainerDb(db, "Database", "Microsoft SQL", "Holds all transactional data", $sprite="microsoftsqlserver")
@@ -29,7 +29,7 @@ Container_Ext(log_store, "Centralized Log Store", "Seq", "Holds all error logs, 
 System_Ext(fme, "FME")
 System_Ext(posse, "POSSE", "The authoritative source for client, licence, and permit data")
 
-Rel(foa, app, "Uses", "HTTPS/WebSocket")
+Rel(client_service_rep, app, "Uses", "HTTPS/WebSocket")
 Rel(co, app, "Uses", "HTTPS/WebSocket")
 Rel(harvest_technician, app, "Uses", "HTTPS/WebSocket")
 Rel(biologist, app, "Uses", "HTTPS/WebSocket")
