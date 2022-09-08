@@ -32,6 +32,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Features\BioSubmissions\" />
+	  <Folder Include="Features\Reporters\" />
 	  <Folder Include="Logs\" />
 	</ItemGroup>
 

@@ -1,5 +1,4 @@
-﻿
-@using WildlifeMortalities.Data.Enums
+﻿@using WildlifeMortalities.Data.Enums
 
 @namespace WildlifeMortalities.App.Features.HarvestReports
 @inherits ReportTypeComponent<SelectSpeciesViewModel>
@@ -9,21 +8,27 @@
 
     @if (ReportType == HarvestReportType.Trapping)
     {
-        <MudSelect T="TrappedSpecies?" @bind-Value="_viewModel.TrappedSpecies" For="@(() => _viewModel.TrappedSpecies)" Label="Harvest Report Type">
+        <MudSelect T="TrappedSpecies?" @bind-Value="_viewModel.TrappedSpecies" For="@(() => _viewModel.TrappedSpecies)" Label="Species">
             <MudSelectItem T="TrappedSpecies?" Value="null">Select an option</MudSelectItem>
-            @foreach (TrappedSpecies harvestReportType in Enum.GetValues(typeof(TrappedSpecies)))
+            @foreach (TrappedSpecies species in Enum.GetValues(typeof(TrappedSpecies)))
             {
-                <MudSelectItem Value="@harvestReportType" T="TrappedSpecies?">@harvestReportType</MudSelectItem>
+                if (species != TrappedSpecies.Uninitialized)
+                {
+                    <MudSelectItem Value="@species" T="TrappedSpecies?">@species</MudSelectItem>
+                }
             }
         </MudSelect>
     }
     else
     {
-        <MudSelect T="HuntedSpecies?" @bind-Value="_viewModel.HuntedSpecies" For="@(() => _viewModel.HuntedSpecies)" Label="Harvest Report Type">
+        <MudSelect T="HuntedSpecies?" @bind-Value="_viewModel.HuntedSpecies" For="@(() => _viewModel.HuntedSpecies)" Label="Species">
             <MudSelectItem T="HuntedSpecies?" Value="null">Select an option</MudSelectItem>
-            @foreach (HuntedSpecies harvestReportType in Enum.GetValues(typeof(HuntedSpecies)))
+            @foreach (HuntedSpecies species in Enum.GetValues(typeof(HuntedSpecies)))
             {
-                <MudSelectItem Value="@harvestReportType" T="HuntedSpecies?">@harvestReportType</MudSelectItem>
+                if (species != HuntedSpecies.Uninitialized)
+                {
+                    <MudSelectItem Value="@species" T="HuntedSpecies?">@species</MudSelectItem>
+                }
             }
         </MudSelect>
     }
