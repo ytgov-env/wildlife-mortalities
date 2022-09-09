@@ -72,9 +72,6 @@ public class AppDbContext : DbContext
             b.Property(b => b.Sex)
                 .HasConversion<string>()
                 .HasColumnName(nameof(WoodBisonMortality.Sex));
-            b.Property(b => b.GameManagementAreaId)
-                .HasColumnName(nameof(WoodBisonMortality.GameManagementAreaId));
-            b.Property(b => b.Landmark).HasColumnName(nameof(WoodBisonMortality.Landmark));
         });
 
         modelBuilder.Entity<AmericanBlackBearMortality>(b =>
@@ -82,9 +79,6 @@ public class AppDbContext : DbContext
             b.Property(b => b.Sex)
                 .HasConversion<string>()
                 .HasColumnName(nameof(AmericanBlackBearMortality.Sex));
-            b.Property(b => b.GameManagementAreaId)
-                .HasColumnName(nameof(AmericanBlackBearMortality.GameManagementAreaId));
-            b.Property(b => b.Landmark).HasColumnName(nameof(AmericanBlackBearMortality.Landmark));
         });
 
         modelBuilder
