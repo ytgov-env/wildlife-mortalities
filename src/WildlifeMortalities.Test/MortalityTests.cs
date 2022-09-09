@@ -160,7 +160,7 @@ public class MortalityTests
         builder
             .UseSqlServer(
                 config.GetConnectionString("UnitTestConnection"),
-                options => options.UseNetTopologySuite().EnableRetryOnFailure()
+                options => options.EnableRetryOnFailure()
             )
             .UseEnumCheckConstraints();
         return new TestDbContextFactory(builder.Options);
