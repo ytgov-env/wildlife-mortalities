@@ -1,6 +1,8 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="/clients" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Clients</MudNavLink>
-    @*<MudNavLink Href="/harvest-reports" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Harvest Reports</MudNavLink>*@
-    <MudNavLink Href="/mortalities" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Mortalities</MudNavLink>
+    <MudNavGroup Title="Mortalities" Expanded="true">
+    <MudNavLink Href="/mortalities" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CrueltyFree">All Mortalities</MudNavLink>
+    <MudNavLink Href="/clients" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Client Overview</MudNavLink>
+    <MudNavLink Href="/conservation-officers" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.LocalPolice">Conservation Officer Overview</MudNavLink>
+    </MudNavGroup>
 </MudNavMenu>

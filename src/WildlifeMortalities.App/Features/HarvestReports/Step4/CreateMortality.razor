@@ -6,11 +6,37 @@
 <EditForm EditContext="_context">
     <FluentValidationValidator Validator="new CreateMortalityViewModelValidator()" />
 
-    <p>@Species</p>
+    <BaseMortalityComponent/>
 
-    @if(Species == AllSpecies.AmericanBlackBear)
+    @switch (Species)
     {
-        <BlackBearMortalityComponent />
+        case AllSpecies.AmericanBlackBear:
+            <AmericanBlackBearMortalityComponent/>
+            break;
+        case AllSpecies.BarrenGroundCaribou:
+            break;
+        case AllSpecies.Coyote:
+            break;
+        case AllSpecies.Elk:
+            break;
+        case AllSpecies.GreyWolf:
+            break;
+        case AllSpecies.GrizzlyBear:
+            break;
+        case AllSpecies.Moose:
+            break;
+        case AllSpecies.MountainGoat:
+            break;
+        case AllSpecies.MuleDeer:
+            break;
+        case AllSpecies.ThinhornSheep:
+            break;
+        case AllSpecies.Wolverine:
+            break;
+        case AllSpecies.WoodBison:
+            break;
+        case AllSpecies.WoodlandCaribou:
+            break;
     }
 
 </EditForm>

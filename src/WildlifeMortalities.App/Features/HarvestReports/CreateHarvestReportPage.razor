@@ -2,24 +2,6 @@
 @using WildlifeMortalities.Data.Entities.Reporters
 @using WildlifeMortalities.Shared.Models
 
-@*<MudText Typo="Typo.h3" Class="mb-8">New Harvest Report</MudText>
-<MudItem lg="4">
-    <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Info" Class="mt-4" KeepPanelsAlive="true" @bind-ActivePanelIndex="_selectedIndex">
-        <MudTabPanel Text="Reporter">
-            <PageStepComponent StepNumber="1" IsValid="_validationMapper[1]" OnNextClicked="OnNextClicked">
-
-            </PageStepComponent>
-        </MudTabPanel>
-        <MudTabPanel Text="Type" Disabled="@(_validationMapper[1] == false)">
-            <PageStepComponent StepNumber="2" IsValid="_validationMapper[2]" OnNextClicked="OnNextClicked" OnPreviousClicked="OnPreviousClicked">
-            </PageStepComponent>
-        </MudTabPanel>
-        <MudTabPanel Text="Report" Disabled="@(_validationMapper[2] == false)">
-        </MudTabPanel>
-    </MudTabs>
-</MudItem>*@
-
-
 <SelectReporterComponent ValidationChanged="@( (x) => SetStepValidation(1,x))" />
 @if (_validationMapper[1] == true)
 {

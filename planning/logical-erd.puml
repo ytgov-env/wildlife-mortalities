@@ -180,8 +180,6 @@ together {
         *Id: number <<generated>>
         --
         *MortalityId: number <<FK>>
-        *Age: number
-        *Confidence: enum
     }
     entity "AmericanBlackBearBiologicalSubmission" as americanblackbearbiological_submission {
         *SkullCondition: string
@@ -220,6 +218,11 @@ together {
     }
     entity "WoodBisonBiologicalSubmission" as woodbisonbiological_submission {
 
+    }
+    entity "Age" as age {
+        *BiologicalSubmissionId: number <<FK>>
+        *Years: number
+        *ConfidenceInAge: enum
     }
 '}
 
@@ -407,6 +410,8 @@ muledeerbiological_submission |o.up.|| muledeer_mortality
 thinhornsheepbiological_submission |o.up.|| thinhornsheep_mortality
 woodbisonbiological_submission |o.up.|| woodbison_mortality
 
+biological_submission ||..|| age
+
 client ||..o{ licence
 hunting_licence ||..o{ seal
 
@@ -513,7 +518,8 @@ enum "GameManagementAreaStatus" as gma_status {
 
 enum "HarvestType" as harvest_type {
     Uninitialized
-
+    Hunting
+    Trapping
 }
 
 enum "Sex" as sex {
@@ -541,6 +547,13 @@ enum "ThinhornSheepTailColour" as thinhorn_sheep_tail_colour {
     Uninitialized
     Dark
     White
+}
+
+enum "ConfidenceInAge" as confidence_in_age {
+    Uninitialized
+    Fair
+    Good
+    Poor
 }
 
 @enduml
