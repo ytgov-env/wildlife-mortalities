@@ -41,7 +41,7 @@ public class AppDbContext : DbContext
             optionsBuilder
                 .UseSqlServer(
                     "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;",
-                    options => options.EnableRetryOnFailure().UseNetTopologySuite()
+                    options => options.EnableRetryOnFailure()
                 )
                 .UseEnumCheckConstraints()
                 .EnableSensitiveDataLogging();
@@ -101,6 +101,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveFrom).HasColumnType("date");
         modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveTo).HasColumnType("date");
         modelBuilder.Entity<GameManagementUnit>().Property(u => u.Name).HasMaxLength(50);
+
+        modelBuilder.Entity<BioSubmission>().OwnsOne(b => b.Age, a => a.ToTable("Age"));
 
         // These shadow properties are referenced during ETL to sync licence and seal data from their source (POSSE)
         modelBuilder.Entity<Licence>().Property<int?>("PosseId");
