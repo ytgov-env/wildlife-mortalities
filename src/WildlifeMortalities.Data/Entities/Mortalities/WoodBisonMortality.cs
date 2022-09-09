@@ -2,7 +2,14 @@
 
 public class WoodBisonMortality : Mortality
 {
-    public int? GameManagementAreaId { get; set; }
-    public GameManagementArea? GameManagementArea { get; set; }
-    public string? Landmark { get; set; }
+    public PregnancyStatus PregnancyStatus { get; set; }
+    public bool IsWounded { get; set; }
+}
+
+public enum PregnancyStatus
+{
+    Uninitialized = 0,
+    False = 1,
+    True = 2,
+    Unknown = 3
 }
