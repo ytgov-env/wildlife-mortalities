@@ -18,10 +18,6 @@ public partial class CreateHarvestReportPage
         _validationMapper.Add(3, false);
     }
 
-    private void OnNextClicked() => ++_selectedIndex;
-
-    private void OnPreviousClicked() => --_selectedIndex;
-
     private void SetStepValidation(int stepNumber, bool validationResult) =>
         _validationMapper[stepNumber] = validationResult;
 
