@@ -4,16 +4,16 @@ using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Shared.Models;
 using WildlifeMortalities.Shared.Services;
 
-namespace WildlifeMortalities.App.Features.HarvestReports;
+namespace WildlifeMortalities.App.Features.Reporters;
 
-public partial class SelectReporterComponent : IDisposable
+public partial class ClientOverviewPage : IDisposable
 {
     private EditContext _context = null!;
 
     protected override void OnInitialized()
     {
-        _selectedSelectReporterViewModel = new();
-        _context = new EditContext(_selectedSelectReporterViewModel);
+        _selectedClientViewModel = new();
+        _context = new EditContext(_selectedClientViewModel);
         _context.OnFieldChanged += _context_OnFieldChanged;
     }
 
@@ -26,16 +26,12 @@ public partial class SelectReporterComponent : IDisposable
     [Inject]
     private IClientLookupService ClientLookupService { get; set; } = null!;
 
-    private SelectReporterViewModel _selectedSelectReporterViewModel = null!;
+    private SelectClientViewModel _selectedClientViewModel = null!;
 
     private async Task<IEnumerable<ClientDto>> SearchClientByEnvClientIdOrLastName(string input) =>
         (await ClientLookupService.SearchByEnvClientId(input))
             .Union(await ClientLookupService.SearchByLastName(input))
             .OrderBy(x => x.LastName);
-
-    private async Task<IEnumerable<ConservationOfficer>> SearchConservationOfficerByBadgeNumber(
-        string input
-    ) => throw new NotImplementedException();
 
     public void Dispose()
     {
@@ -47,4 +43,7 @@ public partial class SelectReporterComponent : IDisposable
 
     [Parameter]
     public EventCallback<bool> ValidationChanged { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
 }

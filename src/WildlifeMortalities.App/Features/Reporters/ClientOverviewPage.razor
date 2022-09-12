@@ -1,0 +1,34 @@
+﻿@page "/reporters/clients"
+@page "/reporters/clients/{id:int}"
+
+@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Shared.Models
+
+@namespace WildlifeMortalities.App.Features.Reporters
+
+<MudText Typo="Typo.h3" Class="mb-8">Client Overview</MudText>
+
+<MudGrid>
+    <MudItem sm="6">
+        <EditForm EditContext="_context">
+            <FluentValidationValidator Validator="new SelectClientViewModelValidator()" />
+            <MudItem>
+                <MudPaper Class="pa-4 mb-4">
+                    <MudAutocomplete T="ClientDto" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by EnvClientId or Last Name"
+                                     @bind-Value="_selectedClientViewModel.SelectedClient" ToStringFunc="@((x) => x is null ? "" : $"{x.EnvClientId} | {x.LastName}" )" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
+                </MudPaper>
+            </MudItem>
+
+            @if (_selectedClientViewModel.SelectedClient is not null)
+            {
+                <MudPaper Class="pa-4">
+                    <MudField Label="ENV Client ID">@_selectedClientViewModel.SelectedClient.EnvClientId</MudField>
+                    <MudField Label="First Name">@_selectedClientViewModel.SelectedClient.FirstName</MudField>
+                    <MudField Label="Last Name">@_selectedClientViewModel.SelectedClient.LastName</MudField>
+                    <MudField Label="Birth Date">@_selectedClientViewModel.SelectedClient.BirthDate.ToString("yyyy-MM-dd")</MudField>
+                </MudPaper>
+            }
+        </EditForm>
+    </MudItem>
+</MudGrid>

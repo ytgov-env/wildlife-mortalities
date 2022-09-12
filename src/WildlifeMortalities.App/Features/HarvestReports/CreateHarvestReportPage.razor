@@ -2,17 +2,13 @@
 @using WildlifeMortalities.Data.Entities.Reporters
 @using WildlifeMortalities.Shared.Models
 
-<SelectReporterComponent ValidationChanged="@( (x) => SetStepValidation(1,x))" />
+<SelectHarvestReportTypeComponent ValidationChanged="@( (x) => SetStepValidation(1,x))" HarvestReportTypeChanged="HarvestReportTypeChanged" />
 @if (_validationMapper[1] == true)
 {
-    <SelectHarvestReportTypeComponent ValidationChanged="@( (x) => SetStepValidation(2,x))" HarvestReportTypeChanged="HarvestReportTypeChanged" />
+    <SelectSpeciesComponent ReportType="_harvestReportType" SpeciesChanged="SpeciesChanged" ValidationChanged="@( (x) => SetStepValidation(2,x))" />
+
     @if (_validationMapper[2] == true)
     {
-        <SelectSpeciesComponent ReportType="_harvestReportType" SpeciesChanged="SpeciesChanged" ValidationChanged="@( (x) => SetStepValidation(3,x))" />
-
-        @if (_validationMapper[3] == true)
-        {
-            <MortalityComponent Species="_species" />
-        }
+        <MortalityComponent Species="_species" />
     }
 }

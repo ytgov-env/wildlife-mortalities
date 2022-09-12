@@ -9,7 +9,7 @@
                 <MudSelectItem T="HarvestReportType?" Value="null">Select an option</MudSelectItem>
                 @foreach (HarvestReportType harvestReportType in Enum.GetValues(typeof(HarvestReportType)))
                 {
-                    <MudSelectItem Value="@harvestReportType"T="HarvestReportType?">@harvestReportType</MudSelectItem>
+                    <MudSelectItem Value="@harvestReportType" T="HarvestReportType?">@harvestReportType</MudSelectItem>
                 }
             </MudSelect>
         </MudPaper>

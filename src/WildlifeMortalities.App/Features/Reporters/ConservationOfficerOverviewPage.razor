@@ -1,0 +1,35 @@
+﻿@page "/reporters/conservation-officers"
+@page "/reporters/conservation-officers/{id:int}"
+
+@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Shared.Models
+
+@namespace WildlifeMortalities.App.Features.Reporters
+
+<MudText Typo="Typo.h3" Class="mb-8">Conservation Officer Overview</MudText>
+
+<MudGrid>
+    <MudItem sm="6">
+        <EditForm EditContext="_context">
+            <FluentValidationValidator Validator="new SelectConservationOfficerViewModelValidator()" />
+            <MudItem>
+                <MudPaper Class="pa-4 mb-4">
+                    <MudAutocomplete T="ConservationOfficer" For="@(() => _selectedConservationOfficerViewModel.SelectedConservationOfficer)" Label="Search by Badge Number or Last Name"
+                                     @bind-Value="_selectedConservationOfficerViewModel.SelectedConservationOfficer" ToStringFunc="@((x) => x is null ? "" : $"{x.BadgeNumber} | {x.LastName}" )" SearchFunc="@SearchConservationOfficerByBadgeNumberOrLastName"
+                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
+                </MudPaper>
+            </MudItem>
+
+            @if (_selectedConservationOfficerViewModel.SelectedConservationOfficer is not null)
+            {
+                <MudPaper Class="pa-4">
+                    <MudField Label="ENV ConservationOfficer ID">@_selectedConservationOfficerViewModel.SelectedConservationOfficer.BadgeNumber</MudField>
+                    <MudField Label="First Name">@_selectedConservationOfficerViewModel.SelectedConservationOfficer.FirstName</MudField>
+                    <MudField Label="Last Name">@_selectedConservationOfficerViewModel.SelectedConservationOfficer.LastName</MudField>
+                </MudPaper>
+            }
+        </EditForm>
+    </MudItem>
+</MudGrid>
+
+
