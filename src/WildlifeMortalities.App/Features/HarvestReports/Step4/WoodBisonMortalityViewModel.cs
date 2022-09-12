@@ -2,12 +2,12 @@
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
-public class CreateWoodBisonMortalityViewModel : CreateMortalityViewModel
+public class WoodBisonMortalityViewModel : MortalityViewModel
 {
     public PregnancyStatus PregnancyStatus { get; set; }
     public bool IsWounded { get; set; }
 
-    public CreateWoodBisonMortalityViewModel() : base(Data.Enums.AllSpecies.WoodBison)
+    public WoodBisonMortalityViewModel() : base(Data.Enums.AllSpecies.WoodBison)
     {
     }
 

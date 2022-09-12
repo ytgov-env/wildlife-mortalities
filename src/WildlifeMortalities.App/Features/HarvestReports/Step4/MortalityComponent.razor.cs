@@ -3,9 +3,9 @@ using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.HarvestReports
 {
-    public partial class CreateMortality
+    public partial class MortalityComponent
     {
-        private CreateMortalityViewModel _viewModel;
+        private MortalityViewModel _viewModel;
 
         [Parameter]
         public AllSpecies Species { get; set; }
@@ -17,10 +17,10 @@ namespace WildlifeMortalities.App.Features.HarvestReports
             switch (Species)
             {
                 case AllSpecies.AmericanBlackBear:
-                    _viewModel = new CreateAmericanBlackBearMortalityViewModel();
+                    _viewModel = new AmericanBlackBearMortalityViewModel();
                     break;
                 case AllSpecies.WoodBison:
-                    _viewModel = new CreateWoodBisonMortalityViewModel();
+                    _viewModel = new WoodBisonMortalityViewModel();
                     break;
                 default:
                     break;

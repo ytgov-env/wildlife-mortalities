@@ -1,20 +1,20 @@
 ﻿@using WildlifeMortalities.Data.Enums
 
 @namespace WildlifeMortalities.App.Features.HarvestReports
-@inherits ReportTypeComponent<CreateMortalityViewModel>
+@inherits ReportTypeComponent<MortalityViewModel>
 
 <EditForm EditContext="_context">
-    <FluentValidationValidator Validator="new CreateMortalityViewModelValidator()" />
+    <FluentValidationValidator Validator="new MortalityViewModelValidator()" />
 
     <BaseMortalityComponent ViewModel="_viewModel" />
 
     @switch (_viewModel)
     {
-        case CreateAmericanBlackBearMortalityViewModel vm:
+        case AmericanBlackBearMortalityViewModel vm:
             <AmericanBlackBearMortalityComponent ViewModel="vm" />
             break;
-        case CreateWoodBisonMortalityViewModel vm:
-            <CreateWoodBisonMortalityComponent ViewModel="vm" />
+        case WoodBisonMortalityViewModel vm:
+            <WoodBisonMortalityComponent ViewModel="vm" />
             break;
     }
 

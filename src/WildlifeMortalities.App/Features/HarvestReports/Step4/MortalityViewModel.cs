@@ -5,7 +5,7 @@ using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
-public class CreateMortalityViewModel
+public class MortalityViewModel
 {
     public decimal? Longitute { get; set; }
     public decimal? Latitude { get; set; }
@@ -17,17 +17,17 @@ public class CreateMortalityViewModel
         { AllSpecies.Elk, () => new ElkMortality() }
     };
 
-    public CreateMortalityViewModel()
+    public MortalityViewModel()
     {
 
     }
 
-    public CreateMortalityViewModel(Mortality mortality)
+    public MortalityViewModel(Mortality mortality)
     {
         Latitude = mortality.Latitude;
     }
 
-    public CreateMortalityViewModel(AllSpecies species)
+    public MortalityViewModel(AllSpecies species)
     {
         Species = species;
     }
@@ -50,4 +50,4 @@ public class CreateMortalityViewModel
 
 }
 
-public class CreateMortalityViewModelValidator : AbstractValidator<CreateMortalityViewModel> { }
+public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel> { }
