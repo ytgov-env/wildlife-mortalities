@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
-public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where T : new()
+public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where T : new() 
 {
     protected T _viewModel;
 
@@ -21,12 +21,8 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
     private void _context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         _context.Validate();
-        ValidationChanged.InvokeAsync(!_context.GetValidationMessages().Any());
+        ValidationChanged.InvokeAsync(_context.GetValidationMessages().Any() == false);
         FieldsChanged();
-        //if (_selectHarvestReportTypeViewModel.HarvestReportType.HasValue == true)
-        //{
-        //    HarvestReportTypeChanged.InvokeAsync(_selectHarvestReportTypeViewModel.HarvestReportType.Value);
-        //}
     }
 
     public void Dispose()

@@ -1,3 +1,18 @@
 ﻿@namespace WildlifeMortalities.App.Features.HarvestReports
+@using WildlifeMortalities.Data.Enums;
 
+<MudTextField @bind-Value="ViewModel.Latitude" Label="Latitude" />
+<MudTextField @bind-Value="ViewModel.Longitute" Label="Longitude" />
+
+<MudSelect T="Sex" @bind-Value="@ViewModel.Sex" Label="Sex">
+    @foreach (var item in Enum.GetValues<Sex>())
+    {
+        if (item == Sex.Uninitialized)
+        {
+            <MudSelectItem T="Sex" Value="@item">Select an option</MudSelectItem>
+        } else {
+            <MudSelectItem T="Sex" Value="@item">@item</MudSelectItem>
+        }
+    }
+</MudSelect>
 

@@ -1,5 +1,8 @@
 ﻿@namespace WildlifeMortalities.App.Features.HarvestReports
 
+<MudCheckBox @bind-Checked="@ViewModel.IsShotInConflict" Label="Shot in conflict" />
+
 @code {
 
+	[Parameter] public CreateAmericanBlackBearMortalityViewModel ViewModel { get; set;}
 }

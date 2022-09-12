@@ -1,0 +1,15 @@
+﻿@namespace WildlifeMortalities.App.Features.HarvestReports
+@using WildlifeMortalities.Data.Entities.Mortalities
+
+<MudSelect T="PregnancyStatus" @bind-Value="@ViewModel.PregnancyStatus"  Label="Pregnancy Status">
+	@foreach(var item in Enum.GetValues<PregnancyStatus>())
+		{
+			<MudSelectItem  T="PregnancyStatus"  Value="@item" >@item</MudSelectItem>
+		}
+</MudSelect>
+
+<MudCheckBox @bind-Checked="@ViewModel.IsWounded" Label="Is Wounded" />
+
+@code {
+	[Parameter] public CreateWoodBisonMortalityViewModel ViewModel { get; set;}
+}

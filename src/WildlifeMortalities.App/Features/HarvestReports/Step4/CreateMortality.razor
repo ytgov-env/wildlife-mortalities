@@ -6,41 +6,25 @@
 <EditForm EditContext="_context">
     <FluentValidationValidator Validator="new CreateMortalityViewModelValidator()" />
 
-    <BaseMortalityComponent/>
+    <BaseMortalityComponent ViewModel="_viewModel" />
 
-    @switch (Species)
+    @switch (_viewModel)
     {
-        case AllSpecies.AmericanBlackBear:
-            <AmericanBlackBearMortalityComponent/>
+        case CreateAmericanBlackBearMortalityViewModel vm:
+            <AmericanBlackBearMortalityComponent ViewModel="vm" />
             break;
-        case AllSpecies.BarrenGroundCaribou:
-            break;
-        case AllSpecies.Coyote:
-            break;
-        case AllSpecies.Elk:
-            break;
-        case AllSpecies.GreyWolf:
-            break;
-        case AllSpecies.GrizzlyBear:
-            break;
-        case AllSpecies.Moose:
-            break;
-        case AllSpecies.MountainGoat:
-            break;
-        case AllSpecies.MuleDeer:
-            break;
-        case AllSpecies.ThinhornSheep:
-            break;
-        case AllSpecies.Wolverine:
-            break;
-        case AllSpecies.WoodBison:
-            break;
-        case AllSpecies.WoodlandCaribou:
+        case CreateWoodBisonMortalityViewModel vm:
+            <CreateWoodBisonMortalityComponent ViewModel="vm" />
             break;
     }
+
+    <MudButton OnClick="CreateInstance" />
+
 
 </EditForm>
 
 
+@code {
 
+}
 
