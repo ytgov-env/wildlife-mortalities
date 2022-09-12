@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WildlifeMortalities.App.Pages.Authentication;
+namespace WildlifeMortalities.App.Features.Auth;
 
 [AllowAnonymous]
 public class LoginModel : PageModel
