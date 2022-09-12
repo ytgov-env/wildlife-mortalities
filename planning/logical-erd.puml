@@ -516,12 +516,6 @@ enum "GameManagementAreaStatus" as gma_status {
     OpenPermitRequired
 }
 
-enum "HarvestType" as harvest_type {
-    Uninitialized
-    Hunting
-    Trapping
-}
-
 enum "Sex" as sex {
     Uninitialized
     Female
