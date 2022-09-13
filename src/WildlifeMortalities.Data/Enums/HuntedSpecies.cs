@@ -26,6 +26,8 @@ public enum HuntedSpecies
     MuleDeer = AllSpecies.MuleDeer,
     [Display(Name = "Thinhorn Sheep")]
     ThinhornSheep = AllSpecies.ThinhornSheep,
+    [Display(Name = "White-tailed Deer")]
+    WhiteTailedDeer = AllSpecies.WhiteTailedDeer,
     [Display(Name = "Wolverine")]
     Wolverine = AllSpecies.Wolverine,
     [Display(Name = "Wood Bison")]

@@ -24,6 +24,7 @@ public class MortalityViewModel
         { AllSpecies.MountainGoat, () => new MountainGoatMortality() },
         { AllSpecies.MuleDeer, () => new MuleDeerMortality() },
         { AllSpecies.ThinhornSheep, () => new ThinhornSheepMortality() },
+        { AllSpecies.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
         { AllSpecies.Wolverine, () => new WolverineMortality() },
         { AllSpecies.WoodBison, () => new WoodBisonMortality() },
         { AllSpecies.WoodlandCaribou, () => new WoodlandCaribouMortality() }

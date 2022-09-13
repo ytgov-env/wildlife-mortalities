@@ -43,9 +43,10 @@ public enum AllSpecies
     SnowshoeHare = 38,
     ThinhornSheep = 39,
     Vole = 40,
-    Wolverine = 41,
-    WoodBison = 42,
-    Woodchuck = 43,
-    WoodlandCaribou = 44,
-    Bird = 45
+    WhiteTailedDeer = 41,
+    Wolverine = 42,
+    WoodBison = 43,
+    Woodchuck = 44,
+    WoodlandCaribou = 45,
+    Bird = 46
 }

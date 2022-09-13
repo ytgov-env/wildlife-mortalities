@@ -26,6 +26,7 @@ public partial class SelectSpeciesComponent
         { HuntedSpecies.MountainGoat, AllSpecies.MountainGoat },
         { HuntedSpecies.MuleDeer, AllSpecies.MuleDeer },
         { HuntedSpecies.ThinhornSheep, AllSpecies.ThinhornSheep },
+        { HuntedSpecies.WhiteTailedDeer, AllSpecies.WhiteTailedDeer },
         { HuntedSpecies.Wolverine, AllSpecies.Wolverine },
         { HuntedSpecies.WoodBison, AllSpecies.WoodBison },
         { HuntedSpecies.WoodlandCaribou, AllSpecies.WoodlandCaribou }

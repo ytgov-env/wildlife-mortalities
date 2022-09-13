@@ -160,6 +160,9 @@ together {
     entity "VoleMortality" as vole_mortality {
 
     }
+    entity "WhiteTailedDeerMortality" as whitetaileddeer_mortality {
+
+    }
     entity "WolverineMortality" as wolverine_mortality {
 
     }
@@ -214,6 +217,10 @@ entity "ThinhornSheepBiologicalSubmission" as thinhornsheepbiological_submission
     *Broomed: enum
     *LengthToThirdAnnulus: number
     *PlugNumber: string
+}
+entity "WhiteTailtedDeerBiologicalSubmission" as whitetaileddeerbiological_submission {
+    *IsHornIncluded: bool
+    *IsHeadIncluded: bool
 }
 entity "WoodBisonBiologicalSubmission" as woodbisonbiological_submission {
 
@@ -367,6 +374,7 @@ mortality <|-- shrew_mortality
 mortality <|-- snowshoehare_mortality
 mortality <|-- thinhornsheep_mortality
 mortality <|-- vole_mortality
+mortality <|-- whitetaileddeer_mortality
 mortality <|-- wolverine_mortality
 mortality <|-- woodbison_mortality
 mortality <|-- woodchuck_mortality
@@ -381,6 +389,7 @@ biological_submission <|-up- grizzlybearbiological_submission
 biological_submission <|-up- mountaingoatbiological_submission
 biological_submission <|-up- muledeerbiological_submission
 biological_submission <|-up- thinhornsheepbiological_submission
+biological_submission <|-up- whitetaileddeerbiological_submission
 biological_submission <|-up- woodbisonbiological_submission
 
 licence <|-- hunting_licence
@@ -407,6 +416,7 @@ grizzlybearbiological_submission |o.up.|| grizzlybear_mortality
 mountaingoatbiological_submission |o.up.|| mountaingoat_mortality
 muledeerbiological_submission |o.up.|| muledeer_mortality
 thinhornsheepbiological_submission |o.up.|| thinhornsheep_mortality
+whitetaileddeerbiological_submission |o.up.|| whitetaileddeer_mortality
 woodbisonbiological_submission |o.up.|| woodbison_mortality
 
 biological_submission ||..|| age
