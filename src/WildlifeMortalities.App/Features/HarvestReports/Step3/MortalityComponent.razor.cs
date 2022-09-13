@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Components;
-using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.HarvestReports
 {
     public partial class MortalityComponent
     {
-
         private AllSpecies _species;
 
         [Parameter]
@@ -24,9 +22,11 @@ namespace WildlifeMortalities.App.Features.HarvestReports
                     case AllSpecies.AmericanBlackBear:
                         viewModel = new AmericanBlackBearMortalityViewModel();
                         break;
+
                     case AllSpecies.WoodBison:
                         viewModel = new WoodBisonMortalityViewModel();
                         break;
+
                     default:
                         break;
                 }
@@ -35,7 +35,6 @@ namespace WildlifeMortalities.App.Features.HarvestReports
             }
 
             base.OnParametersSet();
-
         }
     }
 }

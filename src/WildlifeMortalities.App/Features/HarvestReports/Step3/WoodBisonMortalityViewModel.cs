@@ -1,5 +1,4 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.Reporters;
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
@@ -8,9 +7,7 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
     public PregnancyStatus PregnancyStatus { get; set; }
     public bool IsWounded { get; set; }
 
-    public WoodBisonMortalityViewModel() : base(Data.Enums.AllSpecies.WoodBison)
-    {
-    }
+    public WoodBisonMortalityViewModel() : base(Data.Enums.AllSpecies.WoodBison) { }
 
     public override Mortality GetMortality(int reporterId)
     {

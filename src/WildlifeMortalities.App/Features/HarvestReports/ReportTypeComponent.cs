@@ -53,7 +53,6 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
     [Parameter]
     public EventCallback<bool> ValidationChanged { get; set; }
 
-
     [Parameter]
     public EventCallback<T> ViewModelChanged { get; set; }
 }

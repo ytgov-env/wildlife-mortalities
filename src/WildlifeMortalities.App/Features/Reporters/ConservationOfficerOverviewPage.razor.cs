@@ -23,9 +23,10 @@ namespace WildlifeMortalities.App.Features.Reporters
 
         private SelectConservationOfficerViewModel _selectedConservationOfficerViewModel = null!;
 
-        private async Task<IEnumerable<ConservationOfficer>> SearchConservationOfficerByBadgeNumberOrLastName(
-        string input
-    ) => throw new NotImplementedException();
+        private async Task<
+            IEnumerable<ConservationOfficer>
+        > SearchConservationOfficerByBadgeNumberOrLastName(string input) =>
+            throw new NotImplementedException();
 
         public void Dispose()
         {

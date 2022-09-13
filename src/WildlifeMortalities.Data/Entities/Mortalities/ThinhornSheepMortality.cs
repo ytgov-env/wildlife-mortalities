@@ -1,6 +1,7 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class ThinhornSheepMortality : Mortality {
+public class ThinhornSheepMortality : Mortality
+{
     public ThinhornSheepBodyColour BodyColour { get; set; }
     public ThinhornSheepTailColour TailColour { get; set; }
 }

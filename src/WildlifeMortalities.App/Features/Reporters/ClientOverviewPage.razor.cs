@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Shared.Models;
 using WildlifeMortalities.Shared.Services;
 

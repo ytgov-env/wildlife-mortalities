@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.Reporters;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
@@ -12,28 +11,26 @@ public class MortalityViewModel
     public Sex Sex { get; set; }
     public AllSpecies Species { get; }
 
-    private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory = new()
-    {
-        { AllSpecies.AmericanBlackBear, () => new AmericanBlackBearMortality() },
-        { AllSpecies.BarrenGroundCaribou, () => new BarrenGroundCaribouMortality() },
-        { AllSpecies.Coyote, () => new CoyoteMortality() },
-        { AllSpecies.Elk, () => new ElkMortality() },
-        { AllSpecies.GreyWolf, () => new GreyWolfMortality() },
-        { AllSpecies.GrizzlyBear, () => new GrizzlyBearMortality() },
-        { AllSpecies.Moose, () => new MooseMortality() },
-        { AllSpecies.MountainGoat, () => new MountainGoatMortality() },
-        { AllSpecies.MuleDeer, () => new MuleDeerMortality() },
-        { AllSpecies.ThinhornSheep, () => new ThinhornSheepMortality() },
-        { AllSpecies.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
-        { AllSpecies.Wolverine, () => new WolverineMortality() },
-        { AllSpecies.WoodBison, () => new WoodBisonMortality() },
-        { AllSpecies.WoodlandCaribou, () => new WoodlandCaribouMortality() }
-    };
+    private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory =
+        new()
+        {
+            { AllSpecies.AmericanBlackBear, () => new AmericanBlackBearMortality() },
+            { AllSpecies.BarrenGroundCaribou, () => new BarrenGroundCaribouMortality() },
+            { AllSpecies.Coyote, () => new CoyoteMortality() },
+            { AllSpecies.Elk, () => new ElkMortality() },
+            { AllSpecies.GreyWolf, () => new GreyWolfMortality() },
+            { AllSpecies.GrizzlyBear, () => new GrizzlyBearMortality() },
+            { AllSpecies.Moose, () => new MooseMortality() },
+            { AllSpecies.MountainGoat, () => new MountainGoatMortality() },
+            { AllSpecies.MuleDeer, () => new MuleDeerMortality() },
+            { AllSpecies.ThinhornSheep, () => new ThinhornSheepMortality() },
+            { AllSpecies.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
+            { AllSpecies.Wolverine, () => new WolverineMortality() },
+            { AllSpecies.WoodBison, () => new WoodBisonMortality() },
+            { AllSpecies.WoodlandCaribou, () => new WoodlandCaribouMortality() }
+        };
 
-    public MortalityViewModel()
-    {
-
-    }
+    public MortalityViewModel() { }
 
     public MortalityViewModel(Mortality mortality)
     {
@@ -63,7 +60,6 @@ public class MortalityViewModel
         derivatingMortality.Sex = Sex;
         derivatingMortality.ReporterId = reporterId;
     }
-
 }
 
 public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel> { }
