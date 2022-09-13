@@ -1,4 +1,5 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.Reporters;
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
@@ -11,7 +12,7 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
     {
     }
 
-    public override Mortality GetMortality()
+    public override Mortality GetMortality(int reporterId)
     {
         var mortality = new WoodBisonMortality
         {
@@ -19,7 +20,7 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
             IsWounded = IsWounded
         };
 
-        SetBaseValues(mortality);
+        SetBaseValues(mortality, reporterId);
         return mortality;
     }
 }

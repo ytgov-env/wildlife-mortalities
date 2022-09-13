@@ -1,0 +1,26 @@
+﻿@page "/harvest-reports/{reporterid:int}"
+@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Shared.Models
+
+<SelectHarvestReportTypeComponent ValidationChanged="@( (x) => SetStepValidation(1,x))" HarvestReportTypeChanged="HarvestReportTypeChanged" />
+@if (_validationMapper[1] == true)
+{
+    <SelectSpeciesComponent ReportType="_harvestReportType" SpeciesChanged="SpeciesChanged" ValidationChanged="@( (x) => SetStepValidation(2,x))" />
+
+    @if (_validationMapper[2] == true)
+    {
+
+        <HarvestReportComponent ReportType="_harvestReportType" ViewModelChanged="SetHarvestReportViewModel" ValidationChanged="@( (x) => SetStepValidation(3,x))" />
+        <MortalityComponent ViewModelChanged="SetMortalityViewModel" Species="_species" ValidationChanged="@( (x) => SetStepValidation(4,x))" />
+
+        @if (_validationMapper[3] == true && _validationMapper[4] == true)
+        {
+            <MudButton OnClick="CreateHarvestReport">Create</MudButton>
+        } else {
+            <MudButton Disabled="true">Create</MudButton>
+        }
+
+    }
+}
+
+

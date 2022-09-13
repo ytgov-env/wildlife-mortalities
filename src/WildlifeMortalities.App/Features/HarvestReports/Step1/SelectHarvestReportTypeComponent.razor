@@ -3,17 +3,10 @@
 
 <EditForm EditContext="_context">
     <FluentValidationValidator Validator="new SelectHarvestReportTypeViewModelValidator()" />
-    <MudItem>
-        <MudPaper Class="pa-4 mb-4">
-            <MudSelect T="HarvestReportType?" @bind-Value="_viewModel.HarvestReportType" For="@(() => _viewModel.HarvestReportType)" Label="Harvest Report Type">
-                <MudSelectItem T="HarvestReportType?" Value="null">Select an option</MudSelectItem>
-                @foreach (HarvestReportType harvestReportType in Enum.GetValues(typeof(HarvestReportType)))
-                {
-                    <MudSelectItem Value="@harvestReportType" T="HarvestReportType?">@harvestReportType</MudSelectItem>
-                }
-            </MudSelect>
-        </MudPaper>
-    </MudItem>
-
-
+    <MudSelect T="HarvestReportType" @bind-Value="ViewModel.HarvestReportType" For="@(() => ViewModel.HarvestReportType)" Label="Harvest Report Type">
+        @foreach (HarvestReportType harvestReportType in Enum.GetValues(typeof(HarvestReportType)))
+        {
+            <MudSelectItem Value="@harvestReportType" T="HarvestReportType">@harvestReportType</MudSelectItem>
+        }
+    </MudSelect>
 </EditForm>

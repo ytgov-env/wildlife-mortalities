@@ -33,13 +33,13 @@ public partial class SelectSpeciesComponent
 
     protected override void FieldsChanged()
     {
-        if (_viewModel.HuntedSpecies.HasValue)
+        if (ViewModel.HuntedSpecies.HasValue)
         {
-            SpeciesChanged.InvokeAsync(_huntedMapper[_viewModel.HuntedSpecies.Value]);
+            SpeciesChanged.InvokeAsync(_huntedMapper[ViewModel.HuntedSpecies.Value]);
         }
-        else if (_viewModel.TrappedSpecies.HasValue)
+        else if (ViewModel.TrappedSpecies.HasValue)
         {
-            SpeciesChanged.InvokeAsync(_trappedMapper[_viewModel.TrappedSpecies.Value]);
+            SpeciesChanged.InvokeAsync(_trappedMapper[ViewModel.TrappedSpecies.Value]);
         }
     }
 

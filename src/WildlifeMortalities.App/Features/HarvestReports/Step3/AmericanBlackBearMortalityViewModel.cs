@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.Reporters;
 
 namespace WildlifeMortalities.App.Features.HarvestReports;
 
@@ -16,7 +17,7 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 
     }
 
-    public override Mortality GetMortality()
+    public override Mortality GetMortality(int reporterId)
     {
         var mortality = new AmericanBlackBearMortality
         {
@@ -24,7 +25,7 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 
         };
 
-        SetBaseValues(mortality);
+        SetBaseValues(mortality, reporterId);
 
         return mortality;
 

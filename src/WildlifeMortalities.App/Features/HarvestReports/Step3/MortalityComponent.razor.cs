@@ -1,37 +1,40 @@
 using Microsoft.AspNetCore.Components;
+using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.HarvestReports
 {
     public partial class MortalityComponent
     {
-        private MortalityViewModel _viewModel;
+
+        private AllSpecies _species;
 
         [Parameter]
         public AllSpecies Species { get; set; }
 
         protected override void OnParametersSet()
         {
-            _viewModel = new(Species);
-
-            switch (Species)
+            if (_species != Species)
             {
-                case AllSpecies.AmericanBlackBear:
-                    _viewModel = new AmericanBlackBearMortalityViewModel();
-                    break;
-                case AllSpecies.WoodBison:
-                    _viewModel = new WoodBisonMortalityViewModel();
-                    break;
-                default:
-                    break;
-            }
-            base.OnParametersSet();
-        }
+                _species = Species;
+                MortalityViewModel viewModel = new MortalityViewModel(Species);
 
-        private void CreateInstance()
-        {
-            var mortality =  _viewModel.GetMortality();
-            Console.WriteLine(mortality.GetType().Name);
+                switch (Species)
+                {
+                    case AllSpecies.AmericanBlackBear:
+                        viewModel = new AmericanBlackBearMortalityViewModel();
+                        break;
+                    case AllSpecies.WoodBison:
+                        viewModel = new WoodBisonMortalityViewModel();
+                        break;
+                    default:
+                        break;
+                }
+
+                SetViewModel(viewModel);
+            }
+
+            base.OnParametersSet();
 
         }
     }

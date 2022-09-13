@@ -9,7 +9,7 @@
 
     @if (ReportType == HarvestReportType.Trapping)
     {
-        <MudSelect T="TrappedSpecies?" @bind-Value="_viewModel.TrappedSpecies" For="@(() => _viewModel.TrappedSpecies)" Label="Species">
+        <MudSelect T="TrappedSpecies?" @bind-Value="ViewModel.TrappedSpecies" For="@(() => ViewModel.TrappedSpecies)" Label="Species">
             <MudSelectItem T="TrappedSpecies?" Value="null">Select an option</MudSelectItem>
             @foreach (TrappedSpecies species in Enum.GetValues(typeof(TrappedSpecies)))
             {
@@ -22,7 +22,7 @@
     }
     else
     {
-        <MudSelect T="HuntedSpecies?" @bind-Value="_viewModel.HuntedSpecies" For="@(() => _viewModel.HuntedSpecies)" Label="Species">
+        <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species">
             <MudSelectItem T="HuntedSpecies?" Value="null">Select an option</MudSelectItem>
             @foreach (HuntedSpecies species in Enum.GetValues(typeof(HuntedSpecies)))
             {

@@ -1,0 +1,14 @@
+﻿@namespace WildlifeMortalities.App.Features.HarvestReports
+@inherits ReportTypeComponent<HarvestReportViewModel>
+
+<EditForm EditContext="_context">
+    <FluentValidationValidator Validator="new HarvestReportViewModelValidator(ReportType)" />
+
+    <MudTextField @bind-Value="ViewModel.Comments" For="@(() => ViewModel.Comments)" Label="Comments" />
+
+    @if (ReportType == HarvestReportType.Hunting)
+    {
+        <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark" />
+
+    }
+</EditForm>

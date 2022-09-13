@@ -7,10 +7,7 @@ public partial class SelectHarvestReportTypeComponent
 {
     protected override void FieldsChanged()
     {
-        if (_viewModel.HarvestReportType.HasValue == true)
-        {
-            HarvestReportTypeChanged.InvokeAsync(_viewModel.HarvestReportType.Value);
-        }
+        HarvestReportTypeChanged.InvokeAsync(ViewModel.HarvestReportType);
     }
 
     [Parameter]

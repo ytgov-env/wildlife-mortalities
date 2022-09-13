@@ -4,7 +4,7 @@ namespace WildlifeMortalities.App.Features.HarvestReports;
 
 public class SelectHarvestReportTypeViewModel
 {
-    public HarvestReportType? HarvestReportType { get; set; }
+    public HarvestReportType HarvestReportType { get; set; } = HarvestReportType.Hunting;
 }
 
 public class SelectHarvestReportTypeViewModelValidator

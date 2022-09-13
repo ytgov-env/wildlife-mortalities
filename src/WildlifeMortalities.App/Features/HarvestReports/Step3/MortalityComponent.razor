@@ -6,9 +6,9 @@
 <EditForm EditContext="_context">
     <FluentValidationValidator Validator="new MortalityViewModelValidator()" />
 
-    <BaseMortalityComponent ViewModel="_viewModel" />
+    <BaseMortalityComponent ViewModel="ViewModel" />
 
-    @switch (_viewModel)
+    @switch (ViewModel)
     {
         case AmericanBlackBearMortalityViewModel vm:
             <AmericanBlackBearMortalityComponent ViewModel="vm" />
@@ -17,9 +17,6 @@
             <WoodBisonMortalityComponent ViewModel="vm" />
             break;
     }
-
-    <MudButton OnClick="CreateInstance" />
-
 
 </EditForm>
 
