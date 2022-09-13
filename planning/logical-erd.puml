@@ -175,56 +175,54 @@ together {
     }
 }
 
-'together {
-    entity "BiologicalSubmission" as biological_submission {
-        *Id: number <<generated>>
-        --
-        *MortalityId: number <<FK>>
-    }
-    entity "AmericanBlackBearBiologicalSubmission" as americanblackbearbiological_submission {
-        *SkullCondition: string
-        *SkullLength: number
-        *SkullHeight: number
-    }
-    entity "CanadaLynxBiologicalSubmission" as canadalynxbiological_submission {
-        *PeltLength: number
-        *PeltWidth: number
-    }
-    entity "ElkBiologicalSubmission" as elkbiological_submission {
-        *IsHornIncluded: bool
-        *IsHeadIncluded: bool
-    }
-    entity "GreyWolfBiologicalSubmission" as greywolfbiological_submission {
-        *PeltColour: enum
-    }
-    entity "GrizzlyBearBiologicalSubmission" as grizzlybearbiological_submission {
-        *SkullCondition: string
-        *SkullLength: number
-        *SkullHeight: number
-        *IsEvidenceOfSexAttached: bool
-    }
-    entity "MountainGoatBiologicalSubmission" as mountaingoatbiological_submission {
-        *IsHornIncluded: bool
-        *IsHeadIncluded: bool
-    }
-    entity "MuleDeerBiologicalSubmission" as muledeerbiological_submission {
-        *IsHornIncluded: bool
-        *IsHeadIncluded: bool
-    }
-    entity "ThinhornSheepBiologicalSubmission" as thinhornsheepbiological_submission {
-        *Broomed: enum
-        *LengthToThirdAnnulus: number
-        *PlugNumber: string
-    }
-    entity "WoodBisonBiologicalSubmission" as woodbisonbiological_submission {
+entity "BiologicalSubmission" as biological_submission {
+    *Id: number <<generated>>
+    --
+    *MortalityId: number <<FK>>
+}
+entity "AmericanBlackBearBiologicalSubmission" as americanblackbearbiological_submission {
+    *SkullCondition: string
+    *SkullLength: number
+    *SkullHeight: number
+}
+entity "CanadaLynxBiologicalSubmission" as canadalynxbiological_submission {
+    *PeltLength: number
+    *PeltWidth: number
+}
+entity "ElkBiologicalSubmission" as elkbiological_submission {
+    *IsHornIncluded: bool
+    *IsHeadIncluded: bool
+}
+entity "GreyWolfBiologicalSubmission" as greywolfbiological_submission {
+    *PeltColour: enum
+}
+entity "GrizzlyBearBiologicalSubmission" as grizzlybearbiological_submission {
+    *SkullCondition: string
+    *SkullLength: number
+    *SkullHeight: number
+    *IsEvidenceOfSexAttached: bool
+}
+entity "MountainGoatBiologicalSubmission" as mountaingoatbiological_submission {
+    *IsHornIncluded: bool
+    *IsHeadIncluded: bool
+}
+entity "MuleDeerBiologicalSubmission" as muledeerbiological_submission {
+    *IsHornIncluded: bool
+    *IsHeadIncluded: bool
+}
+entity "ThinhornSheepBiologicalSubmission" as thinhornsheepbiological_submission {
+    *Broomed: enum
+    *LengthToThirdAnnulus: number
+    *PlugNumber: string
+}
+entity "WoodBisonBiologicalSubmission" as woodbisonbiological_submission {
 
-    }
-    entity "Age" as age {
-        *BiologicalSubmissionId: number <<FK>>
-        *Years: number
-        *ConfidenceInAge: enum
-    }
-'}
+}
+entity "Age" as age {
+    *BiologicalSubmissionId: number <<FK>>
+    *Years: number
+    *ConfidenceInAge: enum
+}
 
 together {
     entity "Reporter" as reporter {
@@ -284,7 +282,8 @@ together {
 entity "Violation" as violation {
     *Id: number <<generated>>
     --
-
+    *Code: string
+    *Description: string
 }
 
 entity "GameManagementArea" as game_management_area {
