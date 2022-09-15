@@ -8,7 +8,6 @@ namespace WildlifeMortalities.App.Features.HarvestReports;
 
 public partial class HarvestReportPage
 {
-    private int _selectedIndex;
     private readonly Dictionary<int, bool> _validationMapper = new();
 
     private HarvestReportType _harvestReportType;
@@ -56,7 +55,7 @@ public partial class HarvestReportPage
     private async Task CreateHarvestReport()
     {
         HarvestReport report = null;
-        if (_harvestReportType == HarvestReportType.Hunting)
+        if (_harvestReportType == HarvestReportType.Hunted)
         {
             report = new HuntedHarvestReport
             {
@@ -65,7 +64,7 @@ public partial class HarvestReportPage
                 Comments = _harvestReportViewModel.Comments,
             };
         }
-        else
+        else if (_harvestReportType == HarvestReportType.Trapped)
         {
             report = new TrappedHarvestReport() { Comments = _harvestReportViewModel.Comments, };
         }

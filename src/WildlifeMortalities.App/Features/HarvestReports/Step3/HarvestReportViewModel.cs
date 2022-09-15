@@ -12,7 +12,7 @@ public class HarvestReportViewModelValidator : AbstractValidator<HarvestReportVi
 {
     public HarvestReportViewModelValidator(HarvestReportType type)
     {
-        RuleFor(x => x.Landmark).NotNull().When(x => type == HarvestReportType.Hunting);
+        RuleFor(x => x.Landmark).NotNull().When(x => type == HarvestReportType.Hunted);
         RuleFor(x => x.Comments)
             .Length(10, 1000)
             .When(x => String.IsNullOrEmpty(x.Comments) == false);

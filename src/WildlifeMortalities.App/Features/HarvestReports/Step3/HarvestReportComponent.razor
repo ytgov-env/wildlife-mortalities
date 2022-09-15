@@ -6,7 +6,7 @@
 
     <MudTextField @bind-Value="ViewModel.Comments" For="@(() => ViewModel.Comments)" Label="Comments" />
 
-    @if (ReportType == HarvestReportType.Hunting)
+    @if (ReportType == HarvestReportType.Hunted)
     {
         <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark" />
 

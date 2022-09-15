@@ -13,7 +13,7 @@ public class SelectSpeciesViewModelValidator : AbstractValidator<SelectSpeciesVi
 {
     public SelectSpeciesViewModelValidator(HarvestReportType type)
     {
-        RuleFor(x => x.TrappedSpecies).NotNull().When(_ => type == HarvestReportType.Trapping);
-        RuleFor(x => x.HuntedSpecies).NotNull().When(_ => type == HarvestReportType.Hunting);
+        RuleFor(x => x.TrappedSpecies).NotNull().When(_ => type == HarvestReportType.Trapped);
+        RuleFor(x => x.HuntedSpecies).NotNull().When(_ => type == HarvestReportType.Hunted);
     }
 }

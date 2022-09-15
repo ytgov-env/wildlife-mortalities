@@ -4,7 +4,7 @@ namespace WildlifeMortalities.App.Features.HarvestReports;
 
 public class SelectHarvestReportTypeViewModel
 {
-    public HarvestReportType HarvestReportType { get; set; } = HarvestReportType.Hunting;
+    public HarvestReportType HarvestReportType { get; set; } = HarvestReportType.Hunted;
 }
 
 public class SelectHarvestReportTypeViewModelValidator
@@ -18,6 +18,7 @@ public class SelectHarvestReportTypeViewModelValidator
 
 public enum HarvestReportType
 {
-    Hunting,
-    Trapping
+    Hunted,
+    Outfitted,
+    Trapped
 }
