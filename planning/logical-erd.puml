@@ -7,7 +7,7 @@ skinparam linetype ortho
 
 ' Entities
 
-'together {
+together {
     entity "HarvestReport" as harvest_report {
         *Id: number <<generated>>
         --
@@ -16,6 +16,7 @@ skinparam linetype ortho
         *HarvestReportStatus: enum
     }
     entity "HuntedHarvestReport" as hunted_harvest_report {
+        MortalityId: number <<FK>>
         GameManagementAreaSpeciesId: number <<FK>>
         SealId: number <<FK>>
         TemporarySealNumber: string
@@ -36,7 +37,7 @@ skinparam linetype ortho
         *Id: number <<generated>>
         --
     }
-'}
+}
 
 together {
     entity "Mortality" as mortality {
@@ -69,7 +70,7 @@ together {
 
     }
     entity "BarrenGroundCaribouMortality" as barrengroundcaribou_mortality {
-
+        *BarrenGroundCaribouHerd: enum
     }
     entity "BushyTailedWoodratMortality" as bushytailedwoodrat_mortality {
 
@@ -185,7 +186,7 @@ together {
 
     }
     entity "WoodlandCaribouMortality" as woodlandcaribou_mortality {
-
+        *WoodlandCaribouHerd: enum
     }
 }
 
@@ -411,7 +412,7 @@ licence <|-- trapping_licence
 
 ' Relationships
 
-hunted_harvest_report }o..|| game_management_area_species
+hunted_harvest_report }o.right.|| game_management_area_species
 hunted_harvest_report |o..|| seal
 hunted_harvest_report }o..o{ violation
 trapped_harvest_report }o..|| trapping_licence
@@ -497,6 +498,14 @@ enum "BirdSpecies" as bird_species {
 
 }
 
+enum "WoodlandCaribouHerd" as woodland_caribou_herd {
+
+}
+
+enum "BarrenGroundCaribouHerd" as barren_ground_caribou_herd {
+
+}
+
 enum "HuntedSpecies" as hunted_species {
     Uninitialized
     AmericanBlackBear
@@ -538,6 +547,10 @@ enum "GameManagementAreaStatus" as gma_status {
     Closed
     Open
     OpenPermitRequired
+}
+
+enum "HarvestReportStatus" as harvest_report_status {
+
 }
 
 enum "Sex" as sex {
