@@ -48,37 +48,13 @@ together {
         Latitude: number
         Longitude: number
     }
-    entity "BirdMortality" as bird_mortality {
-        BirdSpecies: enum
-    }
-    entity "AmericanBeaverMortality" as americanbeaver_mortality {
-
-    }
     entity "AmericanBlackBearMortality" as americanblackbear_mortality {
         *IsShotInConflict: bool
-    }
-    entity "AmericanMartinMortality" as americanmartin_mortality {
-
-    }
-    entity "AmericanMinkMortality" as americanmink_mortality {
-
-    }
-    entity "ArcticFoxMortality" as arcticfox_mortality {
-
-    }
-    entity "ArcticGroundSquirrelMortality" as arcticgroundsquirrel_mortality {
-
     }
     entity "BarrenGroundCaribouMortality" as barrengroundcaribou_mortality {
         *BarrenGroundCaribouHerd: enum
     }
-    entity "BushyTailedWoodratMortality" as bushytailedwoodrat_mortality {
-
-    }
     entity "CanadaLynxMortality" as canadalynx_mortality {
-
-    }
-    entity "CollaredPikaMortality" as collaredpika_mortality {
 
     }
     entity "CougarMortality" as cougar_mortality {
@@ -90,35 +66,11 @@ together {
     entity "ElkMortality" as elk_mortality {
 
     }
-    entity "ErmineMortality" as ermine_mortality {
-
-    }
-    entity "FisherMortality" as fisher_mortality {
-
-    }
     entity "GreyWolfMortality" as greywolf_mortality {
 
     }
     entity "GrizzlyBearMortality" as grizzlybear_mortality {
         *IsShotInConflict: bool
-    }
-    entity "HoaryMarmotMortality" as hoarymarmot_mortality {
-
-    }
-    entity "LeastChipmunkMortality" as leastchipmunk_mortality {
-
-    }
-    entity "LeastWeaselMortality" as leastweasel_mortality {
-
-    }
-    entity "LemmingMortality" as lemming_mortality {
-
-    }
-    entity "LittleBrownBatMortality" as littlebrownbat_mortality {
-
-    }
-    entity "MeadowJumpingMouseMortality" as meadowjumpingmouse_mortality {
-
     }
     entity "MooseMortality" as moose_mortality {
 
@@ -132,45 +84,12 @@ together {
     entity "MuskoxMortality" as muskox_mortality {
 
     }
-    entity "MuskratMortality" as muskrat_mortality {
-
-    }
-    entity "NorthAmericanDeerMouseMortality" as northamericandeermouse_mortality {
-
-    }
-    entity "NorthAmericanPorcupineMortality" as northamericanporcupine_mortality {
-
-    }
-    entity "NorthernFlyingSquirrelMortality" as northernflyingsquirrel_mortality {
-
-    }
-    entity "NorthernLongEaredBatMortality" as northernlongearedbat_mortality {
-
-    }
-    entity "NorthernRiverOtterMortality" as northernriverotter_mortality {
-
-    }
     entity "PolarBearMortality" as polarbear_mortality {
-
-    }
-    entity "RedFoxMortality" as redfox_mortality {
-
-    }
-    entity "RedSquirrelMortality" as redsquirrel_mortality {
-
-    }
-    entity "ShrewMortality" as shrew_mortality {
-
-    }
-    entity "SnowshoeHareMortality" as snowshoehare_mortality {
 
     }
     entity "ThinhornSheepMortality" as thinhornsheep_mortality {
         *BodyColour: enum
         *TailColour: enum
-    }
-    entity "VoleMortality" as vole_mortality {
-
     }
     entity "WhiteTailedDeerMortality" as whitetaileddeer_mortality {
 
@@ -182,13 +101,95 @@ together {
         *PregnancyStatus: enum
         *IsWounded: bool
     }
-    entity "WoodchuckMortality" as woodchuck_mortality {
-
-    }
     entity "WoodlandCaribouMortality" as woodlandcaribou_mortality {
         *WoodlandCaribouHerd: enum
     }
+    entity "BirdMortality" as bird_mortality {
+        BirdSpecies: enum
+    }
 }
+
+/' entity "AmericanBeaverMortality" as americanbeaver_mortality {
+
+}
+entity "AmericanMartinMortality" as americanmartin_mortality {
+
+}
+entity "AmericanMinkMortality" as americanmink_mortality {
+
+}
+entity "ArcticFoxMortality" as arcticfox_mortality {
+
+}
+entity "ArcticGroundSquirrelMortality" as arcticgroundsquirrel_mortality {
+
+}
+entity "BushyTailedWoodratMortality" as bushytailedwoodrat_mortality {
+
+}
+entity "CollaredPikaMortality" as collaredpika_mortality {
+
+}
+entity "ErmineMortality" as ermine_mortality {
+
+}
+entity "FisherMortality" as fisher_mortality {
+
+}
+entity "HoaryMarmotMortality" as hoarymarmot_mortality {
+
+}
+entity "LeastChipmunkMortality" as leastchipmunk_mortality {
+
+}
+entity "LeastWeaselMortality" as leastweasel_mortality {
+
+}
+entity "LemmingMortality" as lemming_mortality {
+
+}
+entity "LittleBrownBatMortality" as littlebrownbat_mortality {
+
+}
+entity "MeadowJumpingMouseMortality" as meadowjumpingmouse_mortality {
+
+}
+entity "MuskratMortality" as muskrat_mortality {
+
+}
+entity "NorthAmericanDeerMouseMortality" as northamericandeermouse_mortality {
+
+}
+entity "NorthAmericanPorcupineMortality" as northamericanporcupine_mortality {
+
+}
+entity "NorthernFlyingSquirrelMortality" as northernflyingsquirrel_mortality {
+
+}
+entity "NorthernLongEaredBatMortality" as northernlongearedbat_mortality {
+
+}
+entity "NorthernRiverOtterMortality" as northernriverotter_mortality {
+
+}
+entity "RedFoxMortality" as redfox_mortality {
+
+}
+entity "RedSquirrelMortality" as redsquirrel_mortality {
+
+}
+entity "ShrewMortality" as shrew_mortality {
+
+}
+entity "SnowshoeHareMortality" as snowshoehare_mortality {
+
+}
+entity "VoleMortality" as vole_mortality {
+
+}
+entity "WoodchuckMortality" as woodchuck_mortality {
+
+} '/
 
 entity "BiologicalSubmission" as biological_submission {
     *Id: number <<generated>>
@@ -346,52 +347,53 @@ harvest_report <|-- trapped_harvest_report
 reporter <|-- client
 reporter <|-- conservation_officer
 
-mortality <|-- americanbeaver_mortality
 mortality <|-- americanblackbear_mortality
+mortality <|-- barrengroundcaribou_mortality
+mortality <|-- canadalynx_mortality
+mortality <|-- cougar_mortality
+mortality <|-- coyote_mortality
+mortality <|-- elk_mortality
+mortality <|-- greywolf_mortality
+mortality <|-- grizzlybear_mortality
+mortality <|-- moose_mortality
+mortality <|-- mountaingoat_mortality
+mortality <|-- muledeer_mortality
+mortality <|-- muskox_mortality
+mortality <|-- polarbear_mortality
+mortality <|-- thinhornsheep_mortality
+mortality <|-- whitetaileddeer_mortality
+mortality <|-- wolverine_mortality
+mortality <|-- woodbison_mortality
+mortality <|-- woodlandcaribou_mortality
+mortality <|-- bird_mortality
+
+/' mortality <|-- americanbeaver_mortality
 mortality <|-- americanmartin_mortality
 mortality <|-- americanmink_mortality
 mortality <|-- arcticfox_mortality
 mortality <|-- arcticgroundsquirrel_mortality
-mortality <|-- barrengroundcaribou_mortality
 mortality <|-- bushytailedwoodrat_mortality
-mortality <|-- canadalynx_mortality
 mortality <|-- collaredpika_mortality
-mortality <|-- cougar_mortality
-mortality <|-- coyote_mortality
-mortality <|-- elk_mortality
 mortality <|-- ermine_mortality
 mortality <|-- fisher_mortality
-mortality <|-- greywolf_mortality
-mortality <|-- grizzlybear_mortality
 mortality <|-- hoarymarmot_mortality
 mortality <|-- leastchipmunk_mortality
 mortality <|-- leastweasel_mortality
 mortality <|-- lemming_mortality
 mortality <|-- littlebrownbat_mortality
 mortality <|-- meadowjumpingmouse_mortality
-mortality <|-- moose_mortality
-mortality <|-- mountaingoat_mortality
-mortality <|-- muledeer_mortality
-mortality <|-- muskox_mortality
 mortality <|-- muskrat_mortality
 mortality <|-- northamericandeermouse_mortality
 mortality <|-- northamericanporcupine_mortality
 mortality <|-- northernflyingsquirrel_mortality
 mortality <|-- northernlongearedbat_mortality
 mortality <|-- northernriverotter_mortality
-mortality <|-- polarbear_mortality
 mortality <|-- redfox_mortality
 mortality <|-- redsquirrel_mortality
 mortality <|-- shrew_mortality
 mortality <|-- snowshoehare_mortality
-mortality <|-- thinhornsheep_mortality
 mortality <|-- vole_mortality
-mortality <|-- whitetaileddeer_mortality
-mortality <|-- wolverine_mortality
-mortality <|-- woodbison_mortality
-mortality <|-- woodchuck_mortality
-mortality <|-- woodlandcaribou_mortality
-mortality <|-- bird_mortality
+mortality <|-- woodchuck_mortality '/
 
 biological_submission <|-up- americanblackbearbiological_submission
 biological_submission <|-up- canadalynxbiological_submission
