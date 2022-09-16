@@ -5,25 +5,28 @@ title Logical ERD
 ' avoid problems with angled crows feet
 skinparam linetype ortho
 
-' Entities
+skinparam arrowThickness 1.5
 
+' Entities
 together {
-    entity "HarvestReport" as harvest_report {
-        *Id: number <<generated>>
-        --
-        *DateStarted: datetime
-        *DateCompleted: datetime
-        *HarvestReportStatus: enum
-    }
-    entity "HuntedHarvestReport" as hunted_harvest_report {
-        MortalityId: number <<FK>>
-        GameManagementAreaSpeciesId: number <<FK>>
-        SealId: number <<FK>>
-        TemporarySealNumber: string
-        *Landmark: string
-    }
-    entity "TrappedHarvestReport" as trapped_harvest_report {
-        LicenceId: number <<FK>>
+    together {
+        entity "HarvestReport" as harvest_report {
+            *Id: number <<generated>>
+            --
+            *DateStarted: datetime
+            *DateCompleted: datetime
+            *HarvestReportStatus: enum
+        }
+        entity "HuntedHarvestReport" as hunted_harvest_report {
+            MortalityId: number <<FK>>
+            GameManagementAreaSpeciesId: number <<FK>>
+            SealId: number <<FK>>
+            TemporarySealNumber: string
+            *Landmark: string
+        }
+        entity "TrappedHarvestReport" as trapped_harvest_report {
+            LicenceId: number <<FK>>
+        }
     }
     entity "OutfitterGuideReport" as outfitter_guide_report {
         *Id: number <<generated>>
@@ -36,6 +39,11 @@ together {
     entity "SpecialGuideReport" as special_guide_report {
         *Id: number <<generated>>
         --
+        GuideId: <<FK>>
+    }
+    entity "OutfitterGuideReport_Client" as outfitter_guide_report_client {
+        *OutfitterGuideReportId: <<FK>>
+        *GuideId: <<FK>>
     }
 }
 
@@ -109,6 +117,7 @@ together {
     }
 }
 
+' These (less important) mortalities are hidden to keep the diagram a managable size
 /' entity "AmericanBeaverMortality" as americanbeaver_mortality {
 
 }
@@ -367,6 +376,7 @@ mortality <|-- woodbison_mortality
 mortality <|-- woodlandcaribou_mortality
 mortality <|-- bird_mortality
 
+' These (less important) mortalities are hidden to keep the diagram a managable size
 /' mortality <|-- americanbeaver_mortality
 mortality <|-- americanmartin_mortality
 mortality <|-- americanmink_mortality
@@ -420,11 +430,15 @@ hunted_harvest_report }o..o{ violation
 trapped_harvest_report }o..|| trapping_licence
 
 special_guide_report |o..|| hunted_harvest_report
+outfitter_guide_report ||..|{ outfitter_guide_report_client
+client ||..o| special_guide_report
+client ||..o{ outfitter_guide_report_client
 outfitter_guide_report ||..|{ outfitter_guide_report_hunted_harvest_report
 hunted_harvest_report ||..o| outfitter_guide_report_hunted_harvest_report
 
-mortality }o.right.|| reporter
-mortality ||..o| hunted_harvest_report
+
+mortality }o..|| reporter
+mortality ||.up.o| hunted_harvest_report
 
 americanblackbearbiological_submission |o.up.|| americanblackbear_mortality
 canadalynxbiological_submission |o.up.|| canadalynx_mortality
