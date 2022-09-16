@@ -1,10 +1,7 @@
 @startuml logical-erd
-'!theme spacelab
 title Logical ERD
 
-' avoid problems with angled crows feet
 skinparam linetype ortho
-
 skinparam arrowThickness 1.5
 
 ' Entities
@@ -31,6 +28,7 @@ together {
     entity "OutfitterGuideReport" as outfitter_guide_report {
         *Id: number <<generated>>
         --
+        *OutfittingArea: enum
     }
     entity "OutfitterGuideReport_HuntedHarvestReport" as outfitter_guide_report_hunted_harvest_report {
         *OutfitterReportId: <<FK>>
@@ -254,7 +252,7 @@ entity "Age" as age {
 }
 
 together {
-    entity "Reporter" as reporter {
+    entity "Person" as person {
         *Id: number <<generated>>
     }
 
@@ -353,8 +351,8 @@ entity "GameManagementUnit" as game_management_unit {
 harvest_report <|-- hunted_harvest_report
 harvest_report <|-- trapped_harvest_report
 
-reporter <|-- client
-reporter <|-- conservation_officer
+person <|-- client
+person <|-- conservation_officer
 
 mortality <|-- americanblackbear_mortality
 mortality <|-- barrengroundcaribou_mortality
@@ -429,7 +427,7 @@ hunted_harvest_report |o..|| seal
 hunted_harvest_report }o..o{ violation
 trapped_harvest_report }o..|| trapping_licence
 
-special_guide_report |o..|| hunted_harvest_report
+special_guide_report |o..|{ hunted_harvest_report
 outfitter_guide_report ||..|{ outfitter_guide_report_client
 client ||..o| special_guide_report
 client ||..o{ outfitter_guide_report_client
@@ -437,7 +435,7 @@ outfitter_guide_report ||..|{ outfitter_guide_report_hunted_harvest_report
 hunted_harvest_report ||..o| outfitter_guide_report_hunted_harvest_report
 
 
-mortality }o..|| reporter
+mortality }o..|| person
 mortality ||.up.o| hunted_harvest_report
 
 americanblackbearbiological_submission |o.up.|| americanblackbear_mortality
