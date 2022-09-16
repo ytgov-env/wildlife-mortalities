@@ -9,7 +9,7 @@ public enum HuntedSpecies
     [Display(Name = "American Black Bear")]
     AmericanBlackBear = AllSpecies.AmericanBlackBear,
 
-    [Display(Name = "Barren Ground Caribou")]
+    [Display(Name = "Barren-ground Caribou")]
     BarrenGroundCaribou = AllSpecies.BarrenGroundCaribou,
 
     [Display(Name = "Coyote")]
