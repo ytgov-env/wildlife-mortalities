@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using WildlifeMortalities.Data.Entities.Reporters;
+using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.App.Features.Reporters
 {

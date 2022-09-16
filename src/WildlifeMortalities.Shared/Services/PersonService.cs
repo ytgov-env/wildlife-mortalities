@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities.Reporters;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Models;
 
 namespace WildlifeMortalities.Shared.Services;
 
-public class ReporterService<T> where T : Reporter
+public class PersonService<T> where T : Person
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public ReporterService(IDbContextFactory<AppDbContext> dbContextFactory)
+    public PersonService(IDbContextFactory<AppDbContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
     }

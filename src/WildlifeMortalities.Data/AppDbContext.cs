@@ -3,7 +3,7 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Licences;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.Reporters;
+using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data;
 
@@ -13,7 +13,7 @@ public class AppDbContext : DbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<Reporter> Reporters => Set<Reporter>();
+    public DbSet<Person> Reporters => Set<Person>();
 
     public DbSet<Licence> Licences => Set<Licence>();
     public DbSet<Seal> Seals => Set<Seal>();
@@ -58,6 +58,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TrappedHarvestReport>().HasMany(t => t.Mortalities).WithOne();
         modelBuilder.Entity<HuntedHarvestReport>().HasOne(t => t.Mortality).WithOne();
 
+        modelBuilder.Entity<Person>().ToTable("People");
         modelBuilder.Entity<Client>().HasIndex(c => c.EnvClientId).IsUnique();
         modelBuilder.Entity<ConservationOfficer>().HasIndex(c => c.BadgeNumber).IsUnique();
 

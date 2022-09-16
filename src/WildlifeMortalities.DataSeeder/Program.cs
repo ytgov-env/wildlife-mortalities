@@ -1,7 +1,7 @@
 ﻿using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Licences;
-using WildlifeMortalities.Data.Entities.Reporters;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 
 Console.WriteLine("Starting data seeding...");

@@ -1,4 +1,4 @@
-﻿using WildlifeMortalities.Data.Entities.Reporters;
+﻿using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities.Licences;
 

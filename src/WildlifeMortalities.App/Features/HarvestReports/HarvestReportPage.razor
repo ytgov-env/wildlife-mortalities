@@ -1,5 +1,5 @@
 ﻿@page "/harvest-reports/{reporterid:int}"
-@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Shared.Models
 
 <SelectHarvestReportTypeComponent ValidationChanged="@( (x) => SetStepValidation(1,x))" HarvestReportTypeChanged="HarvestReportTypeChanged" />

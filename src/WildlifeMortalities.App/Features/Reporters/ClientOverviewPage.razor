@@ -1,7 +1,8 @@
 ﻿@page "/reporters/clients"
 @page "/reporters/clients/{id:int}"
 
-@using WildlifeMortalities.Data.Entities.Reporters
+@using WildlifeMortalities.Data.Entities.Mortalities
+@using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Shared.Models
 
 @namespace WildlifeMortalities.App.Features.Reporters
@@ -30,5 +31,10 @@
                 </MudPaper>
             }
         </EditForm>
+    </MudItem>
+    <MudItem>
+        <MudTable T="Mortality">
+            <MudText Typo="Typo.h6">Mortalities</MudText>
+        </MudTable>
     </MudItem>
 </MudGrid>
