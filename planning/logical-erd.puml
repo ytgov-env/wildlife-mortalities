@@ -7,14 +7,13 @@ skinparam linetype ortho
 
 ' Entities
 
-together {
-
+'together {
     entity "HarvestReport" as harvest_report {
         *Id: number <<generated>>
         --
         *DateStarted: datetime
         *DateCompleted: datetime
-        *IsComplete: bool
+        *HarvestReportStatus: enum
     }
     entity "HuntedHarvestReport" as hunted_harvest_report {
         GameManagementAreaSpeciesId: number <<FK>>
@@ -25,7 +24,19 @@ together {
     entity "TrappedHarvestReport" as trapped_harvest_report {
         LicenceId: number <<FK>>
     }
-}
+    entity "OutfitterGuideReport" as outfitter_guide_report {
+        *Id: number <<generated>>
+        --
+    }
+    entity "OutfitterGuideReport_HuntedHarvestReport" as outfitter_guide_report_hunted_harvest_report {
+        *OutfitterReportId: <<FK>>
+        *HuntedHarvestReportId: <<FK>>
+    }
+    entity "SpecialGuideReport" as special_guide_report {
+        *Id: number <<generated>>
+        --
+    }
+'}
 
 together {
     entity "Mortality" as mortality {
@@ -404,6 +415,10 @@ hunted_harvest_report }o..|| game_management_area_species
 hunted_harvest_report |o..|| seal
 hunted_harvest_report }o..o{ violation
 trapped_harvest_report }o..|| trapping_licence
+
+special_guide_report |o..|| hunted_harvest_report
+outfitter_guide_report ||..|{ outfitter_guide_report_hunted_harvest_report
+hunted_harvest_report ||..o| outfitter_guide_report_hunted_harvest_report
 
 mortality }o.right.|| reporter
 mortality ||..o| hunted_harvest_report
