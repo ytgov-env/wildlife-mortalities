@@ -266,7 +266,7 @@ together {
         }
 
     together {
-            entity "Licence" as licence {
+            entity "Authorization" as authorization {
                 *Id: number <<generated>>
                 --
                 *ClientId: number <<FK>>
@@ -414,11 +414,11 @@ biological_submission <|-up- thinhornsheepbiological_submission
 biological_submission <|-up- whitetaileddeerbiological_submission
 biological_submission <|-up- woodbisonbiological_submission
 
-licence <|-- hunting_licence
-licence <|-- hunting_permit
-licence <|-- permit_hunt_authorization
-licence <|-- special_guide_licence
-licence <|-- trapping_licence
+authorization <|-- hunting_licence
+authorization <|-- hunting_permit
+authorization <|-- permit_hunt_authorization
+authorization <|-- special_guide_licence
+authorization <|-- trapping_licence
 
 ' Relationships
 
@@ -451,7 +451,7 @@ woodbisonbiological_submission |o.up.|| woodbison_mortality
 
 biological_submission ||..|| age
 
-client ||..o{ licence
+client ||..o{ authorization
 hunting_licence ||..o{ seal
 
 game_management_area ||..{ game_management_area_species
