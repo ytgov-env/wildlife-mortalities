@@ -31,17 +31,21 @@ together {
         *OutfittingArea: enum
     }
     entity "OutfitterGuideReport_HuntedHarvestReport" as outfitter_guide_report_hunted_harvest_report {
-        *OutfitterReportId: <<FK>>
+        *OutfitterGuideReportId: <<FK>>
         *HuntedHarvestReportId: <<FK>>
+    }
+    entity "OutfitterGuideReport_Client" as outfitter_guide_report_client {
+        *OutfitterGuideReportId: <<FK>>
+        *GuideId: <<FK>>
     }
     entity "SpecialGuideReport" as special_guide_report {
         *Id: number <<generated>>
         --
         GuideId: <<FK>>
     }
-    entity "OutfitterGuideReport_Client" as outfitter_guide_report_client {
-        *OutfitterGuideReportId: <<FK>>
-        *GuideId: <<FK>>
+    entity "SpecialGuideReport_HuntedHarvestReport" as special_guide_report_hunted_harvest_report {
+        *SpecialGuideReportId: <<FK>>
+        *HuntedHarvestReportId: <<FK>>
     }
 }
 
@@ -427,7 +431,9 @@ hunted_harvest_report |o..|| seal
 hunted_harvest_report }o..o{ violation
 trapped_harvest_report }o..|| trapping_licence
 
-special_guide_report |o..|{ hunted_harvest_report
+'special_guide_report |o..|{ hunted_harvest_report
+special_guide_report ||..|{ special_guide_report_hunted_harvest_report
+hunted_harvest_report ||..o| special_guide_report_hunted_harvest_report
 outfitter_guide_report ||..|{ outfitter_guide_report_client
 client ||..o| special_guide_report
 client ||..o{ outfitter_guide_report_client
