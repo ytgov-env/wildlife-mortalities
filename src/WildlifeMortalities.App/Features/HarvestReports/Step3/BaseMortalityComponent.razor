@@ -1,8 +1,8 @@
 ﻿@namespace WildlifeMortalities.App.Features.HarvestReports
 @using WildlifeMortalities.Data.Enums;
 
-<MudTextField @bind-Value="ViewModel.Latitude" For="@(  () => ViewModel.Latitude)" Label="Latitude" />
-<MudTextField @bind-Value="ViewModel.Longitute" For="@(  () => ViewModel.Longitute)" Label="Longitude" />
+<MudNumericField @bind-Value="ViewModel.Latitude" For="@(  () => ViewModel.Latitude)" Label="Latitude" />
+<MudNumericField @bind-Value="ViewModel.Longitute" For="@(  () => ViewModel.Longitute)" Label="Longitude" />
 
 <MudSelect T="Sex" @bind-Value="@ViewModel.Sex" Label="Sex" For="@(  () => ViewModel.Sex)">
     @foreach (var item in Enum.GetValues<Sex>())
