@@ -18,7 +18,7 @@ public class DummyClientLookupService : IClientLookupService
         Task.FromResult(
             _list.Where(
                 x =>
-                    String.IsNullOrEmpty(input) == true
+                    string.IsNullOrEmpty(input) == true
                         ? true
                         : x.EnvClientId.ToLower().Contains(input)
             )
@@ -28,7 +28,7 @@ public class DummyClientLookupService : IClientLookupService
         Task.FromResult(
             _list.Where(
                 x =>
-                    String.IsNullOrEmpty(input) == true
+                    string.IsNullOrEmpty(input) == true
                         ? true
                         : x.LastName.ToLower().Contains(input)
             )

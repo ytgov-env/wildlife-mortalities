@@ -4,8 +4,8 @@ namespace WildlifeMortalities.App.Features.HarvestReports;
 
 public class HarvestReportViewModel
 {
-    public string Landmark { get; set; } = String.Empty;
-    public string Comments { get; set; } = String.Empty;
+    public string Landmark { get; set; } = string.Empty;
+    public string Comments { get; set; } = string.Empty;
 }
 
 public class HarvestReportViewModelValidator : AbstractValidator<HarvestReportViewModel>
@@ -15,6 +15,6 @@ public class HarvestReportViewModelValidator : AbstractValidator<HarvestReportVi
         RuleFor(x => x.Landmark).NotNull().When(x => type == HarvestReportType.Hunted);
         RuleFor(x => x.Comments)
             .Length(10, 1000)
-            .When(x => String.IsNullOrEmpty(x.Comments) == false);
+            .When(x => string.IsNullOrEmpty(x.Comments) == false);
     }
 }
