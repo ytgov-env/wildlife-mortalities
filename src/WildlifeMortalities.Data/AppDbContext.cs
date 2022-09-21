@@ -50,31 +50,29 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Seal>().ToTable("Seals");
-        modelBuilder.Entity<Mortality>().ToTable("Mortalities");
-
-        modelBuilder.Entity<Seal>().Property(s => s.Species).HasConversion<string>();
-
-        modelBuilder.Entity<HuntedHarvestReport>().HasOne(t => t.Mortality).WithOne();
-
         modelBuilder.Entity<Person>().ToTable("People");
         modelBuilder.Entity<Client>().HasIndex(c => c.EnvClientId).IsUnique();
         modelBuilder.Entity<ConservationOfficer>().HasIndex(c => c.BadgeNumber).IsUnique();
 
-        modelBuilder.Entity<MortalityReport>().HasOne(m => m.Mortality).WithOne(m => m.MortalityReport);
-
-        modelBuilder.Entity<WoodBisonMortality>(b =>
+        modelBuilder.Entity<Seal>(s =>
         {
-            b.Property(b => b.Sex)
-                .HasConversion<string>()
-                .HasColumnName(nameof(WoodBisonMortality.Sex));
+            s.ToTable("Seals");
+            s.Property(s => s.Species).HasConversion<string>();
         });
 
-        modelBuilder.Entity<AmericanBlackBearMortality>(b =>
+        modelBuilder.Entity<Mortality>(m =>
         {
-            b.Property(b => b.Sex)
-                .HasConversion<string>()
-                .HasColumnName(nameof(AmericanBlackBearMortality.Sex));
+            m.ToTable("Mortalities");
+            m.Property(m => m.Sex).HasConversion<string>();
+        });
+        modelBuilder
+            .Entity<MortalityReport>()
+            .HasOne(m => m.Mortality)
+            .WithOne(m => m.MortalityReport);
+        modelBuilder.Entity<HuntedHarvestReport>(h =>
+        {
+            h.HasOne(t => t.Mortality).WithOne();
+            h.Property(h => h.Status).HasConversion<string>();
         });
 
         modelBuilder
@@ -86,24 +84,23 @@ public class AppDbContext : DbContext
             .Property(s => s.Species)
             .HasConversion<string>()
             .HasMaxLength(25);
-        modelBuilder
-            .Entity<GameManagementAreaSchedule>()
-            .Property(s => s.PeriodStart)
-            .HasColumnType("date");
-        modelBuilder
-            .Entity<GameManagementAreaSchedule>()
-            .Property(s => s.PeriodEnd)
-            .HasColumnType("date");
-        modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveFrom).HasColumnType("date");
-        modelBuilder.Entity<GameManagementUnit>().Property(u => u.ActiveTo).HasColumnType("date");
-        modelBuilder.Entity<GameManagementUnit>().Property(u => u.Name).HasMaxLength(50);
+        modelBuilder.Entity<GameManagementAreaSchedule>(s =>
+        {
+            s.Property(s => s.PeriodStart).HasColumnType("date");
+            s.Property(s => s.PeriodEnd).HasColumnType("date");
+        });
+        modelBuilder.Entity<GameManagementUnit>(u =>
+        {
+            u.Property(u => u.ActiveFrom).HasColumnType("date");
+            u.Property(u => u.ActiveTo).HasColumnType("date");
+            u.Property(u => u.Name).HasMaxLength(50);
+        });
 
         modelBuilder.Entity<BioSubmission>().OwnsOne(b => b.Age, a => a.ToTable("Age"));
 
         // These shadow properties are referenced during ETL to sync licence and seal data from their source (POSSE)
         modelBuilder.Entity<Authorization>().Property<int?>("PosseId");
         modelBuilder.Entity<Seal>().Property<int?>("PosseId");
-
 
         base.OnModelCreating(modelBuilder);
     }
