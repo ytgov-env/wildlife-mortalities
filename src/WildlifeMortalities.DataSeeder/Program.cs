@@ -1,6 +1,6 @@
 ﻿using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.Licences;
+using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 
@@ -117,12 +117,12 @@ void AddFakeClients(AppDbContext context)
         {
             for (var i = 0; i < rand.Next(0, 4); i++)
             {
-                client.Licences.Add(
+                client.Authorizations.Add(
                     new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}" }
                 );
             }
 
-            foreach (var licence in client.Licences.OfType<HuntingLicence>())
+            foreach (var licence in client.Authorizations.OfType<HuntingLicence>())
             {
                 licence.StartDate = new DateTime(rand.Next(2019, 2022), 04, 01);
                 licence.EndDate = new DateTime(licence.StartDate.Year + 1, 03, 31);

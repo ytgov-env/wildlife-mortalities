@@ -1,4 +1,4 @@
-﻿using WildlifeMortalities.Data.Entities.Licences;
+﻿using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities;

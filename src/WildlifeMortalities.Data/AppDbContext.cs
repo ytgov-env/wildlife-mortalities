@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-using WildlifeMortalities.Data.Entities.Licences;
+using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 
@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Person> People => Set<Person>();
 
-    public DbSet<Licence> Licences => Set<Licence>();
+    public DbSet<Authorization> Authorizations => Set<Authorization>();
     public DbSet<Seal> Seals => Set<Seal>();
 
     public DbSet<Mortality> Mortalities => Set<Mortality>();
@@ -101,7 +101,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<BioSubmission>().OwnsOne(b => b.Age, a => a.ToTable("Age"));
 
         // These shadow properties are referenced during ETL to sync licence and seal data from their source (POSSE)
-        modelBuilder.Entity<Licence>().Property<int?>("PosseId");
+        modelBuilder.Entity<Authorization>().Property<int?>("PosseId");
         modelBuilder.Entity<Seal>().Property<int?>("PosseId");
 
 

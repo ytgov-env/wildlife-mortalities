@@ -1,8 +1,8 @@
 ﻿using WildlifeMortalities.Data.Entities.People;
 
-namespace WildlifeMortalities.Data.Entities.Licences;
+namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public abstract class Licence
+public abstract class Authorization
 {
     public int Id { get; set; }
     public string Number { get; set; } = string.Empty;

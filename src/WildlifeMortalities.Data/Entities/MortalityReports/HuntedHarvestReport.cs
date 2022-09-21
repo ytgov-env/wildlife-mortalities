@@ -15,7 +15,7 @@ public class HuntedHarvestReport : MortalityReport
     public string? TemporarySealNumber { get; set; }
     public int? SealId { get; set; }
     public Seal? Seal { get; set; }
-    public HarvestReportStatus Status { get; set; }
+    public HuntedHarvestReportStatus Status { get; set; }
     public string Comments { get; set; } = "";
     public List<Violation> Violations { get; set; } = null!;
 }
