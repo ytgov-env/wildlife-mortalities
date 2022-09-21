@@ -2,6 +2,7 @@
 using Ardalis.Result.FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Validators;
@@ -46,7 +47,7 @@ public class MortalityService : IMortalityService
 
         return await context.Mortalities
             .OfType<T>()
-            .Where(m => m.Reporter is Client && (m.Reporter as Client)!.EnvClientId == envClientId)
+            .Where(m => m.MortalityReport is HuntedHarvestReport && (m.MortalityReport as HuntedHarvestReport)!.Client.EnvClientId == envClientId)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -61,8 +62,8 @@ public class MortalityService : IMortalityService
             .OfType<T>()
             .Where(
                 m =>
-                    m.Reporter is ConservationOfficer
-                    && (m.Reporter as ConservationOfficer)!.BadgeNumber
+                    m.MortalityReport is ConflictReport
+                    && (m.MortalityReport as ConflictReport)!.ConservationOfficer.BadgeNumber
                         == conservationOfficerBadgeNumber
             )
             .AsNoTracking()

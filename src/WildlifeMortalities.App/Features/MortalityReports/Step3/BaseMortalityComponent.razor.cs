@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace WildlifeMortalities.App.Features.HarvestReports;
+namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class BaseMortalityComponent
 {

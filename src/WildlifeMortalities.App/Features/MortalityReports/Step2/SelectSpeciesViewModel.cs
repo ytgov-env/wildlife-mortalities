@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.HarvestReports;
+namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class SelectSpeciesViewModel
 {
@@ -11,9 +11,9 @@ public class SelectSpeciesViewModel
 
 public class SelectSpeciesViewModelValidator : AbstractValidator<SelectSpeciesViewModel>
 {
-    public SelectSpeciesViewModelValidator(HarvestReportType type)
+    public SelectSpeciesViewModelValidator(MortalityReportType type)
     {
-        RuleFor(x => x.TrappedSpecies).NotNull().When(_ => type == HarvestReportType.Trapped);
-        RuleFor(x => x.HuntedSpecies).NotNull().When(_ => type == HarvestReportType.Hunted);
+        RuleFor(x => x.TrappedSpecies).NotNull().When(_ => type == MortalityReportType.Trapped);
+        RuleFor(x => x.HuntedSpecies).NotNull().When(_ => type == MortalityReportType.Hunted);
     }
 }

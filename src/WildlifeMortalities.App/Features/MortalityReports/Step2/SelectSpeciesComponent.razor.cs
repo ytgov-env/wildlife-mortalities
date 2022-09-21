@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.HarvestReports;
+namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class SelectSpeciesComponent
 {
     [Parameter]
-    public HarvestReportType ReportType { get; set; }
+    public MortalityReportType ReportType { get; set; }
 
     private static readonly Dictionary<TrappedSpecies, AllSpecies> _trappedMapper =
         new()

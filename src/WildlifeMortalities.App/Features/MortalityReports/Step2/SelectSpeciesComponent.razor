@@ -1,13 +1,13 @@
 ﻿@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Enums
 
-@namespace WildlifeMortalities.App.Features.HarvestReports
+@namespace WildlifeMortalities.App.Features.MortalityReports
 @inherits ReportTypeComponent<SelectSpeciesViewModel>
 
 <EditForm EditContext="_context">
     <FluentValidationValidator Validator="new SelectSpeciesViewModelValidator(ReportType)" />
 
-    @if (ReportType == HarvestReportType.Trapped)
+    @if (ReportType == MortalityReportType.Trapped)
     {
         <MudSelect T="TrappedSpecies?" @bind-Value="ViewModel.TrappedSpecies" For="@(() => ViewModel.TrappedSpecies)" Label="Species">
             <MudSelectItem T="TrappedSpecies?" Value="null">Select an option</MudSelectItem>
@@ -20,7 +20,7 @@
             }
         </MudSelect>
     }
-    else if (ReportType == HarvestReportType.Hunted)
+    else if (ReportType == MortalityReportType.Hunted)
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species">
             <MudSelectItem T="HuntedSpecies?" Value="null">Select an option</MudSelectItem>

@@ -27,7 +27,7 @@ public class HuntedHarvestReportService<T> where T : Mortality
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
 
-        return await context.HarvestReports
+        return await context.MortalityReports
             .OfType<HuntedHarvestReport>()
             .Include(h => h.Mortality)
             .FirstOrDefaultAsync(h => h.Id == id);

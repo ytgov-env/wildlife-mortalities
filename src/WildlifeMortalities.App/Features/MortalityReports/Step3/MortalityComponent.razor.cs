@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.HarvestReports
+namespace WildlifeMortalities.App.Features.MortalityReports
 {
     public partial class MortalityComponent
     {

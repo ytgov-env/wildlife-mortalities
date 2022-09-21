@@ -1,6 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
 
-namespace WildlifeMortalities.App.Features.HarvestReports;
+namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class WoodBisonMortalityViewModel : MortalityViewModel
 {

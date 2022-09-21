@@ -2,7 +2,7 @@
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.HarvestReports;
+namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class MortalityViewModel
 {
@@ -58,7 +58,7 @@ public class MortalityViewModel
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitute;
         derivatingMortality.Sex = Sex;
-        derivatingMortality.ReporterId = reporterId;
+        //derivatingMortality.ReporterId = reporterId;
     }
 }
 

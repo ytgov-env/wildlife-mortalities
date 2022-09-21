@@ -4,18 +4,18 @@ using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.HarvestReports;
+namespace WildlifeMortalities.App.Features.MortalityReports;
 
-public partial class HarvestReportPage
+public partial class MortalityReportPage
 {
     private readonly Dictionary<int, bool> _validationMapper = new();
 
-    private HarvestReportType _harvestReportType;
+    private MortalityReportType _mortalityReportType;
 
     private AllSpecies _species;
 
     private MortalityViewModel? _mortalityViewModel;
-    private HarvestReportViewModel? _harvestReportViewModel;
+    private MortalityReportViewModel? _mortalityReportViewModel;
 
     [Parameter]
     public int ReporterId { get; set; }
@@ -23,9 +23,9 @@ public partial class HarvestReportPage
     [Inject]
     private IDbContextFactory<AppDbContext> dbContextFactory { get; set; }
 
-    public HarvestReportPage()
+    public MortalityReportPage()
     {
-        _validationMapper.Add(1, true); //harvest type
+        _validationMapper.Add(1, true); // type
         _validationMapper.Add(2, false); // species
         _validationMapper.Add(3, false); // report
         _validationMapper.Add(4, false); // mortality
@@ -36,9 +36,9 @@ public partial class HarvestReportPage
     private void SetStepValidation(int stepNumber, bool validationResult) =>
         _validationMapper[stepNumber] = validationResult;
 
-    private void HarvestReportTypeChanged(HarvestReportType type)
+    private void MortalityReportTypeChanged(MortalityReportType type)
     {
-        _harvestReportType = type;
+        _mortalityReportType = type;
     }
 
     private void SpeciesChanged(AllSpecies species)
@@ -49,28 +49,28 @@ public partial class HarvestReportPage
     private void SetMortalityViewModel(MortalityViewModel viewModel) =>
         _mortalityViewModel = viewModel;
 
-    private void SetHarvestReportViewModel(HarvestReportViewModel viewModel) =>
-        _harvestReportViewModel = viewModel;
+    private void SetMortalityReportViewModel(MortalityReportViewModel viewModel) =>
+        _mortalityReportViewModel = viewModel;
 
-    private async Task CreateHarvestReport()
+    private async Task CreateMortalityReport()
     {
-        HarvestReport report = null;
-        if (_harvestReportType == HarvestReportType.Hunted)
+        MortalityReport report = null;
+        if (_mortalityReportType == MortalityReportType.Hunted)
         {
             report = new HuntedHarvestReport
             {
                 Mortality = _mortalityViewModel.GetMortality(ReporterId),
-                Landmark = _harvestReportViewModel.Landmark,
-                Comments = _harvestReportViewModel.Comments,
+                Landmark = _mortalityReportViewModel.Landmark,
+                Comments = _mortalityReportViewModel.Comments,
             };
         }
-        else if (_harvestReportType == HarvestReportType.Trapped)
+        else if (_mortalityReportType == MortalityReportType.Trapped)
         {
-            report = new TrappedHarvestReport() { Comments = _harvestReportViewModel.Comments, };
+            report = new TrappedHarvestReport() { Comments = _mortalityReportViewModel.Comments, };
         }
 
         using var context = await dbContextFactory.CreateDbContextAsync();
-        context.HarvestReports.Add(report);
+        context.MortalityReports.Add(report);
         await context.SaveChangesAsync();
         //await Service.CreaeHavestReport(report);
     }

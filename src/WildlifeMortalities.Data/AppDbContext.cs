@@ -19,7 +19,7 @@ public class AppDbContext : DbContext
     public DbSet<Seal> Seals => Set<Seal>();
 
     public DbSet<Mortality> Mortalities => Set<Mortality>();
-    public DbSet<HarvestReport> HarvestReports => Set<HarvestReport>();
+    public DbSet<MortalityReport> MortalityReports => Set<MortalityReport>();
     public DbSet<Violation> Violations => Set<Violation>();
 
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
@@ -61,12 +61,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Person>().ToTable("People");
         modelBuilder.Entity<Client>().HasIndex(c => c.EnvClientId).IsUnique();
         modelBuilder.Entity<ConservationOfficer>().HasIndex(c => c.BadgeNumber).IsUnique();
-
-        modelBuilder
-            .Entity<Mortality>()
-            .HasOne(m => m.Reporter)
-            .WithMany(r => r.Mortalities)
-            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<WoodBisonMortality>(b =>
         {
