@@ -13,7 +13,7 @@ public class AppDbContext : DbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<Person> Reporters => Set<Person>();
+    public DbSet<Person> People => Set<Person>();
 
     public DbSet<Licence> Licences => Set<Licence>();
     public DbSet<Seal> Seals => Set<Seal>();
@@ -55,12 +55,13 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Seal>().Property(s => s.Species).HasConversion<string>();
 
-        modelBuilder.Entity<TrappedHarvestReport>().HasMany(t => t.Mortalities).WithOne();
         modelBuilder.Entity<HuntedHarvestReport>().HasOne(t => t.Mortality).WithOne();
 
         modelBuilder.Entity<Person>().ToTable("People");
         modelBuilder.Entity<Client>().HasIndex(c => c.EnvClientId).IsUnique();
         modelBuilder.Entity<ConservationOfficer>().HasIndex(c => c.BadgeNumber).IsUnique();
+
+        modelBuilder.Entity<MortalityReport>().HasOne(m => m.Mortality).WithOne(m => m.MortalityReport);
 
         modelBuilder.Entity<WoodBisonMortality>(b =>
         {
@@ -102,6 +103,7 @@ public class AppDbContext : DbContext
         // These shadow properties are referenced during ETL to sync licence and seal data from their source (POSSE)
         modelBuilder.Entity<Licence>().Property<int?>("PosseId");
         modelBuilder.Entity<Seal>().Property<int?>("PosseId");
+
 
         base.OnModelCreating(modelBuilder);
     }

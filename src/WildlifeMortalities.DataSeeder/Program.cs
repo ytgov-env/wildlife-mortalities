@@ -98,7 +98,7 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
 
 void AddFakeClients(AppDbContext context)
 {
-    if (!context.Reporters.OfType<Client>().Any())
+    if (!context.People.OfType<Client>().Any())
     {
         var clients = new List<Client>();
         var rand = new Random();

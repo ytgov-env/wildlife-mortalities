@@ -17,13 +17,13 @@ public class PersonService<T> where T : Person
     public async Task<IReadOnlyList<ConservationOfficer>> GetConservationOfficers()
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
-        return await context.Reporters.OfType<ConservationOfficer>().AsNoTracking().ToListAsync();
+        return await context.People.OfType<ConservationOfficer>().AsNoTracking().ToListAsync();
     }
 
     public async Task<ConservationOfficer?> GetConservationOfficerById(int id)
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
-        return await context.Reporters
+        return await context.People
             .OfType<ConservationOfficer>()
             .FirstOrDefaultAsync(c => c.Id == id);
     }
@@ -32,7 +32,7 @@ public class PersonService<T> where T : Person
     {
         var context = await _dbContextFactory.CreateDbContextAsync();
 
-        return await context.Reporters
+        return await context.People
             .OfType<ConservationOfficer>()
             .FirstOrDefaultAsync(c => c.BadgeNumber == badgeNumber);
     }

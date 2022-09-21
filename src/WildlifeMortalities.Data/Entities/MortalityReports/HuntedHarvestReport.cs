@@ -6,8 +6,7 @@ namespace WildlifeMortalities.Data.Entities;
 
 public class HuntedHarvestReport : MortalityReport
 {
-    public int MortalityId { get; set; }
-    public Mortality Mortality { get; set; } = null!;
+
     public int ClientId { get; set; }
     public Client Client { get; set; }
     public int GmaSpeciesId { get; set; }
