@@ -1,4 +1,5 @@
-﻿@namespace WildlifeMortalities.App.Features.MortalityReports
+﻿@using WildlifeMortalities.App.Extensions
+@namespace WildlifeMortalities.App.Features.MortalityReports
 @inherits ReportTypeComponent<SelectMortalityReportTypeViewModel>
 
 <EditForm EditContext="_context">
@@ -6,7 +7,7 @@
     <MudSelect T="MortalityReportType" @bind-Value="ViewModel.MortalityReportType" For="@(() => ViewModel.MortalityReportType)" Label="Mortality Report Type">
         @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
         {
-            <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType</MudSelectItem>
+            <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
         }
     </MudSelect>
 </EditForm>
