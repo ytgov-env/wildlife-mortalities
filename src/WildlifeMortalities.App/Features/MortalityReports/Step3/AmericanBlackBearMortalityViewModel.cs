@@ -8,11 +8,11 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 
     public AmericanBlackBearMortalityViewModel() : base(Data.Enums.AllSpecies.AmericanBlackBear) { }
 
-    public override Mortality GetMortality(int reporterId)
+    public override Mortality GetMortality()
     {
         var mortality = new AmericanBlackBearMortality { IsShotInConflict = IsShotInConflict, };
 
-        SetBaseValues(mortality, reporterId);
+        SetBaseValues(mortality);
 
         return mortality;
     }

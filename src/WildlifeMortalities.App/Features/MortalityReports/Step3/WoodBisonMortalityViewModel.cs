@@ -9,7 +9,7 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
 
     public WoodBisonMortalityViewModel() : base(Data.Enums.AllSpecies.WoodBison) { }
 
-    public override Mortality GetMortality(int reporterId)
+    public override Mortality GetMortality()
     {
         var mortality = new WoodBisonMortality
         {
@@ -17,7 +17,7 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
             IsWounded = IsWounded
         };
 
-        SetBaseValues(mortality, reporterId);
+        SetBaseValues(mortality);
         return mortality;
     }
 }

@@ -18,7 +18,7 @@ public partial class MortalityReportPage
     private MortalityReportViewModel? _mortalityReportViewModel;
 
     [Parameter]
-    public int ReporterId { get; set; }
+    public int PersonId { get; set; }
 
     [Inject]
     private IDbContextFactory<AppDbContext> dbContextFactory { get; set; }
@@ -30,8 +30,6 @@ public partial class MortalityReportPage
         _validationMapper.Add(3, false); // report
         _validationMapper.Add(4, false); // mortality
     }
-
-    protected override async Task OnInitializedAsync() { }
 
     private void SetStepValidation(int stepNumber, bool validationResult) =>
         _validationMapper[stepNumber] = validationResult;
@@ -59,9 +57,10 @@ public partial class MortalityReportPage
         {
             report = new HuntedHarvestReport
             {
-                Mortality = _mortalityViewModel.GetMortality(ReporterId),
+                Mortality = _mortalityViewModel.GetMortality(),
                 Landmark = _mortalityReportViewModel.Landmark,
                 Comments = _mortalityReportViewModel.Comments,
+                ClientId = PersonId,
             };
         }
         else if (_mortalityReportType == MortalityReportType.Trapped)

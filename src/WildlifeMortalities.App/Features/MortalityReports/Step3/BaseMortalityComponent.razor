@@ -4,15 +4,10 @@
 <MudNumericField @bind-Value="ViewModel.Latitude" For="@(  () => ViewModel.Latitude)" Label="Latitude" />
 <MudNumericField @bind-Value="ViewModel.Longitute" For="@(  () => ViewModel.Longitute)" Label="Longitude" />
 
-<MudSelect T="Sex" @bind-Value="@ViewModel.Sex" Label="Sex" For="@(  () => ViewModel.Sex)">
-    @foreach (var item in Enum.GetValues<Sex>())
+<MudSelect T="Sex?" @bind-Value="@ViewModel.Sex" Label="Sex" Placeholder="Select a sex" For="@(  () => ViewModel.Sex)">
+    @foreach (var item in Enum.GetValues<Sex>().Where(x => x != Sex.Uninitialized))
     {
-        if (item == Sex.Uninitialized)
-        {
-            <MudSelectItem T="Sex" Value="@item">Select an option</MudSelectItem>
-        } else {
-            <MudSelectItem T="Sex" Value="@item">@item</MudSelectItem>
-        }
+        <MudSelectItem T="Sex?" Value="@item">@item</MudSelectItem>
     }
 </MudSelect>
 

@@ -8,7 +8,7 @@ public class MortalityViewModel
 {
     public decimal? Longitute { get; set; }
     public decimal? Latitude { get; set; }
-    public Sex Sex { get; set; }
+    public Sex? Sex { get; set; }
     public AllSpecies Species { get; }
 
     private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory =
@@ -44,22 +44,26 @@ public class MortalityViewModel
         Species = species;
     }
 
-    public virtual Mortality GetMortality(int reporter)
+    public virtual Mortality GetMortality()
     {
         var mortalityFactory = _mortalityFactory[Species];
         var mortality = mortalityFactory.Invoke();
-        SetBaseValues(mortality, reporter);
+        SetBaseValues(mortality);
 
         return mortality;
     }
 
-    protected void SetBaseValues(Mortality derivatingMortality, int reporterId)
+    protected void SetBaseValues(Mortality derivatingMortality)
     {
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitute;
-        derivatingMortality.Sex = Sex;
-        //derivatingMortality.ReporterId = reporterId;
+        derivatingMortality.Sex = Sex!.Value;
     }
 }
 
-public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel> { }
+public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel> {
+    public MortalityViewModelValidator()
+    {
+        RuleFor(m => m.Sex).NotNull();
+    }
+}
