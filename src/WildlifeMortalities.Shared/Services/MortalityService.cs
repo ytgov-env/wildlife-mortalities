@@ -62,8 +62,8 @@ public class MortalityService : IMortalityService
             .OfType<T>()
             .Where(
                 m =>
-                    m.MortalityReport is ConflictReport
-                    && (m.MortalityReport as ConflictReport)!.ConservationOfficer.BadgeNumber
+                    m.MortalityReport is HumanWildlifeConflictReport
+                    && (m.MortalityReport as HumanWildlifeConflictReport)!.ConservationOfficer.BadgeNumber
                         == conservationOfficerBadgeNumber
             )
             .AsNoTracking()

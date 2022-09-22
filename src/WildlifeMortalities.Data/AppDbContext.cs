@@ -75,10 +75,15 @@ public class AppDbContext : DbContext
             .Entity<MortalityReport>()
             .HasOne(m => m.Mortality)
             .WithOne(m => m.MortalityReport);
-        modelBuilder.Entity<HuntedHarvestReport>(h =>
-        {
-            h.Property(h => h.Status).HasConversion<string>();
-        });
+        modelBuilder.Entity<HuntedHarvestReport>(
+            h => h.Property(h => h.Status).HasConversion<string>()
+        );
+        modelBuilder.Entity<HumanWildlifeConflictReport>(
+            c =>
+                c.HasOne(c => c.ConservationOfficer)
+                    .WithMany(co => co.HumanWildlifeConflictReports)
+                    .OnDelete(DeleteBehavior.NoAction)
+        );
 
         modelBuilder
             .Entity<GameManagementArea>()
