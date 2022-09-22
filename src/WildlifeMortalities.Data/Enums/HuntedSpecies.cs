@@ -6,10 +6,10 @@ public enum HuntedSpecies
 {
     Uninitialized = AllSpecies.Uninitialized,
 
-    [Display(Name = "American Black Bear")]
+    [Display(Name = "American black bear")]
     AmericanBlackBear = AllSpecies.AmericanBlackBear,
 
-    [Display(Name = "Barren-ground Caribou")]
+    [Display(Name = "Barren-ground caribou")]
     BarrenGroundCaribou = AllSpecies.BarrenGroundCaribou,
 
     [Display(Name = "Coyote")]
@@ -18,33 +18,33 @@ public enum HuntedSpecies
     [Display(Name = "Elk")]
     Elk = AllSpecies.Elk,
 
-    [Display(Name = "Grey Wolf")]
+    [Display(Name = "Grey wolf")]
     GreyWolf = AllSpecies.GreyWolf,
 
-    [Display(Name = "Grizzly Bear")]
+    [Display(Name = "Grizzly bear")]
     GrizzlyBear = AllSpecies.GrizzlyBear,
 
     [Display(Name = "Moose")]
     Moose = AllSpecies.Moose,
 
-    [Display(Name = "Mountain Goat")]
+    [Display(Name = "Mountain goat")]
     MountainGoat = AllSpecies.MountainGoat,
 
-    [Display(Name = "Mule Deer")]
+    [Display(Name = "Mule deer")]
     MuleDeer = AllSpecies.MuleDeer,
 
-    [Display(Name = "Thinhorn Sheep")]
+    [Display(Name = "Thinhorn sheep")]
     ThinhornSheep = AllSpecies.ThinhornSheep,
 
-    [Display(Name = "White-tailed Deer")]
+    [Display(Name = "White-tailed deer")]
     WhiteTailedDeer = AllSpecies.WhiteTailedDeer,
 
     [Display(Name = "Wolverine")]
     Wolverine = AllSpecies.Wolverine,
 
-    [Display(Name = "Wood Bison")]
+    [Display(Name = "Wood bison")]
     WoodBison = AllSpecies.WoodBison,
 
-    [Display(Name = "Woodland Caribou")]
+    [Display(Name = "Woodland caribou")]
     WoodlandCaribou = AllSpecies.WoodlandCaribou
 }

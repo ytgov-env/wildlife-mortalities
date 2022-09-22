@@ -4,11 +4,13 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public enum MortalityReportType
 {
-    [Display(Name = "Hunting (Individual)")]
+    [Display(Name = "Human-wildlife conflict")]
+    Conflict,
+    [Display(Name = "Hunting (individual)")]
     Hunted,
-    [Display(Name = "Hunting (Outfitted)")]
+    [Display(Name = "Hunting (outfitted)")]
     Outfitted,
-    [Display(Name = "Hunting (Special Guided)")]
+    [Display(Name = "Hunting (special guided)")]
     SpecialGuided,
     [Display(Name = "Trapping")]
     Trapped
