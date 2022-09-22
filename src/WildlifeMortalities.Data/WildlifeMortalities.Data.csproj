@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\GuidedReports\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

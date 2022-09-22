@@ -16,7 +16,7 @@
             }
         </MudSelect>
     }
-    else if (ReportType == MortalityReportType.Hunted)
+    else if (ReportType == MortalityReportType.Hunted || ReportType == MortalityReportType.Outfitted || ReportType == MortalityReportType.SpecialGuided)
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
             @foreach (HuntedSpecies species in Enum.GetValues<HuntedSpecies>().Where(s => s != HuntedSpecies.Uninitialized))

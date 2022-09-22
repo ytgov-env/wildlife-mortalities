@@ -4,6 +4,7 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.GuideReports;
 
 namespace WildlifeMortalities.Data;
 
@@ -21,6 +22,9 @@ public class AppDbContext : DbContext
     public DbSet<Mortality> Mortalities => Set<Mortality>();
     public DbSet<MortalityReport> MortalityReports => Set<MortalityReport>();
     public DbSet<Violation> Violations => Set<Violation>();
+
+    public DbSet<OutfitterGuideReport> OutfitterGuideReports => Set<OutfitterGuideReport>();
+    public DbSet<SpecialGuideReport> SpecialGuideReports => Set<SpecialGuideReport>();
 
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 
@@ -65,13 +69,18 @@ public class AppDbContext : DbContext
             m.ToTable("Mortalities");
             m.Property(m => m.Sex).HasConversion<string>();
         });
+
+        modelBuilder.Entity<AmericanBlackBearMortality>();
+
         modelBuilder
             .Entity<MortalityReport>()
             .HasOne(m => m.Mortality)
-            .WithOne(m => m.MortalityReport);
+            .WithOne(m => m.MortalityReport)
+            .HasForeignKey<Mortality>(m => m.MortalityReportId)
+            .IsRequired();
+
         modelBuilder.Entity<HuntedHarvestReport>(h =>
         {
-            h.HasOne(t => t.Mortality).WithOne();
             h.Property(h => h.Status).HasConversion<string>();
         });
 

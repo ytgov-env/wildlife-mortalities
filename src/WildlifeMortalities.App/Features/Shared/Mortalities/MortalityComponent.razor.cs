@@ -5,19 +5,22 @@ namespace WildlifeMortalities.App.Features.MortalityReports
 {
     public partial class MortalityComponent
     {
-        private AllSpecies _species;
+        private AllSpecies? _currentSpecies;
 
         [Parameter]
-        public AllSpecies Species { get; set; }
+        [EditorRequired]
+        public MortalityReportType ReportType { get; set; }
 
-        protected override void OnParametersSet()
+        private void SpeciesChanged(AllSpecies value)
         {
-            if (_species != Species)
+      
+            if (_currentSpecies != value)
             {
-                _species = Species;
-                MortalityViewModel viewModel = new MortalityViewModel(Species);
+                _currentSpecies = value;
 
-                switch (Species)
+                MortalityViewModel viewModel = new MortalityViewModel(value);
+
+                switch (_currentSpecies)
                 {
                     case AllSpecies.AmericanBlackBear:
                         viewModel = new AmericanBlackBearMortalityViewModel();
@@ -33,8 +36,6 @@ namespace WildlifeMortalities.App.Features.MortalityReports
 
                 SetViewModel(viewModel);
             }
-
-            base.OnParametersSet();
         }
     }
 }

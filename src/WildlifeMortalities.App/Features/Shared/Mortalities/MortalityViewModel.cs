@@ -6,10 +6,11 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class MortalityViewModel
 {
-    public decimal? Longitute { get; set; }
+    private AllSpecies? _species;
+
+    public decimal? Longitude { get; set; }
     public decimal? Latitude { get; set; }
     public Sex? Sex { get; set; }
-    public AllSpecies Species { get; }
 
     private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory =
         new()
@@ -35,18 +36,18 @@ public class MortalityViewModel
     public MortalityViewModel(Mortality mortality)
     {
         Latitude = mortality.Latitude;
-        Longitute = mortality.Longitude;
+        Longitude = mortality.Longitude;
         Sex = mortality.Sex;
     }
 
     public MortalityViewModel(AllSpecies species)
     {
-        Species = species;
+        _species = species;
     }
 
     public virtual Mortality GetMortality()
     {
-        var mortalityFactory = _mortalityFactory[Species];
+        var mortalityFactory = _mortalityFactory[_species.Value];
         var mortality = mortalityFactory.Invoke();
         SetBaseValues(mortality);
 
@@ -56,14 +57,30 @@ public class MortalityViewModel
     protected void SetBaseValues(Mortality derivatingMortality)
     {
         derivatingMortality.Latitude = Latitude;
-        derivatingMortality.Longitude = Longitute;
+        derivatingMortality.Longitude = Longitude;
         derivatingMortality.Sex = Sex!.Value;
     }
 }
 
-public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel> {
+public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel>
+{
     public MortalityViewModelValidator()
     {
         RuleFor(m => m.Sex).NotNull();
+        RuleFor(m => m.Latitude)
+            .Must(latitude => latitude is null || (latitude > 58 && latitude < 71))
+            .WithMessage("Latitude must be between 58°N and 71°N");
+        RuleFor(m => m.Latitude)
+            .Null()
+            .When(m => m.Longitude is null)
+            .WithMessage("Latitude cannot be set when longitude is null");
+
+        RuleFor(m => m.Longitude)
+            .Must(longitude => longitude is null || (longitude > -143 && longitude < -121))
+            .WithMessage("Longitude must be between 121°W and 143°W");
+        RuleFor(m => m.Longitude)
+            .Null()
+            .When(m => m.Latitude is null)
+            .WithMessage("Longitude cannot be set when latitude is null");
     }
 }

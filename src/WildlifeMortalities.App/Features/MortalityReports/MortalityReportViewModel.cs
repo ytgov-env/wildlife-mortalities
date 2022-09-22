@@ -4,6 +4,8 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class MortalityReportViewModel
 {
+    public MortalityReportType MortalityReportType { get; set; } = MortalityReportType.Hunted;
+
     public string Landmark { get; set; } = string.Empty;
     public string Comments { get; set; } = string.Empty;
 }
@@ -18,3 +20,4 @@ public class MortalityReportViewModelValidator : AbstractValidator<MortalityRepo
             .When(x => string.IsNullOrEmpty(x.Comments) == false);
     }
 }
+

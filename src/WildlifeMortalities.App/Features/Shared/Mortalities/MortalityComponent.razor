@@ -1,11 +1,13 @@
-﻿@using WildlifeMortalities.Data.Enums
+﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Enums
 
 @namespace WildlifeMortalities.App.Features.MortalityReports
 @inherits ReportTypeComponent<MortalityViewModel>
 
-<EditForm EditContext="_context">
-    <FluentValidationValidator Validator="new MortalityViewModelValidator()" />
+<SelectSpeciesComponent ReportType="ReportType" SpeciesChanged="SpeciesChanged" />
 
+@if (_currentSpecies.HasValue)
+{
     <BaseMortalityComponent ViewModel="ViewModel" />
 
     @switch (ViewModel)
@@ -17,11 +19,10 @@
             <WoodBisonMortalityComponent ViewModel="vm" />
             break;
     }
-
-</EditForm>
-
+}
 
 @code {
+
 
 }
 

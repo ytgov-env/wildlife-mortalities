@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
@@ -8,64 +9,43 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class MortalityReportPage
 {
-    private readonly Dictionary<int, bool> _validationMapper = new();
-
-    private MortalityReportType _mortalityReportType;
-
-    private AllSpecies _species;
+    private EditContext _editContext;
+    private MortalityReportViewModel _vm;
 
     private MortalityViewModel? _mortalityViewModel;
-    private MortalityReportViewModel? _mortalityReportViewModel;
 
     [Parameter]
     public int PersonId { get; set; }
 
+    protected override void OnInitialized()
+    {
+        _vm = new MortalityReportViewModel();
+        _editContext = new(_vm);
+    }
+
     [Inject]
     private IDbContextFactory<AppDbContext> dbContextFactory { get; set; }
 
-    public MortalityReportPage()
-    {
-        _validationMapper.Add(1, true); // type
-        _validationMapper.Add(2, false); // species
-        _validationMapper.Add(3, false); // report
-        _validationMapper.Add(4, false); // mortality
-    }
-
-    private void SetStepValidation(int stepNumber, bool validationResult) =>
-        _validationMapper[stepNumber] = validationResult;
-
-    private void MortalityReportTypeChanged(MortalityReportType type)
-    {
-        _mortalityReportType = type;
-    }
-
-    private void SpeciesChanged(AllSpecies species)
-    {
-        _species = species;
-    }
 
     private void SetMortalityViewModel(MortalityViewModel viewModel) =>
         _mortalityViewModel = viewModel;
 
-    private void SetMortalityReportViewModel(MortalityReportViewModel viewModel) =>
-        _mortalityReportViewModel = viewModel;
-
     private async Task CreateMortalityReport()
     {
         MortalityReport report = null;
-        if (_mortalityReportType == MortalityReportType.Hunted)
+        if (_vm.MortalityReportType == MortalityReportType.Hunted)
         {
             report = new HuntedHarvestReport
             {
                 Mortality = _mortalityViewModel.GetMortality(),
-                Landmark = _mortalityReportViewModel.Landmark,
-                Comments = _mortalityReportViewModel.Comments,
+                Landmark = _vm.Landmark,
+                Comments = _vm.Comments,
                 ClientId = PersonId,
             };
         }
-        else if (_mortalityReportType == MortalityReportType.Trapped)
+        else if (_vm.MortalityReportType == MortalityReportType.Trapped)
         {
-            report = new TrappedHarvestReport() { Comments = _mortalityReportViewModel.Comments, };
+            report = new TrappedHarvestReport() { Comments = _vm.Comments, };
         }
 
         using var context = await dbContextFactory.CreateDbContextAsync();

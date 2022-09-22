@@ -11,7 +11,6 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
     public override Mortality GetMortality()
     {
         var mortality = new AmericanBlackBearMortality { IsShotInConflict = IsShotInConflict, };
-
         SetBaseValues(mortality);
 
         return mortality;

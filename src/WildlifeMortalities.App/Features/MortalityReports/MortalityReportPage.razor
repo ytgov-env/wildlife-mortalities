@@ -1,26 +1,31 @@
 ﻿@page "/mortality-reports/{personid:int}"
+@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Shared.Models
 
-<SelectMortalityReportTypeComponent ValidationChanged="@( (x) => SetStepValidation(1,x))" MortalityReportTypeChanged="MortalityReportTypeChanged" />
-@if (_validationMapper[1] == true)
-{
-    <SelectSpeciesComponent ReportType="_mortalityReportType" SpeciesChanged="SpeciesChanged" ValidationChanged="@( (x) => SetStepValidation(2,x))" />
 
-    @if (_validationMapper[2] == true)
+<EditForm EditContext="_editContext">
+
+    <MudSelect T="MortalityReportType" @bind-Value="_vm.MortalityReportType" For="@(() => _vm.MortalityReportType)" Label="Mortality Report Type">
+        @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
+        {
+            <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
+        }
+    </MudSelect>
+
+
+    @if(_vm.MortalityReportType == MortalityReportType.Hunted)
+    {
+        <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="_vm.MortalityReportType"  />
+    }
+    else if(_vm.MortalityReportType == MortalityReportType.SpecialGuided)
     {
 
-        <MortalityReportComponent ReportType="_mortalityReportType" ViewModelChanged="SetMortalityReportViewModel" ValidationChanged="@( (x) => SetStepValidation(3,x))" />
-        <MortalityComponent ViewModelChanged="SetMortalityViewModel" Species="_species" ValidationChanged="@( (x) => SetStepValidation(4,x))" />
-
-        @if (_validationMapper[3] == true && _validationMapper[4] == true)
-        {
-            <MudButton OnClick="CreateMortalityReport">Create</MudButton>
-        } else {
-            <MudButton Disabled="true">Create</MudButton>
-        }
-
     }
-}
+    <MudTextField Label="Comments" Lines="5" @bind-Value="_vm.Comments" For="@( () => _vm.Comments)" />
+
+    <MudButton OnClick="CreateMortalityReport" Color="Color.Primary">Add</MudButton>
+</EditForm>
+
 
 
