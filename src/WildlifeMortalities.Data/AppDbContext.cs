@@ -69,16 +69,12 @@ public class AppDbContext : DbContext
             m.ToTable("Mortalities");
             m.Property(m => m.Sex).HasConversion<string>();
         });
-
         modelBuilder.Entity<AmericanBlackBearMortality>();
 
         modelBuilder
             .Entity<MortalityReport>()
             .HasOne(m => m.Mortality)
-            .WithOne(m => m.MortalityReport)
-            .HasForeignKey<Mortality>(m => m.MortalityReportId)
-            .IsRequired();
-
+            .WithOne(m => m.MortalityReport);
         modelBuilder.Entity<HuntedHarvestReport>(h =>
         {
             h.Property(h => h.Status).HasConversion<string>();
