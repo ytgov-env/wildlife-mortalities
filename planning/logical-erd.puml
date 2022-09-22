@@ -7,22 +7,30 @@ skinparam arrowThickness 1.5
 ' Entities
 together {
     together {
-        entity "HarvestReport" as harvest_report {
+        entity "MortalityReport" as mortality_report {
             *Id: number <<generated>>
             --
-            *DateStarted: datetime
-            *DateCompleted: datetime
-            *HarvestReportStatus: enum
+            *DateStarted: date
+            *DateCompleted: date
         }
         entity "HuntedHarvestReport" as hunted_harvest_report {
-            MortalityId: number <<FK>>
+            *ClientId: number <<FK>>
             GameManagementAreaSpeciesId: number <<FK>>
             SealId: number <<FK>>
             TemporarySealNumber: string
             *Landmark: string
+            *HuntedHarvestReportStatus: enum
         }
-        entity "TrappedHarvestReport" as trapped_harvest_report {
+        /' entity "TrappedHarvestReport" as trapped_harvest_report {
+            *Id: number <<generated>>
+            --
             LicenceId: number <<FK>>
+        } '/
+        entity "HumanWildlifeConflictReport" as human_wildlife_conflict_report {
+            *Id: number <<generated>>
+            --
+            *ConservationOfficerId: number <<FK>>
+            *HumanWildlifeConflictNumber: number
         }
     }
     entity "OutfitterGuideReport" as outfitter_guide_report {
@@ -47,13 +55,15 @@ together {
         *SpecialGuideReportId: <<FK>>
         *HuntedHarvestReportId: <<FK>>
     }
+    
 }
 
 together {
+    ' Some less important mortality types are not included in this diagram to keep it a manageable size
     entity "Mortality" as mortality {
         *Id: number <<generated>>
         --
-        *ReporterId: number <<FK>>
+        *MortalityReportId: number <<FK>>
         *Sex: enum
         Latitude: number
         Longitude: number
@@ -118,89 +128,6 @@ together {
         BirdSpecies: enum
     }
 }
-
-' These (less important) mortalities are hidden to keep the diagram a managable size
-/' entity "AmericanBeaverMortality" as americanbeaver_mortality {
-
-}
-entity "AmericanMartinMortality" as americanmartin_mortality {
-
-}
-entity "AmericanMinkMortality" as americanmink_mortality {
-
-}
-entity "ArcticFoxMortality" as arcticfox_mortality {
-
-}
-entity "ArcticGroundSquirrelMortality" as arcticgroundsquirrel_mortality {
-
-}
-entity "BushyTailedWoodratMortality" as bushytailedwoodrat_mortality {
-
-}
-entity "CollaredPikaMortality" as collaredpika_mortality {
-
-}
-entity "ErmineMortality" as ermine_mortality {
-
-}
-entity "FisherMortality" as fisher_mortality {
-
-}
-entity "HoaryMarmotMortality" as hoarymarmot_mortality {
-
-}
-entity "LeastChipmunkMortality" as leastchipmunk_mortality {
-
-}
-entity "LeastWeaselMortality" as leastweasel_mortality {
-
-}
-entity "LemmingMortality" as lemming_mortality {
-
-}
-entity "LittleBrownBatMortality" as littlebrownbat_mortality {
-
-}
-entity "MeadowJumpingMouseMortality" as meadowjumpingmouse_mortality {
-
-}
-entity "MuskratMortality" as muskrat_mortality {
-
-}
-entity "NorthAmericanDeerMouseMortality" as northamericandeermouse_mortality {
-
-}
-entity "NorthAmericanPorcupineMortality" as northamericanporcupine_mortality {
-
-}
-entity "NorthernFlyingSquirrelMortality" as northernflyingsquirrel_mortality {
-
-}
-entity "NorthernLongEaredBatMortality" as northernlongearedbat_mortality {
-
-}
-entity "NorthernRiverOtterMortality" as northernriverotter_mortality {
-
-}
-entity "RedFoxMortality" as redfox_mortality {
-
-}
-entity "RedSquirrelMortality" as redsquirrel_mortality {
-
-}
-entity "ShrewMortality" as shrew_mortality {
-
-}
-entity "SnowshoeHareMortality" as snowshoehare_mortality {
-
-}
-entity "VoleMortality" as vole_mortality {
-
-}
-entity "WoodchuckMortality" as woodchuck_mortality {
-
-} '/
 
 entity "BiologicalSubmission" as biological_submission {
     *Id: number <<generated>>
@@ -352,8 +279,9 @@ entity "GameManagementUnit" as game_management_unit {
 
 ' Inheritance
 
-harvest_report <|-- hunted_harvest_report
-harvest_report <|-- trapped_harvest_report
+mortality_report <|-- hunted_harvest_report
+mortality_report <|-- human_wildlife_conflict_report
+'mortality_report <|-- trapped_harvest_report
 
 person <|-- client
 person <|-- conservation_officer
@@ -378,35 +306,6 @@ mortality <|-- woodbison_mortality
 mortality <|-- woodlandcaribou_mortality
 mortality <|-- bird_mortality
 
-' These (less important) mortalities are hidden to keep the diagram a managable size
-/' mortality <|-- americanbeaver_mortality
-mortality <|-- americanmartin_mortality
-mortality <|-- americanmink_mortality
-mortality <|-- arcticfox_mortality
-mortality <|-- arcticgroundsquirrel_mortality
-mortality <|-- bushytailedwoodrat_mortality
-mortality <|-- collaredpika_mortality
-mortality <|-- ermine_mortality
-mortality <|-- fisher_mortality
-mortality <|-- hoarymarmot_mortality
-mortality <|-- leastchipmunk_mortality
-mortality <|-- leastweasel_mortality
-mortality <|-- lemming_mortality
-mortality <|-- littlebrownbat_mortality
-mortality <|-- meadowjumpingmouse_mortality
-mortality <|-- muskrat_mortality
-mortality <|-- northamericandeermouse_mortality
-mortality <|-- northamericanporcupine_mortality
-mortality <|-- northernflyingsquirrel_mortality
-mortality <|-- northernlongearedbat_mortality
-mortality <|-- northernriverotter_mortality
-mortality <|-- redfox_mortality
-mortality <|-- redsquirrel_mortality
-mortality <|-- shrew_mortality
-mortality <|-- snowshoehare_mortality
-mortality <|-- vole_mortality
-mortality <|-- woodchuck_mortality '/
-
 biological_submission <|-up- americanblackbearbiological_submission
 biological_submission <|-up- canadalynxbiological_submission
 biological_submission <|-up- elkbiological_submission
@@ -429,20 +328,19 @@ authorization <|-- trapping_licence
 hunted_harvest_report }o.right.|| game_management_area_species
 hunted_harvest_report |o..|| seal
 hunted_harvest_report }o..o{ violation
-trapped_harvest_report }o..|| trapping_licence
+'trapped_harvest_report }o..|| trapping_licence
 
-'special_guide_report |o..|{ hunted_harvest_report
 special_guide_report ||..|{ special_guide_report_hunted_harvest_report
 hunted_harvest_report ||..o| special_guide_report_hunted_harvest_report
 outfitter_guide_report ||..|{ outfitter_guide_report_client
-client ||..o| special_guide_report
+client ||..o{ special_guide_report
 client ||..o{ outfitter_guide_report_client
+client ||..o{ hunted_harvest_report
+conservation_officer ||..o{ human_wildlife_conflict_report
 outfitter_guide_report ||..|{ outfitter_guide_report_hunted_harvest_report
 hunted_harvest_report ||..o| outfitter_guide_report_hunted_harvest_report
 
-
-mortality }o..|| person
-mortality ||.up.o| hunted_harvest_report
+mortality ||.left.|| mortality_report
 
 americanblackbearbiological_submission |o.up.|| americanblackbear_mortality
 canadalynxbiological_submission |o.up.|| canadalynx_mortality
@@ -569,7 +467,7 @@ enum "GameManagementAreaStatus" as gma_status {
     OpenPermitRequired
 }
 
-enum "HarvestReportStatus" as harvest_report_status {
+enum "HuntedHarvestReportStatus" as harvest_report_status {
 
 }
 
@@ -605,6 +503,10 @@ enum "ConfidenceInAge" as confidence_in_age {
     Fair
     Good
     Poor
+}
+
+enum "OutfittingArea" as outfitting_area {
+
 }
 
 @enduml
