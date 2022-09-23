@@ -91,7 +91,7 @@ public enum AllSpecies
     Muskrat = 28,
 
     [Display(Name = "North american deermouse")]
-    NorthAmericanDeerMouse = 29,
+    NorthAmericanDeermouse = 29,
 
     [Display(Name = "North american porcupine")]
     NorthAmericanPorcupine = 30,
