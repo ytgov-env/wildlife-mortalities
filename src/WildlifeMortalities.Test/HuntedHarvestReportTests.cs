@@ -27,12 +27,13 @@ public class HuntedHarvestReportTests
         var harvestReport = new HuntedHarvestReport()
         {
             TemporarySealNumber = "44064",
-            GmaSpeciesId = 20,
-            Mortality = new AmericanBlackBearMortality()
+            GmaSpecies = new GameManagementAreaSpecies()
             {
-                Reporter = new Client() { EnvClientId = "50406" },
-                Sex = Sex.Male
-            }
+                Species = HuntedSpeciesWithGameManagementArea.AmericanBlackBear,
+                GameManagementArea = new GameManagementArea() { Zone = "1", Subzone = "50" }
+            },
+            Mortality = new AmericanBlackBearMortality() { Sex = Sex.Male },
+            Client = new Client() { EnvClientId = "50406" }
         };
         var result = await service.CreateHuntedHarvestReport(harvestReport);
 
@@ -71,17 +72,19 @@ public class HuntedHarvestReportTests
         var harvestReport = new HuntedHarvestReport()
         {
             TemporarySealNumber = "44064",
-            Mortality = new AmericanBlackBearMortality()
+            GmaSpecies = new GameManagementAreaSpecies()
             {
-                Reporter = new Client() { EnvClientId = "50406" },
-                Sex = Sex.Male
-            }
+                Species = HuntedSpeciesWithGameManagementArea.AmericanBlackBear,
+                GameManagementArea = new GameManagementArea() { Zone = "1", Subzone = "50" }
+            },
+            Mortality = new AmericanBlackBearMortality() { Sex = Sex.Male },
+            Client = new Client() { EnvClientId = "50406" }
         };
         var createResult = await service.CreateHuntedHarvestReport(harvestReport);
         harvestReport = await service.GetHarvestReportById(createResult.Value.Id);
 
         // Act
-        harvestReport.Status = HarvestReportStatus.Complete;
+        harvestReport.Status = HuntedHarvestReportStatus.Complete;
         var updateResult = await service.UpdateHuntedHarvestReport(harvestReport);
 
         // Assert
