@@ -7,7 +7,7 @@
 
 @namespace WildlifeMortalities.App.Features.Reporters
 
-<MudText Typo="Typo.h3" Class="mb-8">Client Overview</MudText>
+<MudText Typo="Typo.h3" Class="mb-8">Client overview</MudText>
 
 <MudGrid>
     <MudItem sm="6">
@@ -15,7 +15,7 @@
             <FluentValidationValidator Validator="new SelectClientViewModelValidator()" />
             <MudItem>
                 <MudPaper Class="pa-4 mb-4">
-                    <MudAutocomplete T="ClientDto" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by EnvClientId or Last Name"
+                    <MudAutocomplete T="ClientDto" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by client id or last name"
                                      @bind-Value="_selectedClientViewModel.SelectedClient" ToStringFunc="@((x) => x is null ? "" : $"{x.EnvClientId} | {x.LastName}" )" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
                 </MudPaper>

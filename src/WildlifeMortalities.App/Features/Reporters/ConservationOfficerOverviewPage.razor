@@ -6,7 +6,7 @@
 
 @namespace WildlifeMortalities.App.Features.Reporters
 
-<MudText Typo="Typo.h3" Class="mb-8">Conservation Officer Overview</MudText>
+<MudText Typo="Typo.h3" Class="mb-8">Conservation officer overview</MudText>
 
 <MudGrid>
     <MudItem sm="6">
@@ -14,7 +14,7 @@
             <FluentValidationValidator Validator="new SelectConservationOfficerViewModelValidator()" />
             <MudItem>
                 <MudPaper Class="pa-4 mb-4">
-                    <MudAutocomplete T="ConservationOfficer" For="@(() => _selectedConservationOfficerViewModel.SelectedConservationOfficer)" Label="Search by Badge Number or Last Name"
+                    <MudAutocomplete T="ConservationOfficer" For="@(() => _selectedConservationOfficerViewModel.SelectedConservationOfficer)" Label="Search by badge number or last name"
                                      @bind-Value="_selectedConservationOfficerViewModel.SelectedConservationOfficer" ToStringFunc="@((x) => x is null ? "" : $"{x.BadgeNumber} | {x.LastName}" )" SearchFunc="@SearchConservationOfficerByBadgeNumberOrLastName"
                                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
                 </MudPaper>

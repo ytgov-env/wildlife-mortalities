@@ -6,7 +6,7 @@
 
 <EditForm EditContext="_editContext">
 
-    <MudSelect T="MortalityReportType" @bind-Value="_vm.MortalityReportType" For="@(() => _vm.MortalityReportType)" Label="Mortality Report Type">
+    <MudSelect T="MortalityReportType" @bind-Value="_vm.MortalityReportType" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
         @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
         {
             <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
