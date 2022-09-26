@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.GuideReports;
@@ -11,8 +12,6 @@ public partial class MortalityReportPage
 {
     private EditContext _editContext;
     private MortalityReportViewModel _vm;
-
-    private MortalityViewModel? _mortalityViewModel;
 
     [Parameter]
     public int PersonId { get; set; }
@@ -26,8 +25,11 @@ public partial class MortalityReportPage
     [Inject]
     private IDbContextFactory<AppDbContext> dbContextFactory { get; set; }
 
+    [Inject]
+    private IDialogService DialogService { get; set; } = null!;
+
     private void SetMortalityViewModel(MortalityViewModel viewModel) =>
-        _mortalityViewModel = viewModel;
+        _vm.MortalityViewModel = viewModel;
 
     private async Task CreateMortalityReport()
     {
@@ -43,7 +45,7 @@ public partial class MortalityReportPage
         {
             var report = new HuntedHarvestReport
             {
-                Mortality = _mortalityViewModel.GetMortality(),
+                Mortality = _vm.MortalityViewModel.GetMortality(),
                 Landmark = _vm.Landmark,
                 Comments = _vm.Comments,
                 ClientId = PersonId,
@@ -56,11 +58,54 @@ public partial class MortalityReportPage
         }
         else if (_vm.MortalityReportType == MortalityReportType.SpecialGuided)
         {
-            var report = new SpecialGuideReport { };
+            var report = new SpecialGuideReport
+            {
+                HuntedHarvestReports = _vm.MortalityViewModels
+                    .Select(
+                        x =>
+                            new HuntedHarvestReport
+                            {
+                                Comments = _vm.Comments,
+                                Mortality = x.GetMortality(),
+                            }
+                    )
+                    .ToList(),
+            };
         }
         else if (_vm.MortalityReportType == MortalityReportType.Trapped) { }
 
         await context.SaveChangesAsync();
         //await Service.CreateHarvestReport(report);
+    }
+
+    private async Task AddMortality()
+    {
+        var parameters = new DialogParameters
+        {
+            [nameof(AddMortalityDialog.ReportType)] = _vm.MortalityReportType
+        };
+
+        var dialog = DialogService.Show<AddMortalityDialog>("", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            _vm.MortalityViewModels.Add(result.Data as MortalityViewModel);
+        }
+    }
+
+    private async Task Edit(MortalityViewModel viewModel)
+    {
+        var parameters = new DialogParameters
+        {
+            [nameof(EditMortalityDialog.ViewModel)] = viewModel
+        };
+
+        var dialog = DialogService.Show<EditMortalityDialog>("", parameters);
+        var result = await dialog.Result;
+    }
+
+    private void Delete(MortalityViewModel viewModel)
+    {
+        _vm.MortalityViewModels.Remove(viewModel);
     }
 }

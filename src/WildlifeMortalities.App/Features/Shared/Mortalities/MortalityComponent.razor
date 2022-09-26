@@ -4,9 +4,12 @@
 @namespace WildlifeMortalities.App.Features.MortalityReports
 @inherits ReportTypeComponent<MortalityViewModel>
 
-<SelectSpeciesComponent ReportType="ReportType" SpeciesChanged="SpeciesChanged" />
+@if (ReportType.HasValue == true)
+{
+    <SelectSpeciesComponent ReportType="ReportType.Value" SpeciesChanged="SpeciesChanged" />
+}
 
-@if (_currentSpecies.HasValue)
+@if (_currentSpecies.HasValue || _editViewModel != null)
 {
     <BaseMortalityComponent ViewModel="ViewModel" />
 

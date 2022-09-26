@@ -11,7 +11,8 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
 
     protected override void OnInitialized()
     {
-        ViewModel = new();
+        ViewModel ??= new();
+
         _context = new EditContext(ViewModel);
         _context.OnFieldChanged += _context_OnFieldChanged;
 

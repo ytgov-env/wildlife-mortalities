@@ -15,4 +15,12 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 
         return mortality;
     }
+
+    public override Dictionary<string, string> GetProperties()
+    {
+        var result = base.GetProperties();
+        result.Add("Is Shot in conflict", IsShotInConflict.ToString());
+
+        return result;
+    }
 }

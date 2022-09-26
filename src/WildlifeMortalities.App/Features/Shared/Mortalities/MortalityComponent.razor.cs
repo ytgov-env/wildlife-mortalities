@@ -6,14 +6,31 @@ namespace WildlifeMortalities.App.Features.MortalityReports
     public partial class MortalityComponent
     {
         private AllSpecies? _currentSpecies;
+        private MortalityViewModel? _editViewModel;
 
         [Parameter]
         [EditorRequired]
-        public MortalityReportType ReportType { get; set; }
+        public MortalityReportType? ReportType { get; set; }
+
+        [Parameter]
+        [EditorRequired]
+        public MortalityViewModel? EditViewModel
+        {
+            get => _editViewModel;
+            set
+            {
+                _editViewModel = value;
+                if (value != null)
+                {
+                    SetViewModel(value);
+                }
+            }
+        }
+
+        public MortalityViewModel GetViewModel() => ViewModel;
 
         private void SpeciesChanged(AllSpecies value)
         {
-      
             if (_currentSpecies != value)
             {
                 _currentSpecies = value;

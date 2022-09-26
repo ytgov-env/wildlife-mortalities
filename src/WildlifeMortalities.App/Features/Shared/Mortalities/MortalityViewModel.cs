@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
 
@@ -6,11 +7,30 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class MortalityViewModel
 {
-    private AllSpecies? _species;
+    public AllSpecies? Species { get; init; }
 
     public decimal? Longitude { get; set; }
     public decimal? Latitude { get; set; }
     public Sex? Sex { get; set; }
+
+    public virtual Dictionary<String, String> GetProperties()
+    {
+        var result = new Dictionary<string, string> { { "Species", Species.GetDisplayName() }, };
+
+        if (Longitude.HasValue)
+        {
+            result.Add("Longitude", Longitude.Value.ToString());
+        }
+
+        if (Latitude.HasValue)
+        {
+            result.Add("Latitude", Latitude.Value.ToString());
+        }
+
+        result.Add("Sex", Sex.GetDisplayName());
+
+        return result;
+    }
 
     private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory =
         new()
@@ -42,12 +62,12 @@ public class MortalityViewModel
 
     public MortalityViewModel(AllSpecies species)
     {
-        _species = species;
+        Species = species;
     }
 
     public virtual Mortality GetMortality()
     {
-        var mortalityFactory = _mortalityFactory[_species.Value];
+        var mortalityFactory = _mortalityFactory[Species.Value];
         var mortality = mortalityFactory.Invoke();
         SetBaseValues(mortality);
 
