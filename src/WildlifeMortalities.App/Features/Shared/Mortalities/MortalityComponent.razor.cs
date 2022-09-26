@@ -43,6 +43,10 @@ namespace WildlifeMortalities.App.Features.MortalityReports
                         viewModel = new AmericanBlackBearMortalityViewModel();
                         break;
 
+                    case AllSpecies.ThinhornSheep:
+                        viewModel = new ThinhornSheepMortalityViewModel();
+                        break;
+
                     case AllSpecies.WoodBison:
                         viewModel = new WoodBisonMortalityViewModel();
                         break;

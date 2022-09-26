@@ -13,10 +13,43 @@
         }
     </MudSelect>
 
+    @if (_vm.MortalityReportType == MortalityReportType.Conflict)
+    {
 
-    @if (_vm.MortalityReportType == MortalityReportType.Hunted)
+    }
+    else if (_vm.MortalityReportType == MortalityReportType.Hunted)
     {
         <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="_vm.MortalityReportType" EditViewModel="null" />
+    }
+    else if (_vm.MortalityReportType == MortalityReportType.Outfitted)
+    {
+        <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" />
+        <MudList>
+            @foreach (var item in _vm.MortalityViewModels)
+            {
+                <MudListItem>
+                    <MudStack Row="true">
+                        <MudStack Row="false">
+                            @foreach (var property in item.GetProperties())
+                            {
+                                var normalizedValue = property.Value.ToLower();
+                                @if (Boolean.TryParse(property.Value, out Boolean value) == true)
+                                {
+                                    <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
+                                }
+                                else
+                                {
+                                    <MudText>@property.Key: @property.Value</MudText>
+                                }
+                            }
+                        </MudStack>
+                        <MudSpacer />
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
+                    </MudStack>
+                </MudListItem>
+            }
+        </MudList>
     }
     else if (_vm.MortalityReportType == MortalityReportType.SpecialGuided)
     {
@@ -47,6 +80,10 @@
                 </MudListItem>
             }
         </MudList>
+    }
+    else if (_vm.MortalityReportType == MortalityReportType.Trapped)
+    {
+
     }
     <MudTextField Label="Comments" Lines="5" @bind-Value="_vm.Comments" For="@( () => _vm.Comments)" />
 

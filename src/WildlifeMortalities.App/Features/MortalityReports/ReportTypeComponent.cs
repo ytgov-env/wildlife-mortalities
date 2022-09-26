@@ -21,7 +21,7 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
 
     protected void SetViewModel(T viewModel)
     {
-        if (_context != null)
+        if (_context is not null)
         {
             _context.OnFieldChanged -= _context_OnFieldChanged;
         }

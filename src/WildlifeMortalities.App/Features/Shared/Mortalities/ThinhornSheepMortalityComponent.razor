@@ -1,0 +1,20 @@
+﻿@namespace WildlifeMortalities.App.Features.MortalityReports
+@using WildlifeMortalities.Data.Entities.Mortalities
+
+<MudSelect T="ThinhornSheepBodyColour?" @bind-Value="@ViewModel.BodyColour" Label="Body colour" Placeholder="Select a colour">
+    @foreach (var item in Enum.GetValues<ThinhornSheepBodyColour>().Where(s => s != ThinhornSheepBodyColour.Uninitialized))
+    {
+        <MudSelectItem T="ThinhornSheepBodyColour?" Value="@item">@item</MudSelectItem>
+    }
+</MudSelect>
+
+<MudSelect T="ThinhornSheepTailColour?" @bind-Value="@ViewModel.TailColour" Label="Tail colour" Placeholder="Select a colour">
+    @foreach (var item in Enum.GetValues<ThinhornSheepTailColour>().Where(s => s != ThinhornSheepTailColour.Uninitialized))
+    {
+        <MudSelectItem T="ThinhornSheepTailColour?" Value="@item">@item</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter] public ThinhornSheepMortalityViewModel ViewModel { get; set; }
+}

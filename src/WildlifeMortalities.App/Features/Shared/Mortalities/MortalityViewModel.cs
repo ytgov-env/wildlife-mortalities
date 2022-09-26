@@ -13,7 +13,7 @@ public class MortalityViewModel
     public decimal? Latitude { get; set; }
     public Sex? Sex { get; set; }
 
-    public virtual Dictionary<String, String> GetProperties()
+    public virtual Dictionary<string, string> GetProperties()
     {
         var result = new Dictionary<string, string> { { "Species", Species.GetDisplayName() }, };
 
