@@ -21,6 +21,15 @@ public class ThinhornSheepMortalityViewModel : MortalityViewModel
         SetBaseValues(mortality);
         return mortality;
     }
+
+    public override Dictionary<string, string> GetProperties()
+    {
+        var result = base.GetProperties();
+        result.Add("Body colour", BodyColour!.Value.ToString());
+        result.Add("Tail colour", TailColour!.Value.ToString());
+
+        return result;
+    }
 }
 
 public class ThinhornSheepViewModelValidator : AbstractValidator<ThinhornSheepMortalityViewModel>

@@ -21,6 +21,15 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
         SetBaseValues(mortality);
         return mortality;
     }
+
+    public override Dictionary<string, string> GetProperties()
+    {
+        var result = base.GetProperties();
+        result.Add("Was pregnant", PregnancyStatus.ToString());
+        result.Add("Was wounded", IsWounded.ToString());
+
+        return result;
+    }
 }
 
 public class WoodBisonMortalityViewModelValidator : AbstractValidator<WoodBisonMortalityViewModel>

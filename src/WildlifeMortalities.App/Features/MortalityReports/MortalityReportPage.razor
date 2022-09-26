@@ -23,7 +23,6 @@
     }
     else if (_vm.MortalityReportType == MortalityReportType.Outfitted)
     {
-        <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" />
         <MudList>
             @foreach (var item in _vm.MortalityViewModels)
             {
@@ -50,10 +49,14 @@
                 </MudListItem>
             }
         </MudList>
+        <MudStack Row="true">
+            <MudSpacer />
+            <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" Size="Size.Medium"/>
+        </MudStack>
     }
     else if (_vm.MortalityReportType == MortalityReportType.SpecialGuided)
     {
-        <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" />
+
         <MudList>
             @foreach (var item in _vm.MortalityViewModels)
             {
@@ -80,6 +83,10 @@
                 </MudListItem>
             }
         </MudList>
+        <MudStack Row="true">
+            <MudSpacer />
+            <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" Size="Size.Medium"/>
+        </MudStack>
     }
     else if (_vm.MortalityReportType == MortalityReportType.Trapped)
     {
