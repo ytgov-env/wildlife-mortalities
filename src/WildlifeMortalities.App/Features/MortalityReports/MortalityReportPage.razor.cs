@@ -41,31 +41,31 @@ public partial class MortalityReportPage
             var report = new HumanWildlifeConflictReport { };
             context.MortalityReports.Add(report);
         }
-        else if (_vm.MortalityReportType == MortalityReportType.Hunted)
+        else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
         {
-            var report = new HuntedHarvestReport
+            var report = new IndividualHuntReport
             {
                 Mortality = _vm.MortalityViewModel.GetMortality(),
                 Landmark = _vm.Landmark,
-                Comments = _vm.Comments,
+                Comment = _vm.Comment,
                 ClientId = PersonId,
             };
             context.MortalityReports.Add(report);
         }
-        else if (_vm.MortalityReportType == MortalityReportType.Outfitted)
+        else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
         {
-            var report = new OutfitterGuideReport { };
+            var report = new OutfitterGuidedHuntReport { };
         }
-        else if (_vm.MortalityReportType == MortalityReportType.SpecialGuided)
+        else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
         {
-            var report = new SpecialGuideReport
+            var report = new SpecialGuidedHuntReport
             {
-                HuntedHarvestReports = _vm.MortalityViewModels
+                IndividualHuntReports = _vm.MortalityViewModels
                     .Select(
                         x =>
-                            new HuntedHarvestReport
+                            new IndividualHuntReport
                             {
-                                Comments = _vm.Comments,
+                                Comment = _vm.Comment,
                                 Mortality = x.GetMortality(),
                             }
                     )

@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities.GuideReports;
-public class OutfitterGuideReport
+
+public class SpecialGuidedHuntReport
 {
     public int Id { get; set; }
-    public List<Client> Guides { get; set; } = null!;
-    public List<HuntedHarvestReport> HuntedHarvestReports { get; set; } = null!;
+    public int GuideId { get; set; }
+    public Client Guide { get; set; } = null!;
+    public List<IndividualHuntReport> IndividualHuntReports { get; set; } = null!;
 }

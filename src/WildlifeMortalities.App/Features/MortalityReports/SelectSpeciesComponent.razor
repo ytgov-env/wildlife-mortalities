@@ -11,7 +11,7 @@
     {
 
     }
-    else if (ReportType is MortalityReportType.Hunted || ReportType is MortalityReportType.Outfitted)
+    else if (ReportType is MortalityReportType.IndividualHunt || ReportType is MortalityReportType.OutfitterGuidedHunt)
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
             @foreach (HuntedSpecies species in Enum.GetValues<HuntedSpecies>().Where(s => s != HuntedSpecies.Uninitialized))
@@ -20,7 +20,7 @@
             }
         </MudSelect>
     }
-    else if (ReportType is MortalityReportType.SpecialGuided)
+    else if (ReportType is MortalityReportType.SpecialGuidedHunt)
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
             @foreach (HuntedSpecies species in Enum.GetValues<HuntedSpecies>()

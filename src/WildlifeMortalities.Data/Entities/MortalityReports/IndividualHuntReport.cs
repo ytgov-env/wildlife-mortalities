@@ -4,18 +4,18 @@ using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities;
 
-public class HuntedHarvestReport : MortalityReport
+public class IndividualHuntReport : MortalityReport
 {
-
     public int ClientId { get; set; }
     public Client Client { get; set; }
     public int GmaSpeciesId { get; set; }
     public GameManagementAreaSpecies GmaSpecies { get; set; } = null!;
+    public DateTimeOffset DateStarted { get; set; }
+    public DateTimeOffset DateCompleted { get; set; }
     public string Landmark { get; set; } = string.Empty;
-    public string? TemporarySealNumber { get; set; }
     public int? SealId { get; set; }
     public Seal? Seal { get; set; }
-    public HuntedHarvestReportStatus Status { get; set; }
-    public string Comments { get; set; } = "";
+    public IndividualHuntReportStatus Status { get; set; }
+    public string Comment { get; set; } = string.Empty;
     public List<Violation> Violations { get; set; } = null!;
 }

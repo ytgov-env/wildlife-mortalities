@@ -2,5 +2,5 @@
 
 public class HuntingLicence : Authorization
 {
-    public List<Seal> Seals { get; set; } = new();
+    public List<Seal> Seals { get; set; } = null!;
 }

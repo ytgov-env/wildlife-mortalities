@@ -4,9 +4,9 @@
 <EditForm EditContext="_context">
     <FluentValidationValidator Validator="new MortalityReportViewModelValidator(ReportType)" />
 
-    <MudTextField @bind-Value="ViewModel.Comments" For="@(() => ViewModel.Comments)" Label="Comments" />
+    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" />
 
-    @if (ReportType == MortalityReportType.Hunted)
+    @if (ReportType == MortalityReportType.IndividualHunt)
     {
         <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark" />
     }

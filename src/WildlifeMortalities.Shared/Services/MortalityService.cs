@@ -47,7 +47,12 @@ public class MortalityService : IMortalityService
 
         return await context.Mortalities
             .OfType<T>()
-            .Where(m => m.MortalityReport is HuntedHarvestReport && (m.MortalityReport as HuntedHarvestReport)!.Client.EnvClientId == envClientId)
+            .Where(
+                m =>
+                    m.MortalityReport is IndividualHuntReport
+                    && (m.MortalityReport as IndividualHuntReport)!.Client.EnvClientId
+                        == envClientId
+            )
             .AsNoTracking()
             .ToListAsync();
     }
@@ -63,8 +68,9 @@ public class MortalityService : IMortalityService
             .Where(
                 m =>
                     m.MortalityReport is HumanWildlifeConflictReport
-                    && (m.MortalityReport as HumanWildlifeConflictReport)!.ConservationOfficer.BadgeNumber
-                        == conservationOfficerBadgeNumber
+                    && (m.MortalityReport as HumanWildlifeConflictReport)!
+                        .ConservationOfficer
+                        .BadgeNumber == conservationOfficerBadgeNumber
             )
             .AsNoTracking()
             .ToListAsync();

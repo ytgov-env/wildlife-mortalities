@@ -21,6 +21,6 @@ public partial class MortalitiesOverview
 
     private void ReportAHarvest()
     {
-        NavigationManager.NavigateTo("harvest-reports/create");
+        NavigationManager.NavigateTo("mortality-reports/create");
     }
 }

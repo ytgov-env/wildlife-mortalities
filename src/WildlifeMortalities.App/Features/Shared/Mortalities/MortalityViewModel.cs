@@ -9,13 +9,19 @@ public class MortalityViewModel
 {
     public AllSpecies? Species { get; init; }
 
+    public DateTime? DateOfDeath { get; set; }
     public decimal? Longitude { get; set; }
     public decimal? Latitude { get; set; }
     public Sex? Sex { get; set; }
 
     public virtual Dictionary<string, string> GetProperties()
     {
-        var result = new Dictionary<string, string> { { "Species", Species.GetDisplayName() }, };
+        var result = new Dictionary<string, string>
+        {
+            { "Species", Species.GetDisplayName() },
+            { "Date of death", DateOfDeath?.Date.ToString() },
+            { "Sex", Sex.GetDisplayName() }
+        };
 
         if (Longitude.HasValue)
         {
@@ -26,8 +32,6 @@ public class MortalityViewModel
         {
             result.Add("Latitude", Latitude.Value.ToString());
         }
-
-        result.Add("Sex", Sex.GetDisplayName());
 
         return result;
     }
@@ -55,6 +59,7 @@ public class MortalityViewModel
 
     public MortalityViewModel(Mortality mortality)
     {
+        DateOfDeath = mortality.DateOfDeath;
         Latitude = mortality.Latitude;
         Longitude = mortality.Longitude;
         Sex = mortality.Sex;
@@ -76,6 +81,7 @@ public class MortalityViewModel
 
     protected void SetBaseValues(Mortality derivatingMortality)
     {
+        derivatingMortality.DateOfDeath = DateOfDeath.Value;
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitude;
         derivatingMortality.Sex = Sex!.Value;

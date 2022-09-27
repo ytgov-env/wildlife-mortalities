@@ -113,50 +113,24 @@ public class ValidatorTests
     }
 
     [Fact]
-    public void CanCreateHuntedHarvestReportWithTemporarySealNumber()
+    public void CannotCreateIndividualHuntReportWithoutSeal()
     {
-        var model = new HuntedHarvestReport()
-        {
-            Mortality = new AmericanBlackBearMortality(),
-            TemporarySealNumber = "60708"
-        };
+        var model = new IndividualHuntReport();
 
-        var validator = new HuntedHarvestReportValidator<AmericanBlackBearMortality>();
+        var validator = new IndividualHuntReportValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
 
-        result.ShouldNotHaveValidationErrorFor(h => h.TemporarySealNumber);
+        result.ShouldHaveValidationErrorFor(h => h.Seal);
     }
 
     [Fact]
-    public void CannotCreateHuntedHarvestReportWithoutTemporarySealNumberAndWithoutSeal()
+    public void CanCreateIndividualHuntReportWithSeal()
     {
-        var model = new HuntedHarvestReport();
+        var model = new IndividualHuntReport() { Seal = new Seal() };
 
-        var validator = new HuntedHarvestReportValidator<AmericanBlackBearMortality>();
+        var validator = new IndividualHuntReportValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(h => h.TemporarySealNumber);
-    }
-
-    [Fact]
-    public void CanCreateHuntedHarvestReportWithSeal()
-    {
-        var model = new HuntedHarvestReport() { Seal = new Seal() };
-
-        var validator = new HuntedHarvestReportValidator<AmericanBlackBearMortality>();
-        var result = validator.TestValidate(model);
-
-        result.ShouldNotHaveValidationErrorFor(h => h.TemporarySealNumber);
-    }
-
-    [Fact]
-    public void CannotCreateHuntedHarvestReportWithTemporarySealNumberAndSeal()
-    {
-        var model = new HuntedHarvestReport() { Seal = new Seal(), TemporarySealNumber = "55120" };
-
-        var validator = new HuntedHarvestReportValidator<AmericanBlackBearMortality>();
-        var result = validator.TestValidate(model);
-
-        result.ShouldHaveValidationErrorFor(h => h.TemporarySealNumber);
+        result.ShouldNotHaveValidationErrorFor(h => h.Seal);
     }
 }

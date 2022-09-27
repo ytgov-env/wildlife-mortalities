@@ -10,23 +10,22 @@ using WildlifeMortalities.Shared.Services;
 namespace WildlifeMortalities.Test;
 
 [Collection("Database Tests")]
-public class HuntedHarvestReportTests
+public class IndividualHuntReportTests
 {
     [Fact]
-    public async void CanCreateHuntedHarvestReport()
+    public async void CanCreateIndividualHuntReport()
     {
         // Arrange
         var dbContextFactory = CreateTestDbContextFactory();
         using var context = dbContextFactory.CreateDbContext();
-        var service = new HuntedHarvestReportService<AmericanBlackBearMortality>(
+        var service = new IndividualHuntReportService<AmericanBlackBearMortality>(
             dbContextFactory,
             new MortalityService(dbContextFactory)
         );
 
         // Act
-        var harvestReport = new HuntedHarvestReport()
+        var individualHuntReport = new IndividualHuntReport()
         {
-            TemporarySealNumber = "44064",
             GmaSpecies = new GameManagementAreaSpecies()
             {
                 Species = HuntedSpeciesWithGameManagementArea.AmericanBlackBear,
@@ -35,43 +34,42 @@ public class HuntedHarvestReportTests
             Mortality = new AmericanBlackBearMortality() { Sex = Sex.Male },
             Client = new Client() { EnvClientId = "50406" }
         };
-        var result = await service.CreateHuntedHarvestReport(harvestReport);
+        var result = await service.CreateIndividualHuntReport(individualHuntReport);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
     }
 
     [Fact]
-    public async void CannotCreateHuntedHarvestReportWithoutAMortality()
+    public async void CannotCreateIndividualHuntReportWithoutAMortality()
     {
         // Arrange
         var dbContextFactory = CreateTestDbContextFactory();
-        var service = new HuntedHarvestReportService<AmericanBlackBearMortality>(
+        var service = new IndividualHuntReportService<AmericanBlackBearMortality>(
             dbContextFactory,
             new MortalityService(dbContextFactory)
         );
 
         // Act
-        var harvestReport = new HuntedHarvestReport() { TemporarySealNumber = "4404" };
-        var result = await service.CreateHuntedHarvestReport(harvestReport);
+        var individualHuntReport = new IndividualHuntReport();
+        var result = await service.CreateIndividualHuntReport(individualHuntReport);
 
         // Assert
         result.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
-    public async void CanUpdateHuntedHarvestReportWIthMortality()
+    public async void CanUpdateIndividualHuntReportWIthMortality()
     {
         // Arrange
         var dbContextFactory = CreateTestDbContextFactory();
-        var service = new HuntedHarvestReportService<AmericanBlackBearMortality>(
+        var service = new IndividualHuntReportService<AmericanBlackBearMortality>(
             dbContextFactory,
             new MortalityService(dbContextFactory)
         );
 
-        var harvestReport = new HuntedHarvestReport()
+        var individualHuntReport = new IndividualHuntReport()
         {
-            TemporarySealNumber = "44064",
             GmaSpecies = new GameManagementAreaSpecies()
             {
                 Species = HuntedSpeciesWithGameManagementArea.AmericanBlackBear,
@@ -80,12 +78,12 @@ public class HuntedHarvestReportTests
             Mortality = new AmericanBlackBearMortality() { Sex = Sex.Male },
             Client = new Client() { EnvClientId = "50406" }
         };
-        var createResult = await service.CreateHuntedHarvestReport(harvestReport);
-        harvestReport = await service.GetHarvestReportById(createResult.Value.Id);
+        var createResult = await service.CreateIndividualHuntReport(individualHuntReport);
+        individualHuntReport = await service.GetHarvestReportById(createResult.Value.Id);
 
         // Act
-        harvestReport.Status = HuntedHarvestReportStatus.Complete;
-        var updateResult = await service.UpdateHuntedHarvestReport(harvestReport);
+        individualHuntReport.Status = IndividualHuntReportStatus.Complete;
+        var updateResult = await service.UpdateIndividualHuntReport(individualHuntReport);
 
         // Assert
         updateResult.IsSuccess.Should().BeTrue();

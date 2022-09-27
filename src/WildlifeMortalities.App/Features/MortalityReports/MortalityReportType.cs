@@ -6,12 +6,16 @@ public enum MortalityReportType
 {
     [Display(Name = "Human-wildlife conflict")]
     Conflict,
+
     [Display(Name = "Hunting (individual)")]
-    Hunted,
+    IndividualHunt,
+
     [Display(Name = "Hunting (outfitted)")]
-    Outfitted,
+    OutfitterGuidedHunt,
+
     [Display(Name = "Hunting (special guided)")]
-    SpecialGuided,
+    SpecialGuidedHunt,
+
     [Display(Name = "Trapping")]
     Trapped
 }

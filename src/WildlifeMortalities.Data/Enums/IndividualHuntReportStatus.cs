@@ -1,6 +1,6 @@
 ﻿namespace WildlifeMortalities.Data.Enums;
 
-public enum HuntedHarvestReportStatus
+public enum IndividualHuntReportStatus
 {
     Uninitialized = 0,
     Complete = 1,

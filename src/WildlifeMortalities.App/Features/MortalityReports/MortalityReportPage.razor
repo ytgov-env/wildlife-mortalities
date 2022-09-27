@@ -18,11 +18,11 @@
     {
 
     }
-    else if (_vm.MortalityReportType == MortalityReportType.Hunted)
+    else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
     {
         <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="_vm.MortalityReportType" EditViewModel="null" />
     }
-    else if (_vm.MortalityReportType == MortalityReportType.Outfitted)
+    else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
     {
         <MudList>
             @foreach (var item in _vm.MortalityViewModels)
@@ -36,6 +36,10 @@
                                 @if (Boolean.TryParse(property.Value, out Boolean value) == true)
                                 {
                                     <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
+                                }
+                                else if(DateTime.TryParse(property.Value, out DateTime dateValue) == true)
+                                {
+                                    <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
                                 }
                                 else
                                 {
@@ -55,9 +59,8 @@
             <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" Size="Size.Medium"/>
         </MudStack>
     }
-    else if (_vm.MortalityReportType == MortalityReportType.SpecialGuided)
+    else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
     {
-
         <MudList>
             @foreach (var item in _vm.MortalityViewModels)
             {
@@ -93,7 +96,6 @@
     {
 
     }
-    <MudTextField Label="Comments" Lines="5" @bind-Value="_vm.Comments" For="@( () => _vm.Comments)" />
 
     <MudStack Row="true">
         <MudSpacer />

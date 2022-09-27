@@ -8,6 +8,6 @@ public class GameManagementAreaSpecies
     public HuntedSpeciesWithGameManagementArea Species { get; set; }
     public int GameManagementAreaId { get; set; }
     public GameManagementArea GameManagementArea { get; set; } = null!;
-    public List<GameManagementAreaSchedule> Schedules { get; set; } = new();
-    public List<GameManagementUnit?> GameManagementUnits { get; set; } = new();
+    public List<GameManagementAreaSchedule> Schedules { get; set; } = null!;
+    public List<GameManagementUnit?> GameManagementUnits { get; set; } = null!;
 }
