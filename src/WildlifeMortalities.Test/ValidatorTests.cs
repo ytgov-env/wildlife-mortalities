@@ -113,22 +113,22 @@ public class ValidatorTests
     }
 
     [Fact]
-    public void CannotCreateIndividualHuntReportWithoutSeal()
+    public void CannotCreateHuntedMortalityReportWithoutSeal()
     {
-        var model = new IndividualHuntReport();
+        var model = new HuntedMortalityReport();
 
-        var validator = new IndividualHuntReportValidator<AmericanBlackBearMortality>();
+        var validator = new HuntedMortalityReportValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
 
         result.ShouldHaveValidationErrorFor(h => h.Seal);
     }
 
     [Fact]
-    public void CanCreateIndividualHuntReportWithSeal()
+    public void CanCreateHuntedMortalityReportWithSeal()
     {
-        var model = new IndividualHuntReport() { Seal = new Seal() };
+        var model = new HuntedMortalityReport() { Seal = new Seal() };
 
-        var validator = new IndividualHuntReportValidator<AmericanBlackBearMortality>();
+        var validator = new HuntedMortalityReportValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
 
         result.ShouldNotHaveValidationErrorFor(h => h.Seal);

@@ -77,10 +77,10 @@ public class AppDbContext : DbContext
             .Entity<MortalityReport>()
             .HasOne(m => m.Mortality)
             .WithOne(m => m.MortalityReport);
-        modelBuilder.Entity<IndividualHuntReport>(
+        modelBuilder.Entity<HuntedMortalityReport>(
             h => h.Property(h => h.Status).HasConversion<string>()
         );
-        modelBuilder.Entity<HumanWildlifeConflictReport>(
+        modelBuilder.Entity<HumanWildlifeConflictMortalityReport>(
             c =>
                 c.HasOne(c => c.ConservationOfficer)
                     .WithMany(co => co.HumanWildlifeConflictReports)

@@ -3,14 +3,14 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Shared.Extensions;
 
-public static class IndividualHuntReportExtensions
+public static class HuntedMortalityReportExtensions
 {
     public static async Task<List<Violation>> GetViolations(
-        this IndividualHuntReport individualHuntReport
+        this HuntedMortalityReport huntedMortalityReport
     )
     {
         var violations = new List<Violation>();
-        switch (individualHuntReport.Mortality)
+        switch (huntedMortalityReport.Mortality)
         {
             case BirdMortality bird:
                 break;

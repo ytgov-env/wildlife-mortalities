@@ -3,10 +3,10 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Shared.Validators;
 
-public class IndividualHuntReportValidator<T> : AbstractValidator<IndividualHuntReport>
+public class HuntedMortalityReportValidator<T> : AbstractValidator<HuntedMortalityReport>
     where T : Mortality
 {
-    public IndividualHuntReportValidator()
+    public HuntedMortalityReportValidator()
     {
         RuleFor(h => h.Mortality).NotNull().SetValidator(new MortalityValidator<T>());
         RuleFor(h => h.Seal).NotNull();

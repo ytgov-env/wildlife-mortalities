@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace WildlifeMortalities.Data.Entities;
 
-public class ResearchReport : MortalityReport { }
+public class ResearchMortalityReport : MortalityReport { }

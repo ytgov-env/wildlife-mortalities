@@ -3,7 +3,7 @@ using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities;
 
-public class HumanWildlifeConflictReport : MortalityReport
+public class HumanWildlifeConflictMortalityReport : MortalityReport
 {
     public int ConservationOfficerId { get; set; }
     public ConservationOfficer ConservationOfficer { get; set; } = null!;

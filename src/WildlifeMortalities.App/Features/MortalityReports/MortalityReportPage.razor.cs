@@ -38,12 +38,12 @@ public partial class MortalityReportPage
         //MortalityReport report = null;
         if (_vm.MortalityReportType == MortalityReportType.Conflict)
         {
-            var report = new HumanWildlifeConflictReport { };
+            var report = new HumanWildlifeConflictMortalityReport { };
             context.MortalityReports.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
         {
-            var report = new IndividualHuntReport
+            var report = new HuntedMortalityReport
             {
                 Mortality = _vm.MortalityViewModel.GetMortality(),
                 Landmark = _vm.Landmark,
@@ -60,10 +60,10 @@ public partial class MortalityReportPage
         {
             var report = new SpecialGuidedHuntReport
             {
-                IndividualHuntReports = _vm.MortalityViewModels
+                HuntedMortalityReports = _vm.MortalityViewModels
                     .Select(
                         x =>
-                            new IndividualHuntReport
+                            new HuntedMortalityReport
                             {
                                 Comment = _vm.Comment,
                                 Mortality = x.GetMortality(),

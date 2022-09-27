@@ -11,5 +11,5 @@ public class OutfitterGuidedHuntReport
 {
     public int Id { get; set; }
     public List<Client> Guides { get; set; } = null!;
-    public List<IndividualHuntReport> IndividualHuntReports { get; set; } = null!;
+    public List<HuntedMortalityReport> HuntedMortalityReports { get; set; } = null!;
 }

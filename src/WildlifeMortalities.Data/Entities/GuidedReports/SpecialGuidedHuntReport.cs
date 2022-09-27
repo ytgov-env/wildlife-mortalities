@@ -12,5 +12,5 @@ public class SpecialGuidedHuntReport
     public int Id { get; set; }
     public int GuideId { get; set; }
     public Client Guide { get; set; } = null!;
-    public List<IndividualHuntReport> IndividualHuntReports { get; set; } = null!;
+    public List<HuntedMortalityReport> HuntedMortalityReports { get; set; } = null!;
 }

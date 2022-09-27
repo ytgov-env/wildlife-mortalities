@@ -49,8 +49,8 @@ public class MortalityService : IMortalityService
             .OfType<T>()
             .Where(
                 m =>
-                    m.MortalityReport is IndividualHuntReport
-                    && (m.MortalityReport as IndividualHuntReport)!.Client.EnvClientId
+                    m.MortalityReport is HuntedMortalityReport
+                    && (m.MortalityReport as HuntedMortalityReport)!.Client.EnvClientId
                         == envClientId
             )
             .AsNoTracking()
@@ -67,8 +67,8 @@ public class MortalityService : IMortalityService
             .OfType<T>()
             .Where(
                 m =>
-                    m.MortalityReport is HumanWildlifeConflictReport
-                    && (m.MortalityReport as HumanWildlifeConflictReport)!
+                    m.MortalityReport is HumanWildlifeConflictMortalityReport
+                    && (m.MortalityReport as HumanWildlifeConflictMortalityReport)!
                         .ConservationOfficer
                         .BadgeNumber == conservationOfficerBadgeNumber
             )
