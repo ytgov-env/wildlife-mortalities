@@ -1,6 +1,4 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
-
-namespace WildlifeMortalities.Data.Entities.People;
+﻿namespace WildlifeMortalities.Data.Entities.People;
 
 public abstract class Person
 {

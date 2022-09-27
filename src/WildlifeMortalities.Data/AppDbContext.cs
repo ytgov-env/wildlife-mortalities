@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Authorizations;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.GuideReports;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Entities.GuideReports;
 
 namespace WildlifeMortalities.Data;
 
@@ -25,6 +25,7 @@ public class AppDbContext : DbContext
 
     public DbSet<OutfitterGuidedHuntReport> OutfitterGuidedHuntReports =>
         Set<OutfitterGuidedHuntReport>();
+
     public DbSet<SpecialGuidedHuntReport> SpecialGuidedHuntReports =>
         Set<SpecialGuidedHuntReport>();
 

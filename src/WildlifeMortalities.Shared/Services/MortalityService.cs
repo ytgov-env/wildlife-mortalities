@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Validators;
 
 namespace WildlifeMortalities.Shared.Services;

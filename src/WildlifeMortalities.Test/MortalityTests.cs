@@ -1,14 +1,9 @@
-using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Services;
-using Authorization = WildlifeMortalities.Data.Entities.Authorizations.Authorization;
 
 namespace WildlifeMortalities.Test;
 
