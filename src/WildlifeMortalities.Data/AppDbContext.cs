@@ -23,8 +23,10 @@ public class AppDbContext : DbContext
     public DbSet<MortalityReport> MortalityReports => Set<MortalityReport>();
     public DbSet<Violation> Violations => Set<Violation>();
 
-    public DbSet<OutfitterGuideReport> OutfitterGuideReports => Set<OutfitterGuideReport>();
-    public DbSet<SpecialGuideReport> SpecialGuideReports => Set<SpecialGuideReport>();
+    public DbSet<OutfitterGuidedHuntReport> OutfitterGuidedHuntReports =>
+        Set<OutfitterGuidedHuntReport>();
+    public DbSet<SpecialGuidedHuntReport> SpecialGuidedHuntReports =>
+        Set<SpecialGuidedHuntReport>();
 
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 
@@ -75,7 +77,7 @@ public class AppDbContext : DbContext
             .Entity<MortalityReport>()
             .HasOne(m => m.Mortality)
             .WithOne(m => m.MortalityReport);
-        modelBuilder.Entity<HuntedHarvestReport>(
+        modelBuilder.Entity<IndividualHuntReport>(
             h => h.Property(h => h.Status).HasConversion<string>()
         );
         modelBuilder.Entity<HumanWildlifeConflictReport>(
