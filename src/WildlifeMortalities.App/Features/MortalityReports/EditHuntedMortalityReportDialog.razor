@@ -6,7 +6,7 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <HuntedMortalityReportComponent MortalityReportType="null" ViewModel="ViewModel" />
+        <HuntedMortalityReportComponent @ref="_huntedMortalityReportComponent" MortalityReportType="null" ViewModel="ViewModel" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -23,6 +23,8 @@
     [Parameter]
     public MortalityReportType ReportType { get; set; }
 
+    private HuntedMortalityReportComponent? _huntedMortalityReportComponent;
+
     private void Cancel()
     {
         MudDialog.Cancel();
@@ -30,6 +32,9 @@
 
     private void Edit()
     {
-        MudDialog.Close(DialogResult.Ok(true));
+        if (_huntedMortalityReportComponent.IsValid() == true)
+        {
+            MudDialog.Close(DialogResult.Ok(ViewModel));
+        }
     }
 }
