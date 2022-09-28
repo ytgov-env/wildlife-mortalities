@@ -112,6 +112,8 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<BioSubmission>().OwnsOne(b => b.Age, a => a.ToTable("Age"));
 
+        modelBuilder.Entity<OutfitterArea>().HasIndex(a => a.Area).IsUnique();
+
         // These shadow properties are referenced during ETL to sync licence and seal data from their source (POSSE)
         modelBuilder.Entity<Authorization>().Property<int?>("PosseId");
         modelBuilder.Entity<Seal>().Property<int?>("PosseId");
