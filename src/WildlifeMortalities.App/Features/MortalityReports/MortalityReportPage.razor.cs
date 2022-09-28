@@ -55,17 +55,23 @@ public partial class MortalityReportPage
         if (_vm.MortalityReportType == MortalityReportType.Conflict)
         {
             var report = new HumanWildlifeConflictMortalityReport { };
-            context.MortalityReports.Add(report);
+            context.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
         {
             var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
 
-            context.MortalityReports.Add(report);
+            context.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
         {
-            var report = new OutfitterGuidedHuntReport { };
+            var report = new OutfitterGuidedHuntReport
+            {
+                HuntedMortalityReports = _vm.HuntedMortalityReportViewModels
+                    .Select(x => x.GetReport(PersonId))
+                    .ToList(),
+            };
+            context.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
         {
@@ -75,6 +81,7 @@ public partial class MortalityReportPage
                     .Select(x => x.GetReport(PersonId))
                     .ToList(),
             };
+            context.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.Trapped) { }
 

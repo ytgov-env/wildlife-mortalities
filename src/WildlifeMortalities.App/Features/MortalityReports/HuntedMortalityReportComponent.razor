@@ -1,10 +1,9 @@
 
 <EditForm EditContext="_context">
     <FluentValidationValidator />
-    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" />
     <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark" />
-
     <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="MortalityReportType" EditViewModel="@(MortalityReportType.HasValue == false ? ViewModel.MortalityViewModel : null)" />
+    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" />
 </EditForm>
 
 @code {
@@ -18,7 +17,6 @@
     {
         _context = new EditContext(ViewModel);
     }
-
 
     [Parameter]
     [EditorRequired]
