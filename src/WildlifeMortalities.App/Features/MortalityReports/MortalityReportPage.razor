@@ -22,87 +22,11 @@ else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
 }
 else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
 {
-    <MudList>
-        @foreach (var item in _vm.HuntedMortalityReportViewModels)
-        {
-            <MudListItem>
-                <MudStack Row="true">
-                    <MudStack Row="false">
-                        <MudText>Landmark: @item.Landmark</MudText>
-                        <MudText>Comment: @item.Comment</MudText>
-
-                        <MudText>Mortality:</MudText>
-                        <MudDivider />
-                        @foreach (var property in item.MortalityViewModel.GetProperties())
-                        {
-                            var normalizedValue = (property.Value ?? string.Empty).ToLower();
-                            @if (Boolean.TryParse(property.Value, out Boolean value) == true)
-                            {
-                                <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
-                            }
-                            else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
-                            {
-                                <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
-                            }
-                            else
-                            {
-                                <MudText>@property.Key: @property.Value</MudText>
-                            }
-                        }
-                    </MudStack>
-                    <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
-                </MudStack>
-            </MudListItem>
-        }
-    </MudList>
-    <MudStack Row="true">
-        <MudSpacer />
-        <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" />
-    </MudStack>
+    <OutfitterGuidedHuntReportComponent ViewModel="_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType" />
 }
 else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
 {
-    <MudList>
-        @foreach (var item in _vm.HuntedMortalityReportViewModels)
-        {
-            <MudListItem>
-                <MudStack Row="true">
-                    <MudStack Row="false">
-                        <MudText>Landmark: @item.Landmark</MudText>
-                        <MudText>Comment: @item.Comment</MudText>
-
-                        <MudText>Mortality:</MudText>
-                        <MudDivider />
-                        @foreach (var property in item.MortalityViewModel.GetProperties())
-                        {
-                            var normalizedValue = (property.Value ?? string.Empty).ToLower();
-                            @if (Boolean.TryParse(property.Value, out Boolean value) == true)
-                            {
-                                <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
-                            }
-                            else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
-                            {
-                                <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
-                            }
-                            else
-                            {
-                                <MudText>@property.Key: @property.Value</MudText>
-                            }
-                        }
-                    </MudStack>
-                    <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
-                </MudStack>
-            </MudListItem>
-        }
-    </MudList>
-    <MudStack Row="true">
-        <MudSpacer />
-        <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" />
-    </MudStack>
+    <SpecialGuidedHuntReportComponent ViewModel="_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType" />
 }
 else if (_vm.MortalityReportType == MortalityReportType.Trapped)
 {

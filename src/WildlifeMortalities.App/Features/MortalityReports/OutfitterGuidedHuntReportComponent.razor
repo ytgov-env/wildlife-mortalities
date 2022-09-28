@@ -1,0 +1,83 @@
+﻿<MudList>
+    @foreach (var item in ViewModel.HuntedMortalityReportViewModels)
+    {
+        <MudListItem>
+            <MudStack Row="true">
+                <MudStack Row="false">
+                    <MudText>Landmark: @item.Landmark</MudText>
+                    <MudText>Comment: @item.Comment</MudText>
+
+                    <MudText>Mortality:</MudText>
+                    <MudDivider />
+                    @foreach (var property in item.MortalityViewModel.GetProperties())
+                    {
+                        var normalizedValue = (property.Value ?? string.Empty).ToLower();
+                        @if (Boolean.TryParse(property.Value, out Boolean value) == true)
+                        {
+                            <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
+                        }
+                        else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
+                        {
+                            <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
+                        }
+                        else
+                        {
+                            <MudText>@property.Key: @property.Value</MudText>
+                        }
+                    }
+                </MudStack>
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
+            </MudStack>
+        </MudListItem>
+    }
+</MudList>
+<MudStack Row="true">
+    <MudSpacer />
+    <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" />
+</MudStack>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public OutfitterGuidedHuntReportViewModel ViewModel { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public MortalityReportType? MortalityReportType { get; set; }
+
+    [Inject]
+    private IDialogService DialogService { get; set; } = null!;
+
+    private async Task Add()
+    {
+        var parameters = new DialogParameters
+            {
+                [nameof(AddHuntedMortalityReportDialog.ReportType)] = MortalityReportType
+            };
+
+        var dialog = DialogService.Show<AddHuntedMortalityReportDialog>("", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            ViewModel.HuntedMortalityReportViewModels.Add(result.Data as HuntedMortalityReportViewModel);
+        }
+    }
+
+    private async Task Edit(HuntedMortalityReportViewModel viewModel)
+    {
+        var parameters = new DialogParameters
+            {
+                [nameof(EditHuntedMortalityReportDialog.ViewModel)] = viewModel
+            };
+
+        var dialog = DialogService.Show<EditHuntedMortalityReportDialog>("", parameters);
+        var result = await dialog.Result;
+    }
+
+    private void Delete(HuntedMortalityReportViewModel viewModel)
+    {
+        ViewModel.HuntedMortalityReportViewModels.Remove(viewModel);
+    }
+}

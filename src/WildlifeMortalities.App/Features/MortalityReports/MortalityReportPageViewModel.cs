@@ -8,13 +8,10 @@ public class MortalityReportPageViewModel
     public MortalityReportType MortalityReportType { get; set; } =
         MortalityReportType.IndividualHunt;
 
-    public HuntedMortalityReportViewModel? HuntedMortalityReportViewModel { get; set; } =
-        new HuntedMortalityReportViewModel();
+    public HuntedMortalityReportViewModel? HuntedMortalityReportViewModel { get; set; } = new();
 
-    public MortalityViewModel MortalityViewModel { get; set; } = new();
-
-    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } =
-        new List<HuntedMortalityReportViewModel>();
+    public OutfitterGuidedHuntReportViewModel? OutfitterGuidedHuntReportViewModel { get; set; }
+    public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }
 }
 
 public class MortalityReportViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
