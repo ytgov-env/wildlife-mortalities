@@ -10,14 +10,14 @@ together {
         entity "MortalityReport" as mortality_report {
             *Id: number <<generated>>
             --
-            *DateStarted: date
-            *DateCompleted: date
+            
         }
-        entity "HuntedHarvestReport" as hunted_harvest_report {
+        entity "HuntedMortalityReport" as hunted_mortality_report {
             *ClientId: number <<FK>>
             GameManagementAreaSpeciesId: number <<FK>>
             SealId: number <<FK>>
-            TemporarySealNumber: string
+            *DateStarted: date
+            *DateCompleted: date
             *Landmark: string
             *HuntedHarvestReportStatus: enum
         }
@@ -26,11 +26,12 @@ together {
             --
             LicenceId: number <<FK>>
         } '/
-        entity "HumanWildlifeConflictReport" as human_wildlife_conflict_report {
-            *Id: number <<generated>>
-            --
+        entity "HumanWildlifeConflictMortalityReport" as human_wildlife_conflict_report {
             *ConservationOfficerId: number <<FK>>
             *HumanWildlifeConflictNumber: number
+        }
+        entity "CollaredMortalityReport" as collared_mortality_report {
+
         }
     }
     entity "OutfitterGuideReport" as outfitter_guide_report {
@@ -38,7 +39,7 @@ together {
         --
         *OutfittingArea: enum
     }
-    entity "OutfitterGuideReport_HuntedHarvestReport" as outfitter_guide_report_hunted_harvest_report {
+    entity "OutfitterGuideReport_HuntedHarvestReport" as outfitter_guide_report_hunted_mortality_report {
         *OutfitterGuideReportId: <<FK>>
         *HuntedHarvestReportId: <<FK>>
     }
@@ -51,7 +52,7 @@ together {
         --
         GuideId: <<FK>>
     }
-    entity "SpecialGuideReport_HuntedHarvestReport" as special_guide_report_hunted_harvest_report {
+    entity "SpecialGuideReport_HuntedHarvestReport" as special_guide_report_hunted_mortality_report {
         *SpecialGuideReportId: <<FK>>
         *HuntedHarvestReportId: <<FK>>
     }
@@ -182,6 +183,12 @@ entity "Age" as age {
     *ConfidenceInAge: enum
 }
 
+entity "MortalityExportPermit" as mortality_export_permit {
+    *Id: number <<generated>>
+    --
+    
+}
+
 together {
     entity "Person" as person {
         *Id: number <<generated>>
@@ -279,8 +286,9 @@ entity "GameManagementUnit" as game_management_unit {
 
 ' Inheritance
 
-mortality_report <|-- hunted_harvest_report
+mortality_report <|-- hunted_mortality_report
 mortality_report <|-- human_wildlife_conflict_report
+mortality_report <|-- collared_mortality_report
 'mortality_report <|-- trapped_harvest_report
 
 person <|-- client
@@ -325,20 +333,20 @@ authorization <|-- trapping_licence
 
 ' Relationships
 
-hunted_harvest_report }o.right.|| game_management_area_species
-hunted_harvest_report |o..|| seal
-hunted_harvest_report }o..o{ violation
+hunted_mortality_report }o.right.|| game_management_area_species
+hunted_mortality_report |o..|| seal
+hunted_mortality_report }o..o{ violation
 'trapped_harvest_report }o..|| trapping_licence
 
-special_guide_report ||..|{ special_guide_report_hunted_harvest_report
-hunted_harvest_report ||..o| special_guide_report_hunted_harvest_report
+special_guide_report ||..|{ special_guide_report_hunted_mortality_report
+hunted_mortality_report ||..o| special_guide_report_hunted_mortality_report
 outfitter_guide_report ||..|{ outfitter_guide_report_client
 client ||..o{ special_guide_report
 client ||..o{ outfitter_guide_report_client
-client ||..o{ hunted_harvest_report
+client ||..o{ hunted_mortality_report
 conservation_officer ||..o{ human_wildlife_conflict_report
-outfitter_guide_report ||..|{ outfitter_guide_report_hunted_harvest_report
-hunted_harvest_report ||..o| outfitter_guide_report_hunted_harvest_report
+outfitter_guide_report ||..|{ outfitter_guide_report_hunted_mortality_report
+hunted_mortality_report ||..o| outfitter_guide_report_hunted_mortality_report
 
 mortality ||.left.|| mortality_report
 
