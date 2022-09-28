@@ -73,6 +73,7 @@ public class AppDbContext : DbContext
             m.Property(m => m.Sex).HasConversion<string>();
         });
         modelBuilder.Entity<AmericanBlackBearMortality>();
+        modelBuilder.Entity<AmericanBlackBearBioSubmission>();
 
         modelBuilder
             .Entity<MortalityReport>()

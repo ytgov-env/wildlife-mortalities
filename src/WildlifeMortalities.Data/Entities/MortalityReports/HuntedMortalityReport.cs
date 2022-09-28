@@ -7,7 +7,7 @@ namespace WildlifeMortalities.Data.Entities;
 public class HuntedMortalityReport : MortalityReport
 {
     public int ClientId { get; set; }
-    public Client Client { get; set; }
+    public Client Client { get; set; } = null!;
     public int GmaSpeciesId { get; set; }
     public GameManagementAreaSpecies GmaSpecies { get; set; } = null!;
     public DateTimeOffset DateStarted { get; set; }
