@@ -2,22 +2,23 @@
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
-            Add mortality
+            Edit report
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MortalityComponent @ref="_mortalityComponent" ReportType="ReportType" EditViewModel="null"/>
+        <HuntedMortalityReportComponent MortalityReportType="null" ViewModel="ViewModel" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" ButtonType="ButtonType.Button" OnClick="Add">Submit</MudButton>
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Button" OnClick="Edit">Submit</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
 
-    private MortalityComponent? _mortalityComponent;
+    [Parameter]
+    public HuntedMortalityReportViewModel ViewModel { get; set; } = null!;
 
     [Parameter]
     public MortalityReportType ReportType { get; set; }
@@ -27,8 +28,8 @@
         MudDialog.Cancel();
     }
 
-    private void Add()
+    private void Edit()
     {
-        MudDialog.Close(DialogResult.Ok(_mortalityComponent?.GetViewModel()));
+        MudDialog.Close(DialogResult.Ok(true));
     }
 }

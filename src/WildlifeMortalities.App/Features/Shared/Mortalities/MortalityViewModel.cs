@@ -88,9 +88,10 @@ public class MortalityViewModel
     }
 }
 
-public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel>
+public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
+    where T : MortalityViewModel
 {
-    public MortalityViewModelValidator()
+    public MortalityViewModelBaseValidator()
     {
         RuleFor(m => m.Sex).NotNull();
         RuleFor(m => m.Latitude)
@@ -110,3 +111,5 @@ public class MortalityViewModelValidator : AbstractValidator<MortalityViewModel>
             .WithMessage("Longitude cannot be set when latitude is null");
     }
 }
+
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }

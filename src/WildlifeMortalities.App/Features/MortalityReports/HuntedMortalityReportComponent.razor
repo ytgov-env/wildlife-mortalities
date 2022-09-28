@@ -1,0 +1,32 @@
+
+<EditForm EditContext="_context">
+    <FluentValidationValidator />
+    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" />
+    <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark" />
+
+    <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="MortalityReportType" EditViewModel="@(MortalityReportType.HasValue == false ? ViewModel.MortalityViewModel : null)" />
+</EditForm>
+
+@code {
+    private EditContext _context;
+
+    [Parameter]
+    [EditorRequired]
+    public HuntedMortalityReportViewModel ViewModel { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        _context = new EditContext(ViewModel);
+    }
+
+
+    [Parameter]
+    [EditorRequired]
+    public MortalityReportType? MortalityReportType { get; set; }
+
+    private void SetMortalityViewModel(MortalityViewModel viewModel) =>
+        ViewModel.MortalityViewModel = viewModel;
+
+    public Boolean IsValid() => _context.Validate();
+
+}

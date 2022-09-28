@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
+﻿using FluentValidation;
+using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
@@ -22,5 +23,14 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
         result.Add("Is Shot in conflict", IsShotInConflict.ToString());
 
         return result;
+    }
+}
+
+public class AmericanBlackBearMortalityViewModelValidator
+    : MortalityViewModelBaseValidator<AmericanBlackBearMortalityViewModel>
+{
+    public AmericanBlackBearMortalityViewModelValidator() : base()
+    {
+        RuleFor(x => x.IsShotInConflict).Equal(true);
     }
 }

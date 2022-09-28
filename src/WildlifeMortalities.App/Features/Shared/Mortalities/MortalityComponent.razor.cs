@@ -22,7 +22,7 @@ namespace WildlifeMortalities.App.Features.MortalityReports
                 _editViewModel = value;
                 if (value != null)
                 {
-                    SetViewModel(value);
+                    SetViewModel(value, false);
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace WildlifeMortalities.App.Features.MortalityReports
                         break;
                 }
 
-                SetViewModel(viewModel);
+                SetViewModel(viewModel, true);
             }
         }
     }

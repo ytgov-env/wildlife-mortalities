@@ -19,7 +19,7 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
         ViewModelChanged.InvokeAsync(ViewModel);
     }
 
-    protected void SetViewModel(T viewModel)
+    protected void SetViewModel(T viewModel, bool fireEvent)
     {
         if (_context is not null)
         {
@@ -31,7 +31,10 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
 
         _context.OnFieldChanged += _context_OnFieldChanged;
 
-        ViewModelChanged.InvokeAsync(ViewModel);
+        if (fireEvent == true)
+        {
+            ViewModelChanged.InvokeAsync(ViewModel);
+        }
     }
 
     protected virtual void FieldsChanged() { }

@@ -5,103 +5,114 @@
 
 <MudText Typo="Typo.h3" Class="mb-8">Mortality report</MudText>
 
-<EditForm EditContext="_editContext">
+<MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
+    @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
+    {
+        <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
+    }
+</MudSelect>
 
-    <MudSelect T="MortalityReportType" @bind-Value="_vm.MortalityReportType" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
-        @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
+@if (_vm.MortalityReportType == MortalityReportType.Conflict)
+{
+
+}
+else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
+{
+    <HuntedMortalityReportComponent ViewModel="_vm.HuntedMortalityReportViewModel" MortalityReportType="_vm.MortalityReportType" />
+}
+else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
+{
+    <MudList>
+        @foreach (var item in _vm.HuntedMortalityReportViewModels)
         {
-            <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
+            <MudListItem>
+                <MudStack Row="true">
+                    <MudStack Row="false">
+                        <MudText>Landmark: @item.Landmark</MudText>
+                        <MudText>Comment: @item.Comment</MudText>
+
+                        <MudText>Mortality:</MudText>
+                        <MudDivider />
+                        @foreach (var property in item.MortalityViewModel.GetProperties())
+                        {
+                            var normalizedValue = (property.Value ?? string.Empty).ToLower();
+                            @if (Boolean.TryParse(property.Value, out Boolean value) == true)
+                            {
+                                <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
+                            }
+                            else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
+                            {
+                                <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
+                            }
+                            else
+                            {
+                                <MudText>@property.Key: @property.Value</MudText>
+                            }
+                        }
+                    </MudStack>
+                    <MudSpacer />
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
+                </MudStack>
+            </MudListItem>
         }
-    </MudSelect>
-
-    @if (_vm.MortalityReportType == MortalityReportType.Conflict)
-    {
-
-    }
-    else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
-    {
-        <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="_vm.MortalityReportType" EditViewModel="null" />
-    }
-    else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
-    {
-        <MudList>
-            @foreach (var item in _vm.MortalityViewModels)
-            {
-                <MudListItem>
-                    <MudStack Row="true">
-                        <MudStack Row="false">
-                            @foreach (var property in item.GetProperties())
-                            {
-                                var normalizedValue = property.Value.ToLower();
-                                @if (Boolean.TryParse(property.Value, out Boolean value) == true)
-                                {
-                                    <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
-                                }
-                                else if(DateTime.TryParse(property.Value, out DateTime dateValue) == true)
-                                {
-                                    <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
-                                }
-                                else
-                                {
-                                    <MudText>@property.Key: @property.Value</MudText>
-                                }
-                            }
-                        </MudStack>
-                        <MudSpacer />
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
-                    </MudStack>
-                </MudListItem>
-            }
-        </MudList>
-        <MudStack Row="true">
-            <MudSpacer />
-            <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" Size="Size.Medium"/>
-        </MudStack>
-    }
-    else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
-    {
-        <MudList>
-            @foreach (var item in _vm.MortalityViewModels)
-            {
-                <MudListItem>
-                    <MudStack Row="true">
-                        <MudStack Row="false">
-                            @foreach (var property in item.GetProperties())
-                            {
-                                var normalizedValue = property.Value.ToLower();
-                                @if (Boolean.TryParse(property.Value, out Boolean value) == true)
-                                {
-                                    <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
-                                }
-                                else
-                                {
-                                    <MudText>@property.Key: @property.Value</MudText>
-                                }
-                            }
-                        </MudStack>
-                        <MudSpacer />
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
-                    </MudStack>
-                </MudListItem>
-            }
-        </MudList>
-        <MudStack Row="true">
-            <MudSpacer />
-            <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="AddMortality" Size="Size.Medium"/>
-        </MudStack>
-    }
-    else if (_vm.MortalityReportType == MortalityReportType.Trapped)
-    {
-
-    }
-
+    </MudList>
     <MudStack Row="true">
         <MudSpacer />
-        <MudButton OnClick="CreateMortalityReport" Color="Color.Primary">Create Report</MudButton>
+        <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" />
     </MudStack>
-</EditForm>
+}
+else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
+{
+    <MudList>
+        @foreach (var item in _vm.HuntedMortalityReportViewModels)
+        {
+            <MudListItem>
+                <MudStack Row="true">
+                    <MudStack Row="false">
+                        <MudText>Landmark: @item.Landmark</MudText>
+                        <MudText>Comment: @item.Comment</MudText>
+
+                        <MudText>Mortality:</MudText>
+                        <MudDivider />
+                        @foreach (var property in item.MortalityViewModel.GetProperties())
+                        {
+                            var normalizedValue = (property.Value ?? string.Empty).ToLower();
+                            @if (Boolean.TryParse(property.Value, out Boolean value) == true)
+                            {
+                                <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
+                            }
+                            else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
+                            {
+                                <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
+                            }
+                            else
+                            {
+                                <MudText>@property.Key: @property.Value</MudText>
+                            }
+                        }
+                    </MudStack>
+                    <MudSpacer />
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
+                </MudStack>
+            </MudListItem>
+        }
+    </MudList>
+    <MudStack Row="true">
+        <MudSpacer />
+        <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" />
+    </MudStack>
+}
+else if (_vm.MortalityReportType == MortalityReportType.Trapped)
+{
+
+}
+
+<MudStack Row="true">
+    <MudSpacer />
+    <MudButton OnClick="CreateMortalityReport" Color="Color.Primary">Create Report</MudButton>
+</MudStack>
 
 
 

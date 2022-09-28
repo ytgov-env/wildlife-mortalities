@@ -1,0 +1,38 @@
+﻿
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add report
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <HuntedMortalityReportComponent @ref="_huntedMortalityReportComponent" MortalityReportType="ReportType" ViewModel="_vm" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Button" OnClick="Add">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+
+    private HuntedMortalityReportComponent? _huntedMortalityReportComponent;
+    private HuntedMortalityReportViewModel _vm = new();
+
+    [Parameter]
+    public MortalityReportType ReportType { get; set; }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void Add()
+    {
+        if (_huntedMortalityReportComponent.IsValid() == true)
+        {
+            MudDialog.Close(DialogResult.Ok(_vm));
+        }
+    }
+}

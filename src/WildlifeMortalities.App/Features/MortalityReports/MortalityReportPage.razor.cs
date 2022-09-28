@@ -11,14 +11,14 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 public partial class MortalityReportPage
 {
     private EditContext _editContext;
-    private MortalityReportViewModel _vm;
+    private MortalityReportPageViewModel _vm;
 
     [Parameter]
     public int PersonId { get; set; }
 
     protected override void OnInitialized()
     {
-        _vm = new MortalityReportViewModel();
+        _vm = new MortalityReportPageViewModel();
         _editContext = new(_vm);
     }
 
@@ -28,8 +28,24 @@ public partial class MortalityReportPage
     [Inject]
     private IDialogService DialogService { get; set; } = null!;
 
-    private void SetMortalityViewModel(MortalityViewModel viewModel) =>
-        _vm.MortalityViewModel = viewModel;
+    private void ReportTypeChanged(MortalityReportType type)
+    {
+        var typeBefore = _vm.MortalityReportType;
+        _vm.MortalityReportType = type;
+
+        _vm.HuntedMortalityReportViewModels.Clear();
+
+        if (
+            typeBefore == MortalityReportType.IndividualHunt
+            && (
+                type == MortalityReportType.OutfitterGuidedHunt
+                || type == MortalityReportType.SpecialGuidedHunt
+            )
+        )
+        {
+            //_vm.HuntedMortalityReportViewModels.Add(_vm.HuntedMortalityReportViewModel);
+        }
+    }
 
     private async Task CreateMortalityReport()
     {
@@ -43,13 +59,8 @@ public partial class MortalityReportPage
         }
         else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
         {
-            var report = new HuntedMortalityReport
-            {
-                Mortality = _vm.MortalityViewModel.GetMortality(),
-                Landmark = _vm.Landmark,
-                Comment = _vm.Comment,
-                ClientId = PersonId,
-            };
+            var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
+
             context.MortalityReports.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
@@ -60,15 +71,8 @@ public partial class MortalityReportPage
         {
             var report = new SpecialGuidedHuntReport
             {
-                HuntedMortalityReports = _vm.MortalityViewModels
-                    .Select(
-                        x =>
-                            new HuntedMortalityReport
-                            {
-                                Comment = _vm.Comment,
-                                Mortality = x.GetMortality(),
-                            }
-                    )
+                HuntedMortalityReports = _vm.HuntedMortalityReportViewModels
+                    .Select(x => x.GetReport(PersonId))
                     .ToList(),
             };
         }
@@ -78,34 +82,34 @@ public partial class MortalityReportPage
         //await Service.CreateHarvestReport(report);
     }
 
-    private async Task AddMortality()
+    private async Task Add()
     {
         var parameters = new DialogParameters
         {
-            [nameof(AddMortalityDialog.ReportType)] = _vm.MortalityReportType
+            [nameof(AddHuntedMortalityReportDialog.ReportType)] = _vm.MortalityReportType
         };
 
-        var dialog = DialogService.Show<AddMortalityDialog>("", parameters);
+        var dialog = DialogService.Show<AddHuntedMortalityReportDialog>("", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            _vm.MortalityViewModels.Add(result.Data as MortalityViewModel);
+            _vm.HuntedMortalityReportViewModels.Add(result.Data as HuntedMortalityReportViewModel);
         }
     }
 
-    private async Task Edit(MortalityViewModel viewModel)
+    private async Task Edit(HuntedMortalityReportViewModel viewModel)
     {
         var parameters = new DialogParameters
         {
-            [nameof(EditMortalityDialog.ViewModel)] = viewModel
+            [nameof(EditHuntedMortalityReportDialog.ViewModel)] = viewModel
         };
 
-        var dialog = DialogService.Show<EditMortalityDialog>("", parameters);
+        var dialog = DialogService.Show<EditHuntedMortalityReportDialog>("", parameters);
         var result = await dialog.Result;
     }
 
-    private void Delete(MortalityViewModel viewModel)
+    private void Delete(HuntedMortalityReportViewModel viewModel)
     {
-        _vm.MortalityViewModels.Remove(viewModel);
+        _vm.HuntedMortalityReportViewModels.Remove(viewModel);
     }
 }
