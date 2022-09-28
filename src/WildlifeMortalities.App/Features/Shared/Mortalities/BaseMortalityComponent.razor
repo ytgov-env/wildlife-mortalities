@@ -1,7 +1,7 @@
 ﻿@namespace WildlifeMortalities.App.Features.MortalityReports
 @using WildlifeMortalities.Data.Enums;
 
-<MudDatePicker @bind-Date="ViewModel.DateOfDeath" For="@(  () => ViewModel.DateOfDeath)" Label="Date of death"/>
+<MudDatePicker @bind-Date="ViewModel.DateOfDeath" For="@(  () => ViewModel.DateOfDeath)" Editable="true" Label="Date of death" />
 <MudNumericField @bind-Value="ViewModel.Latitude" For="@(  () => ViewModel.Latitude)" HideSpinButtons="true" Label="Latitude" />
 <MudNumericField @bind-Value="ViewModel.Longitude" For="@(  () => ViewModel.Longitude)" HideSpinButtons="true" Label="Longitude" />
 
