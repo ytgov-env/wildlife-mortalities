@@ -20,7 +20,7 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
     public override Dictionary<string, string> GetProperties()
     {
         var result = base.GetProperties();
-        result.Add("Is Shot in conflict", IsShotInConflict.ToString());
+        result.Add("Was shot in conflict", IsShotInConflict.ToString());
 
         return result;
     }
@@ -29,8 +29,5 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 public class AmericanBlackBearMortalityViewModelValidator
     : MortalityViewModelBaseValidator<AmericanBlackBearMortalityViewModel>
 {
-    public AmericanBlackBearMortalityViewModelValidator() : base()
-    {
-        RuleFor(x => x.IsShotInConflict).Equal(true);
-    }
+    public AmericanBlackBearMortalityViewModelValidator() : base() { }
 }
