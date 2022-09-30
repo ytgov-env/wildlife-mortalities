@@ -9,9 +9,9 @@ public enum GuidedHuntResult
     [Display(Name = "Did not hunt")]
     DidNotHunt = 1,
 
-    [Display(Name = "Successful hunt")]
-    SuccessfulHunt = 2,
-
     [Display(Name = "Failed hunt")]
-    FailedHunt = 3
+    FailedHunt = 2,
+
+    [Display(Name = "Successful hunt")]
+    SuccessfulHunt = 3,
 }

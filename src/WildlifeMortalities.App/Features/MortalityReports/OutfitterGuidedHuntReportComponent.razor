@@ -1,42 +1,76 @@
-﻿<MudList>
-    @foreach (var item in ViewModel.HuntedMortalityReportViewModels)
-    {
-        <MudListItem>
-            <MudStack Row="true">
-                <MudStack Row="false">
-                    <MudText>Landmark: @item.Landmark</MudText>
-                    <MudText>Comment: @item.Comment</MudText>
+﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Enums
+@using WildlifeMortalities.Shared.Models
+@using WildlifeMortalities.Shared.Services
 
-                    <MudText>Mortality:</MudText>
-                    <MudDivider />
-                    @foreach (var property in item.MortalityViewModel.GetProperties())
-                    {
-                        var normalizedValue = (property.Value ?? string.Empty).ToLower();
-                        @if (Boolean.TryParse(property.Value, out Boolean value) == true)
-                        {
-                            <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
-                        }
-                        else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
-                        {
-                            <MudText>@property.Key: @dateValue.Date.ToShortDateString()</MudText>
-                        }
-                        else
-                        {
-                            <MudText>@property.Key: @property.Value</MudText>
-                        }
-                    }
-                </MudStack>
-                <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
-            </MudStack>
-        </MudListItem>
+<MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result">
+    @foreach (var item in Enum.GetValues<GuidedHuntResult>().Where(s => s != GuidedHuntResult.Uninitialized))
+    {
+        <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
-</MudList>
-<MudStack Row="true">
-    <MudSpacer />
-    <MudFab Icon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" />
-</MudStack>
+</MudSelect>
+
+<MudDateRangePicker Editable="true" Label="Hunting dates" />
+
+<MudPaper Class="pa-4 my-4">
+    <MudAutocomplete T="ClientDto?" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
+                     Value="ViewModel.SelectedGuide" ValueChanged="AddClient" ToStringFunc="@((x) => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}" )" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
+
+    <MudList>
+        @foreach (var item in ViewModel.Guides)
+        {
+            <MudListItem>
+                <MudStack Row="true">
+                    <MudField DisableUnderLine="true" Label="Guide">@item.FirstName @item.LastName</MudField>
+                    <MudSpacer />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => DeleteGuide(item))" />
+                </MudStack>
+            </MudListItem>
+        }
+    </MudList>
+</MudPaper>
+
+@if (ViewModel.Result is GuidedHuntResult.SuccessfulHunt)
+{
+    <MudList Dense="true">
+        @foreach (var item in ViewModel.HuntedMortalityReportViewModels)
+        {
+            <MudListItem>
+                <MudStack Row="true">
+                    <MudStack Row="false">
+                        <MudField DisableUnderLine="true" Label="Landmark">@item.Landmark</MudField>
+                        @foreach (var property in item.MortalityViewModel.GetProperties())
+                        {
+                            var normalizedValue = (property.Value ?? string.Empty).ToLower();
+                            @if (Boolean.TryParse(property.Value, out Boolean value) == true)
+                            {
+                                <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
+                            }
+                            else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
+                            {
+                                <MudField DisableUnderLine="true" Label="@property.Key">@dateValue.Date.ToShortDateString()</MudField>
+                            }
+                            else
+                            {
+                                <MudField DisableUnderLine="true" Label="@property.Key">@property.Value</MudField>
+                            }
+                        }
+                        <MudField DisableUnderLine="true" Label="Comment">@item.Comment</MudField>
+                    </MudStack>
+                    <MudSpacer />
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
+                </MudStack>
+            </MudListItem>
+        }
+    </MudList>
+    <MudStack Row="true">
+        <MudSpacer />
+        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
+        <MudSpacer />
+    </MudStack>
+}
 
 @code {
     [Parameter]
@@ -49,6 +83,37 @@
 
     [Inject]
     private IDialogService DialogService { get; set; } = null!;
+
+    [Inject]
+    private IClientLookupService ClientLookupService { get; set; } = null!;
+
+    [Inject]
+    private ISnackbar SnackBar { get; set; } = null!;
+
+    public void AddClient(ClientDto? input)
+    {
+        ViewModel.SelectedGuide = input;
+        if (input != null)
+        {
+            bool hasErrors = false;
+            if (ViewModel.Guides.Count == 3)
+            {
+                SnackBar.Add("You may add up to 3 guides", Severity.Error);
+                hasErrors = true;
+            }
+            else if (ViewModel.Guides.Any(x => x.Id == input.Id) == true)
+            {
+                hasErrors = true;
+                SnackBar.Add($"{input.FirstName} {input.LastName} already added", Severity.Error);
+            }
+
+            if (hasErrors == false)
+            {
+                ViewModel.Guides.Add(input);
+                ViewModel.SelectedGuide = null;
+            }
+        }
+    }
 
     private async Task Add()
     {
@@ -80,4 +145,14 @@
     {
         ViewModel.HuntedMortalityReportViewModels.Remove(viewModel);
     }
+
+    private void DeleteGuide(ClientDto guide)
+    {
+        ViewModel.Guides.Remove(guide);
+    }
+
+    private async Task<IEnumerable<ClientDto?>> SearchClientByEnvClientIdOrLastName(string input) =>
+        (await ClientLookupService.SearchByEnvClientId(input))
+            .Union(await ClientLookupService.SearchByLastName(input))
+            .OrderBy(x => x.LastName);
 }
