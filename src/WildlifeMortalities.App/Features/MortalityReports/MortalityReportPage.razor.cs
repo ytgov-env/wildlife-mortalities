@@ -5,6 +5,7 @@ using MudBlazor;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.GuideReports;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
@@ -45,7 +46,7 @@ public partial class MortalityReportPage
             case MortalityReportType.SpecialGuidedHunt:
                 _vm.HuntedMortalityReportViewModel = null;
                 _vm.OutfitterGuidedHuntReportViewModel = null;
-                _vm.SpecialGuidedHuntReportViewModel = new();
+                _vm.SpecialGuidedHuntReportViewModel = new SpecialGuidedHuntReportViewModel();
                 break;
         }
 
@@ -79,23 +80,35 @@ public partial class MortalityReportPage
         }
         else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
         {
+            // Clear mortality reports if the hunter wasn't successful
+            var outfitterViewModel = _vm.OutfitterGuidedHuntReportViewModel;
+            if (outfitterViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
+            {
+                outfitterViewModel.HuntedMortalityReportViewModels.Clear();
+            }
+
             var report = new OutfitterGuidedHuntReport
             {
-                HuntedMortalityReports =
-                    _vm.OutfitterGuidedHuntReportViewModel.HuntedMortalityReportViewModels
-                        .Select(x => x.GetReport(PersonId))
-                        .ToList(),
+                HuntedMortalityReports = outfitterViewModel.HuntedMortalityReportViewModels
+                    .Select(x => x.GetReport(PersonId))
+                    .ToList(),
             };
             context.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
         {
+            // Clear mortality reports if the hunter wasn't successful
+            var specialViewModel = _vm.SpecialGuidedHuntReportViewModel;
+            if (specialViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
+            {
+                specialViewModel.HuntedMortalityReportViewModels.Clear();
+            }
+
             var report = new SpecialGuidedHuntReport
             {
-                HuntedMortalityReports =
-                    _vm.SpecialGuidedHuntReportViewModel.HuntedMortalityReportViewModels
-                        .Select(x => x.GetReport(PersonId))
-                        .ToList(),
+                HuntedMortalityReports = specialViewModel.HuntedMortalityReportViewModels
+                    .Select(x => x.GetReport(PersonId))
+                    .ToList(),
             };
             context.Add(report);
         }
@@ -103,5 +116,16 @@ public partial class MortalityReportPage
 
         await context.SaveChangesAsync();
         //await Service.CreateHarvestReport(report);
+    }
+
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            files.Add(file);
+        }
+        //TODO upload the files to the server
     }
 }
