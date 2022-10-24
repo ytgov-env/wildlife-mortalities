@@ -1,17 +1,19 @@
-﻿using FluentValidation;
-using WildlifeMortalities.Data.Entities.Mortalities;
+﻿using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 {
-    public bool IsShotInConflict { get; set; }
+    public AmericanBlackBearMortalityViewModel() : base(AllSpecies.AmericanBlackBear)
+    {
+    }
 
-    public AmericanBlackBearMortalityViewModel() : base(Data.Enums.AllSpecies.AmericanBlackBear) { }
+    public bool IsShotInConflict { get; set; }
 
     public override Mortality GetMortality()
     {
-        var mortality = new AmericanBlackBearMortality { IsShotInConflict = IsShotInConflict, };
+        var mortality = new AmericanBlackBearMortality { IsShotInConflict = IsShotInConflict };
         SetBaseValues(mortality);
 
         return mortality;
@@ -29,5 +31,4 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 public class AmericanBlackBearMortalityViewModelValidator
     : MortalityViewModelBaseValidator<AmericanBlackBearMortalityViewModel>
 {
-    public AmericanBlackBearMortalityViewModelValidator() : base() { }
 }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
-using MudBlazor;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.GuideReports;
@@ -11,20 +10,19 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class MortalityReportPage
 {
+    private readonly IList<IBrowserFile> files = new List<IBrowserFile>();
     private EditContext _editContext;
     private MortalityReportPageViewModel _vm;
 
-    [Parameter]
-    public int PersonId { get; set; }
+    [Parameter] public int PersonId { get; set; }
+
+    [Inject] private IDbContextFactory<AppDbContext> dbContextFactory { get; set; }
 
     protected override void OnInitialized()
     {
         _vm = new MortalityReportPageViewModel();
-        _editContext = new(_vm);
+        _editContext = new EditContext(_vm);
     }
-
-    [Inject]
-    private IDbContextFactory<AppDbContext> dbContextFactory { get; set; }
 
     private void ReportTypeChanged(MortalityReportType type)
     {
@@ -34,13 +32,13 @@ public partial class MortalityReportPage
         switch (type)
         {
             case MortalityReportType.IndividualHunt:
-                _vm.HuntedMortalityReportViewModel = new();
+                _vm.HuntedMortalityReportViewModel = new HuntedMortalityReportViewModel();
                 _vm.OutfitterGuidedHuntReportViewModel = null;
                 _vm.SpecialGuidedHuntReportViewModel = null;
                 break;
             case MortalityReportType.OutfitterGuidedHunt:
                 _vm.HuntedMortalityReportViewModel = null;
-                _vm.OutfitterGuidedHuntReportViewModel = new();
+                _vm.OutfitterGuidedHuntReportViewModel = new OutfitterGuidedHuntReportViewModel();
                 _vm.SpecialGuidedHuntReportViewModel = null!;
                 break;
             case MortalityReportType.SpecialGuidedHunt:
@@ -69,7 +67,7 @@ public partial class MortalityReportPage
         //MortalityReport report = null;
         if (_vm.MortalityReportType == MortalityReportType.Conflict)
         {
-            var report = new HumanWildlifeConflictMortalityReport { };
+            var report = new HumanWildlifeConflictMortalityReport();
             context.Add(report);
         }
         else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
@@ -91,7 +89,7 @@ public partial class MortalityReportPage
             {
                 HuntedMortalityReports = outfitterViewModel.HuntedMortalityReportViewModels
                     .Select(x => x.GetReport(PersonId))
-                    .ToList(),
+                    .ToList()
             };
             context.Add(report);
         }
@@ -108,17 +106,17 @@ public partial class MortalityReportPage
             {
                 HuntedMortalityReports = specialViewModel.HuntedMortalityReportViewModels
                     .Select(x => x.GetReport(PersonId))
-                    .ToList(),
+                    .ToList()
             };
             context.Add(report);
         }
-        else if (_vm.MortalityReportType == MortalityReportType.Trapped) { }
+        else if (_vm.MortalityReportType == MortalityReportType.Trapped)
+        {
+        }
 
         await context.SaveChangesAsync();
         //await Service.CreateHarvestReport(report);
     }
-
-    IList<IBrowserFile> files = new List<IBrowserFile>();
 
     private void UploadFiles(InputFileChangeEventArgs e)
     {

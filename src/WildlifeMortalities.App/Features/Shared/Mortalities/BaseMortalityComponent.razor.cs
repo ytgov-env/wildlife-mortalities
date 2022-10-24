@@ -5,13 +5,19 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class BaseMortalityComponent : IDisposable
 {
-    [Parameter]
-    public MortalityViewModel ViewModel { get; set; } = null!;
-
     private EditContext _context;
 
-    [CascadingParameter]
-    public EditContext Context { get; set; }
+    [Parameter] public MortalityViewModel ViewModel { get; set; } = null!;
+
+    [CascadingParameter] public EditContext Context { get; set; }
+
+    public void Dispose()
+    {
+        if (_context != null)
+        {
+            _context.OnFieldChanged -= Context_OnFieldChanged;
+        }
+    }
 
     protected override void OnParametersSet()
     {
@@ -45,13 +51,5 @@ public partial class BaseMortalityComponent : IDisposable
         //        new FieldIdentifier(ViewModel, nameof(MortalityViewModel.Longitude))
         //    );
         //}
-    }
-
-    public void Dispose()
-    {
-        if (_context != null)
-        {
-            _context.OnFieldChanged -= Context_OnFieldChanged;
-        }
     }
 }

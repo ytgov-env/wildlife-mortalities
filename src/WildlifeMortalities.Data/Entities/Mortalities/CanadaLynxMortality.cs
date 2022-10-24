@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class CanadaLynxMortality : Mortality { }
+public class CanadaLynxMortality : Mortality
+{
+}

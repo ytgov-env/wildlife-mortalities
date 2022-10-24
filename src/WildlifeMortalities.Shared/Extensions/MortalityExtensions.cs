@@ -51,9 +51,6 @@ public static class MortalityExtensions
 
             case WoodlandCaribouMortality woodlandCaribou:
                 break;
-
-            default:
-                break;
         }
 
         return violations;

@@ -16,6 +16,5 @@ public enum MortalityReportType
     [Display(Name = "Hunting (special guided)")]
     SpecialGuidedHunt,
 
-    [Display(Name = "Trapping")]
-    Trapped
+    [Display(Name = "Trapping")] Trapped
 }

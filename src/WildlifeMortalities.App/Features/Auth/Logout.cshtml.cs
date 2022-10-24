@@ -6,21 +6,15 @@ namespace WildlifeMortalities.App.Features.Auth;
 
 public class LogoutModel : PageModel
 {
-    private IConfiguration Configuration { get; }
+    public LogoutModel(IConfiguration configuration) => Configuration = configuration;
 
-    public LogoutModel(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+    private IConfiguration Configuration { get; }
 
     public async Task OnGet()
     {
         await HttpContext.SignOutAsync(
             Configuration["AuthNProvider:Name"],
-            new AuthenticationProperties
-            {
-                RedirectUri = Configuration["AuthNProvider:SignedOutCallbackPath"]
-            }
+            new AuthenticationProperties { RedirectUri = Configuration["AuthNProvider:SignedOutCallbackPath"] }
         );
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }

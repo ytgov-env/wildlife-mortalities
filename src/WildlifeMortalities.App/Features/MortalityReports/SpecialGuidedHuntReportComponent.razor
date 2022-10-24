@@ -2,6 +2,14 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Models
 @using WildlifeMortalities.Shared.Services
+<MudDateRangePicker Editable="true" Label="Hunting dates"/>
+
+<MudPaper Class="pa-4 mb-4">
+    <MudAutocomplete T="ClientDto" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
+                     @bind-Value="ViewModel.Guide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
+    </MudAutocomplete>
+</MudPaper>
 
 <MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result">
     @foreach (var item in Enum.GetValues<GuidedHuntResult>().Where(s => s != GuidedHuntResult.Uninitialized))
@@ -9,15 +17,6 @@
         <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-
-<MudDateRangePicker Editable="true" Label="Hunting dates" />
-
-<MudPaper Class="pa-4 mb-4">
-    <MudAutocomplete T="ClientDto" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
-                     @bind-Value="ViewModel.Guide" ToStringFunc="@((x) => x is null ? "" : $"{x.EnvClientId} | {x.LastName}" )" SearchFunc="@SearchClientByEnvClientIdOrLastName"
-                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
-</MudPaper>
-
 @if (ViewModel.Result is GuidedHuntResult.SuccessfulHunt)
 {
     <MudList>
@@ -30,11 +29,11 @@
                         @foreach (var property in item.MortalityViewModel.GetProperties())
                         {
                             var normalizedValue = (property.Value ?? string.Empty).ToLower();
-                            @if (Boolean.TryParse(property.Value, out Boolean value) == true)
+                            @if (bool.TryParse(property.Value, out var value))
                             {
-                                <MudCheckBox T="Boolean" ReadOnly="true" Checked="value" Label="@property.Key" />
+                                <MudCheckBox T="bool" ReadOnly="true" Checked="value" Label="@property.Key"/>
                             }
-                            else if (DateTime.TryParse(property.Value, out DateTime dateValue) == true)
+                            else if (DateTime.TryParse(property.Value, out var dateValue))
                             {
                                 <MudField DisableUnderLine="true" Label="@property.Key">@dateValue.Date.ToShortDateString()</MudField>
                             }
@@ -45,22 +44,23 @@
                         }
                         <MudField DisableUnderLine="true" Label="Comment">@item.Comment</MudField>
                     </MudStack>
-                    <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => Edit(item))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => Delete(item))" />
+                    <MudSpacer/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => Edit(item))"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => Delete(item))"/>
                 </MudStack>
             </MudListItem>
         }
     </MudList>
     <MudStack Row="true">
-        <MudSpacer />
+        <MudSpacer/>
         <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
-        <MudSpacer />
+        <MudSpacer/>
     </MudStack>
 }
 
 
 @code {
+
     [Parameter]
     [EditorRequired]
     public SpecialGuidedHuntReportViewModel ViewModel { get; set; } = null!;
@@ -78,9 +78,9 @@
     private async Task Add()
     {
         var parameters = new DialogParameters
-            {
-                [nameof(AddHuntedMortalityReportDialog.ReportType)] = MortalityReportType
-            };
+        {
+            [nameof(AddHuntedMortalityReportDialog.ReportType)] = MortalityReportType
+        };
 
         var dialog = DialogService.Show<AddHuntedMortalityReportDialog>("", parameters);
         var result = await dialog.Result;
@@ -93,9 +93,9 @@
     private async Task Edit(HuntedMortalityReportViewModel viewModel)
     {
         var parameters = new DialogParameters
-            {
-                [nameof(EditHuntedMortalityReportDialog.ViewModel)] = viewModel
-            };
+        {
+            [nameof(EditHuntedMortalityReportDialog.ViewModel)] = viewModel
+        };
 
         var dialog = DialogService.Show<EditHuntedMortalityReportDialog>("", parameters);
         var result = await dialog.Result;
@@ -106,8 +106,11 @@
         ViewModel.HuntedMortalityReportViewModels.Remove(viewModel);
     }
 
-    private async Task<IEnumerable<ClientDto>> SearchClientByEnvClientIdOrLastName(string input) =>
-        (await ClientLookupService.SearchByEnvClientId(input))
+    private async Task<IEnumerable<ClientDto>> SearchClientByEnvClientIdOrLastName(string input)
+    {
+        return (await ClientLookupService.SearchByEnvClientId(input))
             .Union(await ClientLookupService.SearchByLastName(input))
             .OrderBy(x => x.LastName);
+    }
+
 }

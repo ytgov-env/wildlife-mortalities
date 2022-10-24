@@ -5,15 +5,8 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class SelectSpeciesComponent
 {
-    [Parameter]
-    public MortalityReportType ReportType { get; set; }
-
     private static readonly Dictionary<TrappedSpecies, AllSpecies> _trappedMapper =
-        new()
-        {
-            { TrappedSpecies.GreyWolf, AllSpecies.GreyWolf },
-            { TrappedSpecies.Wolverine, AllSpecies.Wolverine }
-        };
+        new() { { TrappedSpecies.GreyWolf, AllSpecies.GreyWolf }, { TrappedSpecies.Wolverine, AllSpecies.Wolverine } };
 
     private static readonly Dictionary<HuntedSpecies, AllSpecies> _huntedMapper =
         new()
@@ -34,6 +27,10 @@ public partial class SelectSpeciesComponent
             { HuntedSpecies.WoodlandCaribou, AllSpecies.WoodlandCaribou }
         };
 
+    [Parameter] public MortalityReportType ReportType { get; set; }
+
+    [Parameter] public EventCallback<AllSpecies> SpeciesChanged { get; set; }
+
     protected override void FieldsChanged()
     {
         if (ViewModel.HuntedSpecies.HasValue)
@@ -45,7 +42,4 @@ public partial class SelectSpeciesComponent
             SpeciesChanged.InvokeAsync(_trappedMapper[ViewModel.TrappedSpecies.Value]);
         }
     }
-
-    [Parameter]
-    public EventCallback<AllSpecies> SpeciesChanged { get; set; }
 }

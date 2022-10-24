@@ -78,15 +78,12 @@ void AddAllGameManagementAreaSpecies(AppDbContext context)
                 foreach (var area in gameManagementAreas)
                 {
                     context.GameManagementAreaSpecies.Add(
-                        new GameManagementAreaSpecies
-                        {
-                            Species = species,
-                            GameManagementArea = area
-                        }
+                        new GameManagementAreaSpecies { Species = species, GameManagementArea = area }
                     );
                 }
             }
         }
+
         context.SaveChanges();
         Console.WriteLine("Added GameManagementAreaSpecies");
     }
@@ -134,15 +131,12 @@ void AddFakeClients(AppDbContext context)
                 for (var i = 0; i < rand.Next(0, 5); i++)
                 {
                     licence.Seals.Add(
-                        new Seal
-                        {
-                            Number = $"EHS-{rand.Next(1000, 99999)}",
-                            Species = HuntedSpecies.WoodBison
-                        }
+                        new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.WoodBison }
                     );
                 }
             }
         }
+
         context.AddRange(clients);
         context.SaveChanges();
         Console.WriteLine("Added fake Clients");

@@ -1,14 +1,13 @@
-﻿@namespace WildlifeMortalities.App.Features.MortalityReports
-@using WildlifeMortalities.Data.Enums;
+﻿@using WildlifeMortalities.Data.Enums
+@namespace WildlifeMortalities.App.Features.MortalityReports
 
-<MudDatePicker @bind-Date="ViewModel.DateOfDeath" For="@(  () => ViewModel.DateOfDeath)" Editable="true" Label="Date of death" />
-<MudNumericField @bind-Value="ViewModel.Latitude" For="@(  () => ViewModel.Latitude)" HideSpinButtons="true" Label="Latitude" />
-<MudNumericField @bind-Value="ViewModel.Longitude" For="@(  () => ViewModel.Longitude)" HideSpinButtons="true" Label="Longitude" />
+<MudDatePicker @bind-Date="ViewModel.DateOfDeath" For="@(() => ViewModel.DateOfDeath)" Editable="true" Label="Date of death"/>
+<MudNumericField @bind-Value="ViewModel.Latitude" For="@(() => ViewModel.Latitude)" HideSpinButtons="true" Label="Latitude"/>
+<MudNumericField @bind-Value="ViewModel.Longitude" For="@(() => ViewModel.Longitude)" HideSpinButtons="true" Label="Longitude"/>
 
-<MudSelect T="Sex?" @bind-Value="@ViewModel.Sex" Label="Sex" Placeholder="Select a sex" For="@(  () => ViewModel.Sex)">
+<MudSelect T="Sex?" @bind-Value="@ViewModel.Sex" Label="Sex" Placeholder="Select a sex" For="@(() => ViewModel.Sex)">
     @foreach (var item in Enum.GetValues<Sex>().Where(x => x != Sex.Uninitialized))
     {
         <MudSelectItem T="Sex?" Value="@item">@item</MudSelectItem>
     }
 </MudSelect>
-

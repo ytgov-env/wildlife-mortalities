@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Shared.Services;
 
-public class HumanWildlifeConflictService { }
+public class HumanWildlifeConflictService
+{
+}

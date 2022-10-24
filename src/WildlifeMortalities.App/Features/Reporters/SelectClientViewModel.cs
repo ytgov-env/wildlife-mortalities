@@ -10,8 +10,5 @@ public class SelectClientViewModel
 
 public class SelectClientViewModelValidator : AbstractValidator<SelectClientViewModel>
 {
-    public SelectClientViewModelValidator()
-    {
-        RuleFor(x => x.SelectedClient).NotNull();
-    }
+    public SelectClientViewModelValidator() => RuleFor(x => x.SelectedClient).NotNull();
 }

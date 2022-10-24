@@ -9,9 +9,25 @@ public partial class ClientOverviewPage : IDisposable
 {
     private EditContext _context = null!;
 
+    private SelectClientViewModel _selectedClientViewModel = null!;
+
+    [Inject] private IClientLookupService ClientLookupService { get; set; } = null!;
+
+    [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
+
+    [Parameter] public int Id { get; set; }
+
+    public void Dispose()
+    {
+        if (_context is not null)
+        {
+            _context.OnFieldChanged -= _context_OnFieldChanged;
+        }
+    }
+
     protected override void OnInitialized()
     {
-        _selectedClientViewModel = new();
+        _selectedClientViewModel = new SelectClientViewModel();
         _context = new EditContext(_selectedClientViewModel);
         _context.OnFieldChanged += _context_OnFieldChanged;
     }
@@ -22,27 +38,8 @@ public partial class ClientOverviewPage : IDisposable
         ValidationChanged.InvokeAsync(!_context.GetValidationMessages().Any());
     }
 
-    [Inject]
-    private IClientLookupService ClientLookupService { get; set; } = null!;
-
-    private SelectClientViewModel _selectedClientViewModel = null!;
-
     private async Task<IEnumerable<ClientDto>> SearchClientByEnvClientIdOrLastName(string input) =>
         (await ClientLookupService.SearchByEnvClientId(input))
-            .Union(await ClientLookupService.SearchByLastName(input))
-            .OrderBy(x => x.LastName);
-
-    public void Dispose()
-    {
-        if (_context is not null)
-        {
-            _context.OnFieldChanged -= _context_OnFieldChanged;
-        }
-    }
-
-    [Parameter]
-    public EventCallback<bool> ValidationChanged { get; set; }
-
-    [Parameter]
-    public int Id { get; set; }
+        .Union(await ClientLookupService.SearchByLastName(input))
+        .OrderBy(x => x.LastName);
 }

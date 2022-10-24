@@ -24,15 +24,15 @@ public class HuntedMortalityReportTests
         );
 
         // Act
-        var huntedMortalityReport = new HuntedMortalityReport()
+        var huntedMortalityReport = new HuntedMortalityReport
         {
-            GmaSpecies = new GameManagementAreaSpecies()
+            GmaSpecies = new GameManagementAreaSpecies
             {
                 Species = HuntedSpeciesWithGameManagementArea.AmericanBlackBear,
-                GameManagementArea = new GameManagementArea() { Zone = "1", Subzone = "50" }
+                GameManagementArea = new GameManagementArea { Zone = "1", Subzone = "50" }
             },
-            Mortality = new AmericanBlackBearMortality() { Sex = Sex.Male },
-            Client = new Client() { EnvClientId = "50406" }
+            Mortality = new AmericanBlackBearMortality { Sex = Sex.Male },
+            Client = new Client { EnvClientId = "50406" }
         };
         var result = await service.CreateHuntedMortalityReport(huntedMortalityReport);
 
@@ -68,15 +68,15 @@ public class HuntedMortalityReportTests
             new MortalityService(dbContextFactory)
         );
 
-        var huntedMortalityReport = new HuntedMortalityReport()
+        var huntedMortalityReport = new HuntedMortalityReport
         {
-            GmaSpecies = new GameManagementAreaSpecies()
+            GmaSpecies = new GameManagementAreaSpecies
             {
                 Species = HuntedSpeciesWithGameManagementArea.AmericanBlackBear,
-                GameManagementArea = new GameManagementArea() { Zone = "1", Subzone = "50" }
+                GameManagementArea = new GameManagementArea { Zone = "1", Subzone = "50" }
             },
-            Mortality = new AmericanBlackBearMortality() { Sex = Sex.Male },
-            Client = new Client() { EnvClientId = "50406" }
+            Mortality = new AmericanBlackBearMortality { Sex = Sex.Male },
+            Client = new Client { EnvClientId = "50406" }
         };
         var createResult = await service.CreateHuntedMortalityReport(huntedMortalityReport);
         huntedMortalityReport = await service.GetHarvestReportById(createResult.Value.Id);

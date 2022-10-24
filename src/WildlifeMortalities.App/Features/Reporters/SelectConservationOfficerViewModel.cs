@@ -11,8 +11,5 @@ public class SelectConservationOfficerViewModel
 public class SelectConservationOfficerViewModelValidator
     : AbstractValidator<SelectConservationOfficerViewModel>
 {
-    public SelectConservationOfficerViewModelValidator()
-    {
-        RuleFor(x => x.SelectedConservationOfficer).NotNull();
-    }
+    public SelectConservationOfficerViewModelValidator() => RuleFor(x => x.SelectedConservationOfficer).NotNull();
 }

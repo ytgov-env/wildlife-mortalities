@@ -6,9 +6,7 @@ public enum TrappedSpecies
 {
     Uninitialized = AllSpecies.Uninitialized,
 
-    [Display(Name = "Grey wolf")]
-    GreyWolf = AllSpecies.GreyWolf,
+    [Display(Name = "Grey wolf")] GreyWolf = AllSpecies.GreyWolf,
 
-    [Display(Name = "Wolverine")]
-    Wolverine = AllSpecies.Wolverine
+    [Display(Name = "Wolverine")] Wolverine = AllSpecies.Wolverine
 }

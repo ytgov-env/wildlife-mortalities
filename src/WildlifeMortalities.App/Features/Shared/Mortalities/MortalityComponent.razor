@@ -1,31 +1,28 @@
-﻿@using WildlifeMortalities.App.Extensions
-@using WildlifeMortalities.Data.Enums
-
-@namespace WildlifeMortalities.App.Features.MortalityReports
+﻿@namespace WildlifeMortalities.App.Features.MortalityReports
 @inherits ReportTypeComponent<MortalityViewModel>
 
-@if (ReportType.HasValue == true)
+@if (ReportType.HasValue)
 {
-    <SelectSpeciesComponent ReportType="ReportType.Value" SpeciesChanged="SpeciesChanged" />
+    <SelectSpeciesComponent ReportType="ReportType.Value" SpeciesChanged="SpeciesChanged"/>
 }
 
 @if (_currentSpecies.HasValue || _editViewModel != null)
 {
-    <BaseMortalityComponent ViewModel="ViewModel" />
+    <BaseMortalityComponent ViewModel="ViewModel"/>
 
     @switch (ViewModel)
     {
         case AmericanBlackBearMortalityViewModel vm:
-            <AmericanBlackBearMortalityComponent ViewModel="vm" />
+            <AmericanBlackBearMortalityComponent ViewModel="vm"/>
             break;
         case GrizzlyBearMortalityViewModel vm:
-            <GrizzlyBearMortalityComponent ViewModel="vm" />
+            <GrizzlyBearMortalityComponent ViewModel="vm"/>
             break;
         case ThinhornSheepMortalityViewModel vm:
             <ThinhornSheepMortalityComponent ViewModel="vm"/>
             break;
         case WoodBisonMortalityViewModel vm:
-            <WoodBisonMortalityComponent ViewModel="vm" />
+            <WoodBisonMortalityComponent ViewModel="vm"/>
             break;
     }
 }
@@ -34,4 +31,3 @@
 
 
 }
-

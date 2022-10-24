@@ -17,8 +17,5 @@ public class TestDbContextFactory : IDbContextFactory<AppDbContext>
         }
     }
 
-    public AppDbContext CreateDbContext()
-    {
-        return new AppDbContext(_options);
-    }
+    public AppDbContext CreateDbContext() => new(_options);
 }

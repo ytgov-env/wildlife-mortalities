@@ -1,22 +1,21 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class ThinhornSheepMortalityViewModel : MortalityViewModel
 {
+    public ThinhornSheepMortalityViewModel() : base(AllSpecies.ThinhornSheep)
+    {
+    }
+
     public ThinhornSheepBodyColour? BodyColour { get; set; }
     public ThinhornSheepTailColour? TailColour { get; set; }
 
-    public ThinhornSheepMortalityViewModel() : base(Data.Enums.AllSpecies.ThinhornSheep) { }
-
     public override Mortality GetMortality()
     {
-        var mortality = new ThinhornSheepMortality
-        {
-            BodyColour = BodyColour!.Value,
-            TailColour = TailColour!.Value
-        };
+        var mortality = new ThinhornSheepMortality { BodyColour = BodyColour!.Value, TailColour = TailColour!.Value };
 
         SetBaseValues(mortality);
         return mortality;

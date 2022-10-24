@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class TrappingLicence : Authorization { }
+public class TrappingLicence : Authorization
+{
+}

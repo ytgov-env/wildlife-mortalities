@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class BarrenGroundCaribouMortality : Mortality { }
+public class BarrenGroundCaribouMortality : Mortality
+{
+}

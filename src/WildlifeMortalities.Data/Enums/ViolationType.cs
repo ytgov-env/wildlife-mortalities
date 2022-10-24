@@ -2,5 +2,5 @@
 
 public enum ViolationType
 {
-    Uninitialized = 0,
+    Uninitialized = 0
 }

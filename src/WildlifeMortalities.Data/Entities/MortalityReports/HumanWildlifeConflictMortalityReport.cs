@@ -1,5 +1,4 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.People;
+﻿using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities;
 

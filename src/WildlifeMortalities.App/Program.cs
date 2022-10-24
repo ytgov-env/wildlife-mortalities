@@ -85,7 +85,7 @@ try
 
                 options.Events = new OpenIdConnectEvents
                 {
-                    OnRedirectToIdentityProviderForSignOut = (context) =>
+                    OnRedirectToIdentityProviderForSignOut = context =>
                     {
                         var logoutUri =
                             $"https://{configuration["AuthNProvider:Domain"]}{configuration["AuthNProvider:FederatedLogoutPartialUri"]}{configuration["AuthNProvider:ClientId"]}";
@@ -103,6 +103,7 @@ try
                                     + request.PathBase
                                     + postLogoutUri;
                             }
+
                             logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
                         }
 
@@ -111,7 +112,7 @@ try
 
                         return Task.CompletedTask;
                     },
-                    OnSignedOutCallbackRedirect = (context) =>
+                    OnSignedOutCallbackRedirect = context =>
                     {
                         context.Response.Redirect(options.SignedOutRedirectUri);
                         context.HandleResponse();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
-using WildlifeMortalities.Data.Entities.People;
+﻿using FluentValidation;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Models;
 
@@ -18,12 +12,10 @@ public class OutfitterGuidedHuntReportViewModel
     public int OutfitterArea { get; set; }
     public GuidedHuntResult? Result { get; set; }
 
-    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } =
-        new List<HuntedMortalityReportViewModel>();
+    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } = new();
 }
 
 public class OutfitterGuidedHuntReportViewModelValidator
     : AbstractValidator<OutfitterGuidedHuntReportViewModel>
 {
-    public OutfitterGuidedHuntReportViewModelValidator() { }
 }

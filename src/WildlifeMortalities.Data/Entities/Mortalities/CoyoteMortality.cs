@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class CoyoteMortality : Mortality { }
+public class CoyoteMortality : Mortality
+{
+}

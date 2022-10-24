@@ -1,22 +1,21 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class WoodBisonMortalityViewModel : MortalityViewModel
 {
+    public WoodBisonMortalityViewModel() : base(AllSpecies.WoodBison)
+    {
+    }
+
     public PregnancyStatus? PregnancyStatus { get; set; }
     public bool IsWounded { get; set; }
 
-    public WoodBisonMortalityViewModel() : base(Data.Enums.AllSpecies.WoodBison) { }
-
     public override Mortality GetMortality()
     {
-        var mortality = new WoodBisonMortality
-        {
-            PregnancyStatus = PregnancyStatus!.Value,
-            IsWounded = IsWounded
-        };
+        var mortality = new WoodBisonMortality { PregnancyStatus = PregnancyStatus!.Value, IsWounded = IsWounded };
 
         SetBaseValues(mortality);
         return mortality;
@@ -34,8 +33,5 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
 
 public class WoodBisonMortalityViewModelValidator : AbstractValidator<WoodBisonMortalityViewModel>
 {
-    public WoodBisonMortalityViewModelValidator()
-    {
-        RuleFor(x => x.PregnancyStatus).NotNull();
-    }
+    public WoodBisonMortalityViewModelValidator() => RuleFor(x => x.PregnancyStatus).NotNull();
 }

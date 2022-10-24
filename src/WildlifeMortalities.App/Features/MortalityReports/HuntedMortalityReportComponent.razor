@@ -1,9 +1,8 @@
-
 <EditForm EditContext="_context">
-    <FluentValidationValidator />
-    <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark" />
-    <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="MortalityReportType" EditViewModel="@(MortalityReportType.HasValue == false ? ViewModel.MortalityViewModel : null)" />
-    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" />
+    <FluentValidationValidator/>
+    <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
+    <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="MortalityReportType" EditViewModel="@(MortalityReportType.HasValue == false ? ViewModel.MortalityViewModel : null)"/>
+    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment"/>
 </EditForm>
 
 @code {
@@ -22,9 +21,14 @@
     [EditorRequired]
     public MortalityReportType? MortalityReportType { get; set; }
 
-    private void SetMortalityViewModel(MortalityViewModel viewModel) =>
+    private void SetMortalityViewModel(MortalityViewModel viewModel)
+    {
         ViewModel.MortalityViewModel = viewModel;
+    }
 
-    public Boolean IsValid() => _context.Validate();
+    public bool IsValid()
+    {
+        return _context.Validate();
+    }
 
 }

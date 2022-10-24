@@ -5,13 +5,24 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where T : new()
 {
+    protected EditContext _context = null!;
     protected T ViewModel { get; private set; }
 
-    protected EditContext _context = null!;
+    [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
+
+    [Parameter] public EventCallback<T> ViewModelChanged { get; set; }
+
+    public void Dispose()
+    {
+        if (_context is not null)
+        {
+            _context.OnFieldChanged -= _context_OnFieldChanged;
+        }
+    }
 
     protected override void OnInitialized()
     {
-        ViewModel ??= new();
+        ViewModel ??= new T();
 
         _context = new EditContext(ViewModel);
         _context.OnFieldChanged += _context_OnFieldChanged;
@@ -31,13 +42,15 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
 
         _context.OnFieldChanged += _context_OnFieldChanged;
 
-        if (fireEvent == true)
+        if (fireEvent)
         {
             ViewModelChanged.InvokeAsync(ViewModel);
         }
     }
 
-    protected virtual void FieldsChanged() { }
+    protected virtual void FieldsChanged()
+    {
+    }
 
     private void _context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
@@ -45,18 +58,4 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
         ValidationChanged.InvokeAsync(_context.GetValidationMessages().Any() == false);
         FieldsChanged();
     }
-
-    public void Dispose()
-    {
-        if (_context is not null)
-        {
-            _context.OnFieldChanged -= _context_OnFieldChanged;
-        }
-    }
-
-    [Parameter]
-    public EventCallback<bool> ValidationChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<T> ViewModelChanged { get; set; }
 }

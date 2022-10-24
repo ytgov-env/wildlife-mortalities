@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class MuskratMortality : Mortality { }
+public class MuskratMortality : Mortality
+{
+}

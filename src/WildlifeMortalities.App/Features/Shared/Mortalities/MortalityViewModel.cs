@@ -7,6 +7,39 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class MortalityViewModel
 {
+    private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory =
+        new()
+        {
+            { AllSpecies.AmericanBlackBear, () => new AmericanBlackBearMortality() },
+            { AllSpecies.BarrenGroundCaribou, () => new BarrenGroundCaribouMortality() },
+            { AllSpecies.Coyote, () => new CoyoteMortality() },
+            { AllSpecies.Elk, () => new ElkMortality() },
+            { AllSpecies.GreyWolf, () => new GreyWolfMortality() },
+            { AllSpecies.GrizzlyBear, () => new GrizzlyBearMortality() },
+            { AllSpecies.Moose, () => new MooseMortality() },
+            { AllSpecies.MountainGoat, () => new MountainGoatMortality() },
+            { AllSpecies.MuleDeer, () => new MuleDeerMortality() },
+            { AllSpecies.ThinhornSheep, () => new ThinhornSheepMortality() },
+            { AllSpecies.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
+            { AllSpecies.Wolverine, () => new WolverineMortality() },
+            { AllSpecies.WoodBison, () => new WoodBisonMortality() },
+            { AllSpecies.WoodlandCaribou, () => new WoodlandCaribouMortality() }
+        };
+
+    public MortalityViewModel()
+    {
+    }
+
+    public MortalityViewModel(Mortality mortality)
+    {
+        DateOfDeath = mortality.DateOfDeath;
+        Latitude = mortality.Latitude;
+        Longitude = mortality.Longitude;
+        Sex = mortality.Sex;
+    }
+
+    public MortalityViewModel(AllSpecies species) => Species = species;
+
     public AllSpecies? Species { get; init; }
 
     public DateTime? DateOfDeath { get; set; }
@@ -34,40 +67,6 @@ public class MortalityViewModel
         }
 
         return result;
-    }
-
-    private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory =
-        new()
-        {
-            { AllSpecies.AmericanBlackBear, () => new AmericanBlackBearMortality() },
-            { AllSpecies.BarrenGroundCaribou, () => new BarrenGroundCaribouMortality() },
-            { AllSpecies.Coyote, () => new CoyoteMortality() },
-            { AllSpecies.Elk, () => new ElkMortality() },
-            { AllSpecies.GreyWolf, () => new GreyWolfMortality() },
-            { AllSpecies.GrizzlyBear, () => new GrizzlyBearMortality() },
-            { AllSpecies.Moose, () => new MooseMortality() },
-            { AllSpecies.MountainGoat, () => new MountainGoatMortality() },
-            { AllSpecies.MuleDeer, () => new MuleDeerMortality() },
-            { AllSpecies.ThinhornSheep, () => new ThinhornSheepMortality() },
-            { AllSpecies.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
-            { AllSpecies.Wolverine, () => new WolverineMortality() },
-            { AllSpecies.WoodBison, () => new WoodBisonMortality() },
-            { AllSpecies.WoodlandCaribou, () => new WoodlandCaribouMortality() }
-        };
-
-    public MortalityViewModel() { }
-
-    public MortalityViewModel(Mortality mortality)
-    {
-        DateOfDeath = mortality.DateOfDeath;
-        Latitude = mortality.Latitude;
-        Longitude = mortality.Longitude;
-        Sex = mortality.Sex;
-    }
-
-    public MortalityViewModel(AllSpecies species)
-    {
-        Species = species;
     }
 
     public virtual Mortality GetMortality()
@@ -112,4 +111,6 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
+{
+}

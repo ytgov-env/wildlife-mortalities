@@ -16,7 +16,6 @@ public class MortalityReportPageViewModel
 
 public class MortalityReportViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
 {
-    public MortalityReportViewModelValidator() { }
 }
 
 public class HuntedMortalityReportViewModel
@@ -27,12 +26,12 @@ public class HuntedMortalityReportViewModel
     public MortalityViewModel MortalityViewModel { get; set; } = new();
 
     public HuntedMortalityReport GetReport(int personId) =>
-        new HuntedMortalityReport
+        new()
         {
             Mortality = MortalityViewModel.GetMortality(),
             Landmark = Landmark,
             Comment = Comment,
-            ClientId = personId,
+            ClientId = personId
         };
 }
 

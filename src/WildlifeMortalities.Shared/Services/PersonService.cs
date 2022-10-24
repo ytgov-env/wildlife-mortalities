@@ -9,10 +9,7 @@ public class PersonService<T> where T : Person
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public PersonService(IDbContextFactory<AppDbContext> dbContextFactory)
-    {
-        _dbContextFactory = dbContextFactory;
-    }
+    public PersonService(IDbContextFactory<AppDbContext> dbContextFactory) => _dbContextFactory = dbContextFactory;
 
     public async Task<IReadOnlyList<ConservationOfficer>> GetConservationOfficers()
     {
@@ -37,18 +34,9 @@ public class PersonService<T> where T : Person
             .FirstOrDefaultAsync(c => c.BadgeNumber == badgeNumber);
     }
 
-    public async Task<IReadOnlyList<ClientDto>> GetClients()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IReadOnlyList<ClientDto>> GetClients() => throw new NotImplementedException();
 
-    public async Task<ClientDto> GetClientById(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<ClientDto> GetClientById(int id) => throw new NotImplementedException();
 
-    public async Task<ClientDto> GetClientByEnvClientId(string envClientId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<ClientDto> GetClientByEnvClientId(string envClientId) => throw new NotImplementedException();
 }

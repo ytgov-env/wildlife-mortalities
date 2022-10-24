@@ -1,7 +1,5 @@
 ﻿@page "/mortality-reports/{personid:int}"
 @using WildlifeMortalities.App.Extensions
-@using WildlifeMortalities.Data.Entities.People
-@using WildlifeMortalities.Shared.Models
 
 @*<MudText Typo="Typo.h3" Class="mb-8">Mortality report</MudText>*@
 <MudText Typo="Typo.h3" Class="mb-8">@_vm.MortalityReportType.GetDisplayName() report</MudText>
@@ -16,26 +14,24 @@
 
 @if (_vm.MortalityReportType == MortalityReportType.Conflict)
 {
-
 }
 else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
 {
-    <HuntedMortalityReportComponent ViewModel="_vm.HuntedMortalityReportViewModel" MortalityReportType="_vm.MortalityReportType" />
+    <HuntedMortalityReportComponent ViewModel="_vm.HuntedMortalityReportViewModel" MortalityReportType="_vm.MortalityReportType"/>
 }
 else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
 {
-    <OutfitterGuidedHuntReportComponent ViewModel="_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType" />
+    <OutfitterGuidedHuntReportComponent ViewModel="_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType"/>
 }
 else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
 {
-    <SpecialGuidedHuntReportComponent ViewModel="_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType" />
+    <SpecialGuidedHuntReportComponent ViewModel="_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType"/>
 }
 else if (_vm.MortalityReportType == MortalityReportType.Trapped)
 {
-
 }
 
-<InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
+<InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
 
 <MudButton HtmlTag="label"
            Variant="Variant.Filled"
@@ -60,9 +56,6 @@ else if (_vm.MortalityReportType == MortalityReportType.Trapped)
 }
 
 <MudStack Row="true" Class="mt-4">
-    <MudSpacer />
+    <MudSpacer/>
     <MudButton Variant="Variant.Filled" OnClick="CreateMortalityReport" Color="Color.Primary">Create Report</MudButton>
 </MudStack>
-
-
-

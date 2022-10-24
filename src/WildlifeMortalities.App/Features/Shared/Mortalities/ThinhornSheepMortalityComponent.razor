@@ -1,5 +1,5 @@
-﻿@namespace WildlifeMortalities.App.Features.MortalityReports
-@using WildlifeMortalities.Data.Entities.Mortalities
+﻿@using WildlifeMortalities.Data.Entities.Mortalities
+@namespace WildlifeMortalities.App.Features.MortalityReports
 
 <MudSelect T="ThinhornSheepBodyColour?" @bind-Value="@ViewModel.BodyColour" Label="Body colour" Placeholder="Select a colour">
     @foreach (var item in Enum.GetValues<ThinhornSheepBodyColour>().Where(s => s != ThinhornSheepBodyColour.Uninitialized))
@@ -16,5 +16,8 @@
 </MudSelect>
 
 @code {
-    [Parameter] public ThinhornSheepMortalityViewModel ViewModel { get; set; }
+
+    [Parameter]
+    public ThinhornSheepMortalityViewModel ViewModel { get; set; }
+
 }

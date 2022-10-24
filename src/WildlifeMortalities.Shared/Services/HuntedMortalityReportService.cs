@@ -57,10 +57,8 @@ public class HuntedMortalityReportService<T> where T : Mortality
             await context.SaveChangesAsync();
             return Result<HuntedMortalityReport>.Success(huntedMortalityReport);
         }
-        else
-        {
-            return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
-        }
+
+        return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
     }
 
     public async Task<Result<HuntedMortalityReport>> UpdateHuntedMortalityReport(
@@ -95,9 +93,7 @@ public class HuntedMortalityReportService<T> where T : Mortality
             await context.SaveChangesAsync();
             return Result<HuntedMortalityReport>.Success(huntedMortalityReport);
         }
-        else
-        {
-            return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
-        }
+
+        return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
     }
 }

@@ -11,7 +11,7 @@ public class ValidatorTests
     [Fact]
     public void CanCreateMortalityWithMaleSex()
     {
-        var model = new AmericanBlackBearMortality() { Sex = Sex.Male };
+        var model = new AmericanBlackBearMortality { Sex = Sex.Male };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
 
@@ -22,7 +22,7 @@ public class ValidatorTests
     [Fact]
     public void CannotCreateMortalityWithUnitializedSex()
     {
-        var model = new AmericanBlackBearMortality() { Sex = Sex.Uninitialized };
+        var model = new AmericanBlackBearMortality { Sex = Sex.Uninitialized };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
@@ -38,7 +38,7 @@ public class ValidatorTests
     [InlineData(40)]
     public void CannotCreateMortalityWithLatitudeFarOutsideTheYukon(decimal latitude)
     {
-        var model = new AmericanBlackBearMortality() { Latitude = latitude, Longitude = -134.00m };
+        var model = new AmericanBlackBearMortality { Latitude = latitude, Longitude = -134.00m };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
@@ -52,7 +52,7 @@ public class ValidatorTests
     [InlineData(70)]
     public void CanCreateMortalityWithLatitudeNearTheYukon(decimal latitude)
     {
-        var model = new AmericanBlackBearMortality() { Latitude = latitude, Longitude = -134.00m };
+        var model = new AmericanBlackBearMortality { Latitude = latitude, Longitude = -134.00m };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
@@ -67,7 +67,7 @@ public class ValidatorTests
     [InlineData(30)]
     public void CannotCreateMortalityWithLongitudeFarOutsideTheYukon(decimal longitude)
     {
-        var model = new AmericanBlackBearMortality() { Latitude = 62.42m, Longitude = longitude };
+        var model = new AmericanBlackBearMortality { Latitude = 62.42m, Longitude = longitude };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
@@ -82,7 +82,7 @@ public class ValidatorTests
     [InlineData(-129)]
     public void CanCreateMortalityWithLongitudeNearTheYukon(decimal longitude)
     {
-        var model = new AmericanBlackBearMortality() { Latitude = 62.42m, Longitude = longitude };
+        var model = new AmericanBlackBearMortality { Latitude = 62.42m, Longitude = longitude };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
@@ -93,7 +93,7 @@ public class ValidatorTests
     [Fact]
     public void LatitudeCannotBeSetWhileLongitudeIsNull()
     {
-        var model = new AmericanBlackBearMortality() { Latitude = 62.42m, Longitude = null };
+        var model = new AmericanBlackBearMortality { Latitude = 62.42m, Longitude = null };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
@@ -104,7 +104,7 @@ public class ValidatorTests
     [Fact]
     public void LongitudeCannotBeSetWhileLatitudeIsNull()
     {
-        var model = new AmericanBlackBearMortality() { Latitude = null, Longitude = -134.52m };
+        var model = new AmericanBlackBearMortality { Latitude = null, Longitude = -134.52m };
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);
@@ -126,7 +126,7 @@ public class ValidatorTests
     [Fact]
     public void CanCreateHuntedMortalityReportWithSeal()
     {
-        var model = new HuntedMortalityReport() { Seal = new Seal() };
+        var model = new HuntedMortalityReport { Seal = new Seal() };
 
         var validator = new HuntedMortalityReportValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);

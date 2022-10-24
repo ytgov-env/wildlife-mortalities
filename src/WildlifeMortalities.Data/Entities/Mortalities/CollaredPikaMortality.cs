@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class CollaredPikaMortality : Mortality { }
+public class CollaredPikaMortality : Mortality
+{
+}

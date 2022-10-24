@@ -1,20 +1,18 @@
-﻿@using WildlifeMortalities.App.Extensions
+﻿@namespace WildlifeMortalities.App.Features.MortalityReports
+@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Enums
-
-@namespace WildlifeMortalities.App.Features.MortalityReports
 @inherits ReportTypeComponent<SelectSpeciesViewModel>
 
 <EditForm EditContext="_context">
-    <FluentValidationValidator Validator="new SelectSpeciesViewModelValidator(ReportType)" />
+    <FluentValidationValidator Validator="new SelectSpeciesViewModelValidator(ReportType)"/>
 
     @if (ReportType is MortalityReportType.Conflict)
     {
-
     }
     else if (ReportType is MortalityReportType.IndividualHunt || ReportType is MortalityReportType.OutfitterGuidedHunt)
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
-            @foreach (HuntedSpecies species in Enum.GetValues<HuntedSpecies>().Where(s => s != HuntedSpecies.Uninitialized))
+            @foreach (var species in Enum.GetValues<HuntedSpecies>().Where(s => s != HuntedSpecies.Uninitialized))
             {
                 <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
             }
@@ -23,7 +21,7 @@
     else if (ReportType is MortalityReportType.SpecialGuidedHunt)
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
-            @foreach (HuntedSpecies species in Enum.GetValues<HuntedSpecies>()
+            @foreach (var species in Enum.GetValues<HuntedSpecies>()
                 .Where(s => s == HuntedSpecies.AmericanBlackBear || s == HuntedSpecies.BarrenGroundCaribou || s == HuntedSpecies.Coyote || s == HuntedSpecies.GreyWolf || s == HuntedSpecies.WoodBison || s == HuntedSpecies.WoodlandCaribou))
             {
                 <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
@@ -32,14 +30,11 @@
     }
     else if (ReportType is MortalityReportType.Trapped)
     {
-    <MudSelect T="TrappedSpecies?" @bind-Value="ViewModel.TrappedSpecies" For="@(() => ViewModel.TrappedSpecies)" Label="Species" Placeholder="Select a species">
-        @foreach (TrappedSpecies species in Enum.GetValues<TrappedSpecies>().Where(s => s != TrappedSpecies.Uninitialized))
-        {
-            <MudSelectItem Value="@species" T="TrappedSpecies?">@species.GetDisplayName()</MudSelectItem>
-        }
-    </MudSelect>
+        <MudSelect T="TrappedSpecies?" @bind-Value="ViewModel.TrappedSpecies" For="@(() => ViewModel.TrappedSpecies)" Label="Species" Placeholder="Select a species">
+            @foreach (var species in Enum.GetValues<TrappedSpecies>().Where(s => s != TrappedSpecies.Uninitialized))
+            {
+                <MudSelectItem Value="@species" T="TrappedSpecies?">@species.GetDisplayName()</MudSelectItem>
+            }
+        </MudSelect>
     }
 </EditForm>
-
-
-

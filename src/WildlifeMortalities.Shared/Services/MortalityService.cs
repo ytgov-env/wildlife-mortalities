@@ -12,10 +12,7 @@ public class MortalityService : IMortalityService
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory)
-    {
-        _dbContextFactory = dbContextFactory;
-    }
+    public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) => _dbContextFactory = dbContextFactory;
 
     public async Task<List<Mortality>> GetAllMortalities()
     {
@@ -33,10 +30,8 @@ public class MortalityService : IMortalityService
         {
             return mortality as T;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public async Task<IReadOnlyList<T>> GetMortalitiesByEnvClientId<T>(string envClientId)
@@ -50,7 +45,7 @@ public class MortalityService : IMortalityService
                 m =>
                     m.MortalityReport is HuntedMortalityReport
                     && (m.MortalityReport as HuntedMortalityReport)!.Client.EnvClientId
-                        == envClientId
+                    == envClientId
             )
             .AsNoTracking()
             .ToListAsync();
@@ -68,8 +63,8 @@ public class MortalityService : IMortalityService
                 m =>
                     m.MortalityReport is HumanWildlifeConflictMortalityReport
                     && (m.MortalityReport as HumanWildlifeConflictMortalityReport)!
-                        .ConservationOfficer
-                        .BadgeNumber == conservationOfficerBadgeNumber
+                    .ConservationOfficer
+                    .BadgeNumber == conservationOfficerBadgeNumber
             )
             .AsNoTracking()
             .ToListAsync();
@@ -83,6 +78,7 @@ public class MortalityService : IMortalityService
         {
             return Result<T>.Invalid(validation.AsErrors());
         }
+
         return Result<T>.Success(mortality);
     }
 
@@ -94,6 +90,7 @@ public class MortalityService : IMortalityService
         {
             return Result<T>.Invalid(validation.AsErrors());
         }
+
         return Result<T>.Success(mortality);
     }
 }

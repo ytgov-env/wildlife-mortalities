@@ -1,12 +1,11 @@
-﻿
-<MudDialog>
+﻿<MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
             Edit report
         </MudText>
     </TitleContent>
     <DialogContent>
-        <HuntedMortalityReportComponent @ref="_huntedMortalityReportComponent" MortalityReportType="null" ViewModel="ViewModel" />
+        <HuntedMortalityReportComponent @ref="_huntedMortalityReportComponent" MortalityReportType="null" ViewModel="ViewModel"/>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -15,7 +14,9 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public HuntedMortalityReportViewModel ViewModel { get; set; } = null!;
@@ -32,9 +33,10 @@
 
     private void Edit()
     {
-        if (_huntedMortalityReportComponent.IsValid() == true)
+        if (_huntedMortalityReportComponent.IsValid())
         {
             MudDialog.Close(DialogResult.Ok(ViewModel));
         }
     }
+
 }

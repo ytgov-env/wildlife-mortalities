@@ -138,16 +138,14 @@ public class MortalityTests
     //    mortalities.Should().HaveCount(1);
     //}
 
-    public static List<Client> CreateFourClients()
-    {
-        return new List<Client>()
+    public static List<Client> CreateFourClients() =>
+        new()
         {
-            new Client() { EnvClientId = "51230" },
-            new Client() { EnvClientId = "40123" },
-            new Client() { EnvClientId = "60102" },
-            new Client() { EnvClientId = "20345" }
+            new Client { EnvClientId = "51230" },
+            new Client { EnvClientId = "40123" },
+            new Client { EnvClientId = "60102" },
+            new Client { EnvClientId = "20345" }
         };
-    }
 
     public IDbContextFactory<AppDbContext> CreateTestDbContextFactory()
     {

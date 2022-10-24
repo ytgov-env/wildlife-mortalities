@@ -1,8 +1,6 @@
 ﻿@page "/reporters/conservation-officers"
 @page "/reporters/conservation-officers/{id:int}"
-
 @using WildlifeMortalities.Data.Entities.People
-@using WildlifeMortalities.Shared.Models
 
 @namespace WildlifeMortalities.App.Features.Reporters
 
@@ -11,12 +9,13 @@
 <MudGrid>
     <MudItem sm="6">
         <EditForm EditContext="_context">
-            <FluentValidationValidator Validator="new SelectConservationOfficerViewModelValidator()" />
+            <FluentValidationValidator Validator="new SelectConservationOfficerViewModelValidator()"/>
             <MudItem>
                 <MudPaper Class="pa-4 mb-4">
                     <MudAutocomplete T="ConservationOfficer" For="@(() => _selectedConservationOfficerViewModel.SelectedConservationOfficer)" Label="Search by badge number or last name"
-                                     @bind-Value="_selectedConservationOfficerViewModel.SelectedConservationOfficer" ToStringFunc="@((x) => x is null ? "" : $"{x.BadgeNumber} | {x.LastName}" )" SearchFunc="@SearchConservationOfficerByBadgeNumberOrLastName"
-                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6"></MudAutocomplete>
+                                     @bind-Value="_selectedConservationOfficerViewModel.SelectedConservationOfficer" ToStringFunc="@(x => x is null ? "" : $"{x.BadgeNumber} | {x.LastName}")" SearchFunc="@SearchConservationOfficerByBadgeNumberOrLastName"
+                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
+                    </MudAutocomplete>
                 </MudPaper>
             </MudItem>
 
@@ -31,5 +30,3 @@
         </EditForm>
     </MudItem>
 </MudGrid>
-
-

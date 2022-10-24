@@ -1,3 +1,5 @@
 ﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class PolarBearMortality : Mortality { }
+public class PolarBearMortality : Mortality
+{
+}

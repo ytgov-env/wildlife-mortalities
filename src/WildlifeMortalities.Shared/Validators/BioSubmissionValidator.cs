@@ -3,4 +3,6 @@
 namespace WildlifeMortalities.Shared.Validators;
 
 public class BioSubmissionValidator<T> : AbstractValidator<BioSubmission>
-    where T : BioSubmission { }
+    where T : BioSubmission
+{
+}
