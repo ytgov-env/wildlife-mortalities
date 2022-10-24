@@ -1,4 +1,5 @@
 ﻿@using WildlifeMortalities.Data.Entities.Mortalities
+@using WildlifeMortalities.App.Features.Shared.Mortalities
 @namespace WildlifeMortalities.App.Features.MortalityReports
 
 <MudSelect T="ThinhornSheepBodyColour?" @bind-Value="@ViewModel.BodyColour" Label="Body colour" Placeholder="Select a colour">
@@ -18,6 +19,6 @@
 @code {
 
     [Parameter]
-    public ThinhornSheepMortalityViewModel ViewModel { get; set; }
+    public ThinhornSheepMortalityViewModel ViewModel { get; set; } = default!;
 
 }

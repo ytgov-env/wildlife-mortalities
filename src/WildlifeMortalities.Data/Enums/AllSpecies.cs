@@ -15,7 +15,7 @@ public enum AllSpecies
 
     [Display(Name = "American mink")] AmericanMink = 4,
 
-    [Display(Name = "Artic fox")] ArcticFox = 5,
+    [Display(Name = "Arctic fox")] ArcticFox = 5,
 
     [Display(Name = "Arctic ground squirrel")]
     ArcticGroundSquirrel = 6,

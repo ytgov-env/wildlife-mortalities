@@ -3,11 +3,11 @@ using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.MortalityReports;
+namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public class MortalityViewModel
 {
-    private static readonly Dictionary<AllSpecies, Func<Mortality>> _mortalityFactory =
+    private static readonly Dictionary<AllSpecies, Func<Mortality>> s_mortalityFactory =
         new()
         {
             { AllSpecies.AmericanBlackBear, () => new AmericanBlackBearMortality() },
@@ -71,7 +71,7 @@ public class MortalityViewModel
 
     public virtual Mortality GetMortality()
     {
-        var mortalityFactory = _mortalityFactory[Species.Value];
+        var mortalityFactory = s_mortalityFactory[Species.Value];
         var mortality = mortalityFactory.Invoke();
         SetBaseValues(mortality);
 
@@ -90,7 +90,7 @@ public class MortalityViewModel
 public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
     where T : MortalityViewModel
 {
-    public MortalityViewModelBaseValidator()
+    protected MortalityViewModelBaseValidator()
     {
         RuleFor(m => m.Sex).NotNull();
         RuleFor(m => m.Latitude)

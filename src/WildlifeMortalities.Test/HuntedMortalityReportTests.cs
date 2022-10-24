@@ -17,7 +17,7 @@ public class HuntedMortalityReportTests
     {
         // Arrange
         var dbContextFactory = CreateTestDbContextFactory();
-        using var context = dbContextFactory.CreateDbContext();
+        await using var context = dbContextFactory.CreateDbContext();
         var service = new HuntedMortalityReportService<AmericanBlackBearMortality>(
             dbContextFactory,
             new MortalityService(dbContextFactory)

@@ -5,10 +5,10 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class SelectSpeciesComponent
 {
-    private static readonly Dictionary<TrappedSpecies, AllSpecies> _trappedMapper =
+    private static readonly Dictionary<TrappedSpecies, AllSpecies> s_trappedMapper =
         new() { { TrappedSpecies.GreyWolf, AllSpecies.GreyWolf }, { TrappedSpecies.Wolverine, AllSpecies.Wolverine } };
 
-    private static readonly Dictionary<HuntedSpecies, AllSpecies> _huntedMapper =
+    private static readonly Dictionary<HuntedSpecies, AllSpecies> s_huntedMapper =
         new()
         {
             { HuntedSpecies.AmericanBlackBear, AllSpecies.AmericanBlackBear },
@@ -35,11 +35,11 @@ public partial class SelectSpeciesComponent
     {
         if (ViewModel.HuntedSpecies.HasValue)
         {
-            SpeciesChanged.InvokeAsync(_huntedMapper[ViewModel.HuntedSpecies.Value]);
+            SpeciesChanged.InvokeAsync(s_huntedMapper[ViewModel.HuntedSpecies.Value]);
         }
         else if (ViewModel.TrappedSpecies.HasValue)
         {
-            SpeciesChanged.InvokeAsync(_trappedMapper[ViewModel.TrappedSpecies.Value]);
+            SpeciesChanged.InvokeAsync(s_trappedMapper[ViewModel.TrappedSpecies.Value]);
         }
     }
 }

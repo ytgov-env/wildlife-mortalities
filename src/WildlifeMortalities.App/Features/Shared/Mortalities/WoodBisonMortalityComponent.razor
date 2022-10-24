@@ -1,4 +1,5 @@
 ﻿@using WildlifeMortalities.Data.Entities.Mortalities
+@using WildlifeMortalities.App.Features.Shared.Mortalities
 @namespace WildlifeMortalities.App.Features.MortalityReports
 
 <MudSelect T="PregnancyStatus?" @bind-Value="@ViewModel.PregnancyStatus" Label="Pregnant" Placeholder="Pregnant?">
@@ -13,6 +14,6 @@
 @code {
 
     [Parameter]
-    public WoodBisonMortalityViewModel ViewModel { get; set; }
+    public WoodBisonMortalityViewModel ViewModel { get; set; } = default!;
 
 }

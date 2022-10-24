@@ -3,7 +3,7 @@
 @using WildlifeMortalities.Data.Enums
 @inherits ReportTypeComponent<SelectSpeciesViewModel>
 
-<EditForm EditContext="_context">
+<EditForm EditContext="Context">
     <FluentValidationValidator Validator="new SelectSpeciesViewModelValidator(ReportType)"/>
 
     @if (ReportType is MortalityReportType.Conflict)

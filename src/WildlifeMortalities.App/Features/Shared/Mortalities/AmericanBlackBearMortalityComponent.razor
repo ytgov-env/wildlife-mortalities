@@ -1,10 +1,11 @@
-﻿@namespace WildlifeMortalities.App.Features.MortalityReports
+﻿@using WildlifeMortalities.App.Features.Shared.Mortalities
+@namespace WildlifeMortalities.App.Features.MortalityReports
 
 <MudCheckBox @bind-Checked="@ViewModel.IsShotInConflict" For="@(() => ViewModel.IsShotInConflict)" Label="Was shot in conflict"/>
 
 @code {
 
     [Parameter]
-    public AmericanBlackBearMortalityViewModel ViewModel { get; set; }
+    public AmericanBlackBearMortalityViewModel ViewModel { get; set; } = default!;
 
 }

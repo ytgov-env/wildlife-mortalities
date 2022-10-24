@@ -1,7 +1,7 @@
 ﻿using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.Data.Entities.GuideReports;
+namespace WildlifeMortalities.Data.Entities.GuidedReports;
 
 public class SpecialGuidedHuntReport
 {

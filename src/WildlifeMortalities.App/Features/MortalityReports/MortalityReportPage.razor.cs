@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.GuideReports;
+using WildlifeMortalities.Data.Entities.GuidedReports;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public partial class MortalityReportPage
 {
-    private readonly IList<IBrowserFile> files = new List<IBrowserFile>();
+    private readonly IList<IBrowserFile> _files = new List<IBrowserFile>();
     private EditContext _editContext;
     private MortalityReportPageViewModel _vm;
 
     [Parameter] public int PersonId { get; set; }
 
-    [Inject] private IDbContextFactory<AppDbContext> dbContextFactory { get; set; }
+    [Inject] private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
 
     protected override void OnInitialized()
     {
@@ -62,7 +62,7 @@ public partial class MortalityReportPage
 
     private async Task CreateMortalityReport()
     {
-        using var context = await dbContextFactory.CreateDbContextAsync();
+        await using var context = await DbContextFactory.CreateDbContextAsync();
 
         //MortalityReport report = null;
         if (_vm.MortalityReportType == MortalityReportType.Conflict)
@@ -122,7 +122,7 @@ public partial class MortalityReportPage
     {
         foreach (var file in e.GetMultipleFiles())
         {
-            files.Add(file);
+            _files.Add(file);
         }
         //TODO upload the files to the server
     }

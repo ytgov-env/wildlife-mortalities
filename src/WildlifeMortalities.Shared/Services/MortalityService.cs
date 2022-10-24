@@ -16,14 +16,14 @@ public class MortalityService : IMortalityService
 
     public async Task<List<Mortality>> GetAllMortalities()
     {
-        using var context = await _dbContextFactory.CreateDbContextAsync();
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
 
         return await context.Mortalities.ToListAsync();
     }
 
     public async Task<T?> GetMortalityById<T>(int id) where T : Mortality
     {
-        using var context = await _dbContextFactory.CreateDbContextAsync();
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
 
         var mortality = await context.Mortalities.FirstOrDefaultAsync(m => m.Id == id);
         if (mortality?.GetType() == typeof(T))
@@ -37,7 +37,7 @@ public class MortalityService : IMortalityService
     public async Task<IReadOnlyList<T>> GetMortalitiesByEnvClientId<T>(string envClientId)
         where T : Mortality
     {
-        using var context = await _dbContextFactory.CreateDbContextAsync();
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
 
         return await context.Mortalities
             .OfType<T>()
@@ -55,7 +55,7 @@ public class MortalityService : IMortalityService
         string conservationOfficerBadgeNumber
     ) where T : Mortality
     {
-        using var context = await _dbContextFactory.CreateDbContextAsync();
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
 
         return await context.Mortalities
             .OfType<T>()
@@ -74,23 +74,13 @@ public class MortalityService : IMortalityService
     {
         var validator = new MortalityValidator<T>();
         var validation = await validator.ValidateAsync(mortality);
-        if (!validation.IsValid)
-        {
-            return Result<T>.Invalid(validation.AsErrors());
-        }
-
-        return Result<T>.Success(mortality);
+        return !validation.IsValid ? Result<T>.Invalid(validation.AsErrors()) : Result<T>.Success(mortality);
     }
 
     public async Task<Result<T>> UpdateMortality<T>(T mortality) where T : Mortality
     {
         var validator = new MortalityValidator<T>();
         var validation = await validator.ValidateAsync(mortality);
-        if (!validation.IsValid)
-        {
-            return Result<T>.Invalid(validation.AsErrors());
-        }
-
-        return Result<T>.Success(mortality);
+        return !validation.IsValid ? Result<T>.Invalid(validation.AsErrors()) : Result<T>.Success(mortality);
     }
 }

@@ -5,7 +5,7 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where T : new()
 {
-    protected EditContext _context = null!;
+    protected EditContext Context = null!;
     protected T ViewModel { get; private set; }
 
     [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
@@ -14,9 +14,9 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
 
     public void Dispose()
     {
-        if (_context is not null)
+        if (Context is not null)
         {
-            _context.OnFieldChanged -= _context_OnFieldChanged;
+            Context.OnFieldChanged -= _context_OnFieldChanged;
         }
     }
 
@@ -24,23 +24,23 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
     {
         ViewModel ??= new T();
 
-        _context = new EditContext(ViewModel);
-        _context.OnFieldChanged += _context_OnFieldChanged;
+        Context = new EditContext(ViewModel);
+        Context.OnFieldChanged += _context_OnFieldChanged;
 
         ViewModelChanged.InvokeAsync(ViewModel);
     }
 
     protected void SetViewModel(T viewModel, bool fireEvent)
     {
-        if (_context is not null)
+        if (Context is not null)
         {
-            _context.OnFieldChanged -= _context_OnFieldChanged;
+            Context.OnFieldChanged -= _context_OnFieldChanged;
         }
 
         ViewModel = viewModel;
-        _context = new EditContext(viewModel);
+        Context = new EditContext(viewModel);
 
-        _context.OnFieldChanged += _context_OnFieldChanged;
+        Context.OnFieldChanged += _context_OnFieldChanged;
 
         if (fireEvent)
         {
@@ -54,8 +54,8 @@ public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where 
 
     private void _context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
-        _context.Validate();
-        ValidationChanged.InvokeAsync(_context.GetValidationMessages().Any() == false);
+        Context.Validate();
+        ValidationChanged.InvokeAsync(Context.GetValidationMessages().Any() == false);
         FieldsChanged();
     }
 }

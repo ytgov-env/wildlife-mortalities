@@ -4,7 +4,7 @@
 @using WildlifeMortalities.Shared.Services
 <MudDateRangePicker Editable="true" Label="Hunting dates"/>
 
-<MudPaper Class="pa-4 mb-4">
+<MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="ClientDto" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
                      @bind-Value="ViewModel.Guide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">

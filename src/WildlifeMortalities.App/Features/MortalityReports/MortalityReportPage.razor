@@ -1,9 +1,7 @@
 ﻿@page "/mortality-reports/{personid:int}"
 @using WildlifeMortalities.App.Extensions
 
-@*<MudText Typo="Typo.h3" Class="mb-8">Mortality report</MudText>*@
 <MudText Typo="Typo.h3" Class="mb-8">@_vm.MortalityReportType.GetDisplayName() report</MudText>
-
 
 <MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
     @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
@@ -12,23 +10,23 @@
     }
 </MudSelect>
 
-@if (_vm.MortalityReportType == MortalityReportType.Conflict)
+@switch (_vm.MortalityReportType)
 {
-}
-else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
-{
-    <HuntedMortalityReportComponent ViewModel="_vm.HuntedMortalityReportViewModel" MortalityReportType="_vm.MortalityReportType"/>
-}
-else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
-{
-    <OutfitterGuidedHuntReportComponent ViewModel="_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType"/>
-}
-else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
-{
-    <SpecialGuidedHuntReportComponent ViewModel="_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="_vm.MortalityReportType"/>
-}
-else if (_vm.MortalityReportType == MortalityReportType.Trapped)
-{
+    case MortalityReportType.Conflict:
+        break;
+    case MortalityReportType.IndividualHunt:
+        <HuntedMortalityReportComponent ViewModel="@_vm.HuntedMortalityReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+        break;
+    case MortalityReportType.OutfitterGuidedHunt:
+        <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+        break;
+    case MortalityReportType.SpecialGuidedHunt:
+        <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+        break;
+    case MortalityReportType.Trapped:
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
 }
 
 <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
@@ -42,11 +40,11 @@ else if (_vm.MortalityReportType == MortalityReportType.Trapped)
     Attach Files
 </MudButton>
 
-@if (files.Count != 0)
+@if (_files.Count != 0)
 {
-    <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+    <MudText Typo="@Typo.h6">@_files.Count() File@(_files.Count() == 1 ? "" : "s"):</MudText>
     <MudList>
-        @foreach (var file in files)
+        @foreach (var file in _files)
         {
             <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
                 @file.Name <code>@file.Size bytes</code>

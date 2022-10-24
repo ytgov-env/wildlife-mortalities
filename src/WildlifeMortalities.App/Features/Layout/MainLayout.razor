@@ -1,16 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="currentTheme"/>
+<MudThemeProvider Theme="_currentTheme"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
     <MudAppBar Elevation="0">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(e => DrawerToggle())"/>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(_ => DrawerToggle())"/>
         <MudSpacer/>
         <LoginDisplay/>
         <MudTooltip Text="Toggle light/dark theme">
-            <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@(e => DarkMode())"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@(_ => DarkMode())"/>
         </MudTooltip>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
@@ -36,24 +36,17 @@
 
     protected override void OnInitialized()
     {
-        currentTheme = defaultTheme;
+        _currentTheme = _defaultTheme;
     }
 
     void DarkMode()
     {
-        if (currentTheme == defaultTheme)
-        {
-            currentTheme = darkTheme;
-        }
-        else
-        {
-            currentTheme = defaultTheme;
-        }
+        _currentTheme = _currentTheme == _defaultTheme ? _darkTheme : _defaultTheme;
     }
 
-    MudTheme currentTheme = new();
+    MudTheme _currentTheme = new();
 
-    readonly MudTheme defaultTheme = new()
+    readonly MudTheme _defaultTheme = new()
     {
         Palette = new Palette
         {
@@ -61,7 +54,7 @@
         }
     };
 
-    readonly MudTheme darkTheme = new()
+    readonly MudTheme _darkTheme = new()
     {
         Palette = new Palette
         {

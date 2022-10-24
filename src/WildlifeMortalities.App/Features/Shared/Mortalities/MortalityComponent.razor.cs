@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Components;
+using WildlifeMortalities.App.Features.MortalityReports;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.MortalityReports;
+namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public partial class MortalityComponent
 {
@@ -29,32 +30,34 @@ public partial class MortalityComponent
 
     private void SpeciesChanged(AllSpecies value)
     {
-        if (_currentSpecies != value)
+        if (_currentSpecies == value)
         {
-            _currentSpecies = value;
-
-            var viewModel = new MortalityViewModel(value);
-
-            switch (_currentSpecies)
-            {
-                case AllSpecies.AmericanBlackBear:
-                    viewModel = new AmericanBlackBearMortalityViewModel();
-                    break;
-
-                case AllSpecies.GrizzlyBear:
-                    viewModel = new GrizzlyBearMortalityViewModel();
-                    break;
-
-                case AllSpecies.ThinhornSheep:
-                    viewModel = new ThinhornSheepMortalityViewModel();
-                    break;
-
-                case AllSpecies.WoodBison:
-                    viewModel = new WoodBisonMortalityViewModel();
-                    break;
-            }
-
-            SetViewModel(viewModel, true);
+            return;
         }
+
+        _currentSpecies = value;
+
+        var viewModel = new MortalityViewModel(value);
+
+        switch (_currentSpecies)
+        {
+            case AllSpecies.AmericanBlackBear:
+                viewModel = new AmericanBlackBearMortalityViewModel();
+                break;
+
+            case AllSpecies.GrizzlyBear:
+                viewModel = new GrizzlyBearMortalityViewModel();
+                break;
+
+            case AllSpecies.ThinhornSheep:
+                viewModel = new ThinhornSheepMortalityViewModel();
+                break;
+
+            case AllSpecies.WoodBison:
+                viewModel = new WoodBisonMortalityViewModel();
+                break;
+        }
+
+        SetViewModel(viewModel, true);
     }
 }

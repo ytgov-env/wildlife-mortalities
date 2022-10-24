@@ -5,7 +5,7 @@ namespace WildlifeMortalities.App.Features.Reporters;
 
 public class SelectClientViewModel
 {
-    public ClientDto SelectedClient { get; set; }
+    public ClientDto SelectedClient { get; set; } = default!;
 }
 
 public class SelectClientViewModelValidator : AbstractValidator<SelectClientViewModel>

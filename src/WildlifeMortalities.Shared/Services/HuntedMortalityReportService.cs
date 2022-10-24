@@ -45,20 +45,21 @@ public class HuntedMortalityReportService<T> where T : Mortality
         }
 
         var result = await _mortalityService.CreateMortality((T)huntedMortalityReport.Mortality);
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
-            var mortality = result.Value;
-            huntedMortalityReport.Mortality = mortality;
-            huntedMortalityReport.Violations = await mortality.GetViolations();
-            huntedMortalityReport.Violations.AddRange(await huntedMortalityReport.GetViolations());
-
-            var context = await _dbContextFactory.CreateDbContextAsync();
-            context.Add(huntedMortalityReport);
-            await context.SaveChangesAsync();
-            return Result<HuntedMortalityReport>.Success(huntedMortalityReport);
+            return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
         }
 
-        return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
+        var mortality = result.Value;
+        huntedMortalityReport.Mortality = mortality;
+        huntedMortalityReport.Violations = await mortality.GetViolations();
+        huntedMortalityReport.Violations.AddRange(await huntedMortalityReport.GetViolations());
+
+        var context = await _dbContextFactory.CreateDbContextAsync();
+        context.Add(huntedMortalityReport);
+        await context.SaveChangesAsync();
+        return Result<HuntedMortalityReport>.Success(huntedMortalityReport);
+
     }
 
     public async Task<Result<HuntedMortalityReport>> UpdateHuntedMortalityReport(
@@ -80,20 +81,21 @@ public class HuntedMortalityReportService<T> where T : Mortality
         }
 
         var result = await _mortalityService.UpdateMortality((T)huntedMortalityReport.Mortality);
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
-            var mortality = result.Value;
-            huntedMortalityReport.Mortality = mortality;
-            huntedMortalityReport.Violations?.Clear();
-            huntedMortalityReport.Violations = await mortality.GetViolations();
-            huntedMortalityReport.Violations.AddRange(await huntedMortalityReport.GetViolations());
-
-            var context = await _dbContextFactory.CreateDbContextAsync();
-            context.Update(huntedMortalityReport);
-            await context.SaveChangesAsync();
-            return Result<HuntedMortalityReport>.Success(huntedMortalityReport);
+            return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
         }
 
-        return Result<HuntedMortalityReport>.Invalid(result.ValidationErrors);
+        var mortality = result.Value;
+        huntedMortalityReport.Mortality = mortality;
+        huntedMortalityReport.Violations.Clear();
+        huntedMortalityReport.Violations = await mortality.GetViolations();
+        huntedMortalityReport.Violations.AddRange(await huntedMortalityReport.GetViolations());
+
+        var context = await _dbContextFactory.CreateDbContextAsync();
+        context.Update(huntedMortalityReport);
+        await context.SaveChangesAsync();
+        return Result<HuntedMortalityReport>.Success(huntedMortalityReport);
+
     }
 }
