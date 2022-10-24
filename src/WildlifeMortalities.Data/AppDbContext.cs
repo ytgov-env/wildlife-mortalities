@@ -2,7 +2,7 @@
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-using WildlifeMortalities.Data.Entities.GuideReports;
+using WildlifeMortalities.Data.Entities.GuidedReports;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 
@@ -75,6 +75,8 @@ public class AppDbContext : DbContext
         {
             m.ToTable("Mortalities");
             m.Property(m => m.Sex).HasConversion<string>();
+            m.Property(m => m.Latitude).HasPrecision(10, 8);
+            m.Property(m => m.Longitude).HasPrecision(11, 8);
         });
         modelBuilder.Entity<AmericanBlackBearMortality>();
         modelBuilder.Entity<AmericanBlackBearBioSubmission>();
