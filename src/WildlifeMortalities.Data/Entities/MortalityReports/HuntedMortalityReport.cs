@@ -1,7 +1,9 @@
-﻿using WildlifeMortalities.Data.Entities.People;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.Data.Entities;
+namespace WildlifeMortalities.Data.Entities.MortalityReports;
 
 public class HuntedMortalityReport : MortalityReport
 {
@@ -17,4 +19,9 @@ public class HuntedMortalityReport : MortalityReport
     public HuntedMortalityReportStatus Status { get; set; }
     public string Comment { get; set; } = string.Empty;
     public List<Violation> Violations { get; set; } = null!;
+}
+
+public class HuntedMortalityReportConfig : IEntityTypeConfiguration<HuntedMortalityReport>
+{
+    public void Configure(EntityTypeBuilder<HuntedMortalityReport> builder) => builder.Property(h => h.Status).HasConversion<string>();
 }

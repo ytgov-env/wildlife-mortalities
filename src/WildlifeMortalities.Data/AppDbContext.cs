@@ -4,6 +4,7 @@ using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.GuidedReports;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data;
@@ -61,68 +62,30 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Person>().ToTable("People");
-        modelBuilder.Entity<Client>().HasIndex(c => c.EnvClientId).IsUnique();
-        modelBuilder.Entity<ConservationOfficer>().HasIndex(c => c.BadgeNumber).IsUnique();
-
-        modelBuilder.Entity<Seal>(s =>
-        {
-            s.ToTable("Seals");
-            s.Property(s => s.Species).HasConversion<string>();
-        });
-
-        modelBuilder.Entity<Mortality>(m =>
-        {
-            m.ToTable("Mortalities");
-            m.Property(m => m.Sex).HasConversion<string>();
-            m.Property(m => m.Latitude).HasPrecision(10, 8);
-            m.Property(m => m.Longitude).HasPrecision(11, 8);
-        });
         modelBuilder.Entity<AmericanBlackBearMortality>();
         modelBuilder.Entity<AmericanBlackBearBioSubmission>();
 
-        modelBuilder
-            .Entity<MortalityReport>()
-            .HasOne(m => m.Mortality)
-            .WithOne(m => m.MortalityReport);
-        modelBuilder.Entity<HuntedMortalityReport>(
-            h => h.Property(h => h.Status).HasConversion<string>()
-        );
-        modelBuilder.Entity<HumanWildlifeConflictMortalityReport>(
-            c =>
-                c.HasOne(c => c.ConservationOfficer)
-                    .WithMany(co => co.HumanWildlifeConflictReports)
-                    .OnDelete(DeleteBehavior.NoAction)
-        );
+        modelBuilder.ApplyConfiguration(new PersonConfig());
+        modelBuilder.ApplyConfiguration(new ClientConfig());
+        modelBuilder.ApplyConfiguration(new ConservationOfficerConfig());
 
-        modelBuilder
-            .Entity<GameManagementArea>()
-            .Property(a => a.Area)
-            .HasComputedColumnSql("[Zone] + [Subzone]", true);
-        modelBuilder
-            .Entity<GameManagementAreaSpecies>()
-            .Property(s => s.Species)
-            .HasConversion<string>()
-            .HasMaxLength(25);
-        modelBuilder.Entity<GameManagementAreaSchedule>(s =>
-        {
-            s.Property(s => s.PeriodStart).HasColumnType("date");
-            s.Property(s => s.PeriodEnd).HasColumnType("date");
-        });
-        modelBuilder.Entity<GameManagementUnit>(u =>
-        {
-            u.Property(u => u.ActiveFrom).HasColumnType("date");
-            u.Property(u => u.ActiveTo).HasColumnType("date");
-            u.Property(u => u.Name).HasMaxLength(50);
-        });
+        modelBuilder.ApplyConfiguration(new MortalityConfig());
 
-        modelBuilder.Entity<BioSubmission>().OwnsOne(b => b.Age, a => a.ToTable("Age"));
+        modelBuilder.ApplyConfiguration(new MortalityReportConfig());
+        modelBuilder.ApplyConfiguration(new HuntedMortalityReportConfig());
+        modelBuilder.ApplyConfiguration(new HumanWildlifeConflictMortalityReportConfig());
 
-        modelBuilder.Entity<OutfitterArea>().HasIndex(a => a.Area).IsUnique();
+        modelBuilder.ApplyConfiguration(new GameManagementAreaConfig());
+        modelBuilder.ApplyConfiguration(new GameManagementAreaSpeciesConfig());
+        modelBuilder.ApplyConfiguration(new GameManagementAreaScheduleConfig());
+        modelBuilder.ApplyConfiguration(new GameManagementUnitConfig());
 
-        // These shadow properties are referenced during ETL to sync licence and seal data from their source (POSSE)
-        modelBuilder.Entity<Authorization>().Property<int?>("PosseId");
-        modelBuilder.Entity<Seal>().Property<int?>("PosseId");
+        modelBuilder.ApplyConfiguration(new BioSubmissionConfig());
+
+        modelBuilder.ApplyConfiguration(new OutfitterAreaConfig());
+
+        modelBuilder.ApplyConfiguration(new AuthorizationConfig());
+        modelBuilder.ApplyConfiguration(new SealConfig());
 
         base.OnModelCreating(modelBuilder);
     }

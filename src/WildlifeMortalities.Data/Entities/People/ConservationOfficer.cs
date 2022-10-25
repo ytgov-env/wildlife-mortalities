@@ -1,4 +1,8 @@
-﻿namespace WildlifeMortalities.Data.Entities.People;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.MortalityReports;
+
+namespace WildlifeMortalities.Data.Entities.People;
 
 public class ConservationOfficer : Person
 {
@@ -8,4 +12,9 @@ public class ConservationOfficer : Person
 
     public List<HumanWildlifeConflictMortalityReport> HumanWildlifeConflictReports { get; set; } =
         null!;
+}
+
+public class ConservationOfficerConfig : IEntityTypeConfiguration<ConservationOfficer>
+{
+    public void Configure(EntityTypeBuilder<ConservationOfficer> builder) => builder.HasIndex(c => c.BadgeNumber).IsUnique();
 }

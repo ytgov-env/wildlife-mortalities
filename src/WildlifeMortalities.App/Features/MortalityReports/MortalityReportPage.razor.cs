@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.GuidedReports;
+using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;

@@ -1,5 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.MortalityReports;
 
 namespace WildlifeMortalities.Shared.Extensions;
 

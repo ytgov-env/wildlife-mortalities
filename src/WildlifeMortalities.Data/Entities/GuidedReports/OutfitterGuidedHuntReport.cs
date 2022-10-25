@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data.Entities.People;
+﻿using WildlifeMortalities.Data.Entities.MortalityReports;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities.GuidedReports;

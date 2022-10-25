@@ -1,7 +1,15 @@
-﻿namespace WildlifeMortalities.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace WildlifeMortalities.Data.Entities;
 
 public class OutfitterArea
 {
     public int Id { get; set; }
     public int Area { get; set; }
+}
+
+public class OutfitterAreaConfig : IEntityTypeConfiguration<OutfitterArea>
+{
+    public void Configure(EntityTypeBuilder<OutfitterArea> builder) => builder.HasIndex(a => a.Area).IsUnique();
 }
