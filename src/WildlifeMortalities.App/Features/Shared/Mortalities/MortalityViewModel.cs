@@ -92,22 +92,26 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
 {
     protected MortalityViewModelBaseValidator()
     {
-        RuleFor(m => m.Sex).NotNull();
         RuleFor(m => m.Latitude)
-            .Must(latitude => latitude is null || (latitude > 58 && latitude < 71))
-            .WithMessage("Latitude must be between 58°N and 71°N");
+            .Must(latitude => latitude is null or > 58 and < 71)
+            .WithMessage("Latitude must be between 58 and 71");
         RuleFor(m => m.Latitude)
             .Null()
             .When(m => m.Longitude is null)
             .WithMessage("Latitude cannot be set when longitude is null");
 
         RuleFor(m => m.Longitude)
-            .Must(longitude => longitude is null || (longitude > -143 && longitude < -121))
-            .WithMessage("Longitude must be between 121°W and 143°W");
+            .Must(longitude => longitude is null or > -143 and < -121)
+            .WithMessage("Longitude must be between -121 and -143");
         RuleFor(m => m.Longitude)
             .Null()
             .When(m => m.Latitude is null)
             .WithMessage("Longitude cannot be set when latitude is null");
+
+        RuleFor(m => m.Sex)
+            .IsInEnum()
+            .Must(sex => sex != Sex.Uninitialized)
+            .WithMessage("Sex must be set to Female, Male, or Unknown");
     }
 }
 

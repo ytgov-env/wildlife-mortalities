@@ -102,7 +102,7 @@
                 SnackBar.Add("You may add up to 3 guides", Severity.Error);
                 hasErrors = true;
             }
-            else if (ViewModel.Guides.Any(x => x.Id == input.Id))
+            else if (ViewModel.Guides.Any(x => x.EnvClientId == input.EnvClientId))
             {
                 hasErrors = true;
                 SnackBar.Add($"{input.FirstName} {input.LastName} already added", Severity.Error);
