@@ -29,8 +29,9 @@ Container_Ext(log_store, "Centralized Log Store", "Seq", "Holds all error logs, 
 System_Ext(power_bi, "Power BI Service")
 System_Ext(aimes, "AIMES", "The case management system for Conservation Officer investigations")
 System_Ext(fme, "FME")
-System_Ext(fme2, "FME")
 System_Ext(posse, "POSSE", "The authoritative source for client, licence, and permit data")
+System_Ext(arcgis, "ArcGIS map service", "Contains the hunting boundaries for all licences and permits")
+
 SystemDb_Ext(data_warehouse, "Enterprise Data Warehouse")
 
 Rel(client_service_rep, app, "Uses", "HTTPS/WebSocket")
@@ -47,9 +48,10 @@ Rel(power_bi, data_warehouse, "Reads", "HTTPS")
 Rel(fme, data_warehouse, "Writes", "SQL/ODBC")
 Rel(fme, db, "Reads", "SQL/ODBC")
 
-Rel(fme2, posse, "Reads", "SQL/ODBC")
-Rel(fme2, api, "Writes", "HTTPS")
-Rel(backend, log_store, "Writes", "HTTPS")
+Rel(backend, arcgis, "Checks if reported coordinates are within the legal boundary using", "JSON/HTTPS")
+Rel(backend, posse, "Periodically retrieves up-to-date client, licence, and permit data using", "JSON/HTTPS")
+Rel(posse, api, "Retrieves harvest report data using", "JSON/HTTPS")
+Rel(backend, log_store, "Stores logs using", "JSON/HTTPS")
 
 Rel(aimes, api, "Uses", "HTTPS")
 @enduml
