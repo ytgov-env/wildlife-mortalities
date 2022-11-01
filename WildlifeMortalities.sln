@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Shared"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Test", "src\WildlifeMortalities.Test\WildlifeMortalities.Test.csproj", "{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.PosseExampleApi", "src\WildlifeMortalities.PosseExampleApi\WildlifeMortalities.PosseExampleApi.csproj", "{D041409C-4124-40C3-9231-3725D7CAC56A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F780DA95-81D5-440B-92F0-F0F6E0F6DB3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D041409C-4124-40C3-9231-3725D7CAC56A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D041409C-4124-40C3-9231-3725D7CAC56A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D041409C-4124-40C3-9231-3725D7CAC56A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D041409C-4124-40C3-9231-3725D7CAC56A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

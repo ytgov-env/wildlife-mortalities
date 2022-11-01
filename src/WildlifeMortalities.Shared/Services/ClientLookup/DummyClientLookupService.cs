@@ -6,10 +6,7 @@ public class DummyClientLookupService : IClientLookupService
 {
     private readonly List<ClientDto> _list = new()
     {
-        new ClientDto { Id = 1, LastName = "Doe", FirstName = "John", EnvClientId = "11124" },
-        new ClientDto { Id = 2, LastName = "Doe", FirstName = "Jane", EnvClientId = "13030" },
-        new ClientDto { Id = 3, LastName = "Bruce", FirstName = "Bill", EnvClientId = "14235" },
-        new ClientDto { Id = 4, LastName = "Smith", FirstName = "Tom", EnvClientId = "19912" }
+        new ClientDto("45010", "Brad", "Gurp", new DateOnly(1993, 12, 12), DateTime.Today)
     };
 
     public Task<IEnumerable<ClientDto>> SearchByEnvClientId(string input) =>
@@ -19,6 +16,9 @@ public class DummyClientLookupService : IClientLookupService
                     string.IsNullOrEmpty(input) || x.EnvClientId.ToLower().StartsWith(input)
             )
         );
+
+    public Task<IEnumerable<AuthorizationDto>> GetAuthorizationsByEnvClientId(string input) => throw new NotImplementedException();
+    public Task<IEnumerable<UpdateDto>> GetUpdates(DateTime startDateTime, DateTime endDateTime) => throw new NotImplementedException();
 
     public Task<IEnumerable<ClientDto>> SearchByLastName(string input) =>
         Task.FromResult(
