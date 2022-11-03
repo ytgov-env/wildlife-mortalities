@@ -26,6 +26,9 @@ public enum AllSpecies
     [Display(Name = "Bushy-tailed woodrat")]
     BushyTailedWoodrat = 8,
 
+    // This generic caribou is used prior to harvest report submission, as the actual species is resolved using the reported GMA
+    [Display(Name = "Caribou")] Caribou = -1,
+
     [Display(Name = "Canada lynx")] CanadaLynx = 9,
 
     [Display(Name = "Collared pika")] CollaredPika = 10,

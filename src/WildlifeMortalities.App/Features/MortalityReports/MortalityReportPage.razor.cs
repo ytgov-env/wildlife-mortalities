@@ -15,9 +15,11 @@ public partial class MortalityReportPage
     private EditContext _editContext;
     private MortalityReportPageViewModel _vm;
 
-    [Parameter] public int PersonId { get; set; }
+    [Parameter]
+    public int PersonId { get; set; }
 
-    [Inject] private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
+    [Inject]
+    private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
 
     protected override void OnInitialized()
     {
@@ -48,17 +50,6 @@ public partial class MortalityReportPage
                 _vm.SpecialGuidedHuntReportViewModel = new SpecialGuidedHuntReportViewModel();
                 break;
         }
-
-        //if (
-        //    typeBefore == MortalityReportType.IndividualHunt
-        //    && (
-        //        type == MortalityReportType.OutfitterGuidedHunt
-        //        || type == MortalityReportType.SpecialGuidedHunt
-        //    )
-        //)
-        //{
-        //    _vm.HuntedMortalityReportViewModels.Add(_vm.HuntedMortalityReportViewModel);
-        //}
     }
 
     private async Task CreateMortalityReport()
@@ -73,9 +64,13 @@ public partial class MortalityReportPage
         }
         else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
         {
-            var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
-
-            context.Add(report);
+            var validator = new HuntedMortalityReportViewModelValidator();
+            var result = validator.Validate(_vm.HuntedMortalityReportViewModel);
+            if (result.IsValid == true)
+            {
+                var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
+                context.Add(report);
+            }
         }
         else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
         {
@@ -111,12 +106,10 @@ public partial class MortalityReportPage
             };
             context.Add(report);
         }
-        else if (_vm.MortalityReportType == MortalityReportType.Trapped)
-        {
-        }
+        else if (_vm.MortalityReportType == MortalityReportType.Trapped) { }
 
         await context.SaveChangesAsync();
-        //await Service.CreateHarvestReport(report);
+        //await Service.CreateMortalityReport(report);
     }
 
     private void UploadFiles(InputFileChangeEventArgs e)

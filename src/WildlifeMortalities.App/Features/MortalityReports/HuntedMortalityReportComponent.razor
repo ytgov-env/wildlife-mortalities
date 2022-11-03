@@ -1,21 +1,34 @@
+@using Microsoft.EntityFrameworkCore
 @using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.Data
+@using WildlifeMortalities.Data.Entities
 <EditForm EditContext="_context">
     <FluentValidationValidator/>
-    <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
     <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="MortalityReportType" EditViewModel="@(MortalityReportType.HasValue == false ? ViewModel.MortalityViewModel : null)"/>
+    <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
+    <MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
+    ToStringFunc="@( (x) => x == null ? String.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
     <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment"/>
 </EditForm>
 
 @code {
-    private EditContext _context;
+    private EditContext _context = default!;
+    private List<GameManagementArea> _gameManagementAreas = new();
 
     [Parameter]
     [EditorRequired]
     public HuntedMortalityReportViewModel ViewModel { get; set; } = null!;
+    [Inject] private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
 
     protected override void OnInitialized()
     {
         _context = new EditContext(ViewModel);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var dbContext = await ContextFactory.CreateDbContextAsync();
+        _gameManagementAreas = await dbContext.GameManagementAreas.ToListAsync();
     }
 
     [Parameter]
@@ -30,6 +43,13 @@
     public bool IsValid()
     {
         return _context.Validate();
+    }
+
+    private async Task<IEnumerable<GameManagementArea>> SearchGameManagementAreas(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return _gameManagementAreas;
+        return await Task.FromResult(_gameManagementAreas.Where(y => y.Area.Contains(value)));
     }
 
 }

@@ -10,7 +10,7 @@ public abstract class Mortality
     public int Id { get; set; }
     public int MortalityReportId { get; set; }
     public MortalityReport MortalityReport { get; set; } = null!;
-    public DateTime DateOfDeath { get; set; }
+    public DateTime? DateOfDeath { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
     public Sex Sex { get; set; }

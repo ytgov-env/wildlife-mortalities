@@ -9,10 +9,10 @@
     @if (ReportType is MortalityReportType.Conflict)
     {
     }
-    else if (ReportType is MortalityReportType.IndividualHunt || ReportType is MortalityReportType.OutfitterGuidedHunt)
+    else if (ReportType is MortalityReportType.IndividualHunt or MortalityReportType.OutfitterGuidedHunt)
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
-            @foreach (var species in Enum.GetValues<HuntedSpecies>().Where(s => s != HuntedSpecies.Uninitialized))
+            @foreach (var species in Enum.GetValues<HuntedSpecies>().Where(s => s != HuntedSpecies.Uninitialized).OrderBy(s => s.GetDisplayName()))
             {
                 <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
             }
@@ -22,7 +22,8 @@
     {
         <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
             @foreach (var species in Enum.GetValues<HuntedSpecies>()
-                .Where(s => s == HuntedSpecies.AmericanBlackBear || s == HuntedSpecies.BarrenGroundCaribou || s == HuntedSpecies.Coyote || s == HuntedSpecies.GreyWolf || s == HuntedSpecies.WoodBison || s == HuntedSpecies.WoodlandCaribou))
+                .Where(s => s is HuntedSpecies.AmericanBlackBear or HuntedSpecies.Caribou or HuntedSpecies.Coyote or HuntedSpecies.GreyWolf or HuntedSpecies.WoodBison)
+                .OrderBy(s => s.GetDisplayName()))
             {
                 <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
             }
@@ -31,7 +32,7 @@
     else if (ReportType is MortalityReportType.Trapped)
     {
         <MudSelect T="TrappedSpecies?" @bind-Value="ViewModel.TrappedSpecies" For="@(() => ViewModel.TrappedSpecies)" Label="Species" Placeholder="Select a species">
-            @foreach (var species in Enum.GetValues<TrappedSpecies>().Where(s => s != TrappedSpecies.Uninitialized))
+            @foreach (var species in Enum.GetValues<TrappedSpecies>().Where(s => s != TrappedSpecies.Uninitialized).OrderBy(s => s.GetDisplayName()))
             {
                 <MudSelectItem Value="@species" T="TrappedSpecies?">@species.GetDisplayName()</MudSelectItem>
             }

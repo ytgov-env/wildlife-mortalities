@@ -2,6 +2,7 @@
 using WildlifeMortalities.App.Features.Shared.Mortalities;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.MortalityReports;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
@@ -16,25 +17,30 @@ public class MortalityReportPageViewModel
     public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }
 }
 
-public class MortalityReportViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
-{
-}
+public class MortalityReportViewModelValidator : AbstractValidator<MortalityReportPageViewModel> { }
 
 public class HuntedMortalityReportViewModel
 {
     public string Landmark { get; set; } = string.Empty;
+    public GameManagementArea? GameManagementArea { get; set; }
     public string Comment { get; set; } = string.Empty;
 
     public MortalityViewModel MortalityViewModel { get; set; } = new();
 
-    public HuntedMortalityReport GetReport(int personId) =>
-        new()
+    public HuntedMortalityReport GetReport(int personId)
+    {
+        var species = GameManagementArea!.ResolveSpecies(MortalityViewModel.Species!.Value);
+
+        var report = new HuntedMortalityReport()
         {
-            Mortality = MortalityViewModel.GetMortality(),
+            Mortality = MortalityViewModel.GetMortality(species),
             Landmark = Landmark,
             Comment = Comment,
             ClientId = personId
         };
+
+        return report;
+    }
 }
 
 public class HuntedMortalityReportViewModelValidator
@@ -43,6 +49,8 @@ public class HuntedMortalityReportViewModelValidator
     public HuntedMortalityReportViewModelValidator()
     {
         RuleFor(x => x.Landmark).NotNull();
+        RuleFor(x => x.GameManagementArea).NotNull();
+
         RuleFor(x => x.Comment)
             .Length(10, 1000)
             .When(x => string.IsNullOrEmpty(x.Comment) == false);

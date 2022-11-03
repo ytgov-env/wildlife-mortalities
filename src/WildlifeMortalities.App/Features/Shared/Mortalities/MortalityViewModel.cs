@@ -26,9 +26,7 @@ public class MortalityViewModel
             { AllSpecies.WoodlandCaribou, () => new WoodlandCaribouMortality() }
         };
 
-    public MortalityViewModel()
-    {
-    }
+    public MortalityViewModel() { }
 
     public MortalityViewModel(Mortality mortality)
     {
@@ -51,10 +49,14 @@ public class MortalityViewModel
     {
         var result = new Dictionary<string, string>
         {
-            { "Species", Species.GetDisplayName() },
-            { "Date of death", DateOfDeath?.Date.ToString() },
-            { "Sex", Sex.GetDisplayName() }
+            { "Species", Species!.GetDisplayName() },
+            { "Sex", Sex!.GetDisplayName() }
         };
+
+        if (DateOfDeath.HasValue)
+        {
+            result.Add("Date of death", DateOfDeath.Value.Date.ToString());
+        }
 
         if (Longitude.HasValue)
         {
@@ -69,18 +71,20 @@ public class MortalityViewModel
         return result;
     }
 
-    public virtual Mortality GetMortality()
+    public Mortality GetMortality(AllSpecies species)
     {
-        var mortalityFactory = s_mortalityFactory[Species.Value];
+        var mortalityFactory = s_mortalityFactory[species];
         var mortality = mortalityFactory.Invoke();
         SetBaseValues(mortality);
 
         return mortality;
     }
 
+    public virtual Mortality GetMortality() => GetMortality(Species!.Value);
+
     protected void SetBaseValues(Mortality derivatingMortality)
     {
-        derivatingMortality.DateOfDeath = DateOfDeath.Value;
+        derivatingMortality.DateOfDeath = DateOfDeath;
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitude;
         derivatingMortality.Sex = Sex!.Value;
@@ -99,6 +103,10 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
             .Null()
             .When(m => m.Longitude is null)
             .WithMessage("Latitude cannot be set when longitude is null");
+        RuleFor(m => m.Latitude)
+            .NotNull()
+            .When(m => m.Longitude is not null)
+            .WithMessage("Latitude must be set if longitude is set");
 
         RuleFor(m => m.Longitude)
             .Must(longitude => longitude is null or > -143 and < -121)
@@ -107,14 +115,21 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
             .Null()
             .When(m => m.Latitude is null)
             .WithMessage("Longitude cannot be set when latitude is null");
+        RuleFor(m => m.Longitude)
+            .NotNull()
+            .When(m => m.Latitude is not null)
+            .WithMessage("Longitude must be set if latitude is set");
 
         RuleFor(m => m.Sex)
+            .NotNull()
             .IsInEnum()
             .Must(sex => sex != Sex.Uninitialized)
             .WithMessage("Sex must be set to Female, Male, or Unknown");
+        // TODO Is DateOfDeath required?
+        RuleFor(m => m.DateOfDeath)
+            .NotNull()
+            .WithMessage("Please select a date of death");
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
-{
-}
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }
