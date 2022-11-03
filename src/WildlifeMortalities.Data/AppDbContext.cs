@@ -38,13 +38,13 @@ public class AppDbContext : DbContext
 
     public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
 
-    public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies =>
-        Set<GameManagementAreaSpecies>();
+    // public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies =>
+    //     Set<GameManagementAreaSpecies>();
 
-    public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules =>
-        Set<GameManagementAreaSchedule>();
+    // public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules =>
+    //     Set<GameManagementAreaSchedule>();
 
-    public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
+    // public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -76,9 +76,9 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new HumanWildlifeConflictMortalityReportConfig());
 
         modelBuilder.ApplyConfiguration(new GameManagementAreaConfig());
-        modelBuilder.ApplyConfiguration(new GameManagementAreaSpeciesConfig());
-        modelBuilder.ApplyConfiguration(new GameManagementAreaScheduleConfig());
-        modelBuilder.ApplyConfiguration(new GameManagementUnitConfig());
+        // modelBuilder.ApplyConfiguration(new GameManagementAreaSpeciesConfig());
+        // modelBuilder.ApplyConfiguration(new GameManagementAreaScheduleConfig());
+        // modelBuilder.ApplyConfiguration(new GameManagementUnitConfig());
 
         modelBuilder.ApplyConfiguration(new BioSubmissionConfig());
 

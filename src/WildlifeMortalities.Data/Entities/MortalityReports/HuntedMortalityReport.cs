@@ -10,7 +10,7 @@ public class HuntedMortalityReport : MortalityReport
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
     public int GmaSpeciesId { get; set; }
-    public GameManagementAreaSpecies GmaSpecies { get; set; } = null!;
+    public GameManagementArea GameManagementArea { get; set; } = null!;
     public DateTimeOffset DateStarted { get; set; }
     public DateTimeOffset DateCompleted { get; set; }
     public string Landmark { get; set; } = string.Empty;
@@ -23,5 +23,6 @@ public class HuntedMortalityReport : MortalityReport
 
 public class HuntedMortalityReportConfig : IEntityTypeConfiguration<HuntedMortalityReport>
 {
-    public void Configure(EntityTypeBuilder<HuntedMortalityReport> builder) => builder.Property(h => h.Status).HasConversion<string>();
+    public void Configure(EntityTypeBuilder<HuntedMortalityReport> builder) =>
+        builder.Property(h => h.Status).HasConversion<string>();
 }
