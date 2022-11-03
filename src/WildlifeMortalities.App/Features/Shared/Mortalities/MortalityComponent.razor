@@ -10,8 +10,6 @@
 
 @if (_currentSpecies.HasValue || _editViewModel != null)
 {
-    <BaseMortalityComponent ViewModel="ViewModel"/>
-
     @switch (ViewModel)
     {
         case AmericanBlackBearMortalityViewModel vm:
@@ -27,6 +25,8 @@
             <WoodBisonMortalityComponent ViewModel="vm"/>
             break;
     }
+
+    <BaseMortalityComponent ViewModel="ViewModel"/>
 }
 
 @code {
