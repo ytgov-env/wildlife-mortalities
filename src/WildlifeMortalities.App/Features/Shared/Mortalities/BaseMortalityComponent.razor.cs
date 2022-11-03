@@ -30,26 +30,36 @@ public partial class BaseMortalityComponent : IDisposable
         _context = Context;
     }
 
+    private Boolean _ignoreChangedEvent;
+
     private void Context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
-        // TODO Causing stackoverflow exception
-        //if (
-        //    e.FieldIdentifier.Model == ViewModel
-        //    && e.FieldIdentifier.FieldName == nameof(MortalityViewModel.Longitude)
-        //)
-        //{
-        //    Context.NotifyFieldChanged(
-        //        new FieldIdentifier(ViewModel, nameof(MortalityViewModel.Latitude))
-        //    );
-        //}
-        //else if (
-        //    e.FieldIdentifier.Model == ViewModel
-        //    && e.FieldIdentifier.FieldName == nameof(MortalityViewModel.Latitude)
-        //)
-        //{
-        //    Context.NotifyFieldChanged(
-        //        new FieldIdentifier(ViewModel, nameof(MortalityViewModel.Longitude))
-        //    );
-        //}
+        if(_ignoreChangedEvent) { return; }
+        if (
+            e.FieldIdentifier.Model == ViewModel
+            && e.FieldIdentifier.FieldName == nameof(MortalityViewModel.Longitude)
+        )
+        {
+            _ignoreChangedEvent = true;
+            Context.NotifyFieldChanged(
+                new FieldIdentifier(ViewModel, nameof(MortalityViewModel.Latitude))
+            );
+            _ignoreChangedEvent = false;
+
+        }
+        else if (
+            e.FieldIdentifier.Model == ViewModel
+            && e.FieldIdentifier.FieldName == nameof(MortalityViewModel.Latitude)
+        )
+        {
+            _ignoreChangedEvent = true;
+
+            Context.NotifyFieldChanged(
+                new FieldIdentifier(ViewModel, nameof(MortalityViewModel.Longitude))
+            );
+
+            _ignoreChangedEvent = false;
+
+        }
     }
 }
