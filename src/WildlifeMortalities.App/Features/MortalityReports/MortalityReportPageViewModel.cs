@@ -35,6 +35,7 @@ public class HuntedMortalityReportViewModel
         {
             Mortality = MortalityViewModel.GetMortality(species),
             Landmark = Landmark,
+            GameManagementAreaId = GameManagementArea.Id,
             Comment = Comment,
             ClientId = personId
         };

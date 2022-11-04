@@ -9,7 +9,7 @@ public class HuntedMortalityReport : MortalityReport
 {
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
-    public int GmaSpeciesId { get; set; }
+    public int GameManagementAreaId { get; set; }
     public GameManagementArea GameManagementArea { get; set; } = null!;
     public DateTimeOffset DateStarted { get; set; }
     public DateTimeOffset DateCompleted { get; set; }

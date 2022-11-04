@@ -56,57 +56,66 @@ public partial class MortalityReportPage
     {
         await using var context = await DbContextFactory.CreateDbContextAsync();
 
-        //MortalityReport report = null;
-        if (_vm.MortalityReportType == MortalityReportType.Conflict)
+        switch (_vm.MortalityReportType)
         {
-            var report = new HumanWildlifeConflictMortalityReport();
-            context.Add(report);
-        }
-        else if (_vm.MortalityReportType == MortalityReportType.IndividualHunt)
-        {
-            var validator = new HuntedMortalityReportViewModelValidator();
-            var result = validator.Validate(_vm.HuntedMortalityReportViewModel);
-            if (result.IsValid == true)
-            {
-                var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
-                context.Add(report);
-            }
-        }
-        else if (_vm.MortalityReportType == MortalityReportType.OutfitterGuidedHunt)
-        {
-            // Clear mortality reports if the hunter wasn't successful
-            var outfitterViewModel = _vm.OutfitterGuidedHuntReportViewModel;
-            if (outfitterViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
-            {
-                outfitterViewModel.HuntedMortalityReportViewModels.Clear();
-            }
+            //MortalityReport report = null;
+            case MortalityReportType.Conflict:
+                {
+                    var report = new HumanWildlifeConflictMortalityReport();
+                    context.Add(report);
+                    break;
+                }
+            case MortalityReportType.IndividualHunt:
+                {
+                    var validator = new HuntedMortalityReportViewModelValidator();
+                    var result = validator.Validate(_vm.HuntedMortalityReportViewModel);
+                    if (result.IsValid)
+                    {
+                        var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
+                        context.Add(report);
+                    }
 
-            var report = new OutfitterGuidedHuntReport
-            {
-                HuntedMortalityReports = outfitterViewModel.HuntedMortalityReportViewModels
-                    .Select(x => x.GetReport(PersonId))
-                    .ToList()
-            };
-            context.Add(report);
-        }
-        else if (_vm.MortalityReportType == MortalityReportType.SpecialGuidedHunt)
-        {
-            // Clear mortality reports if the hunter wasn't successful
-            var specialViewModel = _vm.SpecialGuidedHuntReportViewModel;
-            if (specialViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
-            {
-                specialViewModel.HuntedMortalityReportViewModels.Clear();
-            }
+                    break;
+                }
+            case MortalityReportType.OutfitterGuidedHunt:
+                {
+                    // Clear mortality reports if the hunter wasn't successful
+                    var outfitterViewModel = _vm.OutfitterGuidedHuntReportViewModel;
+                    if (outfitterViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
+                    {
+                        outfitterViewModel.HuntedMortalityReportViewModels.Clear();
+                    }
 
-            var report = new SpecialGuidedHuntReport
-            {
-                HuntedMortalityReports = specialViewModel.HuntedMortalityReportViewModels
-                    .Select(x => x.GetReport(PersonId))
-                    .ToList()
-            };
-            context.Add(report);
+                    var report = new OutfitterGuidedHuntReport
+                    {
+                        HuntedMortalityReports = outfitterViewModel.HuntedMortalityReportViewModels
+                            .Select(x => x.GetReport(PersonId))
+                            .ToList()
+                    };
+                    context.Add(report);
+                    break;
+                }
+            case MortalityReportType.SpecialGuidedHunt:
+                {
+                    // Clear mortality reports if the hunter wasn't successful
+                    var specialViewModel = _vm.SpecialGuidedHuntReportViewModel;
+                    if (specialViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
+                    {
+                        specialViewModel.HuntedMortalityReportViewModels.Clear();
+                    }
+
+                    var report = new SpecialGuidedHuntReport
+                    {
+                        HuntedMortalityReports = specialViewModel.HuntedMortalityReportViewModels
+                            .Select(x => x.GetReport(PersonId))
+                            .ToList()
+                    };
+                    context.Add(report);
+                    break;
+                }
+            case MortalityReportType.Trapped:
+                break;
         }
-        else if (_vm.MortalityReportType == MortalityReportType.Trapped) { }
 
         await context.SaveChangesAsync();
         //await Service.CreateMortalityReport(report);
