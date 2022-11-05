@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using Serilog.Events;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Shared.Services.ClientLookup;
 
 Log.Logger = new LoggerConfiguration().MinimumLevel
     .Override("Microsoft", LogEventLevel.Information)
@@ -39,13 +40,7 @@ try
     builder.Services.AddMudServices();
 
     builder.Services.AddScoped<MortalityService>();
-
-#if DEBUG
-    builder.Services.AddScoped<IClientLookupService, DummyClientLookupService>();
-#else
     builder.Services.AddScoped<IClientLookupService, ClientLookupService>();
-
-#endif
 
     var configuration = builder.Configuration;
 

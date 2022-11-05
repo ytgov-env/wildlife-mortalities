@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Models;
 
@@ -6,10 +8,10 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 
 public class OutfitterGuidedHuntReportViewModel
 {
-    public ClientDto? SelectedGuide { get; set; }
+    public Client? SelectedGuide { get; set; }
 
-    public List<ClientDto> Guides { get; set; } = new();
-    public int OutfitterArea { get; set; }
+    public List<Client> Guides { get; set; } = new();
+    public OutfitterArea OutfitterArea { get; set; } = new();
     public GuidedHuntResult? Result { get; set; }
 
     public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } = new();

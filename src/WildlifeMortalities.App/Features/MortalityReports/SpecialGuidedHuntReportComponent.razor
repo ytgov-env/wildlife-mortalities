@@ -1,11 +1,13 @@
 ﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Models
 @using WildlifeMortalities.Shared.Services
+@using WildlifeMortalities.Shared.Services.ClientLookup
 <MudDateRangePicker Editable="true" Label="Hunting dates"/>
 
 <MudPaper Class="pa-4 my-4">
-    <MudAutocomplete T="ClientDto" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
+    <MudAutocomplete T="Client" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
                      @bind-Value="ViewModel.Guide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
     </MudAutocomplete>
@@ -106,7 +108,7 @@
         ViewModel.HuntedMortalityReportViewModels.Remove(viewModel);
     }
 
-    private async Task<IEnumerable<ClientDto>> SearchClientByEnvClientIdOrLastName(string input)
+    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input)
     {
         return (await ClientLookupService.SearchByEnvClientId(input))
             .Union(await ClientLookupService.SearchByLastName(input))

@@ -1,21 +1,21 @@
 ﻿@page "/reporters/clients"
 @page "/reporters/clients/{id:int}"
-@using WildlifeMortalities.Shared.Models
-@using WildlifeMortalities.Data.Entities.Mortalities
+@using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.Data.Entities.People
 
 @namespace WildlifeMortalities.App.Features.Reporters
 
 <MudText Typo="Typo.h3" Class="mb-8">Client overview</MudText>
 
 <MudGrid>
-    <MudItem sm="6">
+    <MudItem xs="12" sm="6">
         <EditForm EditContext="_context">
             <FluentValidationValidator Validator="new SelectClientViewModelValidator()"/>
             <MudItem>
                 <MudPaper Class="pa-4 mb-4">
-                    <MudAutocomplete T="ClientDto" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by client id or last name"
-                                     @bind-Value="_selectedClientViewModel.SelectedClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
-                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
+                    <MudAutocomplete T="Client" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by client id or last name"
+                                     @bind-Value="_selectedClientViewModel.SelectedClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")"
+                                     SearchFunc="@SearchClientByEnvClientIdOrLastName" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6" MinCharacters="2">
                     </MudAutocomplete>
                 </MudPaper>
             </MudItem>
@@ -31,9 +31,13 @@
             }
         </EditForm>
     </MudItem>
-    <MudItem>
-        <MudTable T="Mortality">
-            <MudText Typo="Typo.h6">Mortalities</MudText>
-        </MudTable>
-    </MudItem>
+    @if (_selectedClientViewModel.SelectedClient is not null)
+    {
+        <MudItem xs="12" sm="6">
+            <AuthorizationsComponent ClientId="_selectedClientViewModel.SelectedClient.Id"/>
+        </MudItem>
+        <MudItem xs="12">
+            <MortalitiesTableComponent PersonId="_selectedClientViewModel.SelectedClient.Id"/>
+        </MudItem>
+    }
 </MudGrid>

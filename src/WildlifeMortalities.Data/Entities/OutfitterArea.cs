@@ -6,7 +6,7 @@ namespace WildlifeMortalities.Data.Entities;
 public class OutfitterArea
 {
     public int Id { get; set; }
-    public int Area { get; set; }
+    public string Area { get; set; }
 }
 
 public class OutfitterAreaConfig : IEntityTypeConfiguration<OutfitterArea>

@@ -14,7 +14,7 @@
                 <MudPaper Class="pa-4 mb-4">
                     <MudAutocomplete T="ConservationOfficer" For="@(() => _selectedConservationOfficerViewModel.SelectedConservationOfficer)" Label="Search by badge number or last name"
                                      @bind-Value="_selectedConservationOfficerViewModel.SelectedConservationOfficer" ToStringFunc="@(x => x is null ? "" : $"{x.BadgeNumber} | {x.LastName}")" SearchFunc="@SearchConservationOfficerByBadgeNumberOrLastName"
-                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
+                                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6" MinCharacters="2">
                     </MudAutocomplete>
                 </MudPaper>
             </MudItem>

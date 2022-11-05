@@ -1,11 +1,19 @@
 ﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data
+@using WildlifeMortalities.Data.Entities
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Models
 @using WildlifeMortalities.Shared.Services
+@using Microsoft.EntityFrameworkCore
+@using WildlifeMortalities.Data.Entities.People
+@using WildlifeMortalities.Shared.Services.ClientLookup
+
 <MudDateRangePicker Editable="true" Label="Hunting dates"/>
+<MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
+    ToStringFunc="@( (x) => x == null ? String.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
 <MudPaper Class="pa-4 my-4">
-    <MudAutocomplete T="ClientDto?" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
+    <MudAutocomplete T="Client?" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
                      Value="ViewModel.SelectedGuide" ValueChanged="AddClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
     </MudAutocomplete>
@@ -39,7 +47,6 @@
                 <MudText>Mortality</MudText>
                 <MudStack Row="true">
                     <MudStack Row="false">
-                        <MudField DisableUnderLine="true" Label="Landmark">@item.Landmark</MudField>
                         @foreach (var property in item.MortalityViewModel.GetProperties())
                         {
                             var normalizedValue = (property.Value ?? string.Empty).ToLower();
@@ -56,6 +63,7 @@
                                 <MudField DisableUnderLine="true" Label="@property.Key">@property.Value</MudField>
                             }
                         }
+                        <MudField DisableUnderLine="true" Label="Landmark">@item.Landmark</MudField>
                         <MudField DisableUnderLine="true" Label="Comment">@item.Comment</MudField>
                     </MudStack>
                     <MudSpacer/>
@@ -73,6 +81,7 @@
 }
 
 @code {
+    private List<OutfitterArea> _outfitterAreas = new();
 
     [Parameter]
     [EditorRequired]
@@ -91,7 +100,15 @@
     [Inject]
     private ISnackbar SnackBar { get; set; } = null!;
 
-    public void AddClient(ClientDto? input)
+    [Inject] private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var dbContext = await ContextFactory.CreateDbContextAsync();
+        _outfitterAreas = await dbContext.OutfitterAreas.OrderBy(o => o.Area.Length).ThenBy(o => o.Area).ToListAsync();
+    }
+
+    public void AddClient(Client? input)
     {
         ViewModel.SelectedGuide = input;
         if (input != null)
@@ -147,16 +164,23 @@
         ViewModel.HuntedMortalityReportViewModels.Remove(viewModel);
     }
 
-    private void DeleteGuide(ClientDto guide)
+    private void DeleteGuide(Client guide)
     {
         ViewModel.Guides.Remove(guide);
     }
 
-    private async Task<IEnumerable<ClientDto?>> SearchClientByEnvClientIdOrLastName(string input)
+    private async Task<IEnumerable<Client?>> SearchClientByEnvClientIdOrLastName(string input)
     {
         return (await ClientLookupService.SearchByEnvClientId(input))
             .Union(await ClientLookupService.SearchByLastName(input))
             .OrderBy(x => x.LastName);
+    }
+
+    private async Task<IEnumerable<OutfitterArea>> SearchOutfitterAreas(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return _outfitterAreas;
+        return await Task.FromResult(_outfitterAreas.Where(y => y.Area.StartsWith(input)));
     }
 
 }

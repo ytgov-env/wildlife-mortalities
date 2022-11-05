@@ -37,6 +37,7 @@ public class AppDbContext : DbContext
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 
     public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
+    public DbSet<OutfitterArea> OutfitterAreas => Set<OutfitterArea>();
 
     // public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies =>
     //     Set<GameManagementAreaSpecies>();

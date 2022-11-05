@@ -9,8 +9,9 @@ Console.WriteLine("-----------------------");
 using (var context = new AppDbContext())
 {
     AddAllGameManagementAreas(context);
-    AddAllGameManagementAreaSpecies(context);
-    AddFakeClients(context);
+    AddAllOutfitterAreas(context);
+    // AddAllGameManagementAreaSpecies(context);
+    // AddFakeClients(context);
 }
 
 Console.WriteLine("---------------------");
@@ -62,36 +63,55 @@ void AddAllGameManagementAreas(AppDbContext context)
     }
 }
 
-void AddAllGameManagementAreaSpecies(AppDbContext context)
+void AddAllOutfitterAreas(AppDbContext context)
 {
-    if (!context.GameManagementAreaSpecies.Any())
+    if (!context.OutfitterAreas.Any())
     {
-        foreach (
-            HuntedSpeciesWithGameManagementArea species in Enum.GetValues(
-                typeof(HuntedSpeciesWithGameManagementArea)
-            )
-        )
+        int[] outfitterAreas = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 22 };
+        foreach (var area in outfitterAreas)
         {
-            if (species != HuntedSpeciesWithGameManagementArea.Uninitialized)
-            {
-                var gameManagementAreas = context.GameManagementAreas.ToList();
-                foreach (var area in gameManagementAreas)
-                {
-                    context.GameManagementAreaSpecies.Add(
-                        new GameManagementAreaSpecies { Species = species, GameManagementArea = area }
-                    );
-                }
-            }
+            context.OutfitterAreas.Add(new OutfitterArea { Area = area.ToString() });
         }
 
         context.SaveChanges();
-        Console.WriteLine("Added GameManagementAreaSpecies");
+        Console.WriteLine("Added OutfitterAreas");
     }
     else
     {
-        Console.WriteLine("GameManagementAreaSpecies already exist");
+        Console.WriteLine("OutfitterAreas already exist");
     }
 }
+
+// void AddAllGameManagementAreaSpecies(AppDbContext context)
+// {
+//     if (!context.GameManagementAreaSpecies.Any())
+//     {
+//         foreach (
+//             HuntedSpeciesWithGameManagementArea species in Enum.GetValues(
+//                 typeof(HuntedSpeciesWithGameManagementArea)
+//             )
+//         )
+//         {
+//             if (species != HuntedSpeciesWithGameManagementArea.Uninitialized)
+//             {
+//                 var gameManagementAreas = context.GameManagementAreas.ToList();
+//                 foreach (var area in gameManagementAreas)
+//                 {
+//                     context.GameManagementAreaSpecies.Add(
+//                         new GameManagementAreaSpecies { Species = species, GameManagementArea = area }
+//                     );
+//                 }
+//             }
+//         }
+//
+//         context.SaveChanges();
+//         Console.WriteLine("Added GameManagementAreaSpecies");
+//     }
+//     else
+//     {
+//         Console.WriteLine("GameManagementAreaSpecies already exist");
+//     }
+// }
 
 void AddFakeClients(AppDbContext context)
 {

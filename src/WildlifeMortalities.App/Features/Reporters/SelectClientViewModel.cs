@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Models;
 
 namespace WildlifeMortalities.App.Features.Reporters;
 
 public class SelectClientViewModel
 {
-    public ClientDto SelectedClient { get; set; } = default!;
+    public Client? SelectedClient { get; set; } = default!;
 }
 
 public class SelectClientViewModelValidator : AbstractValidator<SelectClientViewModel>

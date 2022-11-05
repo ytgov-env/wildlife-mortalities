@@ -34,9 +34,9 @@ public class PersonService<T> where T : Person
             .FirstOrDefaultAsync(c => c.BadgeNumber == badgeNumber);
     }
 
-    public async Task<IReadOnlyList<ClientDto>> GetClients() => throw new NotImplementedException();
+    public async Task<IReadOnlyList<Client>> GetClients() => throw new NotImplementedException();
 
-    public async Task<ClientDto> GetClientById(int id) => throw new NotImplementedException();
+    public async Task<Client> GetClientById(int id) => throw new NotImplementedException();
 
-    public async Task<ClientDto> GetClientByEnvClientId(string envClientId) => throw new NotImplementedException();
+    public async Task<Client> GetClientByEnvClientId(string envClientId) => throw new NotImplementedException();
 }

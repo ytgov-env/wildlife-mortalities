@@ -1,0 +1,42 @@
+﻿@using WildlifeMortalities.Data.Entities.Mortalities
+@using WildlifeMortalities.Shared.Services
+
+<MudTable Items="_mortalities">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Mortalities</MudText>
+        @* <MudSpacer/> *@
+        @* <MudTextField @bind-Value="_searchString" Placeholder="Search by lead, title, or description" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField> *@
+        @if (PersonId != null)
+        {
+            <MudSpacer/>
+            <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" OnClick="CreateMortalityReport" Class="flex-shrink-0">Report a mortality</MudButton>
+        }
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager/>
+    </PagerContent>
+</MudTable>
+
+@code {
+
+    [Parameter]
+    public int? PersonId { get; set; }
+
+    private List<Mortality> _mortalities = new();
+
+    [Inject]
+    private MortalityService MortalityService { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync() => _mortalities = await MortalityService.GetAllMortalities();
+
+    private void CreateMortalityReport() => NavigationManager.NavigateTo("mortality-reports/create");
+}

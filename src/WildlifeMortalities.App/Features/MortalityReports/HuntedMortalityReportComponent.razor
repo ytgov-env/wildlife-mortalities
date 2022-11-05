@@ -8,7 +8,7 @@
     <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
     <MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
     ToStringFunc="@( (x) => x == null ? String.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
-    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment"/>
+    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4"/>
 </EditForm>
 
 @code {
@@ -49,7 +49,7 @@
     {
         if (string.IsNullOrEmpty(value))
             return _gameManagementAreas;
-        return await Task.FromResult(_gameManagementAreas.Where(y => y.Area.Contains(value)));
+        return await Task.FromResult(_gameManagementAreas.Where(y => y.Area.StartsWith(value)));
     }
 
 }
