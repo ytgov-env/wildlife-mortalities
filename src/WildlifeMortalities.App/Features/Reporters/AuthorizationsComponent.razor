@@ -1,5 +1,5 @@
-﻿@using WildlifeMortalities.Shared.Services.ClientLookup
-@using WildlifeMortalities.Data.Entities.People
+﻿@using WildlifeMortalities.Data.Entities.People
+@using WildlifeMortalities.Shared.Services
 <MudText Typo="Typo.h6">Authorizations</MudText>
 <MudList>
 </MudList>
@@ -12,13 +12,13 @@
     private AuthorizationsViewModel _authorizationsViewModel = null!;
 
     [Inject]
-    private IClientLookupService ClientLookupService { get; set; } = default!;
+    private ClientService ClientService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
         _authorizationsViewModel = new AuthorizationsViewModel
         {
-            Authorizations = await ClientLookupService.GetAuthorizationsByClientId(ClientId)
+            Authorizations = await ClientService.GetAuthorizationsByClientId(ClientId)
         };
     }
 

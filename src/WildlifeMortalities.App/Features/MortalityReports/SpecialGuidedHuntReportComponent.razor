@@ -3,7 +3,6 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Models
 @using WildlifeMortalities.Shared.Services
-@using WildlifeMortalities.Shared.Services.ClientLookup
 <MudDateRangePicker Editable="true" Label="Hunting dates"/>
 
 <MudPaper Class="pa-4 my-4">
@@ -75,7 +74,7 @@
     private IDialogService DialogService { get; set; } = null!;
 
     [Inject]
-    private IClientLookupService ClientLookupService { get; set; } = null!;
+    private ClientService ClientService { get; set; } = null!;
 
     private async Task Add()
     {
@@ -110,8 +109,8 @@
 
     private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input)
     {
-        return (await ClientLookupService.SearchByEnvClientId(input))
-            .Union(await ClientLookupService.SearchByLastName(input))
+        return (await ClientService.SearchByEnvClientId(input))
+            .Union(await ClientService.SearchByLastName(input))
             .OrderBy(x => x.LastName);
     }
 

@@ -6,7 +6,6 @@
 @using WildlifeMortalities.Shared.Services
 @using Microsoft.EntityFrameworkCore
 @using WildlifeMortalities.Data.Entities.People
-@using WildlifeMortalities.Shared.Services.ClientLookup
 
 <MudDateRangePicker Editable="true" Label="Hunting dates"/>
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
@@ -95,7 +94,7 @@
     private IDialogService DialogService { get; set; } = null!;
 
     [Inject]
-    private IClientLookupService ClientLookupService { get; set; } = null!;
+    private ClientService ClientService { get; set; } = null!;
 
     [Inject]
     private ISnackbar SnackBar { get; set; } = null!;
@@ -171,8 +170,8 @@
 
     private async Task<IEnumerable<Client?>> SearchClientByEnvClientIdOrLastName(string input)
     {
-        return (await ClientLookupService.SearchByEnvClientId(input))
-            .Union(await ClientLookupService.SearchByLastName(input))
+        return (await ClientService.SearchByEnvClientId(input))
+            .Union(await ClientService.SearchByLastName(input))
             .OrderBy(x => x.LastName);
     }
 

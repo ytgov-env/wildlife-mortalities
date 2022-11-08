@@ -9,7 +9,7 @@ using WildlifeMortalities.Shared.Validators;
 
 namespace WildlifeMortalities.Shared.Services;
 
-public class MortalityService : IMortalityService
+public class MortalityService
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
@@ -84,4 +84,6 @@ public class MortalityService : IMortalityService
         var validation = await validator.ValidateAsync(mortality);
         return !validation.IsValid ? Result<T>.Invalid(validation.AsErrors()) : Result<T>.Success(mortality);
     }
+
+
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Shared.Services.ClientLookup;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reporters;
 
@@ -11,7 +11,7 @@ public partial class ClientOverviewPage : IDisposable
 
     private SelectClientViewModel _selectedClientViewModel = default!;
 
-    [Inject] private IClientLookupService ClientLookupService { get; set; } = default!;
+    [Inject] private ClientService ClientService { get; set; } = default!;
 
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
@@ -44,7 +44,7 @@ public partial class ClientOverviewPage : IDisposable
     }
 
     private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input) =>
-        (await ClientLookupService.SearchByEnvClientId(input))
-        .Union(await ClientLookupService.SearchByLastName(input))
+        (await ClientService.SearchByEnvClientId(input))
+        .Union(await ClientService.SearchByLastName(input))
         .OrderBy(x => x.LastName);
 }

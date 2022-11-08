@@ -4,14 +4,14 @@ using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Models;
 
-namespace WildlifeMortalities.Shared.Services.ClientLookup;
+namespace WildlifeMortalities.Shared.Services;
 
-public class ClientLookupService : IClientLookupService, IDisposable
+public class ClientService : IDisposable
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
     private AppDbContext _dbContext;
 
-    public ClientLookupService(IDbContextFactory<AppDbContext> dbContextFactory)
+    public ClientService(IDbContextFactory<AppDbContext> dbContextFactory)
     {
         _dbContextFactory = dbContextFactory;
         _dbContext = _dbContextFactory.CreateDbContext();
