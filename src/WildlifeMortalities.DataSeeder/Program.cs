@@ -3,6 +3,14 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
+using Bogus;
+
+var envClientIds = 0;
+var fakerClients = new Faker<Client>()
+    .RuleFor(c => c.EnvClientId, f => f.Random.Replace("######"))
+    .RuleFor(c => c.FirstName, f => f.Name.FirstName())
+    .RuleFor(c => c.LastName, f => f.Name.LastName())
+    .RuleFor(c => c.BirthDate, f => f.Date.Past(40, DateTime.Now));
 
 Console.WriteLine("Starting data seeding...");
 Console.WriteLine("-----------------------");
@@ -11,7 +19,7 @@ using (var context = new AppDbContext())
     AddAllGameManagementAreas(context);
     AddAllOutfitterAreas(context);
     // AddAllGameManagementAreaSpecies(context);
-    // AddFakeClients(context);
+    AddFakeClients(context);
 }
 
 Console.WriteLine("---------------------");
@@ -117,26 +125,21 @@ void AddFakeClients(AppDbContext context)
 {
     if (!context.People.OfType<Client>().Any())
     {
-        var clients = new List<Client>();
-        var rand = new Random();
-
-        for (var i = 1; i < 100; i++)
-        {
-            clients.Add(new Client { EnvClientId = rand.Next(10000, 80000).ToString() });
-        }
+        var clients = fakerClients.Generate(500);
 
         foreach (var client in clients)
         {
             AddLicences(client);
         }
 
+
         void AddLicences(Client client)
         {
+            client.Authorizations = new List<Authorization>();
+            var rand = new Random();
             for (var i = 0; i < rand.Next(0, 4); i++)
             {
-                client.Authorizations.Add(
-                    new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}" }
-                );
+                client.Authorizations.Add(new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}"});
             }
 
             foreach (var licence in client.Authorizations.OfType<HuntingLicence>())
@@ -148,15 +151,13 @@ void AddFakeClients(AppDbContext context)
 
             void AddSeals(HuntingLicence licence)
             {
+                licence.Seals = new List<Seal>();
                 for (var i = 0; i < rand.Next(0, 5); i++)
                 {
-                    licence.Seals.Add(
-                        new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.WoodBison }
-                    );
+                    licence.Seals.Add(new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.WoodBison });
                 }
             }
         }
-
         context.AddRange(clients);
         context.SaveChanges();
         Console.WriteLine("Added fake Clients");
