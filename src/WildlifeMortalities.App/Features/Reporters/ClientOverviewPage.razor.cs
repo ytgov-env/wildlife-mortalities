@@ -7,7 +7,7 @@ namespace WildlifeMortalities.App.Features.Reporters;
 
 public partial class ClientOverviewPage : IDisposable
 {
-    private EditContext _context = default!;
+    private EditContext _editContext = default!;
 
     private SelectClientViewModel _selectedClientViewModel = default!;
 
@@ -21,30 +21,32 @@ public partial class ClientOverviewPage : IDisposable
 
     public void Dispose()
     {
-        if (_context is not null)
+        if (_editContext is not null)
         {
-            _context.OnFieldChanged -= _context_OnFieldChanged;
+            _editContext.OnFieldChanged -= EditContextOnFieldChanged;
         }
     }
 
     protected override void OnInitialized()
     {
         _selectedClientViewModel = new SelectClientViewModel();
-        _context = new EditContext(_selectedClientViewModel);
-        _context.OnFieldChanged += _context_OnFieldChanged;
+        _editContext = new EditContext(_selectedClientViewModel);
+        _editContext.OnFieldChanged += EditContextOnFieldChanged;
     }
 
-    private void _context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
+    private void EditContextOnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
-        _context.Validate();
-        ValidationChanged.InvokeAsync(!_context.GetValidationMessages().Any());
+        _editContext.Validate();
+        ValidationChanged.InvokeAsync(!_editContext.GetValidationMessages().Any());
         // TODO Is there a better way to set the route parameter?
         Id = _selectedClientViewModel.SelectedClient.Id;
         NavigationManager.NavigateTo($"/reporters/clients/{Id}");
     }
 
-    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input) =>
-        (await ClientService.SearchByEnvClientId(input))
-        .Union(await ClientService.SearchByLastName(input))
-        .OrderBy(x => x.LastName);
+    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input)
+    {
+        return (await ClientService.SearchByEnvClientId(input))
+            .Union(await ClientService.SearchByLastName(input))
+            .OrderBy(x => x.LastName);
+    }
 }

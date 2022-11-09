@@ -19,7 +19,10 @@ public class MortalityService
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        return await context.Mortalities.ToListAsync();
+        // Todo fix: Unable to materialize entity instance of type 'Mortality. No discriminators matched the discriminator value 'Mortality'
+        // When saving, the discriminator property is null on the Mortality entity
+        // return await context.Mortalities.ToListAsync();
+        return new List<Mortality>();
     }
 
     public async Task<T?> GetMortalityById<T>(int id) where T : Mortality

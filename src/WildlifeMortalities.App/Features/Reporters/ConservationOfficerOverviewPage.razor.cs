@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reporters;
 
@@ -13,6 +14,8 @@ public partial class ConservationOfficerOverviewPage : IDisposable
     [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
 
     [Parameter] public int Id { get; set; }
+
+    [Inject] private ConservationOfficerService ConservationOfficerService { get; set; } = default!;
 
     public void Dispose()
     {
@@ -35,8 +38,10 @@ public partial class ConservationOfficerOverviewPage : IDisposable
         ValidationChanged.InvokeAsync(!_context.GetValidationMessages().Any());
     }
 
-    private async Task<
-        IEnumerable<ConservationOfficer>
-    > SearchConservationOfficerByBadgeNumberOrLastName(string input) =>
-        throw new NotImplementedException();
+    private async Task<IEnumerable<ConservationOfficer>> SearchConservationOfficerByBadgeNumberOrLastName(string input)
+    {
+        return (await ConservationOfficerService.SearchByBadgeNumber(input))
+            .Union(await ConservationOfficerService.SearchByLastName(input))
+            .OrderBy(x => x.LastName);
+    }
 }

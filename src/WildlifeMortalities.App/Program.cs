@@ -40,6 +40,7 @@ try
 
     builder.Services.AddScoped<MortalityService>();
     builder.Services.AddScoped<ClientService>();
+    builder.Services.AddScoped<ConservationOfficerService>();
 
     var configuration = builder.Configuration;
 

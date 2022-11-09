@@ -38,5 +38,5 @@
 
     protected override async Task OnInitializedAsync() => _mortalities = await MortalityService.GetAllMortalities();
 
-    private void CreateMortalityReport() => NavigationManager.NavigateTo("mortality-reports/create");
+    private void CreateMortalityReport() => NavigationManager.NavigateTo($"mortality-reports/new/{PersonId}");
 }

@@ -24,6 +24,13 @@ public class ClientService : IDisposable
         return _dbContext.People.OfType<Client>().Where(c => c.EnvClientId.StartsWith(input));
     }
 
+    public async Task<IEnumerable<Client>> SearchByLastName(string input)
+    {
+        // await using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        return _dbContext.People.OfType<Client>().Where(c => c.LastName.StartsWith(input));
+    }
+
     public async Task<IEnumerable<Authorization>> GetAuthorizationsByEnvClientId(string input)
     {
         return _dbContext.Authorizations.Where(a => a.Client.EnvClientId == input);
@@ -36,12 +43,7 @@ public class ClientService : IDisposable
 
     public async Task<IEnumerable<UpdateDto>> GetUpdates(DateTime startDateTime, DateTime endDateTime) => throw new NotImplementedException();
 
-    public async Task<IEnumerable<Client>> SearchByLastName(string input)
-    {
-        // await using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        return _dbContext.People.OfType<Client>().Where(c => c.LastName.StartsWith(input));
-    }
 
     public void Dispose() => _dbContext.Dispose();
 }
