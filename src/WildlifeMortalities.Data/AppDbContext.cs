@@ -86,6 +86,10 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new OutfitterAreaConfig());
 
         modelBuilder.ApplyConfiguration(new AuthorizationConfig());
+        modelBuilder.ApplyConfiguration(new SpecialGuideLicenceConfig());
+        modelBuilder.ApplyConfiguration(new HuntingLicenceConfig());
+        modelBuilder.ApplyConfiguration(new HuntingPermitConfig());
+        modelBuilder.ApplyConfiguration(new PermitHuntAuthorizationConfig());
         modelBuilder.ApplyConfiguration(new SealConfig());
 
         base.OnModelCreating(modelBuilder);

@@ -144,8 +144,8 @@ void AddFakeClients(AppDbContext context)
 
             foreach (var licence in client.Authorizations.OfType<HuntingLicence>())
             {
-                licence.StartDate = new DateTime(rand.Next(2019, 2022), 04, 01);
-                licence.EndDate = new DateTime(licence.StartDate.Year + 1, 03, 31);
+                licence.ValidFromDate = new DateTime(rand.Next(2019, 2022), 04, 01);
+                licence.ValidToDate = new DateTime(licence.ValidFromDate.Year + 1, 03, 31);
                 AddSeals(licence);
             }
 

@@ -10,6 +10,6 @@ public class HuntedMortalityReportValidator<T> : AbstractValidator<HuntedMortali
     public HuntedMortalityReportValidator()
     {
         RuleFor(h => h.Mortality).NotNull().SetValidator(new MortalityValidator<T>());
-        RuleFor(h => h.Seal).NotNull();
+        RuleFor(h => h.Authorization).NotNull();
     }
 }

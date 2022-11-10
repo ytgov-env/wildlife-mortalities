@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 
@@ -14,8 +15,8 @@ public class HuntedMortalityReport : MortalityReport
     public DateTimeOffset DateStarted { get; set; }
     public DateTimeOffset DateCompleted { get; set; }
     public string Landmark { get; set; } = string.Empty;
-    public int? SealId { get; set; }
-    public Seal? Seal { get; set; }
+    public int? AuthorizationId { get; set; }
+    public Authorization? Authorization { get; set; }
     public HuntedMortalityReportStatus Status { get; set; }
     public string Comment { get; set; } = string.Empty;
     public List<Violation> Violations { get; set; } = null!;
