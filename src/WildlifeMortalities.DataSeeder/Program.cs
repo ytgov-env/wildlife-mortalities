@@ -5,12 +5,6 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
 using Bogus;
 
-var envClientIds = 0;
-var fakerClients = new Faker<Client>()
-    .RuleFor(c => c.EnvClientId, f => f.Random.Replace("######"))
-    .RuleFor(c => c.FirstName, f => f.Name.FirstName())
-    .RuleFor(c => c.LastName, f => f.Name.LastName())
-    .RuleFor(c => c.BirthDate, f => f.Date.Past(40, DateTime.Now));
 
 Console.WriteLine("Starting data seeding...");
 Console.WriteLine("-----------------------");
@@ -125,39 +119,45 @@ void AddFakeClients(AppDbContext context)
 {
     if (!context.People.OfType<Client>().Any())
     {
-        var clients = fakerClients.Generate(500);
+        var fakerClients = new Faker<Client>()
+            .RuleFor(c => c.EnvClientId, f => f.Random.Replace("######"))
+            .RuleFor(c => c.FirstName, f => f.Name.FirstName())
+            .RuleFor(c => c.LastName, f => f.Name.LastName())
+            .RuleFor(c => c.BirthDate, f => f.Date.Past(70, DateTime.Today));
 
-        foreach (var client in clients)
-        {
-            AddLicences(client);
-        }
+        var clients = fakerClients.Generate(50);
 
-
-        void AddLicences(Client client)
-        {
-            client.Authorizations = new List<Authorization>();
-            var rand = new Random();
-            for (var i = 0; i < rand.Next(0, 4); i++)
-            {
-                client.Authorizations.Add(new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}"});
-            }
-
-            foreach (var licence in client.Authorizations.OfType<HuntingLicence>())
-            {
-                licence.ValidFromDate = new DateTime(rand.Next(2019, 2022), 04, 01);
-                licence.ValidToDate = new DateTime(licence.ValidFromDate.Year + 1, 03, 31);
-                AddSeals(licence);
-            }
-
-            void AddSeals(HuntingLicence licence)
-            {
-                licence.Seals = new List<Seal>();
-                for (var i = 0; i < rand.Next(0, 5); i++)
-                {
-                    licence.Seals.Add(new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.WoodBison });
-                }
-            }
-        }
+        // foreach (var client in clients)
+        // {
+        //     AddLicences(client);
+        // }
+        //
+        //
+        // void AddLicences(Client client)
+        // {
+        //     client.Authorizations = new List<Authorization>();
+        //     var rand = new Random();
+        //     for (var i = 0; i < rand.Next(0, 4); i++)
+        //     {
+        //         client.Authorizations.Add(new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}"});
+        //     }
+        //
+        //     foreach (var licence in client.Authorizations.OfType<HuntingLicence>())
+        //     {
+        //         licence.ValidFromDate = new DateTime(rand.Next(2019, 2022), 04, 01);
+        //         licence.ValidToDate = new DateTime(licence.ValidFromDate.Year + 1, 03, 31);
+        //         AddSeals(licence);
+        //     }
+        //
+        //     void AddSeals(HuntingLicence licence)
+        //     {
+        //         licence.Seals = new List<Seal>();
+        //         for (var i = 0; i < rand.Next(0, 5); i++)
+        //         {
+        //             licence.Seals.Add(new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.WoodBison });
+        //         }
+        //     }
+        // }
         context.AddRange(clients);
         context.SaveChanges();
         Console.WriteLine("Added fake Clients");

@@ -39,21 +39,13 @@ public class AppDbContext : DbContext
     public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
     public DbSet<OutfitterArea> OutfitterAreas => Set<OutfitterArea>();
 
-    // public DbSet<GameManagementAreaSpecies> GameManagementAreaSpecies =>
-    //     Set<GameManagementAreaSpecies>();
-
-    // public DbSet<GameManagementAreaSchedule> GameManagementAreaSchedules =>
-    //     Set<GameManagementAreaSchedule>();
-
-    // public DbSet<GameManagementUnit> GameManagementUnits => Set<GameManagementUnit>();
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder
                 .UseSqlServer(
-                    "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;",
+                    "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;",
                     options => options.EnableRetryOnFailure()
                 )
                 .UseEnumCheckConstraints()
@@ -63,27 +55,24 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AmericanBlackBearMortality>();
+        ConfigureMortalities(modelBuilder);
+
         modelBuilder.Entity<AmericanBlackBearBioSubmission>();
 
         modelBuilder.ApplyConfiguration(new PersonConfig());
         modelBuilder.ApplyConfiguration(new ClientConfig());
         modelBuilder.ApplyConfiguration(new ConservationOfficerConfig());
 
-        modelBuilder.ApplyConfiguration(new MortalityConfig());
+        modelBuilder.ApplyConfiguration(new MortalityConfig<Mortality>());
 
         modelBuilder.ApplyConfiguration(new MortalityReportConfig());
         modelBuilder.ApplyConfiguration(new HuntedMortalityReportConfig());
         modelBuilder.ApplyConfiguration(new HumanWildlifeConflictMortalityReportConfig());
 
         modelBuilder.ApplyConfiguration(new GameManagementAreaConfig());
-        // modelBuilder.ApplyConfiguration(new GameManagementAreaSpeciesConfig());
-        // modelBuilder.ApplyConfiguration(new GameManagementAreaScheduleConfig());
-        // modelBuilder.ApplyConfiguration(new GameManagementUnitConfig());
+        modelBuilder.ApplyConfiguration(new OutfitterAreaConfig());
 
         modelBuilder.ApplyConfiguration(new BioSubmissionConfig());
-
-        modelBuilder.ApplyConfiguration(new OutfitterAreaConfig());
 
         modelBuilder.ApplyConfiguration(new AuthorizationConfig());
         modelBuilder.ApplyConfiguration(new SpecialGuideLicenceConfig());
@@ -93,5 +82,38 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new SealConfig());
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    private static void ConfigureMortalities(ModelBuilder modelBuilder)
+    {
+        var mortalityType = typeof(Mortality);
+        var relevantAssembly = mortalityType.Assembly;
+        var allTypes = relevantAssembly.GetTypes();
+
+        foreach (var item in allTypes)
+        {
+            if (item.IsSubclassOf(mortalityType) != true)
+            {
+                continue;
+            }
+
+            var constructor = item.GetConstructor(Array.Empty<Type>());
+            if (constructor == null)
+            {
+                continue;
+            }
+
+            modelBuilder.Entity(item);
+
+            var instance = constructor.Invoke(Array.Empty<object>());
+
+            var configMethod = item.GetMethod(nameof(Mortality<Mortality>.GetConfig));
+            if (configMethod == null)
+            {
+                continue;
+            }
+
+            configMethod.Invoke(instance, Array.Empty<object>());
+        }
     }
 }

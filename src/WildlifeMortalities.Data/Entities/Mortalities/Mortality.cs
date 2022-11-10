@@ -5,6 +5,12 @@ using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
+public abstract class Mortality<T> : Mortality
+    where T : Mortality
+{
+    public virtual IEntityTypeConfiguration<T> GetConfig() => new MortalityConfig<T>();
+}
+
 public abstract class Mortality
 {
     public int Id { get; set; }
@@ -17,9 +23,9 @@ public abstract class Mortality
     public string Discriminator { get; set; } = null!;
 }
 
-public class MortalityConfig : IEntityTypeConfiguration<Mortality>
+public class MortalityConfig<T> : IEntityTypeConfiguration<T> where T : Mortality
 {
-    public void Configure(EntityTypeBuilder<Mortality> builder)
+    public void Configure(EntityTypeBuilder<T> builder)
     {
         builder.ToTable("Mortalities");
         builder.Property(m => m.Sex).HasConversion<string>();
