@@ -15,6 +15,8 @@ public class AmericanBlackBearMortalityConfig : IEntityTypeConfiguration<America
 {
     public void Configure(EntityTypeBuilder<AmericanBlackBearMortality> builder)
     {
-        builder.Property(m => m.IsShotInConflict).HasConversion<string>();
+        builder.Property(m => m.IsShotInConflict)
+            .HasColumnName(nameof(AmericanBlackBearMortality.IsShotInConflict))
+            .HasConversion<string>();
     }
 }

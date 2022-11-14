@@ -27,3 +27,8 @@ public class GrizzlyBearMortalityViewModel : MortalityViewModel
         return result;
     }
 }
+
+public class GrizzlyBearMortalityViewModelValidator
+    : MortalityViewModelBaseValidator<GrizzlyBearMortalityViewModel>
+{
+}
