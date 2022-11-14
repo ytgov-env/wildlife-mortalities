@@ -1,4 +1,4 @@
-﻿namespace WildlifeMortalities.Shared.Models;
+﻿namespace WildlifeMortalities.PosseExampleApi.Models;
 
 public record ClientDto(
     string EnvClientId,

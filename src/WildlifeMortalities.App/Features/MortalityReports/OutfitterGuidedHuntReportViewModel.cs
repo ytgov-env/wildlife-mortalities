@@ -2,7 +2,6 @@
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Enums;
-using WildlifeMortalities.Shared.Models;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 

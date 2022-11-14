@@ -2,7 +2,6 @@
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Shared.Models;
 
 namespace WildlifeMortalities.Shared.Services;
 
@@ -40,10 +39,6 @@ public class ClientService : IDisposable
     {
         return _dbContext.Authorizations.Where(a => a.Client.Id == clientId);
     }
-
-    public async Task<IEnumerable<UpdateDto>> GetUpdates(DateTime startDateTime, DateTime endDateTime) => throw new NotImplementedException();
-
-
 
     public void Dispose() => _dbContext.Dispose();
 }

@@ -1,6 +1,4 @@
-using WildlifeMortalities.Shared.Models;
-
-namespace WildlifeMortalities.Shared.Services;
+namespace WildlifeMortalities.PosseExampleApi.Models;
 
 public record AuthorizationDto(
     AuthorizationType Type,

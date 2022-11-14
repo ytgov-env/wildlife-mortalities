@@ -1,5 +1,5 @@
 ﻿using Ardalis.Result;
-using WildlifeMortalities.Shared.Models;
+using WildlifeMortalities.PosseExampleApi.Models;
 using WildlifeMortalities.Shared.Services;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
@@ -7,7 +7,9 @@ namespace WildlifeMortalities.PosseExampleApi;
 
 public static class Endpoints
 {
-    public static void MapClientEndpoints(this WebApplication app)
+    private const string Tag ="Clients";
+    private const string BaseRoute = "api/v1/clients";
+    public static void MapClientEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("api/v1/clients/{envClientId}/authorizations", GetAuthorizationsByEnvClientId)
             .WithTags("Authorizations")

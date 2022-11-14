@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Shared.Models;
 
 namespace WildlifeMortalities.Shared.Services;
 

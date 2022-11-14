@@ -6,6 +6,7 @@ using WildlifeMortalities.Data.Entities.GuidedReports;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Data.Entities.People;
+// ReSharper disable ReturnTypeCanBeEnumerable.Global
 
 namespace WildlifeMortalities.Data;
 
