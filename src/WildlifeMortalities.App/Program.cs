@@ -27,12 +27,6 @@ try
         )
         .UseWindowsService();
 
-    builder.WebHost.UseKestrel(opts =>
-    {
-        opts.ListenAnyIP(5002);
-        opts.ListenAnyIP(5003, opts => opts.UseHttps());
-    });
-
     // Add services to the container.
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
@@ -123,8 +117,7 @@ try
         options =>
             options
                 .UseSqlServer(
-                    //configuration.GetConnectionString("AppDbContext"),
-                    "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EnvWildlifeMortalities;Integrated Security=True;",
+                    configuration.GetConnectionString("AppDbContext"),
                     options => options.EnableRetryOnFailure()
                 )
                 .UseEnumCheckConstraints()
