@@ -49,7 +49,7 @@
     {
         if (string.IsNullOrEmpty(value))
             return _gameManagementAreas;
-        return await Task.FromResult(_gameManagementAreas.Where(y => y.Area.StartsWith(value)));
+        return await Task.FromResult(_gameManagementAreas.Where(y => y.Area.StartsWith(value) || (y.Zone + y.Subzone).StartsWith(value)));
     }
 
 }
