@@ -15,8 +15,8 @@ public class GrizzlyBearMortalityConfig : IEntityTypeConfiguration<GrizzlyBearMo
 {
     public void Configure(EntityTypeBuilder<GrizzlyBearMortality> builder)
     {
-        builder.Property(m => m.IsShotInConflict)
-            .HasColumnName(nameof(GrizzlyBearMortality.IsShotInConflict))
-            .HasConversion<string>();
+        builder
+            .Property(m => m.IsShotInConflict)
+            .HasColumnName(nameof(GrizzlyBearMortality.IsShotInConflict));
     }
 }
