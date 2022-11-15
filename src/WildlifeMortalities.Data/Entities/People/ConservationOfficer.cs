@@ -16,5 +16,10 @@ public class ConservationOfficer : Person
 
 public class ConservationOfficerConfig : IEntityTypeConfiguration<ConservationOfficer>
 {
-    public void Configure(EntityTypeBuilder<ConservationOfficer> builder) => builder.HasIndex(c => c.BadgeNumber).IsUnique();
+    public void Configure(EntityTypeBuilder<ConservationOfficer> builder)
+    {
+        builder.HasIndex(c => c.BadgeNumber).IsUnique();
+        builder.Property(c => c.FirstName).HasColumnName(nameof(ConservationOfficer.FirstName));
+        builder.Property(c => c.LastName).HasColumnName(nameof(ConservationOfficer.LastName));
+    }
 }

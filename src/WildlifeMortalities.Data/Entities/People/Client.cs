@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
+using WildlifeMortalities.Data.Entities.GuidedReports;
 
 namespace WildlifeMortalities.Data.Entities.People;
 
@@ -11,9 +12,15 @@ public class Client : Person
     public string LastName { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
     public List<Authorization> Authorizations { get; set; } = null!;
+    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReports { get; set; } = null!;
 }
 
 public class ClientConfig : IEntityTypeConfiguration<Client>
 {
-    public void Configure(EntityTypeBuilder<Client> builder) => builder.HasIndex(c => c.EnvClientId).IsUnique();
+    public void Configure(EntityTypeBuilder<Client> builder)
+    {
+        builder.HasIndex(c => c.EnvClientId).IsUnique();
+        builder.Property(c => c.FirstName).HasColumnName(nameof(Client.FirstName));
+        builder.Property(c => c.LastName).HasColumnName(nameof(Client.LastName));
+    }
 }
