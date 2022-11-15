@@ -24,8 +24,6 @@ public class AppDbContext : DbContext
     public DbSet<Person> People => Set<Person>();
 
     public DbSet<Authorization> Authorizations => Set<Authorization>();
-    public DbSet<Seal> Seals => Set<Seal>();
-
     public DbSet<Mortality> Mortalities => Set<Mortality>();
     public DbSet<MortalityReport> MortalityReports => Set<MortalityReport>();
     public DbSet<Violation> Violations => Set<Violation>();
@@ -59,20 +57,8 @@ public class AppDbContext : DbContext
     {
         ConfigureMortalities(modelBuilder);
 
-        // Todo fix ConfigureMortalities method, as the IEntityTypeConfiguration<T> is ignored when adding a migration
-        modelBuilder.Entity<AmericanBlackBearMortality>()
-            .Property(m => m.IsShotInConflict)
-            .HasColumnName(nameof(AmericanBlackBearMortality.IsShotInConflict));
-        modelBuilder.Entity<GrizzlyBearMortality>()
-            .Property(m => m.IsShotInConflict)
-            .HasColumnName(nameof(GrizzlyBearMortality.IsShotInConflict));
-
-        // Todo fix many-to-many config. The table should only contain 2 columns that make up the composite primary key
-        // modelBuilder.Entity<OutfitterGuidedHuntReport>()
-        //     .HasMany(o => o.Guides)
-        //     .WithMany(c => c.OutfitterGuidedHuntReports)
-        //     .UsingEntity<ClientOutfitterGuidedHuntReport>(j =>
-        //         j.HasKey(t => new { t.GuideId, t.OutfitterGuidedHuntReportId }));
+        //Todo isn't this applying ALL configurations in the assembly, not just those in the Mortality hierarchy?
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Mortality).Assembly);
 
         modelBuilder.Entity<AmericanBlackBearBioSubmission>();
 
@@ -125,16 +111,6 @@ public class AppDbContext : DbContext
             }
 
             modelBuilder.Entity(item);
-
-            var instance = constructor.Invoke(Array.Empty<object>());
-
-            var configMethod = item.GetMethod(nameof(Mortality<Mortality>.GetConfig));
-            if (configMethod == null)
-            {
-                continue;
-            }
-
-            configMethod.Invoke(instance, Array.Empty<object>());
         }
     }
 }
