@@ -5,21 +5,24 @@ using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class Seal : Authorization
+public class HuntingSeal : Authorization
 {
     public HuntedSpecies Species { get; set; }
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = null!;
     public HuntedMortalityReport? HuntedMortalityReport { get; set; }
+    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
 }
 
-public class SealConfig : IEntityTypeConfiguration<Seal>
+public class SealConfig : IEntityTypeConfiguration<HuntingSeal>
 {
-    public void Configure(EntityTypeBuilder<Seal> builder)
+    public void Configure(EntityTypeBuilder<HuntingSeal> builder)
     {
         builder.Property(s => s.Species).HasConversion<string>();
-        builder.HasOne(s => s.BigGameHuntingLicence)
-            .WithMany(h => h.Seals)
+        builder
+            .ToTable("Authorizations")
+            .HasOne(s => s.BigGameHuntingLicence)
+            .WithMany(h => h.HuntingSeals)
             .HasForeignKey(s => s.BigGameHuntingLicenceId)
             .OnDelete(DeleteBehavior.NoAction);
 

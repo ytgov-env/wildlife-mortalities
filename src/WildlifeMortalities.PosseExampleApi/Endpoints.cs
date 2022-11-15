@@ -34,7 +34,7 @@ public static class Endpoints
 
         result.Add(new AuthorizationDto(AuthorizationType.HuntingLicence, envClientId, "EHL-3123",
             DateTime.Now.AddMonths(-2), DateTime.Now.AddMonths(1),
-            Array.Empty<SealDto>(), DateTime.Now
+            Array.Empty<HuntingSealDto>(), DateTime.Now
         ));
 
         return Results.Ok(result);

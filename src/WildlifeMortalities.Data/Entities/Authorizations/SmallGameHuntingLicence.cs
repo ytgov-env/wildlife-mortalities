@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.MortalityReports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -18,11 +19,14 @@ public class SmallGameHuntingLicence : Authorization
         YukonResidentFirstNationsOrInuit,
         YukonResidentFirstNationsOrInuitSenior
     }
+
+    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
 }
 
 public class SmallGameHuntingLicenceConfig : IEntityTypeConfiguration<SmallGameHuntingLicence>
 {
     public void Configure(EntityTypeBuilder<SmallGameHuntingLicence> builder)
     {
+        builder.ToTable("Authorizations");
     }
 }

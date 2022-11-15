@@ -1,5 +1,5 @@
 namespace WildlifeMortalities.PosseExampleApi.Models;
 
-public record SealDto(
+public record HuntingSealDto(
     DateTimeOffset lastUpdatedDateTime
     );

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Data.Entities.MortalityReports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -21,13 +21,16 @@ public class PhaHuntingPermit : Authorization
 
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
+    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
 }
 
 public class PhaHuntingPermitConfig : IEntityTypeConfiguration<PhaHuntingPermit>
 {
     public void Configure(EntityTypeBuilder<PhaHuntingPermit> builder)
     {
-        builder.HasOne(p => p.BigGameHuntingLicence)
+        builder
+            .ToTable("Authorizations")
+            .HasOne(p => p.BigGameHuntingLicence)
             .WithMany(h => h.PhaHuntingPermits)
             .HasForeignKey(p => p.BigGameHuntingLicenceId)
             .OnDelete(DeleteBehavior.NoAction);

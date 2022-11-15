@@ -6,7 +6,7 @@ public record AuthorizationDto(
     string Number,
     DateTimeOffset ActiveFromDateTime,
     DateTimeOffset ActiveToDateTime,
-    IEnumerable<SealDto> Seals,
+    IEnumerable<HuntingSealDto> HuntingSeals,
     DateTimeOffset lastUpdatedDateTime
 );
 
