@@ -1,5 +1,5 @@
 ﻿@page "/reporters/clients"
-@page "/reporters/clients/{id:int}"
+@page "/reporters/clients/{envClientId}"
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data.Entities.People
 
@@ -14,7 +14,7 @@
             <MudItem>
                 <MudPaper Class="pa-4 mb-4">
                     <MudAutocomplete T="Client" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by client id or last name"
-                                     @bind-Value="_selectedClientViewModel.SelectedClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")"
+                                     Value="_selectedClientViewModel.SelectedClient" ValueChanged="ClientSelected" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")"
                                      SearchFunc="@SearchClientByEnvClientIdOrLastName" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6" MinCharacters="2">
                     </MudAutocomplete>
                 </MudPaper>

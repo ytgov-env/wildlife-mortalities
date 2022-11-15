@@ -18,6 +18,8 @@ public partial class MortalityReportPage
     [Parameter]
     public int PersonId { get; set; }
 
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
     [Inject]
     private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
 
@@ -68,7 +70,7 @@ public partial class MortalityReportPage
             case MortalityReportType.IndividualHunt:
                 {
                     var validator = new HuntedMortalityReportViewModelValidator();
-                    var result = validator.Validate(_vm.HuntedMortalityReportViewModel);
+                    var result = await validator.ValidateAsync(_vm.HuntedMortalityReportViewModel);
                     if (result.IsValid)
                     {
                         var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
@@ -119,6 +121,9 @@ public partial class MortalityReportPage
 
         await context.SaveChangesAsync();
         //await Service.CreateMortalityReport(report);
+
+        //Todo fix route parameter to use envClientId
+        NavigationManager.NavigateTo($"reporters/clients/{PersonId}");
     }
 
     private void UploadFiles(InputFileChangeEventArgs e)

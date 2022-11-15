@@ -17,7 +17,7 @@ public partial class ClientOverviewPage : IDisposable
 
     [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
 
-    [Parameter] public int Id { get; set; }
+    [Parameter] public string EnvClientId { get; set; } = string.Empty;
 
     public void Dispose()
     {
@@ -27,6 +27,18 @@ public partial class ClientOverviewPage : IDisposable
         }
     }
 
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_selectedClientViewModel.SelectedClient == null)
+        {
+            var result = await ClientService.SearchByEnvClientId(EnvClientId);
+            _selectedClientViewModel.SelectedClient = result.FirstOrDefault();
+        }
+
+        await base.OnParametersSetAsync();
+    }
+
     protected override void OnInitialized()
     {
         _selectedClientViewModel = new SelectClientViewModel();
@@ -34,13 +46,18 @@ public partial class ClientOverviewPage : IDisposable
         _editContext.OnFieldChanged += EditContextOnFieldChanged;
     }
 
+    private void ClientSelected(Client? client)
+    {
+        _selectedClientViewModel.SelectedClient = client;
+        EnvClientId = _selectedClientViewModel.SelectedClient.EnvClientId;
+        NavigationManager.NavigateTo($"/reporters/clients/{EnvClientId}");
+    }
+
     private void EditContextOnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         _editContext.Validate();
         ValidationChanged.InvokeAsync(!_editContext.GetValidationMessages().Any());
-        // TODO Is there a better way to set the route parameter?
-        Id = _selectedClientViewModel.SelectedClient.Id;
-        NavigationManager.NavigateTo($"/reporters/clients/{Id}");
+        EnvClientId = _selectedClientViewModel.SelectedClient.EnvClientId;
     }
 
     private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input)

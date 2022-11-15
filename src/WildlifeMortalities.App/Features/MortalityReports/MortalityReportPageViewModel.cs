@@ -51,17 +51,17 @@ public class HuntedMortalityReportViewModelValidator
     {
         RuleFor(x => x.Landmark).NotNull();
         RuleFor(x => x.GameManagementArea).NotNull();
-
         RuleFor(x => x.Comment)
             .Length(10, 1000)
             .When(x => string.IsNullOrEmpty(x.Comment) == false);
-
         RuleFor(x => x.MortalityViewModel)
             .NotNull()
             .SetInheritanceValidator(x =>
             {
                 x.Add(new AmericanBlackBearMortalityViewModelValidator());
-
+                x.Add(new GrizzlyBearMortalityViewModelValidator());
+                x.Add(new ThinhornSheepViewModelValidator());
+                x.Add(new WoodBisonMortalityViewModelValidator());
                 x.Add(new MortalityViewModelValidator());
             });
     }
