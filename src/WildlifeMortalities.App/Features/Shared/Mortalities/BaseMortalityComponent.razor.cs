@@ -30,7 +30,7 @@ public partial class BaseMortalityComponent : IDisposable
         _context = Context;
     }
 
-    private Boolean _ignoreChangedEvent;
+    private bool _ignoreChangedEvent;
 
     private void Context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {

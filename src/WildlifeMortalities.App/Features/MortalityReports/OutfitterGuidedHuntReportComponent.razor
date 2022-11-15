@@ -8,7 +8,7 @@
 
 <MudDateRangePicker Editable="true" Label="Hunting dates"/>
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
-    ToStringFunc="@( (x) => x == null ? String.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
+    ToStringFunc="@( (x) => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
 <MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="Client?" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
