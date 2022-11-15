@@ -19,6 +19,5 @@ public class AuthorizationConfig : IEntityTypeConfiguration<Authorization>
 {
     public void Configure(EntityTypeBuilder<Authorization> builder)
     {
-
     }
 }

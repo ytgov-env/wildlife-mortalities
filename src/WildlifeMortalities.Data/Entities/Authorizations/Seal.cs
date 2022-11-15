@@ -8,9 +8,8 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 public class Seal : Authorization
 {
     public HuntedSpecies Species { get; set; }
-    public int LicenceId { get; set; }
-    public HuntingLicence Licence { get; set; } = null!;
-    public List<HuntingPermit> HuntingPermits { get; set; }
+    public int BigGameHuntingLicenceId { get; set; }
+    public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = null!;
     public HuntedMortalityReport? HuntedMortalityReport { get; set; }
 }
 
@@ -19,9 +18,9 @@ public class SealConfig : IEntityTypeConfiguration<Seal>
     public void Configure(EntityTypeBuilder<Seal> builder)
     {
         builder.Property(s => s.Species).HasConversion<string>();
-        builder.HasOne(s => s.Licence)
+        builder.HasOne(s => s.BigGameHuntingLicence)
             .WithMany(h => h.Seals)
-            .HasForeignKey(s => s.LicenceId)
+            .HasForeignKey(s => s.BigGameHuntingLicenceId)
             .OnDelete(DeleteBehavior.NoAction);
 
     }

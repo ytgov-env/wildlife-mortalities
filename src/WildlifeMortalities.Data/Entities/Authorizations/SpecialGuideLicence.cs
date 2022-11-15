@@ -5,17 +5,18 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class SpecialGuideLicence : Authorization
 {
-    public int HuntingLicenceId { get; set; }
-    public HuntingLicence HuntingLicence { get; set; } = default!;
+    public int BigGameHuntingLicenceId { get; set; }
+    public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
 }
 
 public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLicence>
 {
     public void Configure(EntityTypeBuilder<SpecialGuideLicence> builder)
     {
-        builder.HasOne(s => s.HuntingLicence)
+        builder
+            .HasOne(s => s.BigGameHuntingLicence)
             .WithOne(h => h.SpecialGuideLicence)
-            .HasForeignKey<SpecialGuideLicence>(s=> s.HuntingLicenceId)
+            .HasForeignKey<SpecialGuideLicence>(s => s.BigGameHuntingLicenceId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

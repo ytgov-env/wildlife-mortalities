@@ -1,5 +1,26 @@
-﻿namespace WildlifeMortalities.Data.Entities.Authorizations;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class TrappingLicence : Authorization
 {
+    public LicenceType Type { get; set; }
+    public enum LicenceType
+    {
+        Uninitialized = 0,
+        Assistant,
+        AssistantSenior,
+        ConcessionHolder,
+        ConcessionHolderSenior,
+        GroupConcessionAreaMember,
+        GroupConcessionAreaMemberSenior
+    }
+}
+
+public class TrappingLicenceConfig : IEntityTypeConfiguration<TrappingLicence>
+{
+    public void Configure(EntityTypeBuilder<TrappingLicence> builder)
+    {
+    }
 }

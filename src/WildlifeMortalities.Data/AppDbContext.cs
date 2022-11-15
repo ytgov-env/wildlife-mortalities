@@ -6,6 +6,7 @@ using WildlifeMortalities.Data.Entities.GuidedReports;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Data.Entities.People;
+
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
 namespace WildlifeMortalities.Data;
@@ -58,6 +59,21 @@ public class AppDbContext : DbContext
     {
         ConfigureMortalities(modelBuilder);
 
+        // Todo fix ConfigureMortalities method, as the IEntityTypeConfiguration<T> is ignored when adding a migration
+        modelBuilder.Entity<AmericanBlackBearMortality>()
+            .Property(m => m.IsShotInConflict)
+            .HasColumnName(nameof(AmericanBlackBearMortality.IsShotInConflict));
+        modelBuilder.Entity<GrizzlyBearMortality>()
+            .Property(m => m.IsShotInConflict)
+            .HasColumnName(nameof(GrizzlyBearMortality.IsShotInConflict));
+
+        // Todo fix many-to-many config. The table should only contain 2 columns that make up the composite primary key
+        // modelBuilder.Entity<OutfitterGuidedHuntReport>()
+        //     .HasMany(o => o.Guides)
+        //     .WithMany(c => c.OutfitterGuidedHuntReports)
+        //     .UsingEntity<ClientOutfitterGuidedHuntReport>(j =>
+        //         j.HasKey(t => new { t.GuideId, t.OutfitterGuidedHuntReportId }));
+
         modelBuilder.Entity<AmericanBlackBearBioSubmission>();
 
         modelBuilder.ApplyConfiguration(new PersonConfig());
@@ -76,11 +92,15 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new BioSubmissionConfig());
 
         modelBuilder.ApplyConfiguration(new AuthorizationConfig());
-        modelBuilder.ApplyConfiguration(new SpecialGuideLicenceConfig());
-        modelBuilder.ApplyConfiguration(new HuntingLicenceConfig());
+        modelBuilder.ApplyConfiguration(new BigGameHuntingLicenceConfig());
         modelBuilder.ApplyConfiguration(new HuntingPermitConfig());
-        modelBuilder.ApplyConfiguration(new PermitHuntAuthorizationConfig());
+        modelBuilder.ApplyConfiguration(new OutfitterAssistantGuideLicenceConfig());
+        modelBuilder.ApplyConfiguration(new OutfitterChiefGuideLicenceConfig());
+        modelBuilder.ApplyConfiguration(new PhaHuntingPermitConfig());
         modelBuilder.ApplyConfiguration(new SealConfig());
+        modelBuilder.ApplyConfiguration(new SmallGameHuntingLicenceConfig());
+        modelBuilder.ApplyConfiguration(new SpecialGuideLicenceConfig());
+        modelBuilder.ApplyConfiguration(new TrappingLicenceConfig());
 
         base.OnModelCreating(modelBuilder);
     }
