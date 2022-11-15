@@ -25,7 +25,7 @@ public class BigGameHuntingLicence : Authorization
     public List<PhaHuntingPermit> PhaHuntingPermits { get; set; } = null!;
     public SpecialGuideLicence? SpecialGuideLicence { get; set; }
     public OutfitterAssistantGuideLicence? OutfitterAssistantGuideLicence { get; set; }
-    public OutfitterChiefGuideLicence OutfitterChiefGuideLicence { get; set; }
+    public OutfitterChiefGuideLicence? OutfitterChiefGuideLicence { get; set; }
 }
 
 public class BigGameHuntingLicenceConfig : IEntityTypeConfiguration<BigGameHuntingLicence>
