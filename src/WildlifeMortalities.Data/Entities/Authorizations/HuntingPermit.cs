@@ -12,9 +12,9 @@ public class HuntingPermit : Authorization
     public enum PermitType
     {
         Uninitialized = 0,
-        CaribouFortyMileFall,
-        CaribouFortyMileWinter,
-        CaribouHart,
+        CaribouFortymileFall,
+        CaribouFortymileWinter,
+        CaribouHartRiver,
         CaribouNelchina,
         CaribouSummer,
         Elk,
@@ -29,8 +29,8 @@ public class HuntingPermit : Authorization
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
 
-    public bool IsCaribouRelated() => Type is PermitType.CaribouFortyMileFall or PermitType.CaribouFortyMileWinter
-        or PermitType.CaribouHart or PermitType.CaribouHart or PermitType.CaribouNelchina or PermitType.CaribouSummer;
+    public bool IsCaribouRelated() => Type is PermitType.CaribouFortymileFall or PermitType.CaribouFortymileWinter
+        or PermitType.CaribouHartRiver or PermitType.CaribouHartRiver or PermitType.CaribouNelchina or PermitType.CaribouSummer;
     public bool IsElkRelated() => Type is PermitType.Elk or PermitType.ElkAdaptive or PermitType.ElkAdaptiveFirstNation
         or PermitType.ElkAgricultural or PermitType.ElkBonusDraw;
     public bool IsMooseRelated() => Type is PermitType.Moose;
