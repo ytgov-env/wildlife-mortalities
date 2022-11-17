@@ -22,10 +22,18 @@ public class AuthorizationResult
         new(authorization, new List<Violation>());
 }
 
-public record AuthorizationsSummary(IEnumerable<AuthorizationResult> ApplicableAuthorizationResults);
-
 public abstract class Authorization
 {
+    public int Id { get; set; }
+    public string Number { get; set; } = string.Empty;
+    public DateTime ValidFromDate { get; set; }
+    public DateTime ValidToDate { get; set; }
+    public string Season => $"{ValidFromDate.Year}-{ValidToDate.Year}";
+    public int ClientId { get; set; }
+    public Client Client { get; set; } = null!;
+
+    public record AuthorizationsSummary(IEnumerable<AuthorizationResult> ApplicableAuthorizationResults);
+
     public static AuthorizationsSummary GetSummary(IEnumerable<Authorization> authorizations,
         MortalityReport report)
     {
@@ -41,15 +49,6 @@ public abstract class Authorization
 
         return new AuthorizationsSummary(applicableAuthorizationResults);
     }
-
-
-    public int Id { get; set; }
-    public string Number { get; set; } = string.Empty;
-    public DateTime ValidFromDate { get; set; }
-    public DateTime ValidToDate { get; set; }
-    public string Season => $"{ValidFromDate.Year}-{ValidToDate.Year}";
-    public int ClientId { get; set; }
-    public Client Client { get; set; } = null!;
 
     public abstract AuthorizationResult GetResult(MortalityReport report);
 }
