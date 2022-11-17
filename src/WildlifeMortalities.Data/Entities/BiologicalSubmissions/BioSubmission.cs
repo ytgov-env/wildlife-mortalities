@@ -12,7 +12,7 @@ public abstract class BioSubmission
 public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
 {
     public void Configure(EntityTypeBuilder<BioSubmission> builder) =>
-        builder.OwnsOne(b => b.Age, a => a.ToTable("Age"));
+        builder.OwnsOne(b => b.Age);
 }
 
 public class Age
