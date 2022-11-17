@@ -10,15 +10,15 @@ public class TrappingLicence : Authorization
     public enum LicenceType
     {
         Uninitialized = 0,
-        Assistant,
-        AssistantSenior,
+        AssistantTrapper,
+        AssistantTrapperSenior,
         ConcessionHolder,
         ConcessionHolderSenior,
         GroupConcessionAreaMember,
         GroupConcessionAreaMemberSenior
     }
 
-    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
+    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
 }
 
 public class TrappingLicenceConfig : IEntityTypeConfiguration<TrappingLicence>

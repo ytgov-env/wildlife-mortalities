@@ -7,64 +7,39 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class AuthorizationResult
 {
-    private AuthorizationResult(Authorization authorization)
+    public AuthorizationResult(Authorization authorization, List<Violation> violations, bool isApplicable = true)
     {
-        this.Authorization = authorization;
+        Authorization = authorization;
+        IsApplicable = isApplicable;
     }
 
     public Authorization Authorization { get; }
-    public bool IsApplicable { get; private set; }
-    public bool ViolationFound { get; private set; }
-    public string Message { get; private set; }
-
-    public void SetAsNotApplicable() =>
-        IsApplicable = true;
+    public List<Violation> Violations { get; } = new();
+    public bool HasViolations => Violations.Any();
+    public bool IsApplicable { get; }
 
     public static AuthorizationResult NotApplicable(Authorization authorization) =>
-        new AuthorizationResult(authorization) { IsApplicable = false };
-
-    public static AuthorizationResult Forbidden(Authorization authorization, string message) =>
-        new AuthorizationResult(authorization) { IsApplicable = true, ViolationFound = true, Message = message };
-
-    public static AuthorizationResult Allowed(Authorization authorization)
-    {
-        throw new NotImplementedException();
-    }
+        new(authorization, false);
 }
+
+public record AuthorizationsSummary(IEnumerable<AuthorizationResult> ApplicableAuthorizationResults);
 
 public abstract class Authorization
 {
-    public static (bool, IEnumerable<AuthorizationResult>) IsValid(IEnumerable<Authorization> authorizations,
+    public static AuthorizationsSummary GetSummary(IEnumerable<Authorization> authorizations,
         MortalityReport report)
     {
-        bool? validAuthorizationFound = null;
         List<AuthorizationResult> applicableAuthorizationResults = new();
         foreach (var authorization in authorizations)
         {
-            var authorizationResult = authorization.IsValid(report);
+            var authorizationResult = authorization.GetResult(report);
             if (authorizationResult.IsApplicable)
             {
                 applicableAuthorizationResults.Add(authorizationResult);
             }
-
-            if (authorizationResult.ViolationFound)
-            {
-                validAuthorizationFound = false;
-            }
-            else
-            {
-                // Todo Remove this if statement?
-                // if (validAuthorizationFound == false)
-                // {
-                if (authorizationResult.IsApplicable == true && authorizationResult.ViolationFound == false)
-                {
-                    validAuthorizationFound = true;
-                }
-                // }
-            }
         }
 
-        return (validAuthorizationFound ?? false, applicableAuthorizationResults);
+        return new AuthorizationsSummary(applicableAuthorizationResults);
     }
 
 
@@ -76,7 +51,7 @@ public abstract class Authorization
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
-    public abstract AuthorizationResult IsValid(MortalityReport report);
+    public abstract AuthorizationResult GetResult(MortalityReport report);
 }
 
 public class AuthorizationConfig : IEntityTypeConfiguration<Authorization>

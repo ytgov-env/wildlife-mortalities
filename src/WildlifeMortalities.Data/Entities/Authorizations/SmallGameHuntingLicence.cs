@@ -20,7 +20,7 @@ public class SmallGameHuntingLicence : Authorization
         YukonResidentFirstNationsOrInuitSenior
     }
 
-    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
+    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
 }
 
 public class SmallGameHuntingLicenceConfig : IEntityTypeConfiguration<SmallGameHuntingLicence>

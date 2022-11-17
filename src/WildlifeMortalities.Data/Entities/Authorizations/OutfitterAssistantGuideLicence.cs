@@ -8,7 +8,7 @@ public class OutfitterAssistantGuideLicence : Authorization
 {
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
-    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
+    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
 }
 
 public class OutfitterAssistantGuideLicenceConfig : IEntityTypeConfiguration<OutfitterAssistantGuideLicence>

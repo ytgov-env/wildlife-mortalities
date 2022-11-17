@@ -11,14 +11,13 @@ public class HuntingSeal : Authorization
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = null!;
     public HuntedMortalityReport? HuntedMortalityReport { get; set; }
-    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
+    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
 }
 
 public class SealConfig : IEntityTypeConfiguration<HuntingSeal>
 {
     public void Configure(EntityTypeBuilder<HuntingSeal> builder)
     {
-        builder.Property(s => s.Species).HasConversion<string>();
         builder
             .ToTable("Authorizations")
             .HasOne(s => s.BigGameHuntingLicence)

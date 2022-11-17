@@ -28,7 +28,6 @@ public class MortalityConfig<T> : IEntityTypeConfiguration<T> where T : Mortalit
     public void Configure(EntityTypeBuilder<T> builder)
     {
         builder.ToTable("Mortalities");
-        builder.Property(m => m.Sex).HasConversion<string>();
         builder.Property(m => m.Latitude).HasPrecision(10, 8);
         builder.Property(m => m.Longitude).HasPrecision(11, 8);
     }

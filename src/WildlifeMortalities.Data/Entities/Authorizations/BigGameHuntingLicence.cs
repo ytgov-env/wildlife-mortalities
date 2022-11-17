@@ -27,7 +27,7 @@ public class BigGameHuntingLicence : Authorization
     public SpecialGuideLicence? SpecialGuideLicence { get; set; }
     public OutfitterAssistantGuideLicence? OutfitterAssistantGuideLicence { get; set; }
     public OutfitterChiefGuideLicence? OutfitterChiefGuideLicence { get; set; }
-    public override AuthorizationResult IsValid(MortalityReport report) => throw new NotImplementedException();
+    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
 }
 
 public class BigGameHuntingLicenceConfig : IEntityTypeConfiguration<BigGameHuntingLicence>

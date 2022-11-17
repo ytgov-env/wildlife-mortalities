@@ -9,15 +9,6 @@ public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>
     public ThinhornSheepTailColour TailColour { get; set; }
 }
 
-public class ThinhornSheepMortalityConfig : IEntityTypeConfiguration<ThinhornSheepMortality>
-{
-    public void Configure(EntityTypeBuilder<ThinhornSheepMortality> builder)
-    {
-        builder.Property(m => m.BodyColour).HasConversion<string>();
-        builder.Property(m => m.TailColour).HasConversion<string>();
-    }
-}
-
 public enum ThinhornSheepBodyColour
 {
     Uninitialized = 0,

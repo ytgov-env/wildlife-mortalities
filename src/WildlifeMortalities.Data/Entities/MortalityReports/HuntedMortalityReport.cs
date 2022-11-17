@@ -24,6 +24,7 @@ public class HuntedMortalityReport : MortalityReport
 
 public class HuntedMortalityReportConfig : IEntityTypeConfiguration<HuntedMortalityReport>
 {
-    public void Configure(EntityTypeBuilder<HuntedMortalityReport> builder) =>
-        builder.Property(h => h.Status).HasConversion<string>();
+    public void Configure(EntityTypeBuilder<HuntedMortalityReport> builder)
+    {
+    }
 }

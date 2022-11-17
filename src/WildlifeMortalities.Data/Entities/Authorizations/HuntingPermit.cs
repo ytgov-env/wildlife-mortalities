@@ -13,49 +13,56 @@ public class HuntingPermit : Authorization
     {
         Uninitialized = 0,
         CaribouFortymileFall,
+        CaribouFortymileSummer,
         CaribouFortymileWinter,
         CaribouHartRiver,
         CaribouNelchina,
-        CaribouSummer,
-        Elk,
+        ElkExclusion,
         ElkAdaptive,
-        ElkAdaptiveFirstNation,
-        ElkAgricultural,
-        ElkBonusDraw,
-        Moose,
-        WoodBison
+        ElkAdaptiveFirstNations,
+        MooseThreshold,
+        WoodBisonThreshold
     }
 
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
 
     public bool IsCaribouRelated() => Type is PermitType.CaribouFortymileFall or PermitType.CaribouFortymileWinter
-        or PermitType.CaribouHartRiver or PermitType.CaribouHartRiver or PermitType.CaribouNelchina or PermitType.CaribouSummer;
-    public bool IsElkRelated() => Type is PermitType.Elk or PermitType.ElkAdaptive or PermitType.ElkAdaptiveFirstNation
-        or PermitType.ElkAgricultural or PermitType.ElkBonusDraw;
-    public bool IsMooseRelated() => Type is PermitType.Moose;
-    public bool IsWoodBisonRelated() => Type is PermitType.WoodBison;
+        or PermitType.CaribouHartRiver or PermitType.CaribouHartRiver or PermitType.CaribouNelchina
+        or PermitType.CaribouFortymileSummer;
 
-    public override AuthorizationResult IsValid(MortalityReport report)
+    public bool IsElkRelated() =>
+        Type is PermitType.ElkExclusion or PermitType.ElkAdaptive or PermitType.ElkAdaptiveFirstNations;
+
+    public bool IsMooseRelated() => Type is PermitType.MooseThreshold;
+    public bool IsWoodBisonRelated() => Type is PermitType.WoodBisonThreshold;
+
+    public override AuthorizationResult GetResult(MortalityReport report)
     {
         if (report is HuntedMortalityReport huntedMortalityReport == false)
         {
             return AuthorizationResult.NotApplicable(this);
         }
 
-        if (IsElkRelated() == true && huntedMortalityReport.Mortality is ElkMortality)
-        {
-            if (huntedMortalityReport.GameManagementArea.Subzone != "12")
-            {
-                return AuthorizationResult.Allowed(this);
-            }
-            else
-            {
-                return AuthorizationResult.Forbidden(this, "because it is not allowed!");
-            }
-        }
+        AuthorizationResult authorizationResult = new(this, new List<Violation>());
 
-        return AuthorizationResult.NotApplicable(this);
+        if (IsCaribouRelated() &&
+            huntedMortalityReport.Mortality is WoodlandCaribouMortality or BarrenGroundCaribouMortality)
+        {
+        }
+        else if (IsElkRelated() && huntedMortalityReport.Mortality is ElkMortality)
+        {
+        }
+        else if (IsMooseRelated() && huntedMortalityReport.Mortality is MooseMortality)
+        {
+        }
+        else if (IsWoodBisonRelated() && huntedMortalityReport.Mortality is WoodBisonMortality)
+        {
+        }
+        else
+        {
+            return AuthorizationResult.NotApplicable(this);
+        }
     }
 }
 
