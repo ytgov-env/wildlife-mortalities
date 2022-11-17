@@ -55,38 +55,12 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        ConfigureMortalities(modelBuilder);
-
-        //Todo isn't this applying ALL configurations in the assembly, not just those in the Mortality hierarchy?
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(Mortality).Assembly);
-
         modelBuilder.Entity<AmericanBlackBearBioSubmission>();
 
-        modelBuilder.ApplyConfiguration(new PersonConfig());
-        modelBuilder.ApplyConfiguration(new ClientConfig());
-        modelBuilder.ApplyConfiguration(new ConservationOfficerConfig());
-
+        ConfigureMortalities(modelBuilder);
         modelBuilder.ApplyConfiguration(new MortalityConfig<Mortality>());
 
-        modelBuilder.ApplyConfiguration(new MortalityReportConfig());
-        modelBuilder.ApplyConfiguration(new HuntedMortalityReportConfig());
-        modelBuilder.ApplyConfiguration(new HumanWildlifeConflictMortalityReportConfig());
-
-        modelBuilder.ApplyConfiguration(new GameManagementAreaConfig());
-        modelBuilder.ApplyConfiguration(new OutfitterAreaConfig());
-
-        modelBuilder.ApplyConfiguration(new BioSubmissionConfig());
-
-        modelBuilder.ApplyConfiguration(new AuthorizationConfig());
-        modelBuilder.ApplyConfiguration(new BigGameHuntingLicenceConfig());
-        modelBuilder.ApplyConfiguration(new HuntingPermitConfig());
-        modelBuilder.ApplyConfiguration(new OutfitterAssistantGuideLicenceConfig());
-        modelBuilder.ApplyConfiguration(new OutfitterChiefGuideLicenceConfig());
-        modelBuilder.ApplyConfiguration(new PhaHuntingPermitConfig());
-        modelBuilder.ApplyConfiguration(new SealConfig());
-        modelBuilder.ApplyConfiguration(new SmallGameHuntingLicenceConfig());
-        modelBuilder.ApplyConfiguration(new SpecialGuideLicenceConfig());
-        modelBuilder.ApplyConfiguration(new TrappingLicenceConfig());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }
@@ -99,7 +73,7 @@ public class AppDbContext : DbContext
 
         foreach (var item in allTypes)
         {
-            if (item.IsSubclassOf(mortalityType) != true)
+            if (!item.IsSubclassOf(mortalityType))
             {
                 continue;
             }
