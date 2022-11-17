@@ -1,4 +1,7 @@
-﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class BarrenGroundCaribouMortality : Mortality
 {
@@ -9,5 +12,15 @@ public class BarrenGroundCaribouMortality : Mortality
         Fortymile,
         Nelchina,
         Porcupine
+    }
+}
+
+public class BarrenGroundCaribouMortalityConfig : IEntityTypeConfiguration<BarrenGroundCaribouMortality>
+{
+    public void Configure(EntityTypeBuilder<BarrenGroundCaribouMortality> builder)
+    {
+        builder
+            .ToTable("Mortalities")
+            .Property(w => w.Herd).HasColumnName(nameof(BarrenGroundCaribouMortality.BarrenGroundCaribouHerd));;
     }
 }
