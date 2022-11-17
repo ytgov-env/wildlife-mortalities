@@ -19,7 +19,7 @@ public class AuthorizationResult
     public bool IsApplicable { get; }
 
     public static AuthorizationResult NotApplicable(Authorization authorization) =>
-        new(authorization, false);
+        new(authorization, new List<Violation>());
 }
 
 public record AuthorizationsSummary(IEnumerable<AuthorizationResult> ApplicableAuthorizationResults);

@@ -46,23 +46,24 @@ public class HuntingPermit : Authorization
 
         AuthorizationResult authorizationResult = new(this, new List<Violation>());
 
-        if (IsCaribouRelated() &&
-            huntedMortalityReport.Mortality is WoodlandCaribouMortality or BarrenGroundCaribouMortality)
-        {
-        }
-        else if (IsElkRelated() && huntedMortalityReport.Mortality is ElkMortality)
-        {
-        }
-        else if (IsMooseRelated() && huntedMortalityReport.Mortality is MooseMortality)
-        {
-        }
-        else if (IsWoodBisonRelated() && huntedMortalityReport.Mortality is WoodBisonMortality)
-        {
-        }
-        else
-        {
-            return AuthorizationResult.NotApplicable(this);
-        }
+        // if (IsCaribouRelated() &&
+        //     huntedMortalityReport.Mortality is WoodlandCaribouMortality or BarrenGroundCaribouMortality)
+        // {
+        // }
+        // else if (IsElkRelated() && huntedMortalityReport.Mortality is ElkMortality)
+        // {
+        // }
+        // else if (IsMooseRelated() && huntedMortalityReport.Mortality is MooseMortality)
+        // {
+        // }
+        // else if (IsWoodBisonRelated() && huntedMortalityReport.Mortality is WoodBisonMortality)
+        // {
+        // }
+        // else
+        // {
+        //     return AuthorizationResult.NotApplicable(this);
+        // }
+        throw new NotImplementedException();
     }
 }
 
