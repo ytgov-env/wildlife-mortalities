@@ -32,9 +32,8 @@ public static class Endpoints
             return Results.NotFound();
         }
 
-        result.Add(new AuthorizationDto(AuthorizationType.HuntingLicence, envClientId, "EHL-3123",
-            DateTime.Now.AddMonths(-2), DateTime.Now.AddMonths(1),
-            Array.Empty<HuntingSealDto>(), DateTime.Now
+        result.Add(new AuthorizationDto(AuthorizationType.BigGameHuntingLicence, envClientId, "EHL-3123",
+            DateTime.Now.AddMonths(-2), DateTime.Now.AddMonths(1), DateTime.Now
         ));
 
         return Results.Ok(result);

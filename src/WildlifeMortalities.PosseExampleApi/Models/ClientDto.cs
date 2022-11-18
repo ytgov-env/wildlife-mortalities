@@ -5,5 +5,5 @@ public record ClientDto(
     string FirstName,
     string LastName,
     DateOnly BirthDate,
-    DateTime lastUpdatedDateTime
+    DateTimeOffset LastModifiedDateTime
 );
