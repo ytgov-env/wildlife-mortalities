@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSwag.AspNetCore" Version="13.17.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.18.0" />
     <!--    This package can be removed after NSwag adds support for .NET 7-->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <!--    This package can be removed after NSwag adds support for .NET 7-->
