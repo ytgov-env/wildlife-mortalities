@@ -17,9 +17,9 @@ public class HuntingPermit : Authorization
         CaribouFortymileWinter,
         CaribouHartRiver,
         CaribouNelchina,
-        ElkExclusion,
         ElkAdaptive,
         ElkAdaptiveFirstNations,
+        ElkExclusion,
         MooseThreshold,
         WoodBisonThreshold
     }
