@@ -2,8 +2,7 @@
 
 public enum HuntedMortalityReportStatus
 {
-    Uninitialized = 0,
-    Complete = 1,
-    CompleteWithViolations = 2,
-    WaitingOnClient = 3
+    Complete = 10,
+    CompleteWithViolations = 20,
+    WaitingOnClient = 30
 }

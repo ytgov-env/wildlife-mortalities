@@ -11,23 +11,10 @@ public class GameManagementArea
     public string Subzone { get; set; } = string.Empty;
     public string Area { get; } = string.Empty;
 
-    public AllSpecies ResolveSpecies(AllSpecies species)
+    public static AllSpecies ResolveSubType(AllSpecies species)
     {
-        if (species != AllSpecies.Caribou)
-        {
-            return species;
-        }
-
-        // TODO implement GMA resolution logic for caribou
-        if (Zone == "11")
-        {
-            return AllSpecies.WoodlandCaribou;
-        }
-        else
-        {
-            return AllSpecies.BarrenGroundCaribou;
-        }
-
+        // Todo implement herd/group resolution logic
+        return species;
     }
 }
 

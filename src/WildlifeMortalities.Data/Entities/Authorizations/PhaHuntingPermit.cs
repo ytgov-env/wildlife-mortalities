@@ -9,14 +9,13 @@ public class PhaHuntingPermit : Authorization
     public PermitType Type { get; set; }
     public enum PermitType
     {
-        Uninitialized = 0,
-        Caribou,
-        Deer,
-        Elk,
-        Goat,
-        Moose,
-        Sheep,
-        SheepKluane
+        Caribou = 10,
+        Deer = 20,
+        Elk = 30,
+        MountainGoat = 40,
+        Moose = 50,
+        ThinhornSheep = 60,
+        ThinhornSheepKluane = 70
     }
 
     public int BigGameHuntingLicenceId { get; set; }

@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class WoodlandCaribouMortality : Mortality
+public class CaribouMortality : Mortality
 {
-    public WoodlandCaribouHerd Herd { get; set; }
+    public CaribouHerd Herd { get; set; }
 
-    public enum WoodlandCaribouHerd
+    public enum CaribouHerd
     {
-        Uninitialized = 0,
         Aishihik,
         Atlin,
         BonnetPlume,
@@ -20,6 +19,7 @@ public class WoodlandCaribouMortality : Mortality
         CoalRiver,
         EthelLake,
         Finlayson,
+        Fortymile,
         HartRiver,
         Horseranch,
         Ibex,
@@ -30,7 +30,9 @@ public class WoodlandCaribouMortality : Mortality
         LiardPlateau,
         LittleRancheria,
         MooseLake,
+        Nelchina,
         Pelly,
+        Porcupine,
         RedStone,
         Redstone,
         SouthNahanni,
@@ -41,12 +43,12 @@ public class WoodlandCaribouMortality : Mortality
     }
 }
 
-public class WoodlandCaribouMortalityConfig : IEntityTypeConfiguration<WoodlandCaribouMortality>
+public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>
 {
-    public void Configure(EntityTypeBuilder<WoodlandCaribouMortality> builder)
+    public void Configure(EntityTypeBuilder<CaribouMortality> builder)
     {
         builder
             .ToTable("Mortalities")
-            .Property(w => w.Herd).HasColumnName(nameof(WoodlandCaribouMortality.WoodlandCaribouHerd));
+            .Property(w => w.Herd).HasColumnName(nameof(CaribouMortality.CaribouHerd));
     }
 }

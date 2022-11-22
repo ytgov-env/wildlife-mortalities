@@ -12,7 +12,7 @@
 </MudPaper>
 
 <MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result">
-    @foreach (var item in Enum.GetValues<GuidedHuntResult>().Where(s => s != GuidedHuntResult.Uninitialized))
+    @foreach (var item in Enum.GetValues<GuidedHuntResult>())
     {
         <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }

@@ -108,7 +108,7 @@ public class HuntedMortalityReportService : IDisposable
             case AmericanBlackBearMortality americanBlackBear:
                 break;
 
-            case BarrenGroundCaribouMortality barrenGroundCaribou:
+            case CaribouMortality caribou:
                 break;
 
             case CoyoteMortality coyote:
@@ -141,8 +141,7 @@ public class HuntedMortalityReportService : IDisposable
             case WoodBisonMortality woodBison:
                 break;
 
-            case WoodlandCaribouMortality woodlandCaribou:
-                break;
+
         }
 
         return violations;
@@ -159,7 +158,7 @@ public class HuntedMortalityReportService : IDisposable
             case AmericanBlackBearMortality americanBlackBear:
                 break;
 
-            case BarrenGroundCaribouMortality barrenGroundCaribou:
+            case CaribouMortality caribou:
                 break;
 
             case CoyoteMortality coyote:
@@ -190,9 +189,6 @@ public class HuntedMortalityReportService : IDisposable
                 break;
 
             case WoodBisonMortality woodBison:
-                break;
-
-            case WoodlandCaribouMortality woodlandCaribou:
                 break;
         }
 

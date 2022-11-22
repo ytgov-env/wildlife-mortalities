@@ -2,8 +2,7 @@
 
 public enum GameManagementAreaStatus
 {
-    Uninitialized = 0,
-    Closed = 1,
-    Open = 2,
-    OpenPermitRequired = 3
+    Closed = 10,
+    Open = 20,
+    OpenPermitRequired = 30
 }

@@ -11,7 +11,7 @@ public class MortalityViewModel
         new()
         {
             { AllSpecies.AmericanBlackBear, () => new AmericanBlackBearMortality() },
-            { AllSpecies.BarrenGroundCaribou, () => new BarrenGroundCaribouMortality() },
+            { AllSpecies.Caribou, () => new CaribouMortality() },
             { AllSpecies.Coyote, () => new CoyoteMortality() },
             { AllSpecies.Elk, () => new ElkMortality() },
             { AllSpecies.GreyWolf, () => new GreyWolfMortality() },
@@ -22,8 +22,7 @@ public class MortalityViewModel
             { AllSpecies.ThinhornSheep, () => new ThinhornSheepMortality() },
             { AllSpecies.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
             { AllSpecies.Wolverine, () => new WolverineMortality() },
-            { AllSpecies.WoodBison, () => new WoodBisonMortality() },
-            { AllSpecies.WoodlandCaribou, () => new WoodlandCaribouMortality() }
+            { AllSpecies.WoodBison, () => new WoodBisonMortality() }
         };
 
     public MortalityViewModel() { }
@@ -123,7 +122,6 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
         RuleFor(m => m.Sex)
             .NotNull()
             .IsInEnum()
-            .Must(sex => sex != Sex.Uninitialized)
             .WithMessage("Sex must be set to Female, Male, or Unknown");
         // TODO Is DateOfDeath required?
         RuleFor(m => m.DateOfDeath)

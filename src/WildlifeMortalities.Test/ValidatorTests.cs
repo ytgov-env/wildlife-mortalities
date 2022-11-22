@@ -24,7 +24,7 @@ public class ValidatorTests
     [Fact]
     public void CannotCreateMortalityWithUnitializedSex()
     {
-        var model = new AmericanBlackBearMortality { Sex = Sex.Uninitialized };
+        var model = new AmericanBlackBearMortality();
 
         var validator = new MortalityValidator<AmericanBlackBearMortality>();
         var result = validator.TestValidate(model);

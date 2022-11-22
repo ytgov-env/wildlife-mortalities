@@ -29,7 +29,7 @@ public class HuntedMortalityReportViewModel
 
     public HuntedMortalityReport GetReport(int personId)
     {
-        var species = GameManagementArea!.ResolveSpecies(MortalityViewModel.Species!.Value);
+        var species = GameManagementArea.ResolveSubType(MortalityViewModel.Species!.Value);
 
         var report = new HuntedMortalityReport()
         {

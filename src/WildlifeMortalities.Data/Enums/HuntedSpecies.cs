@@ -4,8 +4,6 @@ namespace WildlifeMortalities.Data.Enums;
 
 public enum HuntedSpecies
 {
-    Uninitialized = AllSpecies.Uninitialized,
-
     [Display(Name = "American black bear")]
     AmericanBlackBear = AllSpecies.AmericanBlackBear,
 

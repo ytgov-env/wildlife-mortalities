@@ -26,7 +26,7 @@ public class MortalityValidator<T> : AbstractValidator<Mortality> where T : Mort
         RuleFor(m => m.MortalityReportId).NotNull();
         RuleFor(m => m.Sex)
             .IsInEnum()
-            .Must(sex => sex != Sex.Uninitialized)
+            .Must(sex => sex != 0)
             .WithMessage("Sex must be set to Female, Male, or Unknown");
     }
 }
