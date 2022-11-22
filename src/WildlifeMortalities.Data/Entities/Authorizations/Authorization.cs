@@ -5,27 +5,55 @@ using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
+public class ViolationResult
+{
+}
+
 public class AuthorizationResult
 {
-    public AuthorizationResult(Authorization authorization, List<Violation> violations, bool isApplicable = true)
+    private AuthorizationResult(Authorization authorization, IEnumerable<ViolationResult> violations, bool isApplicable)
     {
         Authorization = authorization;
+        Violations = violations;
         IsApplicable = isApplicable;
     }
 
+    private AuthorizationResult(Authorization authorization) : this(authorization, Array.Empty<ViolationResult>())
+    {
+    }
+
+    private AuthorizationResult(Authorization authorization, IEnumerable<ViolationResult> violations) : this(
+        authorization, violations, true)
+    {
+    }
+
     public Authorization Authorization { get; }
-    public List<Violation> Violations { get; } = new();
+    public IEnumerable<ViolationResult> Violations { get; }
     public bool HasViolations => Violations.Any();
     public bool IsApplicable { get; }
 
-    public static AuthorizationResult NotApplicable(Authorization authorization) =>
-        new(authorization, new List<Violation>());
-}
+    public static AuthorizationResult IsLegal(Authorization authorization) =>
+        new(authorization);
 
-public record AuthorizationsSummary(IEnumerable<AuthorizationResult> ApplicableAuthorizationResults);
+    public static AuthorizationResult NotApplicable(Authorization authorization) =>
+        new(authorization, Array.Empty<ViolationResult>(), false);
+
+    public static AuthorizationResult IsIllegal(Authorization authorization, IEnumerable<ViolationResult> violations) =>
+        new(authorization, violations);
+}
 
 public abstract class Authorization
 {
+    public int Id { get; set; }
+    public string Number { get; set; } = string.Empty;
+    public DateTime ValidFromDate { get; set; }
+    public DateTime ValidToDate { get; set; }
+    public string Season => $"{ValidFromDate.Year}-{ValidToDate.Year}";
+    public int ClientId { get; set; }
+    public Client Client { get; set; } = null!;
+
+    public record AuthorizationsSummary(IEnumerable<AuthorizationResult> ApplicableAuthorizationResults);
+
     public static AuthorizationsSummary GetSummary(IEnumerable<Authorization> authorizations,
         MortalityReport report)
     {
@@ -41,15 +69,6 @@ public abstract class Authorization
 
         return new AuthorizationsSummary(applicableAuthorizationResults);
     }
-
-
-    public int Id { get; set; }
-    public string Number { get; set; } = string.Empty;
-    public DateTime ValidFromDate { get; set; }
-    public DateTime ValidToDate { get; set; }
-    public string Season => $"{ValidFromDate.Year}-{ValidToDate.Year}";
-    public int ClientId { get; set; }
-    public Client Client { get; set; } = null!;
 
     public abstract AuthorizationResult GetResult(MortalityReport report);
 }
