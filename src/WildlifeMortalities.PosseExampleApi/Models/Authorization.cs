@@ -1,19 +1,11 @@
 namespace WildlifeMortalities.PosseExampleApi.Models;
 
-public record ClientAuthorizationDto(
-    AuthorizationType Type,
-    string Number,
-    // string SpecialGuideLicenceGuidedHunterEnvClientId,
-    DateTimeOffset ActiveFromDateTime,
-    DateTimeOffset ActiveToDateTime,
-    DateTimeOffset LastModifiedDateTime
-);
-
-public record AuthorizationDto(
+public record Authorization(
     AuthorizationType Type,
     string EnvClientId,
     string Number,
-    // string SpecialGuideLicenceGuidedHunterEnvClientId,
+    string? WildlifeActPermitConditions,
+    string? SpecialGuideLicenceGuidedHunterEnvClientId,
     DateTimeOffset ActiveFromDateTime,
     DateTimeOffset ActiveToDateTime,
     DateTimeOffset LastModifiedDateTime

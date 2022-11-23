@@ -1,19 +1,19 @@
 ﻿namespace WildlifeMortalities.PosseExampleApi.Features.Clients.GetByEnvClientId;
 
-public class Endpoint : Endpoint<GetClientRequest, GetClientResponse>
+public class Endpoint : Endpoint<GetClientByEnvClientIdRequest, GetClientByEnvClientIdResponse>
 {
     public override void Configure()
     {
         Get("/clients/{EnvClientId}");
         Policies("ApiKey");
         Description(b => b
-            .Produces<Client>()
+            .Produces<GetClientByEnvClientIdResponse>()
             .Produces(404));
         Summary(s =>
         {
-            s.ResponseExamples[200] = new GetClientResponse
+            s.ResponseExamples[200] = new GetClientByEnvClientIdResponse
             {
-                Client = new Client(
+                ClientDetails = new ClientDetails(
                     new[] { "432032" },
                     "John",
                     "Doe",
@@ -23,11 +23,11 @@ public class Endpoint : Endpoint<GetClientRequest, GetClientResponse>
         });
     }
 
-    public override async Task HandleAsync(GetClientRequest req, CancellationToken ct)
+    public override async Task HandleAsync(GetClientByEnvClientIdRequest req, CancellationToken ct)
     {
-        var response = new GetClientResponse
+        var response = new GetClientByEnvClientIdResponse
         {
-            Client = new Client(
+            ClientDetails = new ClientDetails(
                 new[] { "43203" },
                 "John",
                 "Doe",
@@ -39,17 +39,17 @@ public class Endpoint : Endpoint<GetClientRequest, GetClientResponse>
     }
 }
 
-public class GetClientRequest
+public class GetClientByEnvClientIdRequest
 {
     public string? EnvClientId { get; set; }
 }
 
-public class GetClientResponse
+public class GetClientByEnvClientIdResponse
 {
-    public Client Client { get; set; }
+    public ClientDetails ClientDetails { get; set; }
 }
 
-public record Client(
+public record ClientDetails(
     IEnumerable<string> PreviousEnvClientIds,
     string FirstName,
     string LastName,

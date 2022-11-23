@@ -34,7 +34,7 @@ builder.Services.AddSwaggerDoc(s =>
 
         // s.GenerateEnumMappingDescription = true;
     },
-    excludeNonFastEndpoints: true, addJWTBearerAuth: false, shortSchemaNames: false, removeEmptySchemas: true);
+    excludeNonFastEndpoints: true, addJWTBearerAuth: false, shortSchemaNames: true, removeEmptySchemas: true);
 
 var app = builder.Build();
 

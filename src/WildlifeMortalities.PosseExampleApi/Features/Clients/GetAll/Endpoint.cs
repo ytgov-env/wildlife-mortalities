@@ -1,4 +1,6 @@
-﻿namespace WildlifeMortalities.PosseExampleApi.Features.Clients.GetAll;
+﻿using WildlifeMortalities.PosseExampleApi.Features.Clients.GetByEnvClientId;
+
+namespace WildlifeMortalities.PosseExampleApi.Features.Clients.GetAll;
 
 public class Endpoint : Endpoint<GetClientsRequest, GetClientsResponse>
 {
@@ -7,7 +9,7 @@ public class Endpoint : Endpoint<GetClientsRequest, GetClientsResponse>
         Get("/clients");
         Policies("ApiKey");
         Description(b => b
-            .Produces<IEnumerable<Client>>());
+            .Produces<GetClientsResponse>());
         Summary(s =>
         {
             s.ResponseExamples[200] = new GetClientsResponse
