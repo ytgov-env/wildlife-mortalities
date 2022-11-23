@@ -6,8 +6,8 @@ public record Authorization(
     string Number,
     string? WildlifeActPermitConditions,
     string? SpecialGuideLicenceGuidedHunterEnvClientId,
-    DateTimeOffset ActiveFromDateTime,
-    DateTimeOffset ActiveToDateTime,
+    DateTimeOffset? ValidFromDateTime,
+    DateTimeOffset? ValidToDateTime,
     DateTimeOffset LastModifiedDateTime
 );
 
