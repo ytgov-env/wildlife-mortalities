@@ -145,8 +145,6 @@ try
     );
 #endif
 
-    //builder.Services.AddSwaggerDoc();
-
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -158,9 +156,7 @@ try
     }
 
     app.UseHttpsRedirection();
-
     app.UseStaticFiles();
-
     app.UseRouting();
 
     app.UseCookiePolicy();
@@ -169,9 +165,6 @@ try
 
     app.MapBlazorHub();
     app.MapFallbackToPage("/_Host");
-
-    //app.UseOpenApi();
-    //app.UseSwaggerUi3(s => s.ConfigureDefaults());
 
     app.Run();
     return 0;
