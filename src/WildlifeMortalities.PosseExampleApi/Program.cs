@@ -34,7 +34,7 @@ builder.Services.AddSwaggerDoc(s =>
 
         // s.GenerateEnumMappingDescription = true;
     },
-    excludeNonFastEndpoints: true, addJWTBearerAuth: false, shortSchemaNames: true, removeEmptySchemas: true);
+    excludeNonFastEndpoints: true, addJWTBearerAuth: false, shortSchemaNames: false, removeEmptySchemas: true);
 
 var app = builder.Build();
 
@@ -43,7 +43,7 @@ app.UseAuthorization();
 app.UseFastEndpoints(c =>
 {
     c.Endpoints.RoutePrefix = "api";
-    c.Endpoints.ShortNames = true;
+    // c.Endpoints.ShortNames = true;
     c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
 });
 app.UseSwaggerGen();
