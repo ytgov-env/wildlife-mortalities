@@ -6,6 +6,15 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class BigGameHuntingLicence : Authorization
 {
+    public BigGameHuntingLicence()
+    {
+
+    }
+
+    public BigGameHuntingLicence(LicenceType type)
+    {
+        Type = type;
+    }
     public LicenceType Type { get; set; }
 
     public enum LicenceType

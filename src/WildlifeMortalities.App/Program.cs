@@ -1,8 +1,10 @@
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Serilog.Events;
+using WildlifeMortalities.App.HostedServices;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services;
 
@@ -27,16 +29,24 @@ try
         )
         .UseWindowsService();
 
+    var configuration = builder.Configuration;
+
     // Add services to the container.
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
     builder.Services.AddMudServices();
 
+    builder.Services.AddHostedService<PosseSyncService>();
     builder.Services.AddScoped<MortalityService>();
+    builder.Services.AddHttpClient<IPosseClientService, PosseClientService>(client =>
+    {
+        client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("ApiKey", configuration["PosseClientService:ApiKey"]);
+    });
     builder.Services.AddScoped<ClientService>();
     builder.Services.AddScoped<ConservationOfficerService>();
 
-    var configuration = builder.Configuration;
 
     // Add authentication services
     builder.Services

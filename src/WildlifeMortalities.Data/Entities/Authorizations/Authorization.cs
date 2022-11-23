@@ -46,8 +46,8 @@ public abstract class Authorization
 {
     public int Id { get; set; }
     public string Number { get; set; } = string.Empty;
-    public DateTime ValidFromDate { get; set; }
-    public DateTime ValidToDate { get; set; }
+    public DateTimeOffset ValidFromDate { get; set; }
+    public DateTimeOffset ValidToDate { get; set; }
     public string Season => $"{ValidFromDate.Year}-{ValidToDate.Year}";
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
