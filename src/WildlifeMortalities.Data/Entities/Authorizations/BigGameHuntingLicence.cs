@@ -19,15 +19,14 @@ public class BigGameHuntingLicence : Authorization
 
     public enum LicenceType
     {
-        Uninitialized = 0,
-        CanadianResident,
-        CanadianResidentSpecialGuided,
-        NonResident,
-        YukonResident,
-        YukonResidentSenior,
-        YukonResidentFirstNationsOrInuit,
-        YukonResidentFirstNationsOrInuitSenior,
-        YukonResidentTrapper
+        CanadianResident= 10,
+        CanadianResidentSpecialGuided = 20,
+        NonResident = 30,
+        YukonResident = 40,
+        YukonResidentSenior = 50,
+        YukonResidentFirstNationsOrInuit = 60,
+        YukonResidentFirstNationsOrInuitSenior = 70,
+        YukonResidentTrapper = 80
     }
 
     public List<HuntingSeal> HuntingSeals { get; set; } = null!;

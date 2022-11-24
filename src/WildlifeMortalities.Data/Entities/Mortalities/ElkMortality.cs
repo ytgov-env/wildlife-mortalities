@@ -8,9 +8,8 @@ public class ElkMortality : Mortality
     public ElkHerd Herd { get; set; }
     public enum ElkHerd
     {
-        Uninitialized = 0,
-        Braeburn,
-        Takhini
+        Braeburn = 10,
+        Takhini = 20
     }
 }
 

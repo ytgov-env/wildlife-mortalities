@@ -7,11 +7,33 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class HuntingSeal : Authorization
 {
-    public HuntedSpecies Species { get; set; }
+    public HuntingSeal()
+    {
+
+    }
+
+    public HuntingSeal(SealType type)
+    {
+        Type = type;
+    }
+    public SealType Type { get; set; }
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = null!;
     public HuntedMortalityReport? HuntedMortalityReport { get; set; }
     public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
+
+    public enum SealType
+    {
+        AmericanBlackBear = 10,
+        Caribou = 20,
+        Deer = 30,
+        Elk = 40,
+        GrizzlyBear = 50,
+        Moose = 60,
+        MountainGoat = 70,
+        ThinhornSheep = 80,
+        WoodBison = 90
+    }
 }
 
 public class SealConfig : IEntityTypeConfiguration<HuntingSeal>

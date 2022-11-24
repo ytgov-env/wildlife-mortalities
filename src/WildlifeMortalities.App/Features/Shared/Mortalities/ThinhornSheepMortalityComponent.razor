@@ -3,14 +3,14 @@
 @namespace WildlifeMortalities.App.Features.MortalityReports
 
 <MudSelect T="ThinhornSheepBodyColour?" @bind-Value="@ViewModel.BodyColour" Label="Body colour" Placeholder="Select a colour">
-    @foreach (var item in Enum.GetValues<ThinhornSheepBodyColour>().Where(s => s != ThinhornSheepBodyColour.Uninitialized))
+    @foreach (var item in Enum.GetValues<ThinhornSheepBodyColour>())
     {
         <MudSelectItem T="ThinhornSheepBodyColour?" Value="@item">@item</MudSelectItem>
     }
 </MudSelect>
 
 <MudSelect T="ThinhornSheepTailColour?" @bind-Value="@ViewModel.TailColour" Label="Tail colour" Placeholder="Select a colour">
-    @foreach (var item in Enum.GetValues<ThinhornSheepTailColour>().Where(s => s != ThinhornSheepTailColour.Uninitialized))
+    @foreach (var item in Enum.GetValues<ThinhornSheepTailColour>())
     {
         <MudSelectItem T="ThinhornSheepTailColour?" Value="@item">@item</MudSelectItem>
     }

@@ -6,7 +6,17 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class PhaHuntingPermit : Authorization
 {
+    public PhaHuntingPermit()
+    {
+    }
+
+    public PhaHuntingPermit(PermitType type)
+    {
+        Type = type;
+    }
+
     public PermitType Type { get; set; }
+
     public enum PermitType
     {
         Caribou = 10,

@@ -8,8 +8,7 @@ public class WoodBisonMortality : Mortality
 
 public enum PregnancyStatus
 {
-    Uninitialized = 0,
-    False = 1,
-    True = 2,
-    Unknown = 3
+    False = 10,
+    True = 20,
+    Unknown = 30
 }

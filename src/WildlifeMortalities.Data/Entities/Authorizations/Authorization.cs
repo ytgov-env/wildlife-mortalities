@@ -46,9 +46,13 @@ public abstract class Authorization
 {
     public int Id { get; set; }
     public string Number { get; set; } = string.Empty;
-    public DateTimeOffset ValidFromDate { get; set; }
-    public DateTimeOffset ValidToDate { get; set; }
-    public string Season => $"{ValidFromDate.Year}-{ValidToDate.Year}";
+    public DateTimeOffset? ActiveFromDate { get; set; }
+    public DateTimeOffset? ActiveToDate { get; set; }
+
+    public string Season => ActiveFromDate is null || ActiveToDate is null
+        ? string.Empty
+        : $"{ActiveFromDate?.Year}-{ActiveToDate?.Year}";
+
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 

@@ -23,8 +23,7 @@ public class Age
 
 public enum ConfidenceInAge
 {
-    Uninitialized = 0,
-    Fair = 1,
-    Good = 2,
-    Poor = 3
+    Fair = 10,
+    Good = 20,
+    Poor = 30
 }

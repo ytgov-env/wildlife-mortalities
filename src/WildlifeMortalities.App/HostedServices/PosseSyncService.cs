@@ -14,12 +14,11 @@ public class PosseSyncService : TimerBasedHostedService
 
     protected override async void DoWork(object? state)
     {
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            var posseClientService = scope.ServiceProvider.GetRequiredService<IPosseClientService>();
-            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        using var scope = _serviceProvider.CreateScope();
+        var posseClientService = scope.ServiceProvider.GetRequiredService<IPosseClientService>();
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            var apiResult = await posseClientService.RetrieveData();
-        }
+        // Todo replace parameter with modifiedSinceDateTime retrieved from the database
+        var apiResult = await posseClientService.RetrieveData(new DateTimeOffset());
     }
 }

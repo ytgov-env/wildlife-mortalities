@@ -7,6 +7,16 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class HuntingPermit : Authorization
 {
+
+    public HuntingPermit()
+    {
+
+    }
+
+    public HuntingPermit(PermitType type)
+    {
+        Type = type;
+    }
     public PermitType Type { get; set; }
 
     public enum PermitType

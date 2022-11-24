@@ -11,15 +11,13 @@ public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>
 
 public enum ThinhornSheepBodyColour
 {
-    Uninitialized = 0,
-    Dark = 1,
-    Fannin = 2,
-    White = 3
+    Dark = 10,
+    Fannin = 20,
+    White = 30
 }
 
 public enum ThinhornSheepTailColour
 {
-    Uninitialized = 0,
-    Dark = 1,
-    White = 2
+    Dark = 10,
+    White = 20
 }
