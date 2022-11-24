@@ -6,5 +6,6 @@ public class WildlifeActPermit : Authorization
 {
     public string Conditions { get; set; }
 
-    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
+    public override AuthorizationResult GetResult(MortalityReport report) =>
+        throw new NotImplementedException();
 }

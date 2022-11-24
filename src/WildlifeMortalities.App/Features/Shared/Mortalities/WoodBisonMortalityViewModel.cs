@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using WildlifeMortalities.App.Features.MortalityReports;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
 

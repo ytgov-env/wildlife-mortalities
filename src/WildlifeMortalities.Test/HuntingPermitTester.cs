@@ -7,14 +7,6 @@ namespace WildlifeMortalities.Test;
 
 public class HuntingPermitTester
 {
-    public class DummyHuntedMortalityReport : HuntedMortalityReport
-    {
-        public DummyHuntedMortalityReport()
-        {
-
-        }
-    }
-
     [Fact]
     public void GetResult_WithNonApplicableHuntedMortalityReport_ShouldReturnNotApplicableResult()
     {
@@ -54,4 +46,7 @@ public class HuntingPermitTester
         result.HasViolations.Should().BeFalse();
     }
 
+    public class DummyHuntedMortalityReport : HuntedMortalityReport
+    {
+    }
 }

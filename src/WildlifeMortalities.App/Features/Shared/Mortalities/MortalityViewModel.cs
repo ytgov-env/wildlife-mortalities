@@ -25,7 +25,9 @@ public class MortalityViewModel
             { AllSpecies.WoodBison, () => new WoodBisonMortality() }
         };
 
-    public MortalityViewModel() { }
+    public MortalityViewModel()
+    {
+    }
 
     public MortalityViewModel(Mortality mortality)
     {
@@ -48,8 +50,7 @@ public class MortalityViewModel
     {
         var result = new Dictionary<string, string>
         {
-            { "Species", Species!.GetDisplayName() },
-            { "Sex", Sex!.GetDisplayName() }
+            { "Species", Species!.GetDisplayName() }, { "Sex", Sex!.GetDisplayName() }
         };
 
         if (DateOfDeath.HasValue)
@@ -124,10 +125,10 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
             .IsInEnum()
             .WithMessage("Sex must be set to Female, Male, or Unknown");
         // TODO Is DateOfDeath required?
-        RuleFor(m => m.DateOfDeath)
-            .NotNull()
-            .WithMessage("Please select a date of death");
+        RuleFor(m => m.DateOfDeath).NotNull().WithMessage("Please select a date of death");
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
+{
+}

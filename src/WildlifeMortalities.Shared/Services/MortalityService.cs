@@ -2,7 +2,6 @@
 using Ardalis.Result.FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Shared.Validators;
@@ -13,7 +12,8 @@ public class MortalityService
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) => _dbContextFactory = dbContextFactory;
+    public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) =>
+        _dbContextFactory = dbContextFactory;
 
     public async Task<List<Mortality>> GetAllMortalities()
     {
@@ -75,15 +75,17 @@ public class MortalityService
     {
         var validator = new MortalityValidator<T>();
         var validation = await validator.ValidateAsync(mortality);
-        return !validation.IsValid ? Result<T>.Invalid(validation.AsErrors()) : Result<T>.Success(mortality);
+        return !validation.IsValid
+            ? Result<T>.Invalid(validation.AsErrors())
+            : Result<T>.Success(mortality);
     }
 
     public async Task<Result<T>> UpdateMortality<T>(T mortality) where T : Mortality
     {
         var validator = new MortalityValidator<T>();
         var validation = await validator.ValidateAsync(mortality);
-        return !validation.IsValid ? Result<T>.Invalid(validation.AsErrors()) : Result<T>.Success(mortality);
+        return !validation.IsValid
+            ? Result<T>.Invalid(validation.AsErrors())
+            : Result<T>.Success(mortality);
     }
-
-
 }

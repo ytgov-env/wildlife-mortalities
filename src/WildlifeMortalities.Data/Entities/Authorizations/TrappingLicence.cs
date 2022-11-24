@@ -6,16 +6,6 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class TrappingLicence : Authorization
 {
-    public TrappingLicence()
-    {
-
-    }
-
-    public TrappingLicence(LicenceType type)
-    {
-        Type = type;
-    }
-    public LicenceType Type { get; set; }
     public enum LicenceType
     {
         AssistantTrapper = 10,
@@ -26,13 +16,19 @@ public class TrappingLicence : Authorization
         GroupConcessionAreaMemberSenior = 60
     }
 
-    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
+    public TrappingLicence()
+    {
+    }
+
+    public TrappingLicence(LicenceType type) => Type = type;
+
+    public LicenceType Type { get; set; }
+
+    public override AuthorizationResult GetResult(MortalityReport report) =>
+        throw new NotImplementedException();
 }
 
 public class TrappingLicenceConfig : IEntityTypeConfiguration<TrappingLicence>
 {
-    public void Configure(EntityTypeBuilder<TrappingLicence> builder)
-    {
-        builder.ToTable("Authorizations");
-    }
+    public void Configure(EntityTypeBuilder<TrappingLicence> builder) => builder.ToTable("Authorizations");
 }

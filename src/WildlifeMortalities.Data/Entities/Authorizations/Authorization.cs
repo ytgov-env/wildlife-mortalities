@@ -11,19 +11,26 @@ public class ViolationResult
 
 public class AuthorizationResult
 {
-    private AuthorizationResult(Authorization authorization, IEnumerable<ViolationResult> violations, bool isApplicable)
+    private AuthorizationResult(
+        Authorization authorization,
+        IEnumerable<ViolationResult> violations,
+        bool isApplicable
+    )
     {
         Authorization = authorization;
         Violations = violations;
         IsApplicable = isApplicable;
     }
 
-    private AuthorizationResult(Authorization authorization) : this(authorization, Array.Empty<ViolationResult>())
+    private AuthorizationResult(Authorization authorization)
+        : this(authorization, Array.Empty<ViolationResult>())
     {
     }
 
-    private AuthorizationResult(Authorization authorization, IEnumerable<ViolationResult> violations) : this(
-        authorization, violations, true)
+    private AuthorizationResult(
+        Authorization authorization,
+        IEnumerable<ViolationResult> violations
+    ) : this(authorization, violations, true)
     {
     }
 
@@ -32,14 +39,15 @@ public class AuthorizationResult
     public bool HasViolations => Violations.Any();
     public bool IsApplicable { get; }
 
-    public static AuthorizationResult IsLegal(Authorization authorization) =>
-        new(authorization);
+    public static AuthorizationResult IsLegal(Authorization authorization) => new(authorization);
 
     public static AuthorizationResult NotApplicable(Authorization authorization) =>
         new(authorization, Array.Empty<ViolationResult>(), false);
 
-    public static AuthorizationResult IsIllegal(Authorization authorization, IEnumerable<ViolationResult> violations) =>
-        new(authorization, violations);
+    public static AuthorizationResult IsIllegal(
+        Authorization authorization,
+        IEnumerable<ViolationResult> violations
+    ) => new(authorization, violations);
 }
 
 public abstract class Authorization
@@ -49,17 +57,18 @@ public abstract class Authorization
     public DateTimeOffset? ActiveFromDate { get; set; }
     public DateTimeOffset? ActiveToDate { get; set; }
 
-    public string Season => ActiveFromDate is null || ActiveToDate is null
-        ? string.Empty
-        : $"{ActiveFromDate?.Year}-{ActiveToDate?.Year}";
+    public string Season =>
+        ActiveFromDate is null || ActiveToDate is null
+            ? string.Empty
+            : $"{ActiveFromDate?.Year}-{ActiveToDate?.Year}";
 
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
-    public record AuthorizationsSummary(IEnumerable<AuthorizationResult> ApplicableAuthorizationResults);
-
-    public static AuthorizationsSummary GetSummary(IEnumerable<Authorization> authorizations,
-        MortalityReport report)
+    public static AuthorizationsSummary GetSummary(
+        IEnumerable<Authorization> authorizations,
+        MortalityReport report
+    )
     {
         List<AuthorizationResult> applicableAuthorizationResults = new();
         foreach (var authorization in authorizations)
@@ -75,6 +84,10 @@ public abstract class Authorization
     }
 
     public abstract AuthorizationResult GetResult(MortalityReport report);
+
+    public record AuthorizationsSummary(
+        IEnumerable<AuthorizationResult> ApplicableAuthorizationResults
+    );
 }
 
 public class AuthorizationConfig : IEntityTypeConfiguration<Authorization>

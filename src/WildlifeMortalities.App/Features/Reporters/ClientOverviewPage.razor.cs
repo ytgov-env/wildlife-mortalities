@@ -27,7 +27,6 @@ public partial class ClientOverviewPage : IDisposable
         }
     }
 
-
     protected override async Task OnParametersSetAsync()
     {
         if (_selectedClientViewModel.SelectedClient == null)
@@ -60,10 +59,8 @@ public partial class ClientOverviewPage : IDisposable
         EnvClientId = _selectedClientViewModel.SelectedClient.EnvClientId;
     }
 
-    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input)
-    {
-        return (await ClientService.SearchByEnvClientId(input))
-            .Union(await ClientService.SearchByLastName(input))
-            .OrderBy(x => x.LastName);
-    }
+    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input) =>
+        (await ClientService.SearchByEnvClientId(input))
+        .Union(await ClientService.SearchByLastName(input))
+        .OrderBy(x => x.LastName);
 }

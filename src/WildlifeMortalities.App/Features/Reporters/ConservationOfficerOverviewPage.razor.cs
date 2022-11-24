@@ -38,10 +38,10 @@ public partial class ConservationOfficerOverviewPage : IDisposable
         ValidationChanged.InvokeAsync(!_context.GetValidationMessages().Any());
     }
 
-    private async Task<IEnumerable<ConservationOfficer>> SearchConservationOfficerByBadgeNumberOrLastName(string input)
-    {
-        return (await ConservationOfficerService.SearchByBadgeNumber(input))
-            .Union(await ConservationOfficerService.SearchByLastName(input))
-            .OrderBy(x => x.LastName);
-    }
+    private async Task<
+        IEnumerable<ConservationOfficer>
+    > SearchConservationOfficerByBadgeNumberOrLastName(string input) =>
+        (await ConservationOfficerService.SearchByBadgeNumber(input))
+        .Union(await ConservationOfficerService.SearchByLastName(input))
+        .OrderBy(x => x.LastName);
 }

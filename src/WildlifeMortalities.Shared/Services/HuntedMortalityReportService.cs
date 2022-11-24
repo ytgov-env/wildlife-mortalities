@@ -23,6 +23,10 @@ public class HuntedMortalityReportService : IDisposable
         _mortalityService = mortalityService;
     }
 
+    public void Dispose()
+    {
+    }
+
     public async Task<HuntedMortalityReport?> GetHarvestReportById(int id)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync();
@@ -53,7 +57,9 @@ public class HuntedMortalityReportService : IDisposable
         var mortality = result.Value;
         huntedMortalityReport.Mortality = mortality;
         huntedMortalityReport.Violations = await GetMortalityViolations(mortality);
-        huntedMortalityReport.Violations.AddRange(await GetHuntedMortalityReportViolations(huntedMortalityReport));
+        huntedMortalityReport.Violations.AddRange(
+            await GetHuntedMortalityReportViolations(huntedMortalityReport)
+        );
 
         await using var context = await _dbContextFactory.CreateDbContextAsync();
         context.Add(huntedMortalityReport);
@@ -89,7 +95,9 @@ public class HuntedMortalityReportService : IDisposable
         huntedMortalityReport.Mortality = mortality;
         huntedMortalityReport.Violations.Clear();
         huntedMortalityReport.Violations = await GetMortalityViolations(mortality);
-        huntedMortalityReport.Violations.AddRange(await GetHuntedMortalityReportViolations(huntedMortalityReport));
+        huntedMortalityReport.Violations.AddRange(
+            await GetHuntedMortalityReportViolations(huntedMortalityReport)
+        );
 
         await using var context = await _dbContextFactory.CreateDbContextAsync();
         context.Update(huntedMortalityReport);
@@ -97,7 +105,9 @@ public class HuntedMortalityReportService : IDisposable
         return Result<HuntedMortalityReport>.Success(huntedMortalityReport);
     }
 
-    private async Task<List<Violation>> GetHuntedMortalityReportViolations(HuntedMortalityReport report)
+    private async Task<List<Violation>> GetHuntedMortalityReportViolations(
+        HuntedMortalityReport report
+    )
     {
         var violations = new List<Violation>();
         switch (report.Mortality)
@@ -140,8 +150,6 @@ public class HuntedMortalityReportService : IDisposable
 
             case WoodBisonMortality woodBison:
                 break;
-
-
         }
 
         return violations;
@@ -193,9 +201,5 @@ public class HuntedMortalityReportService : IDisposable
         }
 
         return violations;
-    }
-
-    public void Dispose()
-    {
     }
 }

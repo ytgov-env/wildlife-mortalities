@@ -11,17 +11,13 @@ public class GameManagementArea
     public string Subzone { get; set; } = string.Empty;
     public string Area { get; } = string.Empty;
 
-    public static AllSpecies ResolveSubType(AllSpecies species)
-    {
+    public static AllSpecies ResolveSubType(AllSpecies species) =>
         // Todo implement herd/group resolution logic
-        return species;
-    }
+        species;
 }
 
 public class GameManagementAreaConfig : IEntityTypeConfiguration<GameManagementArea>
 {
-    public void Configure(EntityTypeBuilder<GameManagementArea> builder)
-    {
+    public void Configure(EntityTypeBuilder<GameManagementArea> builder) =>
         builder.Property(a => a.Area).HasComputedColumnSql("[Zone] + '-' + [Subzone]", true);
-    }
 }

@@ -1,6 +1,4 @@
-﻿using WildlifeMortalities.PosseExampleApi.Features.Clients.GetByEnvClientId;
-
-namespace WildlifeMortalities.PosseExampleApi.Features.Clients.GetAll;
+﻿namespace WildlifeMortalities.PosseExampleApi.Features.Clients.GetAll;
 
 public class Endpoint : Endpoint<GetClientsRequest, GetClientsResponse>
 {
@@ -8,8 +6,7 @@ public class Endpoint : Endpoint<GetClientsRequest, GetClientsResponse>
     {
         Get("/clients");
         Policies("ApiKey");
-        Description(b => b
-            .Produces<GetClientsResponse>());
+        Description(b => b.Produces<GetClientsResponse>());
         Summary(s =>
         {
             s.ResponseExamples[200] = new GetClientsResponse
@@ -22,14 +19,16 @@ public class Endpoint : Endpoint<GetClientsRequest, GetClientsResponse>
                         "John",
                         "Doe",
                         new DateOnly(2001, 1, 2),
-                        DateTimeOffset.Now),
+                        DateTimeOffset.Now
+                    ),
                     new(
                         "253020",
                         Array.Empty<string>(),
                         "Jane",
                         "Doe",
                         new DateOnly(1984, 11, 25),
-                        DateTimeOffset.Now)
+                        DateTimeOffset.Now
+                    )
                 }
             };
         });
@@ -47,14 +46,16 @@ public class Endpoint : Endpoint<GetClientsRequest, GetClientsResponse>
                     "John",
                     "Doe",
                     new DateOnly(1984, 11, 25),
-                    DateTimeOffset.Now),
+                    DateTimeOffset.Now
+                ),
                 new(
                     "23020",
                     Array.Empty<string>(),
                     "John",
                     "Doe",
                     new DateOnly(1984, 11, 25),
-                    DateTimeOffset.Now)
+                    DateTimeOffset.Now
+                )
             }
         };
 

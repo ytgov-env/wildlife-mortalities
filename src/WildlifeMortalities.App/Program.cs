@@ -41,12 +41,13 @@ try
     builder.Services.AddHttpClient<IPosseClientService, PosseClientService>(client =>
     {
         client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("ApiKey", configuration["PosseClientService:ApiKey"]);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "ApiKey",
+            configuration["PosseClientService:ApiKey"]
+        );
     });
     builder.Services.AddScoped<ClientService>();
     builder.Services.AddScoped<ConservationOfficerService>();
-
 
     // Add authentication services
     builder.Services

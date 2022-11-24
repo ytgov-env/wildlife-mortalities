@@ -1,14 +1,13 @@
 ﻿@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data
 @using WildlifeMortalities.Data.Entities
+@using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
 @using Microsoft.EntityFrameworkCore
-@using WildlifeMortalities.Data.Entities.People
-
 <MudDateRangePicker Editable="true" Label="Hunting dates"/>
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
-    ToStringFunc="@( (x) => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
 <MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="Client?" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
@@ -98,7 +97,8 @@
     [Inject]
     private ISnackbar SnackBar { get; set; } = null!;
 
-    [Inject] private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
+    [Inject]
+    private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {

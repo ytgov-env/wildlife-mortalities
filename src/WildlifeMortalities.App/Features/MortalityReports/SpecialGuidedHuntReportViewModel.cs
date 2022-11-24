@@ -9,7 +9,8 @@ public class SpecialGuidedHuntReportViewModel
     public Client Guide { get; set; } = null!;
     public GuidedHuntResult? Result { get; set; }
 
-    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } = new();
+    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } =
+        new();
 }
 
 public class SpecialGuidedHuntReportViewModelValidator

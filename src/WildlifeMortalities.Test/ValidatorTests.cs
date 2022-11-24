@@ -1,8 +1,5 @@
 ﻿using FluentValidation.TestHelper;
-using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Validators;
 

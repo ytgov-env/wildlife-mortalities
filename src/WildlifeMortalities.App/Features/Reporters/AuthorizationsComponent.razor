@@ -1,12 +1,12 @@
-﻿@using WildlifeMortalities.Data.Entities.People
-@using WildlifeMortalities.Shared.Services
+﻿@using WildlifeMortalities.Shared.Services
 <MudText Typo="Typo.h6">Authorizations</MudText>
 <MudList>
 </MudList>
 
 @code {
 
-    [Parameter, EditorRequired]
+    [Parameter]
+    [EditorRequired]
     public int ClientId { get; set; }
 
     private AuthorizationsViewModel _authorizationsViewModel = null!;

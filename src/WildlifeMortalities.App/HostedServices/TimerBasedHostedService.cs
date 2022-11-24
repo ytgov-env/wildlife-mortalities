@@ -14,13 +14,10 @@ public abstract class TimerBasedHostedService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(DoWork, null, _dueTime,
-            _period);
+        _timer = new Timer(DoWork, null, _dueTime, _period);
 
         return Task.CompletedTask;
     }
-
-    protected abstract void DoWork(object? state);
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
@@ -28,4 +25,6 @@ public abstract class TimerBasedHostedService : IHostedService
 
         return Task.CompletedTask;
     }
+
+    protected abstract void DoWork(object? state);
 }

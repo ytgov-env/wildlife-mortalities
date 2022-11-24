@@ -11,18 +11,18 @@ public class SpecialGuideLicence : Authorization
     public Client GuidedClient { get; set; } = null!;
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
-    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
+
+    public override AuthorizationResult GetResult(MortalityReport report) =>
+        throw new NotImplementedException();
 }
 
 public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLicence>
 {
-    public void Configure(EntityTypeBuilder<SpecialGuideLicence> builder)
-    {
+    public void Configure(EntityTypeBuilder<SpecialGuideLicence> builder) =>
         builder
             .ToTable("Authorizations")
             .HasOne(s => s.BigGameHuntingLicence)
             .WithOne(h => h.SpecialGuideLicence)
             .HasForeignKey<SpecialGuideLicence>(s => s.BigGameHuntingLicenceId)
             .OnDelete(DeleteBehavior.NoAction);
-    }
 }

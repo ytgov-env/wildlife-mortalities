@@ -6,9 +6,7 @@ public class Endpoint : Endpoint<GetClientByEnvClientIdRequest, GetClientByEnvCl
     {
         Get("/clients/{EnvClientId}");
         Policies("ApiKey");
-        Description(b => b
-            .Produces<GetClientByEnvClientIdResponse>()
-            .Produces(404));
+        Description(b => b.Produces<GetClientByEnvClientIdResponse>().Produces(404));
         Summary(s =>
         {
             s.ResponseExamples[200] = new GetClientByEnvClientIdResponse
@@ -18,7 +16,8 @@ public class Endpoint : Endpoint<GetClientByEnvClientIdRequest, GetClientByEnvCl
                     "John",
                     "Doe",
                     new DateOnly(1994, 11, 25),
-                    DateTimeOffset.Now)
+                    DateTimeOffset.Now
+                )
             };
         });
     }
@@ -32,7 +31,8 @@ public class Endpoint : Endpoint<GetClientByEnvClientIdRequest, GetClientByEnvCl
                 "John",
                 "Doe",
                 new DateOnly(1984, 11, 25),
-                DateTimeOffset.Now)
+                DateTimeOffset.Now
+            )
         };
 
         await SendAsync(response);

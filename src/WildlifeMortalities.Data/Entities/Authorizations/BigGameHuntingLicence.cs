@@ -6,20 +6,9 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class BigGameHuntingLicence : Authorization
 {
-    public BigGameHuntingLicence()
-    {
-
-    }
-
-    public BigGameHuntingLicence(LicenceType type)
-    {
-        Type = type;
-    }
-    public LicenceType Type { get; set; }
-
     public enum LicenceType
     {
-        CanadianResident= 10,
+        CanadianResident = 10,
         CanadianResidentSpecialGuided = 20,
         NonResident = 30,
         YukonResident = 40,
@@ -29,19 +18,26 @@ public class BigGameHuntingLicence : Authorization
         YukonResidentTrapper = 80
     }
 
+    public BigGameHuntingLicence()
+    {
+    }
+
+    public BigGameHuntingLicence(LicenceType type) => Type = type;
+
+    public LicenceType Type { get; set; }
+
     public List<HuntingSeal> HuntingSeals { get; set; } = null!;
     public List<HuntingPermit> HuntingPermits { get; set; } = null!;
     public List<PhaHuntingPermit> PhaHuntingPermits { get; set; } = null!;
     public SpecialGuideLicence? SpecialGuideLicence { get; set; }
     public OutfitterAssistantGuideLicence? OutfitterAssistantGuideLicence { get; set; }
     public OutfitterChiefGuideLicence? OutfitterChiefGuideLicence { get; set; }
-    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
+
+    public override AuthorizationResult GetResult(MortalityReport report) =>
+        throw new NotImplementedException();
 }
 
 public class BigGameHuntingLicenceConfig : IEntityTypeConfiguration<BigGameHuntingLicence>
 {
-    public void Configure(EntityTypeBuilder<BigGameHuntingLicence> builder)
-    {
-        builder.ToTable("Authorizations");
-    }
+    public void Configure(EntityTypeBuilder<BigGameHuntingLicence> builder) => builder.ToTable("Authorizations");
 }

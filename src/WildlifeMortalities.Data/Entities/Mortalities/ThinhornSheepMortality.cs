@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace WildlifeMortalities.Data.Entities.Mortalities;
+﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>
 {

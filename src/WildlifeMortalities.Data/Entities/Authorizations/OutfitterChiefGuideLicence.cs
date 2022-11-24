@@ -8,17 +8,17 @@ public class OutfitterChiefGuideLicence : Authorization
 {
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
-    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
+
+    public override AuthorizationResult GetResult(MortalityReport report) =>
+        throw new NotImplementedException();
 }
 
 public class OutfitterChiefGuideLicenceConfig : IEntityTypeConfiguration<OutfitterChiefGuideLicence>
 {
-    public void Configure(EntityTypeBuilder<OutfitterChiefGuideLicence> builder)
-    {
+    public void Configure(EntityTypeBuilder<OutfitterChiefGuideLicence> builder) =>
         builder
             .ToTable("Authorizations")
             .HasOne(p => p.BigGameHuntingLicence)
             .WithOne(h => h.OutfitterChiefGuideLicence)
             .OnDelete(DeleteBehavior.NoAction);
-    }
 }

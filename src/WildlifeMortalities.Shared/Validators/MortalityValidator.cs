@@ -1,5 +1,4 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Shared.Validators;
 

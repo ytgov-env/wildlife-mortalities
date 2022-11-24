@@ -9,5 +9,5 @@ public enum HuntedSpeciesWithGameManagementArea
     MountainGoat = HuntedSpecies.MountainGoat,
     MuleDeer = HuntedSpecies.MuleDeer,
     ThinhornSheep = HuntedSpecies.ThinhornSheep,
-    WoodBison = HuntedSpecies.WoodBison,
+    WoodBison = HuntedSpecies.WoodBison
 }

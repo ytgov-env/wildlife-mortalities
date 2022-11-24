@@ -7,10 +7,9 @@ public class PosseSyncService : TimerBasedHostedService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public PosseSyncService(IServiceProvider serviceProvider) : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(2))
-    {
+    public PosseSyncService(IServiceProvider serviceProvider)
+        : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(2)) =>
         _serviceProvider = serviceProvider;
-    }
 
     protected override async void DoWork(object? state)
     {

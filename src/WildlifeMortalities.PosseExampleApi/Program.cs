@@ -8,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddFastEndpoints();
 builder.Services.AddAuthentication();
-builder.Services.AddAuthorization(o =>
-    o.AddPolicy("ApiKey", b => b.RequireAssertion(_ => true)));
-builder.Services.AddSwaggerDoc(s =>
+builder.Services.AddAuthorization(o => o.AddPolicy("ApiKey", b => b.RequireAssertion(_ => true)));
+builder.Services.AddSwaggerDoc(
+    s =>
     {
         s.PostProcess = document =>
         {
@@ -24,17 +24,21 @@ builder.Services.AddSwaggerDoc(s =>
             };
         };
 
-        s.AddAuth("ApiKey",
+        s.AddAuth(
+            "ApiKey",
             new OpenApiSecurityScheme
             {
-                Name = "api_key",
-                In = OpenApiSecurityApiKeyLocation.Header,
-                Type = OpenApiSecuritySchemeType.ApiKey,
-            });
+                Name = "api_key", In = OpenApiSecurityApiKeyLocation.Header, Type = OpenApiSecuritySchemeType.ApiKey
+            }
+        );
 
         // s.GenerateEnumMappingDescription = true;
     },
-    excludeNonFastEndpoints: true, addJWTBearerAuth: false, shortSchemaNames: true, removeEmptySchemas: true);
+    excludeNonFastEndpoints: true,
+    addJWTBearerAuth: false,
+    shortSchemaNames: true,
+    removeEmptySchemas: true
+);
 
 var app = builder.Build();
 

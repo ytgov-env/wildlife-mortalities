@@ -6,17 +6,6 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class SmallGameHuntingLicence : Authorization
 {
-    public SmallGameHuntingLicence()
-    {
-    }
-
-    public SmallGameHuntingLicence(LicenceType type)
-    {
-        Type = type;
-    }
-
-    public LicenceType Type { get; set; }
-
     public enum LicenceType
     {
         CanadianResident = 10,
@@ -29,13 +18,19 @@ public class SmallGameHuntingLicence : Authorization
         YukonResidentFirstNationsOrInuitSenior = 80
     }
 
-    public override AuthorizationResult GetResult(MortalityReport report) => throw new NotImplementedException();
+    public SmallGameHuntingLicence()
+    {
+    }
+
+    public SmallGameHuntingLicence(LicenceType type) => Type = type;
+
+    public LicenceType Type { get; set; }
+
+    public override AuthorizationResult GetResult(MortalityReport report) =>
+        throw new NotImplementedException();
 }
 
 public class SmallGameHuntingLicenceConfig : IEntityTypeConfiguration<SmallGameHuntingLicence>
 {
-    public void Configure(EntityTypeBuilder<SmallGameHuntingLicence> builder)
-    {
-        builder.ToTable("Authorizations");
-    }
+    public void Configure(EntityTypeBuilder<SmallGameHuntingLicence> builder) => builder.ToTable("Authorizations");
 }

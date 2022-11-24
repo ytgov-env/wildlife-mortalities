@@ -11,5 +11,6 @@ public class OutfitterArea
 
 public class OutfitterAreaConfig : IEntityTypeConfiguration<OutfitterArea>
 {
-    public void Configure(EntityTypeBuilder<OutfitterArea> builder) => builder.HasIndex(a => a.Area).IsUnique();
+    public void Configure(EntityTypeBuilder<OutfitterArea> builder) =>
+        builder.HasIndex(a => a.Area).IsUnique();
 }

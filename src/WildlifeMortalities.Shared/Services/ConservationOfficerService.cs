@@ -7,7 +7,7 @@ namespace WildlifeMortalities.Shared.Services;
 public class ConservationOfficerService : IDisposable
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
-    private AppDbContext _dbContext;
+    private readonly AppDbContext _dbContext;
 
     public ConservationOfficerService(IDbContextFactory<AppDbContext> dbContextFactory)
     {
@@ -15,24 +15,18 @@ public class ConservationOfficerService : IDisposable
         _dbContext = _dbContextFactory.CreateDbContext();
     }
 
-    public async Task<IReadOnlyList<ConservationOfficer>> GetConservationOfficers()
-    {
-        return await _dbContext.People.OfType<ConservationOfficer>().AsNoTracking().ToListAsync();
-    }
+    public void Dispose() => _dbContext.Dispose();
 
-    public async Task<IEnumerable<ConservationOfficer>> SearchByLastName(string input)
-    {
-        return _dbContext.People
+    public async Task<IReadOnlyList<ConservationOfficer>> GetConservationOfficers() =>
+        await _dbContext.People.OfType<ConservationOfficer>().AsNoTracking().ToListAsync();
+
+    public async Task<IEnumerable<ConservationOfficer>> SearchByLastName(string input) =>
+        _dbContext.People
             .OfType<ConservationOfficer>()
             .Where(c => c.LastName.StartsWith(input));
-    }
 
-    public async Task<IEnumerable<ConservationOfficer>> SearchByBadgeNumber(string input)
-    {
-        return _dbContext.People
+    public async Task<IEnumerable<ConservationOfficer>> SearchByBadgeNumber(string input) =>
+        _dbContext.People
             .OfType<ConservationOfficer>()
             .Where(c => c.BadgeNumber.StartsWith(input));
-    }
-
-    public void Dispose() => _dbContext.Dispose();
 }

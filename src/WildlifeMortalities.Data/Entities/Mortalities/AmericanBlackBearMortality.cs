@@ -13,10 +13,8 @@ public class AmericanBlackBearMortality : Mortality<AmericanBlackBearMortality>
 
 public class AmericanBlackBearMortalityConfig : IEntityTypeConfiguration<AmericanBlackBearMortality>
 {
-    public void Configure(EntityTypeBuilder<AmericanBlackBearMortality> builder)
-    {
+    public void Configure(EntityTypeBuilder<AmericanBlackBearMortality> builder) =>
         builder
             .Property(m => m.IsShotInConflict)
             .HasColumnName(nameof(AmericanBlackBearMortality.IsShotInConflict));
-    }
 }

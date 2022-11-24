@@ -2,63 +2,85 @@
 
 namespace WildlifeMortalities.PosseExampleApi.Features.Authorizations.GetByEnvClientId;
 
-public class Endpoint : Endpoint<GetAuthorizationsByEnvClientIdRequest, GetAuthorizationsByEnvClientIdResponse>
+public class Endpoint
+    : Endpoint<GetAuthorizationsByEnvClientIdRequest, GetAuthorizationsByEnvClientIdResponse>
 {
     public override void Configure()
     {
         Get("/authorizations/{EnvClientId}");
         Policies("ApiKey");
-        Description(b => b
-            .Produces<GetAuthorizationsByEnvClientIdResponse>()
-            .Produces(404));
+        Description(b => b.Produces<GetAuthorizationsByEnvClientIdResponse>().Produces(404));
         Summary(s =>
         {
             s.ResponseExamples[200] = new GetAuthorizationsByEnvClientIdResponse
             {
-                Authorizations = new List<Authorization>()
+                Authorizations = new List<Authorization>
                 {
                     new(
                         AuthorizationType.BigGameHuntingLicence_YukonResident,
                         "532304",
-                        "EHL-24202", null, null,
+                        "EHL-24202",
+                        null,
+                        null,
                         new DateTimeOffset(2021, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
                         new DateTimeOffset(2021, 9, 12, 0, 0, 0, new TimeSpan(-7, 0, 0)),
-                        DateTimeOffset.Now),
+                        DateTimeOffset.Now
+                    ),
                     new(
                         AuthorizationType.HuntingSeal_AmericanBlackBear,
                         "532304",
-                        "EHS-2420", null, null,
+                        "EHS-2420",
+                        null,
+                        null,
                         new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
                         new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
-                        DateTimeOffset.Now),
+                        DateTimeOffset.Now
+                    ),
                     new(
-                    AuthorizationType.WildlifeActPermit,
-                    "532304",
-                    "EHS-2420", "You must...", null,
-                    new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
-                    new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
-                    DateTimeOffset.Now),
+                        AuthorizationType.WildlifeActPermit,
+                        "532304",
+                        "EHS-2420",
+                        "You must...",
+                        null,
+                        new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
+                        new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
+                        DateTimeOffset.Now
+                    ),
                     new(
                         AuthorizationType.SpecialGuideLicence,
                         "532304",
-                        "EHS-2420", null, "403203",
+                        "EHS-2420",
+                        null,
+                        "403203",
                         new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
                         new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
-                        DateTimeOffset.Now)
+                        DateTimeOffset.Now
+                    )
                 }
             };
         });
     }
 
-    public override Task HandleAsync(GetAuthorizationsByEnvClientIdRequest req, CancellationToken ct)
+    public override Task HandleAsync(
+        GetAuthorizationsByEnvClientIdRequest req,
+        CancellationToken ct
+    )
     {
-        var response = new GetAuthorizationsByEnvClientIdResponse()
+        var response = new GetAuthorizationsByEnvClientIdResponse
         {
-            Authorizations = new List<Authorization>()
+            Authorizations = new List<Authorization>
             {
-                new(req.AuthorizationType ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
-                    req.EnvClientId ?? "41203", "EHL-24202", null, null,
-                    DateTimeOffset.Now, DateTimeOffset.Now, DateTimeOffset.Now)
+                new(
+                    req.AuthorizationType
+                    ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
+                    req.EnvClientId ?? "41203",
+                    "EHL-24202",
+                    null,
+                    null,
+                    DateTimeOffset.Now,
+                    DateTimeOffset.Now,
+                    DateTimeOffset.Now
+                )
             }
         };
 

@@ -13,7 +13,8 @@ public class OutfitterGuidedHuntReportViewModel
     public OutfitterArea OutfitterArea { get; set; } = new();
     public GuidedHuntResult? Result { get; set; }
 
-    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } = new();
+    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } =
+        new();
 }
 
 public class OutfitterGuidedHuntReportViewModelValidator

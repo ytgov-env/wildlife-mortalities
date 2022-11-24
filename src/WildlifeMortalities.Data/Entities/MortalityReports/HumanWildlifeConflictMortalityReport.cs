@@ -11,13 +11,12 @@ public class HumanWildlifeConflictMortalityReport : MortalityReport
     public string HumanWildlifeConflictNumber { get; set; } = string.Empty;
 }
 
-public class HumanWildlifeConflictMortalityReportConfig : IEntityTypeConfiguration<HumanWildlifeConflictMortalityReport>
+public class HumanWildlifeConflictMortalityReportConfig
+    : IEntityTypeConfiguration<HumanWildlifeConflictMortalityReport>
 {
-    public void Configure(EntityTypeBuilder<HumanWildlifeConflictMortalityReport> builder)
-    {
+    public void Configure(EntityTypeBuilder<HumanWildlifeConflictMortalityReport> builder) =>
         builder
             .HasOne(c => c.ConservationOfficer)
             .WithMany(co => co.HumanWildlifeConflictReports)
             .OnDelete(DeleteBehavior.NoAction);
-    }
 }

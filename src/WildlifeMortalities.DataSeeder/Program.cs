@@ -1,10 +1,7 @@
-﻿using WildlifeMortalities.Data;
+﻿using Bogus;
+using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Enums;
-using Bogus;
-
 
 Console.WriteLine("Starting data seeding...");
 Console.WriteLine("-----------------------");

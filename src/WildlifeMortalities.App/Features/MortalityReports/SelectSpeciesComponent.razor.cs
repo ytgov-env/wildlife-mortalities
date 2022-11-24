@@ -6,11 +6,7 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 public partial class SelectSpeciesComponent
 {
     private static readonly Dictionary<TrappedSpecies, AllSpecies> s_trappedMapper =
-        new()
-        {
-            { TrappedSpecies.GreyWolf, AllSpecies.GreyWolf },
-            { TrappedSpecies.Wolverine, AllSpecies.Wolverine }
-        };
+        new() { { TrappedSpecies.GreyWolf, AllSpecies.GreyWolf }, { TrappedSpecies.Wolverine, AllSpecies.Wolverine } };
 
     private static readonly Dictionary<HuntedSpecies, AllSpecies> s_huntedMapper =
         new()
@@ -27,14 +23,12 @@ public partial class SelectSpeciesComponent
             { HuntedSpecies.ThinhornSheep, AllSpecies.ThinhornSheep },
             { HuntedSpecies.WhiteTailedDeer, AllSpecies.WhiteTailedDeer },
             { HuntedSpecies.Wolverine, AllSpecies.Wolverine },
-            { HuntedSpecies.WoodBison, AllSpecies.WoodBison },
+            { HuntedSpecies.WoodBison, AllSpecies.WoodBison }
         };
 
-    [Parameter]
-    public MortalityReportType ReportType { get; set; }
+    [Parameter] public MortalityReportType ReportType { get; set; }
 
-    [Parameter]
-    public EventCallback<AllSpecies> SpeciesChanged { get; set; }
+    [Parameter] public EventCallback<AllSpecies> SpeciesChanged { get; set; }
 
     protected override void FieldsChanged()
     {

@@ -5,10 +5,7 @@ public class ApiKeyMiddleware
     private const string ApiKeyName = "api_key";
     private readonly RequestDelegate _next;
 
-    public ApiKeyMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+    public ApiKeyMiddleware(RequestDelegate next) => _next = next;
 
     public async Task InvokeAsync(HttpContext context)
     {

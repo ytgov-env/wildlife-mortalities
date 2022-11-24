@@ -2,7 +2,6 @@
 using WildlifeMortalities.App.Features.Shared.Mortalities;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.MortalityReports;
-using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
@@ -17,7 +16,9 @@ public class MortalityReportPageViewModel
     public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }
 }
 
-public class MortalityReportViewModelValidator : AbstractValidator<MortalityReportPageViewModel> { }
+public class MortalityReportViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
+{
+}
 
 public class HuntedMortalityReportViewModel
 {
@@ -31,7 +32,7 @@ public class HuntedMortalityReportViewModel
     {
         var species = GameManagementArea.ResolveSubType(MortalityViewModel.Species!.Value);
 
-        var report = new HuntedMortalityReport()
+        var report = new HuntedMortalityReport
         {
             Mortality = MortalityViewModel.GetMortality(species),
             Landmark = Landmark,

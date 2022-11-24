@@ -5,8 +5,7 @@ using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public abstract class Mortality<T> : Mortality
-    where T : Mortality
+public abstract class Mortality<T> : Mortality where T : Mortality
 {
     public virtual IEntityTypeConfiguration<T> GetConfig() => new MortalityConfig<T>();
 }

@@ -7,6 +7,8 @@ public partial class BaseMortalityComponent : IDisposable
 {
     private EditContext? _context;
 
+    private bool _ignoreChangedEvent;
+
     [Parameter] public MortalityViewModel ViewModel { get; set; } = default!;
 
     [CascadingParameter] public EditContext Context { get; set; } = default!;
@@ -30,11 +32,13 @@ public partial class BaseMortalityComponent : IDisposable
         _context = Context;
     }
 
-    private bool _ignoreChangedEvent;
-
     private void Context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
-        if(_ignoreChangedEvent) { return; }
+        if (_ignoreChangedEvent)
+        {
+            return;
+        }
+
         if (
             e.FieldIdentifier.Model == ViewModel
             && e.FieldIdentifier.FieldName == nameof(MortalityViewModel.Longitude)
@@ -45,7 +49,6 @@ public partial class BaseMortalityComponent : IDisposable
                 new FieldIdentifier(ViewModel, nameof(MortalityViewModel.Latitude))
             );
             _ignoreChangedEvent = false;
-
         }
         else if (
             e.FieldIdentifier.Model == ViewModel
@@ -59,7 +62,6 @@ public partial class BaseMortalityComponent : IDisposable
             );
 
             _ignoreChangedEvent = false;
-
         }
     }
 }

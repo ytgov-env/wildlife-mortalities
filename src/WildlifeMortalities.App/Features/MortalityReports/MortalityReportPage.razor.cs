@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.GuidedReports;
 using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Data.Enums;
@@ -15,13 +14,11 @@ public partial class MortalityReportPage
     private EditContext _editContext;
     private MortalityReportPageViewModel _vm;
 
-    [Parameter]
-    public int PersonId { get; set; }
+    [Parameter] public int PersonId { get; set; }
 
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
-    [Inject]
-    private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
+    [Inject] private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
 
     protected override void OnInitialized()
     {

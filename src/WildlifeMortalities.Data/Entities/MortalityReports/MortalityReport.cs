@@ -12,9 +12,6 @@ public abstract class MortalityReport
 
 public class MortalityReportConfig : IEntityTypeConfiguration<MortalityReport>
 {
-    public void Configure(EntityTypeBuilder<MortalityReport> builder)
-    {
-        builder.HasOne(m => m.Mortality)
-            .WithOne(m => m.MortalityReport);
-    }
+    public void Configure(EntityTypeBuilder<MortalityReport> builder) =>
+        builder.HasOne(m => m.Mortality).WithOne(m => m.MortalityReport);
 }

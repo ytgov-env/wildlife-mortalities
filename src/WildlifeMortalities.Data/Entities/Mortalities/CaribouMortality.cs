@@ -5,8 +5,6 @@ namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class CaribouMortality : Mortality
 {
-    public CaribouHerd Herd { get; set; }
-
     public enum CaribouHerd
     {
         Aishihik,
@@ -41,14 +39,15 @@ public class CaribouMortality : Mortality
         Tay,
         WolfLake
     }
+
+    public CaribouHerd Herd { get; set; }
 }
 
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>
 {
-    public void Configure(EntityTypeBuilder<CaribouMortality> builder)
-    {
+    public void Configure(EntityTypeBuilder<CaribouMortality> builder) =>
         builder
             .ToTable("Mortalities")
-            .Property(w => w.Herd).HasColumnName(nameof(CaribouMortality.CaribouHerd));
-    }
+            .Property(w => w.Herd)
+            .HasColumnName(nameof(CaribouMortality.CaribouHerd));
 }

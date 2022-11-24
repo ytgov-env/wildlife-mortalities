@@ -8,8 +8,7 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
     {
         Get("/authorizations");
         Policies("ApiKey");
-        Description(b => b
-            .Produces<GetAuthorizationsResponse>());
+        Description(b => b.Produces<GetAuthorizationsResponse>());
         Summary(s =>
         {
             s.ResponseExamples[200] = new GetAuthorizationsResponse
@@ -19,24 +18,33 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
                     new(
                         AuthorizationType.BigGameHuntingLicence_YukonResident,
                         "532304",
-                        "EHL-24202", null, null,
+                        "EHL-24202",
+                        null,
+                        null,
                         new DateTimeOffset(2021, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
                         new DateTimeOffset(2021, 9, 12, 0, 0, 0, new TimeSpan(-7, 0, 0)),
-                        DateTimeOffset.Now),
+                        DateTimeOffset.Now
+                    ),
                     new(
                         AuthorizationType.PhaHuntingPermit_Elk,
                         "231030",
-                        "EHP-24240", null, null,
+                        "EHP-24240",
+                        null,
+                        null,
                         new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
                         new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
-                        DateTimeOffset.Now),
+                        DateTimeOffset.Now
+                    ),
                     new(
                         AuthorizationType.PhaHuntingPermit_ThinhornSheepKluane,
                         "632300",
-                        "EHP-32304", null, null,
+                        "EHP-32304",
+                        null,
+                        null,
                         new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
                         new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
-                        DateTimeOffset.Now)
+                        DateTimeOffset.Now
+                    )
                 }
             };
         });
@@ -44,13 +52,21 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
 
     public override Task HandleAsync(GetAuthorizationsRequest req, CancellationToken ct)
     {
-        var response = new GetAuthorizationsResponse()
+        var response = new GetAuthorizationsResponse
         {
             Authorizations = new List<Authorization>
             {
-                new(req.AuthorizationType ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
-                    "41203", "EHL-24202", null, null,
-                    DateTimeOffset.Now, DateTimeOffset.Now, DateTimeOffset.Now)
+                new(
+                    req.AuthorizationType
+                    ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
+                    "41203",
+                    "EHL-24202",
+                    null,
+                    null,
+                    DateTimeOffset.Now,
+                    DateTimeOffset.Now,
+                    DateTimeOffset.Now
+                )
             }
         };
 

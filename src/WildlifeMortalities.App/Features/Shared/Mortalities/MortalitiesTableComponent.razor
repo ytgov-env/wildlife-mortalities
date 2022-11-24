@@ -1,6 +1,5 @@
 ﻿@using WildlifeMortalities.Data.Entities.Mortalities
 @using WildlifeMortalities.Shared.Services
-
 <MudTable Items="_mortalities">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Mortalities</MudText>
@@ -36,7 +35,14 @@
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync() => _mortalities = await MortalityService.GetAllMortalities();
+    protected override async Task OnInitializedAsync()
+    {
+        _mortalities = await MortalityService.GetAllMortalities();
+    }
 
-    private void CreateMortalityReport() => NavigationManager.NavigateTo($"mortality-reports/new/{PersonId}");
+    private void CreateMortalityReport()
+    {
+        NavigationManager.NavigateTo($"mortality-reports/new/{PersonId}");
+    }
+
 }
