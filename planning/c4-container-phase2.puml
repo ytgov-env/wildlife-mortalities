@@ -26,14 +26,16 @@ System_Boundary(c1, "Wildlife Mortalities"){
 }
 Container_Ext(log_store, "Centralized Log Store", "Seq", "Holds all error logs, and logs relating to users connecting, viewing, and updating data")
 
+System_Ext(hwcr, "Survey123 Human-Wildlife Conflict App", "Mobile app used by Conservation Officers in the field")
 System_Ext(power_bi, "Power BI Service")
 System_Ext(aimes, "AIMES", "The case management system for Conservation Officer investigations")
 System_Ext(fme, "FME")
 System_Ext(posse, "POSSE", "The authoritative source for client, licence, and permit data")
-System_Ext(arcgis, "ArcGIS map service", "Contains the hunting boundaries for all licences and permits")
+System_Ext(arcgis, "ArcGIS Map Service", "Contains the hunting boundaries for all licences and permits")
 
 SystemDb_Ext(data_warehouse, "Enterprise Data Warehouse")
 
+Rel(hwcr, api, "Submits HWC reports using", "JSON/HTTPS")
 Rel(client_service_rep, app, "Uses", "HTTPS/WebSocket")
 Rel(co, app, "Uses", "HTTPS/WebSocket")
 Rel(harvest_technician, app, "Uses", "HTTPS/WebSocket")
@@ -53,5 +55,5 @@ Rel(backend, posse, "Periodically retrieves up-to-date client, licence, and perm
 Rel(posse, api, "Retrieves harvest report data using", "JSON/HTTPS")
 Rel(backend, log_store, "Stores logs using", "JSON/HTTPS")
 
-Rel(aimes, api, "Uses", "HTTPS")
+Rel(aimes, api, "Retrieves mortality reports, and reports violations using", "JSON/HTTPS")
 @enduml
