@@ -28,3 +28,10 @@ public class HuntedMortalityReportConfig : IEntityTypeConfiguration<HuntedMortal
     {
     }
 }
+
+public enum HuntedMortalityReportStatus
+{
+    Complete = 10,
+    CompleteWithViolations = 20,
+    WaitingOnClient = 30
+}

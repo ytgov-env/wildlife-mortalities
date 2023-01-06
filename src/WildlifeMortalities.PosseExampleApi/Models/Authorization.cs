@@ -6,6 +6,11 @@ public record Authorization(
     string Number,
     string? WildlifeActPermitConditions,
     string? SpecialGuideLicenceGuidedHunterEnvClientId,
+    string? PhaHuntingPermitHuntCode,
+    // applies to canadian resident and non-resident licences
+    List<string> OutfitterAreas,
+    // applies to all trapping licences
+    List<string> RegisteredTrappingConcessions,
     DateTimeOffset? ValidFromDateTime,
     DateTimeOffset? ValidToDateTime,
     DateTimeOffset LastModifiedDateTime
@@ -30,7 +35,7 @@ public enum AuthorizationType
     HuntingPermit_CaribouFortymileSummerPeriodSix = 150,
     HuntingPermit_CaribouFortymileSummerPeriodSeven = 160,
     HuntingPermit_CaribouFortymileSummerPeriodEight = 170,
-    HuntingPermit_CaribouFortymileWinter = 180,
+    HuntingPermit_CaribouFortymileWinterThreshold = 180,
     HuntingPermit_CaribouHartRiver = 190,
     HuntingPermit_CaribouNelchina = 200,
     HuntingPermit_ElkAdaptive = 210,

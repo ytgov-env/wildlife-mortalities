@@ -36,16 +36,16 @@ try
     builder.Services.AddServerSideBlazor();
     builder.Services.AddMudServices();
 
-    builder.Services.AddHostedService<PosseSyncService>();
+    // builder.Services.AddHostedService<PosseSyncService>();
     builder.Services.AddScoped<MortalityService>();
-    builder.Services.AddHttpClient<IPosseClientService, PosseClientService>(client =>
-    {
-        client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-            "ApiKey",
-            configuration["PosseClientService:ApiKey"]
-        );
-    });
+    // builder.Services.AddHttpClient<IPosseClientService, PosseClientService>(client =>
+    // {
+    //     client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
+    //     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+    //         "ApiKey",
+    //         configuration["PosseClientService:ApiKey"]
+    //     );
+    // });
     builder.Services.AddScoped<ClientService>();
     builder.Services.AddScoped<ConservationOfficerService>();
 

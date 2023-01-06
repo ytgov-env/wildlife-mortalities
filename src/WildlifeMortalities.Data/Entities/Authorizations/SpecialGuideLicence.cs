@@ -18,11 +18,17 @@ public class SpecialGuideLicence : Authorization
 
 public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLicence>
 {
-    public void Configure(EntityTypeBuilder<SpecialGuideLicence> builder) =>
+    public void Configure(EntityTypeBuilder<SpecialGuideLicence> builder)
+    {
         builder
             .ToTable("Authorizations")
             .HasOne(s => s.BigGameHuntingLicence)
             .WithOne(h => h.SpecialGuideLicence)
             .HasForeignKey<SpecialGuideLicence>(s => s.BigGameHuntingLicenceId)
             .OnDelete(DeleteBehavior.NoAction);
+        builder
+            .HasOne(s => s.GuidedClient)
+            .WithMany(c => c.SpecialGuideLicences)
+            .OnDelete(DeleteBehavior.NoAction);
+    }
 }
