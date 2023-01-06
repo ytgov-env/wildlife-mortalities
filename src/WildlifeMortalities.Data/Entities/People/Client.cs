@@ -9,7 +9,9 @@ public class Client : Person
 {
     public string EnvClientId { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
+
     public string LastName { get; set; } = string.Empty;
+
     // Client is the guided hunter
     public List<SpecialGuideLicence> SpecialGuideLicences { get; set; } = null!;
     public DateTime BirthDate { get; set; }

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Data.Entities.MortalityReports;
 

@@ -7,8 +7,8 @@ namespace WildlifeMortalities.Shared.Services;
 
 public class ClientService : IDisposable
 {
-    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
     private readonly AppDbContext _dbContext;
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
     public ClientService(IDbContextFactory<AppDbContext> dbContextFactory)
     {
