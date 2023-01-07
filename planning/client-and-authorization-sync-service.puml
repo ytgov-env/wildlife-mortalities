@@ -1,0 +1,65 @@
+@startuml client-and-authorization-sync-service
+!theme materia
+skinparam backgroundColor white
+title client and authorization sync service
+
+|wildlife mortalities|
+repeat 
+:send GET request to /api/clients,
+passing queryParam ModifiedSinceDateTime = ISO 8601 DateTime of the previous request;
+
+|posse|
+:send JSON response;
+
+|wildlife mortalities|
+if (JSON document is empty?) then (false)
+    repeat :read next client;
+
+    if (a client with this envClientId already exists?) then (true)
+        :update properties: 
+        previousEnvClientIds, firstName, 
+        lastName, birthDate, lastModifiedDateTime;
+    else (false)
+        if (previousEnvClientIds array is empty?) then (true)
+            :create new client;
+        else (false)
+            if (a client with one of these envClientIds already exists?) then (true)
+                :update properties: 
+                envClientId, previousEnvClientIds, 
+                firstName, lastName, birthDate,
+                lastModifiedDateTime;
+            else (false)
+                :create new client;
+            endif
+        endif
+    endif
+    repeat while (end of JSON document?) is (false)
+    -> true;
+else (true)
+endif
+
+:send GET request to /api/authorizations,
+passing queryParam ModifiedSinceDateTime = ISO 8601 DateTime of the previous request;
+
+|posse|
+:send JSON response;
+
+|wildlife mortalities|
+if (JSON document is empty?) then (false)
+    repeat :read next authorization;
+
+    if (an authorization with the same client, number, and season already exists?) then (true)
+        :update properties;
+    else (false)
+        :create new authorization;
+    endif
+
+    repeat while (end of JSON document?) is (false)
+    -> true;
+else (true)
+endif
+
+:wait ~120 seconds
+(interval to be determined);
+repeat while
+@enduml
