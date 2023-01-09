@@ -3,39 +3,58 @@
 @using WildlifeMortalities.Data.Enums
 @inherits ReportTypeComponent<SelectSpeciesViewModel>
 
-<EditForm EditContext="Context">
-    <FluentValidationValidator Validator="new SelectSpeciesViewModelValidator(ReportType)"/>
 
-    @if (ReportType is MortalityReportType.Conflict)
+@if (ReportType is MortalityReportType.Conflict)
+{
+}
+else if (ReportType is MortalityReportType.IndividualHunt or MortalityReportType.OutfitterGuidedHunt)
+{
+    <MudSelect T="HuntedSpecies?" Value="GetModel().HuntedSpecies" ValueChanged="OnHuntedSpeciesChanged" For="@(() => GetModel().HuntedSpecies)" Label="Species" Placeholder="Select a species">
+        @foreach (var species in Enum.GetValues<HuntedSpecies>().OrderBy(s => s.GetDisplayName()))
+        {
+            <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
+        }
+    </MudSelect>
+}
+else if (ReportType is MortalityReportType.SpecialGuidedHunt)
+{
+    <MudSelect T="HuntedSpecies?" Value="GetModel().HuntedSpecies" ValueChanged="OnHuntedSpeciesChanged" For="@(() => GetModel().HuntedSpecies)" Label="Species" Placeholder="Select a species">
+        @foreach (var species in Enum.GetValues<HuntedSpecies>()
+            .Where(s => s is HuntedSpecies.AmericanBlackBear or HuntedSpecies.Caribou or HuntedSpecies.Coyote or HuntedSpecies.GreyWolf or HuntedSpecies.WoodBison)
+            .OrderBy(s => s.GetDisplayName()))
+        {
+            <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
+        }
+    </MudSelect>
+}
+else if (ReportType is MortalityReportType.Trapped)
+{
+    <MudSelect T="TrappedSpecies?" Value="GetModel().TrappedSpecies" ValueChanged="OnTrappedSpeciesSpeciesChanged" For="@(() => GetModel().TrappedSpecies)" Label="Species" Placeholder="Select a species">
+        @foreach (var species in Enum.GetValues<TrappedSpecies>().OrderBy(s => s.GetDisplayName()))
+        {
+            <MudSelectItem Value="@species" T="TrappedSpecies?">@species.GetDisplayName()</MudSelectItem>
+        }
+    </MudSelect>
+}
+
+@code {
+
+    private SelectSpeciesViewModel GetModel()
     {
+        return CascadingViewModel ?? ViewModel;
     }
-    else if (ReportType is MortalityReportType.IndividualHunt or MortalityReportType.OutfitterGuidedHunt)
+
+    private async Task OnHuntedSpeciesChanged(HuntedSpecies? species)
     {
-        <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
-            @foreach (var species in Enum.GetValues<HuntedSpecies>().OrderBy(s => s.GetDisplayName()))
-            {
-                <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
-            }
-        </MudSelect>
+        GetModel().HuntedSpecies = species;
+        await SpeciesChanged.InvokeAsync(s_huntedMapper[species.Value]);
     }
-    else if (ReportType is MortalityReportType.SpecialGuidedHunt)
+
+    private async Task OnTrappedSpeciesSpeciesChanged(TrappedSpecies? species)
     {
-        <MudSelect T="HuntedSpecies?" @bind-Value="ViewModel.HuntedSpecies" For="@(() => ViewModel.HuntedSpecies)" Label="Species" Placeholder="Select a species">
-            @foreach (var species in Enum.GetValues<HuntedSpecies>()
-                .Where(s => s is HuntedSpecies.AmericanBlackBear or HuntedSpecies.Caribou or HuntedSpecies.Coyote or HuntedSpecies.GreyWolf or HuntedSpecies.WoodBison)
-                .OrderBy(s => s.GetDisplayName()))
-            {
-                <MudSelectItem Value="@species" T="HuntedSpecies?">@species.GetDisplayName()</MudSelectItem>
-            }
-        </MudSelect>
+        GetModel().TrappedSpecies = species;
+        await SpeciesChanged.InvokeAsync(s_trappedMapper[ViewModel.TrappedSpecies.Value]);
     }
-    else if (ReportType is MortalityReportType.Trapped)
-    {
-        <MudSelect T="TrappedSpecies?" @bind-Value="ViewModel.TrappedSpecies" For="@(() => ViewModel.TrappedSpecies)" Label="Species" Placeholder="Select a species">
-            @foreach (var species in Enum.GetValues<TrappedSpecies>().OrderBy(s => s.GetDisplayName()))
-            {
-                <MudSelectItem Value="@species" T="TrappedSpecies?">@species.GetDisplayName()</MudSelectItem>
-            }
-        </MudSelect>
-    }
-</EditForm>
+
+
+}

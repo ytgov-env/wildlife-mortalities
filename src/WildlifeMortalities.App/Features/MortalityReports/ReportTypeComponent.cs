@@ -6,7 +6,11 @@ namespace WildlifeMortalities.App.Features.MortalityReports;
 public abstract class ReportTypeComponent<T> : ComponentBase, IDisposable where T : new()
 {
     protected EditContext Context = null!;
-    protected T ViewModel { get; private set; }
+
+    [CascadingParameter(Name = "SpecialViewModel")]
+    public T? CascadingViewModel { get; set; }
+
+    [Parameter] public T ViewModel { get; set; }
 
     [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
 

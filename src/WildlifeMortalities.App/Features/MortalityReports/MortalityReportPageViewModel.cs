@@ -16,12 +16,21 @@ public class MortalityReportPageViewModel
     public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }
 }
 
-public class MortalityReportViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
+public class MortalityReportPageViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
 {
+    public MortalityReportPageViewModelValidator()
+    {
+        RuleFor(x => x.MortalityReportType).NotEmpty();
+
+        RuleFor(x => x.HuntedMortalityReportViewModel)
+            .SetValidator(new HuntedMortalityReportViewModelValidator())
+            .When(x => x.MortalityReportType == MortalityReportType.IndividualHunt);
+    }
 }
 
 public class HuntedMortalityReportViewModel
 {
+    public SelectSpeciesViewModel SelectSpeciesViewModel { get; set; } = new();
     public string Landmark { get; set; } = string.Empty;
     public GameManagementArea? GameManagementArea { get; set; }
     public string Comment { get; set; } = string.Empty;
@@ -55,6 +64,9 @@ public class HuntedMortalityReportViewModelValidator
         RuleFor(x => x.Comment)
             .Length(10, 1000)
             .When(x => string.IsNullOrEmpty(x.Comment) == false);
+
+        RuleFor(x => x.SelectSpeciesViewModel)
+            .SetValidator(new SelectSpeciesViewModelValidator(MortalityReportType.IndividualHunt));
         RuleFor(x => x.MortalityViewModel)
             .NotNull()
             .SetInheritanceValidator(x =>

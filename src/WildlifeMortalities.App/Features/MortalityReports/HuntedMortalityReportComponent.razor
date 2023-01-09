@@ -2,17 +2,16 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data
 @using WildlifeMortalities.Data.Entities
-<EditForm EditContext="_context">
-    <FluentValidationValidator/>
+<CascadingValue Name="SpecialViewModel" Value="ViewModel.SelectSpeciesViewModel" IsFixed="true">
     <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="MortalityReportType" EditViewModel="@(MortalityReportType.HasValue == false ? ViewModel.MortalityViewModel : null)"/>
     <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
     <MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
                      ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
     <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4"/>
-</EditForm>
+</CascadingValue>
 
 @code {
-    private EditContext _context = default!;
+
     private List<GameManagementArea> _gameManagementAreas = new();
 
     [Parameter]
@@ -22,10 +21,6 @@
     [Inject]
     private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
 
-    protected override void OnInitialized()
-    {
-        _context = new EditContext(ViewModel);
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,10 +37,6 @@
         ViewModel.MortalityViewModel = viewModel;
     }
 
-    public bool IsValid()
-    {
-        return _context.Validate();
-    }
 
     private async Task<IEnumerable<GameManagementArea>> SearchGameManagementAreas(string value)
     {

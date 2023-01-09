@@ -3,57 +3,60 @@
 
 <MudText Typo="Typo.h3" Class="mb-8">@_vm.MortalityReportType.GetDisplayName() report</MudText>
 
-<MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
-    @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
-    {
-        <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
-    }
-</MudSelect>
-
-@switch (_vm.MortalityReportType)
-{
-    case MortalityReportType.Conflict:
-        break;
-    case MortalityReportType.IndividualHunt:
-        <HuntedMortalityReportComponent ViewModel="@_vm.HuntedMortalityReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
-        break;
-    case MortalityReportType.OutfitterGuidedHunt:
-        <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
-        break;
-    case MortalityReportType.SpecialGuidedHunt:
-        <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
-        break;
-    case MortalityReportType.Trapped:
-        break;
-    default:
-        throw new ArgumentOutOfRangeException();
-}
-
-<InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
-
-<MudButton HtmlTag="label"
-           Variant="Variant.Filled"
-           Color="Color.Info"
-           StartIcon="@Icons.Filled.CloudUpload"
-           for="fileInput"
-           Class="mt-4">
-    Attach Files
-</MudButton>
-
-@if (_files.Count != 0)
-{
-    <MudText Typo="@Typo.h6">@_files.Count() File@(_files.Count() == 1 ? "" : "s"):</MudText>
-    <MudList>
-        @foreach (var file in _files)
+<EditForm OnValidSubmit="CreateMortalityReport" Model="_vm">
+    <FluentValidationValidator/>
+    <MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
+        @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
         {
-            <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
-                @file.Name <code>@file.Size bytes</code>
-            </MudListItem>
+            <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
         }
-    </MudList>
-}
+    </MudSelect>
 
-<MudStack Row="true" Class="mt-4">
-    <MudSpacer/>
-    <MudButton Variant="Variant.Filled" OnClick="CreateMortalityReport" Color="Color.Primary">Create Report</MudButton>
-</MudStack>
+    @switch (_vm.MortalityReportType)
+    {
+        case MortalityReportType.Conflict:
+            break;
+        case MortalityReportType.IndividualHunt:
+            <HuntedMortalityReportComponent ViewModel="@_vm.HuntedMortalityReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+            break;
+        case MortalityReportType.OutfitterGuidedHunt:
+            <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+            break;
+        case MortalityReportType.SpecialGuidedHunt:
+            <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+            break;
+        case MortalityReportType.Trapped:
+            break;
+        default:
+            throw new ArgumentOutOfRangeException();
+    }
+
+    <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
+
+    <MudButton HtmlTag="label"
+               Variant="Variant.Filled"
+               Color="Color.Info"
+               StartIcon="@Icons.Filled.CloudUpload"
+               for="fileInput"
+               Class="mt-4">
+        Attach Files
+    </MudButton>
+
+    @if (_files.Count != 0)
+    {
+        <MudText Typo="@Typo.h6">@_files.Count() File@(_files.Count() == 1 ? "" : "s"):</MudText>
+        <MudList>
+            @foreach (var file in _files)
+            {
+                <MudListItem Icon="@Icons.Filled.AttachFile" @key="@file">
+                    @file.Name <code>@file.Size bytes</code>
+                </MudListItem>
+            }
+        </MudList>
+    }
+
+    <MudStack Row="true" Class="mt-4">
+        <MudSpacer/>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Create Report</MudButton>
+    </MudStack>
+</EditForm>

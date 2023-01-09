@@ -38,7 +38,6 @@ public class MortalityViewModel
     }
 
     public MortalityViewModel(AllSpecies species) => Species = species;
-
     public AllSpecies? Species { get; init; }
 
     public DateTime? DateOfDeath { get; set; }

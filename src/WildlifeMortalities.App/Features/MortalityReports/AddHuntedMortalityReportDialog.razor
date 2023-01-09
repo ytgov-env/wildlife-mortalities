@@ -5,7 +5,10 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <HuntedMortalityReportComponent @ref="_huntedMortalityReportComponent" MortalityReportType="ReportType" ViewModel="_vm"/>
+        <EditForm EditContext="_context">
+            <FluentValidationValidator/>
+            <HuntedMortalityReportComponent @ref="_huntedMortalityReportComponent" MortalityReportType="ReportType" ViewModel="_vm"/>
+        </EditForm>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -14,6 +17,7 @@
 </MudDialog>
 
 @code {
+    private EditContext _context = null!;
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = null!;
@@ -24,6 +28,12 @@
     [Parameter]
     public MortalityReportType ReportType { get; set; }
 
+    protected override void OnInitialized()
+    {
+        _context = new EditContext(_vm);
+        base.OnInitialized();
+    }
+
     private void Cancel()
     {
         MudDialog.Cancel();
@@ -31,7 +41,7 @@
 
     private void Add()
     {
-        if (_huntedMortalityReportComponent.IsValid())
+        if (_context.Validate())
         {
             MudDialog.Close(DialogResult.Ok(_vm));
         }

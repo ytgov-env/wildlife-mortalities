@@ -11,6 +11,10 @@ public class SelectSpeciesViewModel
 
 public class SelectSpeciesViewModelValidator : AbstractValidator<SelectSpeciesViewModel>
 {
+    public SelectSpeciesViewModelValidator()
+    {
+    }
+
     public SelectSpeciesViewModelValidator(MortalityReportType type)
     {
         RuleFor(x => x.TrappedSpecies).NotNull().When(_ => type == MortalityReportType.Trapped);
