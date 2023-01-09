@@ -1,15 +1,19 @@
-﻿@namespace WildlifeMortalities.App.Features.Shared.Mortalities
+﻿@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.App.Features.MortalityReports
-@inherits WildlifeMortalities.App.Features.MortalityReports.ReportTypeComponent<MortalityViewModel>
+@using WildlifeMortalities.Data.Enums
+@namespace WildlifeMortalities.App.Features.Shared.Mortalities
 
-@if (ReportType.HasValue)
-{
-    <SelectSpeciesComponent ReportType="ReportType.Value" SpeciesChanged="SpeciesChanged"/>
-}
+<MudSelect Disabled="@DisableSpeciesSelection" T="AllSpecies?" Value="ViewModel.Species" ValueChanged="SpeciesChanged" For="@(() => ViewModel.Species)">
+    @foreach (var species in Enum.GetValues<AllSpecies>().Where(x => x.IsSelectable(ReportType)))
+    {
+        <MudSelectItem Value="@species" T="AllSpecies?">@species.GetDisplayName()</MudSelectItem>
+    }
+</MudSelect>
 
-@if (_currentSpecies.HasValue || _editViewModel != null)
+
+@if (ViewModel.Species.HasValue)
 {
-    @switch (ViewModel)
+    @switch (ViewModel.MortalityViewModel)
     {
         case AmericanBlackBearMortalityViewModel vm:
             <AmericanBlackBearMortalityComponent ViewModel="vm"/>
@@ -25,10 +29,5 @@
             break;
     }
 
-    <BaseMortalityComponent ViewModel="ViewModel"/>
-}
-
-@code {
-
-
+    <BaseMortalityComponent ViewModel="ViewModel.MortalityViewModel"/>
 }

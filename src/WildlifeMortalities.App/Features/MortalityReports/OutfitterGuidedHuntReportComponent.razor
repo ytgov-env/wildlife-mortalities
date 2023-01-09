@@ -44,7 +44,7 @@
                 <MudText>Mortality</MudText>
                 <MudStack Row="true">
                     <MudStack Row="false">
-                        @foreach (var property in item.MortalityViewModel.GetProperties())
+                        @foreach (var property in item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetProperties())
                         {
                             var normalizedValue = (property.Value ?? string.Empty).ToLower();
                             @if (bool.TryParse(property.Value, out var value))

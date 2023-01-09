@@ -6,40 +6,33 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public partial class MortalityComponent
 {
-    private AllSpecies? _currentSpecies;
-    private MortalityViewModel? _editViewModel;
-
-    [Parameter] [EditorRequired] public MortalityReportType? ReportType { get; set; }
+    [Parameter] [EditorRequired] public MortalityReportType ReportType { get; set; }
+    [Parameter] public bool DisableSpeciesSelection { get; set; } = false;
 
     [Parameter]
     [EditorRequired]
-    public MortalityViewModel? EditViewModel
+    public MortalityWithSpeciesSelectionViewModel ViewModel { get; set; } = null!;
+
+    public MortalityViewModel GetViewModel() => ViewModel.MortalityViewModel;
+
+    private void SpeciesChanged(AllSpecies? value)
     {
-        get => _editViewModel;
-        set
+        if (value.HasValue == false)
         {
-            _editViewModel = value;
-            if (value != null)
-            {
-                SetViewModel(value, false);
-            }
+            return;
+            ;
         }
-    }
 
-    public MortalityViewModel GetViewModel() => ViewModel;
-
-    private void SpeciesChanged(AllSpecies value)
-    {
-        if (_currentSpecies == value)
+        if (ViewModel.Species == value)
         {
             return;
         }
 
-        _currentSpecies = value;
+        ViewModel.Species = value;
 
-        var viewModel = new MortalityViewModel(value);
+        var viewModel = new MortalityViewModel(value.Value);
 
-        switch (_currentSpecies)
+        switch (value)
         {
             case AllSpecies.AmericanBlackBear:
                 viewModel = new AmericanBlackBearMortalityViewModel();
@@ -58,6 +51,6 @@ public partial class MortalityComponent
                 break;
         }
 
-        SetViewModel(viewModel, true);
+        ViewModel.MortalityViewModel = viewModel;
     }
 }

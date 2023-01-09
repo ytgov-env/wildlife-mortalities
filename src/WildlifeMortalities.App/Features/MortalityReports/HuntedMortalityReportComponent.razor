@@ -2,13 +2,12 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data
 @using WildlifeMortalities.Data.Entities
-<CascadingValue Name="SpecialViewModel" Value="ViewModel.SelectSpeciesViewModel" IsFixed="true">
-    <MortalityComponent ViewModelChanged="SetMortalityViewModel" ReportType="MortalityReportType" EditViewModel="@(MortalityReportType.HasValue == false ? ViewModel.MortalityViewModel : null)"/>
-    <MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
-    <MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
-                     ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
-    <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4"/>
-</CascadingValue>
+<MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
+<MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
+<MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
+<MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4"/>
+
 
 @code {
 
@@ -17,6 +16,9 @@
     [Parameter]
     [EditorRequired]
     public HuntedMortalityReportViewModel ViewModel { get; set; } = null!;
+
+    [Parameter]
+    public bool EditMode { get; set; } = false!;
 
     [Inject]
     private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
@@ -30,13 +32,7 @@
 
     [Parameter]
     [EditorRequired]
-    public MortalityReportType? MortalityReportType { get; set; }
-
-    private void SetMortalityViewModel(MortalityViewModel viewModel)
-    {
-        ViewModel.MortalityViewModel = viewModel;
-    }
-
+    public MortalityReportType MortalityReportType { get; set; }
 
     private async Task<IEnumerable<GameManagementArea>> SearchGameManagementAreas(string value)
     {

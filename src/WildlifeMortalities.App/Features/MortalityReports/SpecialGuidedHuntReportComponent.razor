@@ -26,7 +26,7 @@
                 <MudStack Row="true">
                     <MudStack Row="false">
                         <MudField DisableUnderLine="true" Label="Landmark">@item.Landmark</MudField>
-                        @foreach (var property in item.MortalityViewModel.GetProperties())
+                        @foreach (var property in item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetProperties())
                         {
                             var normalizedValue = (property.Value ?? string.Empty).ToLower();
                             @if (bool.TryParse(property.Value, out var value))
