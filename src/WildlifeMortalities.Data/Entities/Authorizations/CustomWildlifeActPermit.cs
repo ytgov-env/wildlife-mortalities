@@ -2,7 +2,7 @@
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class WildlifeActPermit : Authorization
+public class CustomWildlifeActPermit : Authorization
 {
     public string Conditions { get; set; }
 

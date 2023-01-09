@@ -66,7 +66,7 @@ public class PosseClientService : IPosseClientService
         TrappingLicence_ConcessionHolderSenior = 560,
         TrappingLicence_GroupConcessionAreaMember = 570,
         TrappingLicence_GroupConcessionAreaMemberSenior = 580,
-        WildlifeActPermit = 590
+        CustomWildlifeActPermit = 590
     }
 
     private static readonly Dictionary<
@@ -285,7 +285,7 @@ public class PosseClientService : IPosseClientService
                 AuthorizationType.TrappingLicence_GroupConcessionAreaMemberSenior, () =>
                     new TrappingLicence(TrappingLicence.LicenceType.GroupConcessionAreaMemberSenior)
             },
-            { AuthorizationType.WildlifeActPermit, () => new WildlifeActPermit() }
+            { AuthorizationType.CustomWildlifeActPermit, () => new CustomWildlifeActPermit() }
         };
 
     private readonly HttpClient _httpClient;
@@ -310,19 +310,19 @@ public class PosseClientService : IPosseClientService
             authorization.ActiveFromDate = posseAuthorization.ActiveFromDateTime;
             authorization.ActiveToDate = posseAuthorization.ActiveToDateTime;
 
-            if (authorization is WildlifeActPermit wildlifeActPermit)
+            if (authorization is CustomWildlifeActPermit wildlifeActPermit)
             {
-                if (string.IsNullOrEmpty(posseAuthorization.WildlifeActPermitConditions))
+                if (string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
                 {
                     // Todo throw exception?
                     continue;
                 }
 
-                wildlifeActPermit.Conditions = posseAuthorization.WildlifeActPermitConditions;
+                wildlifeActPermit.Conditions = posseAuthorization.CustomWildlifeActPermitConditions;
             }
             else
             {
-                if (!string.IsNullOrEmpty(posseAuthorization.WildlifeActPermitConditions))
+                if (!string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
                 {
                     // Todo throw exception?
                 }
@@ -374,7 +374,7 @@ public class PosseClientService : IPosseClientService
         AuthorizationType Type,
         string EnvClientId,
         string Number,
-        string? WildlifeActPermitConditions,
+        string? CustomWildlifeActPermitConditions,
         string? SpecialGuideLicenceGuidedHunterEnvClientId,
         DateTimeOffset? ActiveFromDateTime,
         DateTimeOffset? ActiveToDateTime,

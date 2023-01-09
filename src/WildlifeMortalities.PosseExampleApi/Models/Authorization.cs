@@ -4,13 +4,13 @@ public record Authorization(
     AuthorizationType Type,
     string EnvClientId,
     string Number,
-    string? WildlifeActPermitConditions,
+    string? CustomWildlifeActPermitConditions,
     string? SpecialGuideLicenceGuidedHunterEnvClientId,
     string? PhaHuntingPermitHuntCode,
     // applies to canadian resident and non-resident licences
-    List<string> OutfitterAreas,
+    IEnumerable<string> OutfitterAreas,
     // applies to all trapping licences
-    List<string> RegisteredTrappingConcessions,
+    string? RegisteredTrappingConcession,
     DateTimeOffset? ValidFromDateTime,
     DateTimeOffset? ValidToDateTime,
     DateTimeOffset LastModifiedDateTime
@@ -76,5 +76,5 @@ public enum AuthorizationType
     TrappingLicence_ConcessionHolderSenior = 560,
     TrappingLicence_GroupConcessionAreaMember = 570,
     TrappingLicence_GroupConcessionAreaMemberSenior = 580,
-    WildlifeActPermit = 590
+    CustomWildlifeActPermit = 590
 }
