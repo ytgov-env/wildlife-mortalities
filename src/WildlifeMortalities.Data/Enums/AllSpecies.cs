@@ -2,10 +2,34 @@
 
 namespace WildlifeMortalities.Data.Enums;
 
+public class IsOutfitterGuidedHuntableAttribute : Attribute
+{
+}
+
+public class IsSpecialGuidedHuntableAttribute : Attribute
+{
+}
+
+public class IsIndividualHuntableAttribute : Attribute
+{
+}
+
+public class IsTrappableAttribute : Attribute
+{
+}
+
+public class HasGameManagementAreaAttribute : Attribute
+{
+}
+
 public enum AllSpecies
 {
     [Display(Name = "American beaver")] AmericanBeaver = 10,
 
+    [IsIndividualHuntable]
+    [IsOutfitterGuidedHuntable]
+    [IsSpecialGuidedHuntable]
+    [HasGameManagementArea]
     [Display(Name = "American black bear")]
     AmericanBlackBear = 20,
 
@@ -23,23 +47,32 @@ public enum AllSpecies
 
     [Display(Name = "Canada lynx")] CanadaLynx = 80,
 
-    [Display(Name = "Caribou")] Caribou = 90,
+    [IsOutfitterGuidedHuntable] [IsSpecialGuidedHuntable] [HasGameManagementArea] [Display(Name = "Caribou")]
+    Caribou = 90,
 
     [Display(Name = "Collared pika")] CollaredPika = 100,
 
     [Display(Name = "Cougar")] Cougar = 110,
 
-    [Display(Name = "Coyote")] Coyote = 120,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [IsSpecialGuidedHuntable] [Display(Name = "Coyote")]
+    Coyote = 120,
 
-    [Display(Name = "Elk")] Elk = 130,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [Display(Name = "Elk")]
+    Elk = 130,
 
     [Display(Name = "Ermine")] Ermine = 140,
 
     [Display(Name = "Fisher")] Fisher = 150,
 
-    [Display(Name = "Grey wolf")] GreyWolf = 160,
+    [IsIndividualHuntable]
+    [IsOutfitterGuidedHuntable]
+    [IsSpecialGuidedHuntable]
+    [IsTrappable]
+    [Display(Name = "Grey wolf")]
+    GreyWolf = 160,
 
-    [Display(Name = "Grizzly bear")] GrizzlyBear = 170,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [HasGameManagementArea] [Display(Name = "Grizzly bear")]
+    GrizzlyBear = 170,
 
     [Display(Name = "Hoary marmot")] HoaryMarmot = 180,
 
@@ -54,11 +87,14 @@ public enum AllSpecies
     [Display(Name = "Meadow jumping mouse")]
     MeadowJumpingMouse = 230,
 
-    [Display(Name = "Moose")] Moose = 240,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [HasGameManagementArea] [Display(Name = "Moose")]
+    Moose = 240,
 
-    [Display(Name = "Mountain goat")] MountainGoat = 250,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [HasGameManagementArea] [Display(Name = "Mountain goat")]
+    MountainGoat = 250,
 
-    [Display(Name = "Mule deer")] MuleDeer = 260,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [HasGameManagementArea] [Display(Name = "Mule deer")]
+    MuleDeer = 260,
 
     [Display(Name = "Muskox")] Muskox = 270,
 
@@ -89,15 +125,23 @@ public enum AllSpecies
 
     [Display(Name = "Snowshoe hare")] SnowshoeHare = 380,
 
-    [Display(Name = "Thinhorn sheep")] ThinhornSheep = 390,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [HasGameManagementArea] [Display(Name = "Thinhorn sheep")]
+    ThinhornSheep = 390,
 
     [Display(Name = "Vole")] Vole = 400,
 
-    [Display(Name = "White-tailed deer")] WhiteTailedDeer = 410,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [Display(Name = "White-tailed deer")]
+    WhiteTailedDeer = 410,
 
-    [Display(Name = "Wolverine")] Wolverine = 420,
+    [IsIndividualHuntable] [IsOutfitterGuidedHuntable] [IsTrappable] [Display(Name = "Wolverine")]
+    Wolverine = 420,
 
-    [Display(Name = "Wood bison")] WoodBison = 430,
+    [IsIndividualHuntable]
+    [IsOutfitterGuidedHuntable]
+    [IsSpecialGuidedHuntable]
+    [HasGameManagementArea]
+    [Display(Name = "Wood bison")]
+    WoodBison = 430,
 
     [Display(Name = "Woodchuck")] Woodchuck = 440,
 
