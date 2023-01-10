@@ -11,33 +11,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\BiologicalSubmissions\**"/>
-    <Content Remove="Features\BiologicalSubmissions\**"/>
-    <EmbeddedResource Remove="Features\BiologicalSubmissions\**"/>
-    <None Remove="Features\BiologicalSubmissions\**"/>
+    <Compile Remove="Features\BiologicalSubmissions\**" />
+    <Content Remove="Features\BiologicalSubmissions\**" />
+    <EmbeddedResource Remove="Features\BiologicalSubmissions\**" />
+    <None Remove="Features\BiologicalSubmissions\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.1"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0"/>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0"/>
-    <PackageReference Include="MudBlazor" Version="6.1.7"/>
-    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0"/>
-    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="MudBlazor" Version="6.1.7" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\BioSubmissions\"/>
-    <Folder Include="Logs\"/>
+    <Folder Include="Features\BioSubmissions\" />
+    <Folder Include="Logs\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj"/>
-    <ProjectReference Include="..\WildlifeMortalities.Shared\WildlifeMortalities.Shared.csproj"/>
+    <ProjectReference Include="..\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj" />
+    <ProjectReference Include="..\WildlifeMortalities.Shared\WildlifeMortalities.Shared.csproj" />
   </ItemGroup>
 
 </Project>
