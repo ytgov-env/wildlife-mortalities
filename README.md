@@ -1,5 +1,7 @@
 # Wildlife Mortalities
 
+This service is used to manage wildlife mortality data collected by Yukon's Department of Environment. This includes hunted and trapped harvest mortalities, human-wildlife conflict mortalities, research mortalities, and collared wildlife mortalities.
+
 ## Stack
 
 * UI Component Library: [MudBlazor](https://github.com/MudBlazor/MudBlazor)
