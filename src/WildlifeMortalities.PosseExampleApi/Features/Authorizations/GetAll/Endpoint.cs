@@ -25,7 +25,7 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
                         Array.Empty<string>(),
                         null,
                         new DateTimeOffset(2021, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
-                        new DateTimeOffset(2021, 9, 12, 0, 0, 0, new TimeSpan(-7, 0, 0)),
+                        new DateTimeOffset(2021, 9, 12, 23, 59, 59, new TimeSpan(-7, 0, 0)),
                         DateTimeOffset.Now
                     ),
                     new(
@@ -38,7 +38,7 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
                         Array.Empty<string>(),
                         null,
                         new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
-                        new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
+                        new DateTimeOffset(2023, 3, 31, 23, 59, 59, new TimeSpan(-7, 0, 0)),
                         DateTimeOffset.Now
                     ),
                     new(
@@ -51,7 +51,7 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
                         Array.Empty<string>(),
                         null,
                         new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
-                        new DateTimeOffset(2023, 3, 31, 23, 59, 59, 999, new TimeSpan(-7, 0, 0)),
+                        new DateTimeOffset(2023, 3, 31, 23, 59, 59, new TimeSpan(-7, 0, 0)),
                         DateTimeOffset.Now
                     ),
                     new(
@@ -63,8 +63,8 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
                         null,
                         new[] { "12", "14" },
                         null,
-                        DateTimeOffset.Now,
-                        DateTimeOffset.Now,
+                        new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
+                        new DateTimeOffset(2023, 3, 31, 23, 59, 59, new TimeSpan(-7, 0, 0)),
                         DateTimeOffset.Now
                     ),
                     new(
@@ -76,10 +76,10 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
                         null,
                         Array.Empty<string>(),
                         "226",
-                        DateTimeOffset.Now,
-                        DateTimeOffset.Now,
+                        new DateTimeOffset(2022, 4, 1, 0, 0, 0, new TimeSpan(-7, 0, 0)),
+                        new DateTimeOffset(2023, 3, 31, 23, 59, 59, new TimeSpan(-7, 0, 0)),
                         DateTimeOffset.Now
-                        )
+                    )
                 }
             };
         });
@@ -93,7 +93,7 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
             {
                 new(
                     req.AuthorizationType
-                    ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
+                        ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
                     "41203",
                     "EHL-24202",
                     null,
@@ -114,7 +114,15 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
 
 public class GetAuthorizationsRequest
 {
+    /// <summary>
+    /// Return all authorizations that match this type. If null, return all authorization types. The posse API does not need to use these exact names for the authorizations - it could use the names currently used in POSSE.
+    /// Other authorization types can be added in the future, but the type names must be immutable.
+    /// </summary>
     public AuthorizationType? AuthorizationType { get; set; }
+
+    /// <summary>
+    /// Return all authorizations whose lastModifiedDateTime property is >= this datetime. If null, return all authorizations.
+    /// </summary>
     public DateTimeOffset? ModifiedSinceDateTime { get; set; }
 }
 

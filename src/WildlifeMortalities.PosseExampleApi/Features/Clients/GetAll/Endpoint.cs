@@ -65,6 +65,9 @@ public class Endpoint : Endpoint<GetClientsRequest, GetClientsResponse>
 
 public class GetClientsRequest
 {
+    /// <summary>
+    /// Return all clients whose lastModifiedDateTime property is >= this datetime. If null, return all clients.
+    /// </summary>
     public DateTimeOffset? ModifiedSinceDateTime { get; set; }
 }
 

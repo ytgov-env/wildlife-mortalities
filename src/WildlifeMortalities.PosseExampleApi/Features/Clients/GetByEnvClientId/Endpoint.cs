@@ -6,7 +6,7 @@ public class Endpoint : Endpoint<GetClientByEnvClientIdRequest, GetClientByEnvCl
     {
         Get("/clients/{EnvClientId}");
         Policies("ApiKey");
-        Description(b => b.Produces<GetClientByEnvClientIdResponse>().Produces(404));
+        Description(b => b.Produces<GetClientByEnvClientIdResponse>().Produces(404).Produces(301));
         Summary(s =>
         {
             s.ResponseExamples[200] = new GetClientByEnvClientIdResponse
@@ -19,6 +19,8 @@ public class Endpoint : Endpoint<GetClientByEnvClientIdRequest, GetClientByEnvCl
                     DateTimeOffset.Now
                 )
             };
+            s.Responses[301] =
+                "Permanent Redirect. This EnvClientId has been merged. The URI for the new EnvClientId should be returned as per https://httpwg.org/specs/rfc9110.html#status.301";
         });
     }
 
