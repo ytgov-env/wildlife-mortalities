@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public class WoodBisonMortalityViewModel : MortalityViewModel
 {
-    public WoodBisonMortalityViewModel() : base(AllSpecies.WoodBison)
+    public WoodBisonMortalityViewModel() : base(Data.Enums.Species.WoodBison)
     {
     }
 

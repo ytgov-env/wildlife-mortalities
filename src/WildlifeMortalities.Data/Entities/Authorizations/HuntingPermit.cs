@@ -9,22 +9,15 @@ public class HuntingPermit : Authorization
     public enum PermitType
     {
         CaribouFortymileFall = 10,
-        CaribouFortymileSummerPeriodOne = 20,
-        CaribouFortymileSummerPeriodTwo = 30,
-        CaribouFortymileSummerPeriodThree = 40,
-        CaribouFortymileSummerPeriodFour = 50,
-        CaribouFortymileSummerPeriodFive = 60,
-        CaribouFortymileSummerPeriodSix = 70,
-        CaribouFortymileSummerPeriodSeven = 80,
-        CaribouFortymileSummerPeriodEight = 90,
-        CaribouFortymileWinter = 100,
-        CaribouHartRiver = 110,
-        CaribouNelchina = 120,
-        ElkAdaptive = 130,
-        ElkAdaptiveFirstNations = 140,
-        ElkExclusion = 150,
-        MooseThreshold = 160,
-        WoodBisonThreshold = 170
+        CaribouFortymileSummer = 20,
+        CaribouFortymileWinter = 30,
+        CaribouHartRiver = 40,
+        CaribouNelchina = 50,
+        ElkAdaptive = 60,
+        ElkAdaptiveFirstNations = 70,
+        ElkExclusion = 80,
+        MooseThreshold = 90,
+        WoodBisonThreshold = 100
     }
 
     public HuntingPermit()
@@ -41,14 +34,7 @@ public class HuntingPermit : Authorization
     public bool IsCaribouRelated() =>
         Type
             is PermitType.CaribouFortymileFall
-            or PermitType.CaribouFortymileSummerPeriodOne
-            or PermitType.CaribouFortymileSummerPeriodTwo
-            or PermitType.CaribouFortymileSummerPeriodThree
-            or PermitType.CaribouFortymileSummerPeriodFour
-            or PermitType.CaribouFortymileSummerPeriodFive
-            or PermitType.CaribouFortymileSummerPeriodSix
-            or PermitType.CaribouFortymileSummerPeriodSeven
-            or PermitType.CaribouFortymileSummerPeriodEight
+            or PermitType.CaribouFortymileSummer
             or PermitType.CaribouFortymileWinter
             or PermitType.CaribouHartRiver
             or PermitType.CaribouNelchina;

@@ -7,22 +7,22 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public class MortalityViewModel
 {
-    private static readonly Dictionary<AllSpecies, Func<Mortality>> s_mortalityFactory =
+    private static readonly Dictionary<Species, Func<Mortality>> s_mortalityFactory =
         new()
         {
-            { AllSpecies.AmericanBlackBear, () => new AmericanBlackBearMortality() },
-            { AllSpecies.Caribou, () => new CaribouMortality() },
-            { AllSpecies.Coyote, () => new CoyoteMortality() },
-            { AllSpecies.Elk, () => new ElkMortality() },
-            { AllSpecies.GreyWolf, () => new GreyWolfMortality() },
-            { AllSpecies.GrizzlyBear, () => new GrizzlyBearMortality() },
-            { AllSpecies.Moose, () => new MooseMortality() },
-            { AllSpecies.MountainGoat, () => new MountainGoatMortality() },
-            { AllSpecies.MuleDeer, () => new MuleDeerMortality() },
-            { AllSpecies.ThinhornSheep, () => new ThinhornSheepMortality() },
-            { AllSpecies.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
-            { AllSpecies.Wolverine, () => new WolverineMortality() },
-            { AllSpecies.WoodBison, () => new WoodBisonMortality() }
+            { Data.Enums.Species.AmericanBlackBear, () => new AmericanBlackBearMortality() },
+            { Data.Enums.Species.Caribou, () => new CaribouMortality() },
+            { Data.Enums.Species.Coyote, () => new CoyoteMortality() },
+            { Data.Enums.Species.Elk, () => new ElkMortality() },
+            { Data.Enums.Species.GreyWolf, () => new GreyWolfMortality() },
+            { Data.Enums.Species.GrizzlyBear, () => new GrizzlyBearMortality() },
+            { Data.Enums.Species.Moose, () => new MooseMortality() },
+            { Data.Enums.Species.MountainGoat, () => new MountainGoatMortality() },
+            { Data.Enums.Species.MuleDeer, () => new MuleDeerMortality() },
+            { Data.Enums.Species.ThinhornSheep, () => new ThinhornSheepMortality() },
+            { Data.Enums.Species.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
+            { Data.Enums.Species.Wolverine, () => new WolverineMortality() },
+            { Data.Enums.Species.WoodBison, () => new WoodBisonMortality() }
         };
 
     public MortalityViewModel()
@@ -37,8 +37,9 @@ public class MortalityViewModel
         Sex = mortality.Sex;
     }
 
-    public MortalityViewModel(AllSpecies species) => Species = species;
-    public AllSpecies? Species { get; init; }
+    public MortalityViewModel(Species species) => Species = species;
+
+    public Species? Species { get; init; }
 
     public DateTime? DateOfDeath { get; set; }
     public decimal? Longitude { get; set; }
@@ -47,10 +48,7 @@ public class MortalityViewModel
 
     public virtual Dictionary<string, string> GetProperties()
     {
-        var result = new Dictionary<string, string>
-        {
-            { "Species", Species!.GetDisplayName() }, { "Sex", Sex!.GetDisplayName() }
-        };
+        var result = new Dictionary<string, string> { { "Sex", Sex!.GetDisplayName() } };
 
         if (DateOfDeath.HasValue)
         {
@@ -70,7 +68,7 @@ public class MortalityViewModel
         return result;
     }
 
-    public Mortality GetMortality(AllSpecies species)
+    public Mortality GetMortality(Species species)
     {
         var mortalityFactory = s_mortalityFactory[species];
         var mortality = mortalityFactory.Invoke();

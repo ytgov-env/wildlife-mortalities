@@ -11,7 +11,7 @@ public class GameManagementArea
     public string Subzone { get; set; } = string.Empty;
     public string Area { get; } = string.Empty;
 
-    public static AllSpecies ResolveSubType(AllSpecies species) =>
+    public static Species ResolveSubType(Species species) =>
         // Todo implement herd/group resolution logic
         species;
 }

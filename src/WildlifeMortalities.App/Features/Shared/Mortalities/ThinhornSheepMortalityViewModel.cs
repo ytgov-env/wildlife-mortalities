@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public class ThinhornSheepMortalityViewModel : MortalityViewModel
 {
-    public ThinhornSheepMortalityViewModel() : base(AllSpecies.ThinhornSheep)
+    public ThinhornSheepMortalityViewModel() : base(Data.Enums.Species.ThinhornSheep)
     {
     }
 

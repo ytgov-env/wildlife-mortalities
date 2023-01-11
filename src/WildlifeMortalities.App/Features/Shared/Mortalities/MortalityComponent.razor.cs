@@ -7,15 +7,14 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 public partial class MortalityComponent
 {
     [Parameter] [EditorRequired] public MortalityReportType ReportType { get; set; }
+
     [Parameter] public bool DisableSpeciesSelection { get; set; } = false;
 
-    [Parameter]
-    [EditorRequired]
-    public MortalityWithSpeciesSelectionViewModel ViewModel { get; set; } = null!;
+    [Parameter] [EditorRequired] public MortalityWithSpeciesSelectionViewModel ViewModel { get; set; } = null!;
 
     public MortalityViewModel GetViewModel() => ViewModel.MortalityViewModel;
 
-    private void SpeciesChanged(AllSpecies? value)
+    private void SpeciesChanged(Species? value)
     {
         if (value.HasValue == false)
         {
@@ -34,19 +33,19 @@ public partial class MortalityComponent
 
         switch (value)
         {
-            case AllSpecies.AmericanBlackBear:
+            case Species.AmericanBlackBear:
                 viewModel = new AmericanBlackBearMortalityViewModel();
                 break;
 
-            case AllSpecies.GrizzlyBear:
+            case Species.GrizzlyBear:
                 viewModel = new GrizzlyBearMortalityViewModel();
                 break;
 
-            case AllSpecies.ThinhornSheep:
+            case Species.ThinhornSheep:
                 viewModel = new ThinhornSheepMortalityViewModel();
                 break;
 
-            case AllSpecies.WoodBison:
+            case Species.WoodBison:
                 viewModel = new WoodBisonMortalityViewModel();
                 break;
         }

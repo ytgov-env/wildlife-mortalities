@@ -5,7 +5,7 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
 @using Microsoft.EntityFrameworkCore
-<MudDateRangePicker Editable="true" Label="Hunting dates"/>
+<MudDateRangePicker Editable="true" Label="Hunting dates" bind-DateRange="ViewModel.HuntingDateRange"/>
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
@@ -27,9 +27,11 @@
             </MudListItem>
         }
     </MudList>
+    <!--suppress CssUnresolvedCustomProperty -->
+    <ValidationMessage For="@(() => ViewModel.Guides)" Style="font-size: 12px; color: var(--mud-palette-error);"/>
 </MudPaper>
 
-<MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result">
+<MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result" For="@(() => ViewModel.Result)">
     @foreach (var item in Enum.GetValues<GuidedHuntResult>())
     {
         <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
@@ -37,39 +39,53 @@
 </MudSelect>
 @if (ViewModel.Result is GuidedHuntResult.SuccessfulHunt)
 {
-    <MudList Dense="true">
+    <MudGrid Class="my-3">
         @foreach (var item in ViewModel.HuntedMortalityReportViewModels)
         {
-            <MudListItem>
-                <MudText>Mortality</MudText>
-                <MudStack Row="true">
-                    <MudStack Row="false">
-                        @foreach (var property in item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetProperties())
-                        {
-                            var normalizedValue = (property.Value ?? string.Empty).ToLower();
-                            @if (bool.TryParse(property.Value, out var value))
+            <MudItem md="3" xs="12">
+                <MudCard Elevation="5" Class="flex-column d-flex" Style="height: 100%">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">@item.MortalityWithSpeciesSelectionViewModel.Species.GetDisplayName()</MudText>
+                        </CardHeaderContent>
+                        @* <CardHeaderActions> *@
+                        @*     <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" /> *@
+                        @* </CardHeaderActions> *@
+                    </MudCardHeader>
+                    <MudCardContent Class="flex-column d-flex" Style="height: 100%">
+                        <MudStack Row="false">
+                            @foreach (var property in item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetProperties())
                             {
-                                <MudCheckBox T="bool" ReadOnly="true" Checked="value" Label="@property.Key"/>
+                                var normalizedValue = (property.Value ?? string.Empty).ToLower();
+                                @if (bool.TryParse(property.Value, out var value))
+                                {
+                                    <MudCheckBox T="bool" ReadOnly="true" Checked="value" Label="@property.Key"/>
+                                }
+                                else if (DateTime.TryParse(property.Value, out var dateValue))
+                                {
+                                    <MudField DisableUnderLine="true" Label="@property.Key">@dateValue.Date.ToShortDateString()</MudField>
+                                }
+                                else
+                                {
+                                    <MudField DisableUnderLine="true" Label="@property.Key">@property.Value</MudField>
+                                }
                             }
-                            else if (DateTime.TryParse(property.Value, out var dateValue))
-                            {
-                                <MudField DisableUnderLine="true" Label="@property.Key">@dateValue.Date.ToShortDateString()</MudField>
-                            }
-                            else
-                            {
-                                <MudField DisableUnderLine="true" Label="@property.Key">@property.Value</MudField>
-                            }
-                        }
-                        <MudField DisableUnderLine="true" Label="Landmark">@item.Landmark</MudField>
-                        <MudField DisableUnderLine="true" Label="Comment">@item.Comment</MudField>
-                    </MudStack>
-                    <MudSpacer/>
-                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => Edit(item))"/>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => Delete(item))"/>
-                </MudStack>
-            </MudListItem>
+                            <MudField DisableUnderLine="true" Label="Landmark">@item.Landmark</MudField>
+                            <MudField DisableUnderLine="true" Label="Comment">@item.Comment</MudField>
+                        </MudStack>
+                        <MudSpacer/>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudStack Row="true" Class="justify-right">
+                            <MudSpacer/>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => Edit(item))" Color="Color.Primary"/>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => Delete(item))" Color="Color.Error"/>
+                        </MudStack>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
         }
-    </MudList>
+    </MudGrid>
     <MudStack Row="true">
         <MudSpacer/>
         <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>

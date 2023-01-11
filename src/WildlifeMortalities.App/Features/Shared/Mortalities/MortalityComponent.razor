@@ -3,10 +3,10 @@
 @using WildlifeMortalities.Data.Enums
 @namespace WildlifeMortalities.App.Features.Shared.Mortalities
 
-<MudSelect Disabled="@DisableSpeciesSelection" T="AllSpecies?" Value="ViewModel.Species" ValueChanged="SpeciesChanged" For="@(() => ViewModel.Species)">
-    @foreach (var species in Enum.GetValues<AllSpecies>().Where(x => x.IsSelectable(ReportType)))
+<MudSelect Disabled="@DisableSpeciesSelection" Placeholder="Select a species" T="Species?" Value="ViewModel.Species" ValueChanged="SpeciesChanged" For="@(() => ViewModel.Species)">
+    @foreach (var species in Enum.GetValues<Species>().Where(x => x.IsSelectable(ReportType)))
     {
-        <MudSelectItem Value="@species" T="AllSpecies?">@species.GetDisplayName()</MudSelectItem>
+        <MudSelectItem Value="@species" T="Species?">@species.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
 

@@ -26,12 +26,20 @@ public class MortalityReportPageViewModelValidator : AbstractValidator<Mortality
         RuleFor(x => x.HuntedMortalityReportViewModel)
             .SetValidator(new HuntedMortalityReportViewModelValidator())
             .When(x => x.MortalityReportType == MortalityReportType.IndividualHunt);
+
+        RuleFor(x => x.OutfitterGuidedHuntReportViewModel)
+            .SetValidator(new OutfitterGuidedHuntReportViewModelValidator())
+            .When(x => x.MortalityReportType == MortalityReportType.OutfitterGuidedHunt);
+
+        RuleFor(x => x.SpecialGuidedHuntReportViewModel)
+            .SetValidator(new SpecialGuidedHuntReportViewModelValidator())
+            .When(x => x.MortalityReportType == MortalityReportType.SpecialGuidedHunt);
     }
 }
 
 public class MortalityWithSpeciesSelectionViewModel
 {
-    public AllSpecies? Species { get; set; }
+    public Species? Species { get; set; }
     public MortalityViewModel MortalityViewModel { get; set; }
 }
 
@@ -41,15 +49,20 @@ public class HuntedMortalityReportViewModel
     public GameManagementArea? GameManagementArea { get; set; }
     public string Comment { get; set; } = string.Empty;
 
-    public MortalityWithSpeciesSelectionViewModel MortalityWithSpeciesSelectionViewModel { get; set; } = new();
+    public MortalityWithSpeciesSelectionViewModel MortalityWithSpeciesSelectionViewModel { get; set; } =
+        new();
 
     public HuntedMortalityReport GetReport(int personId)
     {
-        var species = GameManagementArea.ResolveSubType(MortalityWithSpeciesSelectionViewModel.Species!.Value);
+        var species = GameManagementArea.ResolveSubType(
+            MortalityWithSpeciesSelectionViewModel.Species!.Value
+        );
 
         var report = new HuntedMortalityReport
         {
-            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(species),
+            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(
+                species
+            ),
             Landmark = Landmark,
             GameManagementAreaId = GameManagementArea.Id,
             Comment = Comment,

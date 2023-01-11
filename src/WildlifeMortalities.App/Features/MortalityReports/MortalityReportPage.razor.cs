@@ -87,6 +87,11 @@ public partial class MortalityReportPage
 
                     var report = new OutfitterGuidedHuntReport
                     {
+                        HuntStartDate = (DateTime)outfitterViewModel.HuntingDateRange.Start,
+                        HuntEndDate = (DateTime)outfitterViewModel.HuntingDateRange.End!,
+                        Guides = outfitterViewModel.Guides,
+                        OutfitterArea = outfitterViewModel.OutfitterArea,
+                        Result = outfitterViewModel.Result!.Value,
                         HuntedMortalityReports = outfitterViewModel.HuntedMortalityReportViewModels
                             .Select(x => x.GetReport(PersonId))
                             .ToList()

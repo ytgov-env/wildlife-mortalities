@@ -1,11 +1,10 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public class GrizzlyBearMortalityViewModel : MortalityViewModel
 {
-    public GrizzlyBearMortalityViewModel() : base(AllSpecies.GrizzlyBear)
+    public GrizzlyBearMortalityViewModel() : base(Data.Enums.Species.GrizzlyBear)
     {
     }
 
