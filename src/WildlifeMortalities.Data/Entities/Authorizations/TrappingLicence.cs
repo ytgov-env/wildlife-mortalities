@@ -30,5 +30,6 @@ public class TrappingLicence : Authorization
 
 public class TrappingLicenceConfig : IEntityTypeConfiguration<TrappingLicence>
 {
-    public void Configure(EntityTypeBuilder<TrappingLicence> builder) => builder.ToTable("Authorizations");
+    public void Configure(EntityTypeBuilder<TrappingLicence> builder) =>
+        builder.ToTable("Authorizations");
 }

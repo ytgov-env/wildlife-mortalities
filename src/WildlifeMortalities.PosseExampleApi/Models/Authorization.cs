@@ -3,11 +3,24 @@ namespace WildlifeMortalities.PosseExampleApi.Models;
 /// <param name="Type"></param>
 /// <param name="EnvClientId"></param>
 /// <param name="Number">The human-readable identifier for this authorization. (ex: EAT-0015403) </param>
-/// <param name="CustomWildlifeActPermitConditions">The conditions of a custom wildlife act permit. This is a placeholder for now, as this authorization type is not yet implemented in POSSE.</param>
-/// <param name="SpecialGuideLicenceGuidedHunterEnvClientId">The EnvClientId of the guided hunter. Null for every authorization type except <see cref="AuthorizationType.SpecialGuideLicence"/>.</param>
+/// <param name="CustomWildlifeActPermitConditions">
+///     The conditions of a custom wildlife act permit. This is a placeholder
+///     for now, as this authorization type is not yet implemented in POSSE.
+/// </param>
+/// <param name="SpecialGuideLicenceGuidedHunterEnvClientId">
+///     The EnvClientId of the guided hunter. Null for every
+///     authorization type except <see cref="AuthorizationType.SpecialGuideLicence" />.
+/// </param>
 /// <param name="PhaHuntingPermitHuntCode">The PHA hunt code. Null for every authorization type except PhaHuntingPermit_*</param>
-/// <param name="OutfitterAreas">The outfitter areas associated with this licence. Null for every authorization type except <see cref="AuthorizationType.BigGameHuntingLicence_CanadianResident"/>, <see cref="AuthorizationType.SmallGameHuntingLicence_NonResident"/>.</param>
-/// <param name="RegisteredTrappingConcession">The registered trapping concession. Null for every authorization type except TrappingLicence_*</param>
+/// <param name="OutfitterAreas">
+///     The outfitter areas associated with this licence. Null for every authorization type except
+///     <see cref="AuthorizationType.BigGameHuntingLicence_CanadianResident" />,
+///     <see cref="AuthorizationType.SmallGameHuntingLicence_NonResident" />.
+/// </param>
+/// <param name="RegisteredTrappingConcession">
+///     The registered trapping concession. Null for every authorization type except
+///     TrappingLicence_*
+/// </param>
 /// <param name="ValidFromDateTime">The earliest datetime that the client can legally use this authorization.</param>
 /// <param name="ValidToDateTime">The latest datetime that the client can legally use this authorization.</param>
 /// <param name="LastModifiedDateTime">The most recent datetime that any of the values in this object were modified.</param>

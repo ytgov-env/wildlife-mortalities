@@ -21,12 +21,8 @@ public class ConservationOfficerService : IDisposable
         await _dbContext.People.OfType<ConservationOfficer>().AsNoTracking().ToListAsync();
 
     public async Task<IEnumerable<ConservationOfficer>> SearchByLastName(string input) =>
-        _dbContext.People
-            .OfType<ConservationOfficer>()
-            .Where(c => c.LastName.StartsWith(input));
+        _dbContext.People.OfType<ConservationOfficer>().Where(c => c.LastName.StartsWith(input));
 
     public async Task<IEnumerable<ConservationOfficer>> SearchByBadgeNumber(string input) =>
-        _dbContext.People
-            .OfType<ConservationOfficer>()
-            .Where(c => c.BadgeNumber.StartsWith(input));
+        _dbContext.People.OfType<ConservationOfficer>().Where(c => c.BadgeNumber.StartsWith(input));
 }

@@ -32,5 +32,6 @@ public class SmallGameHuntingLicence : Authorization
 
 public class SmallGameHuntingLicenceConfig : IEntityTypeConfiguration<SmallGameHuntingLicence>
 {
-    public void Configure(EntityTypeBuilder<SmallGameHuntingLicence> builder) => builder.ToTable("Authorizations");
+    public void Configure(EntityTypeBuilder<SmallGameHuntingLicence> builder) =>
+        builder.ToTable("Authorizations");
 }

@@ -39,5 +39,6 @@ public class BigGameHuntingLicence : Authorization
 
 public class BigGameHuntingLicenceConfig : IEntityTypeConfiguration<BigGameHuntingLicence>
 {
-    public void Configure(EntityTypeBuilder<BigGameHuntingLicence> builder) => builder.ToTable("Authorizations");
+    public void Configure(EntityTypeBuilder<BigGameHuntingLicence> builder) =>
+        builder.ToTable("Authorizations");
 }

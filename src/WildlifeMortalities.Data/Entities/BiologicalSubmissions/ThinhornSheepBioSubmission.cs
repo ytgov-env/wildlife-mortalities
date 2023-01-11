@@ -12,7 +12,10 @@ public class ThinhornSheepBioSubmission : BioSubmission
 public enum BroomedStatus
 {
     [Display(Name = "Both horns broomed")] BothHornsBroomed,
+
     [Display(Name = "Left horn broomed")] LeftHornBroomed,
+
     [Display(Name = "Not broomed")] NotBroomed,
+
     [Display(Name = "Right horn broomed")] RightHornBroomed
 }
