@@ -1,6 +1,6 @@
 # Wildlife Mortalities
 
-This service is used to manage wildlife mortality data collected by Yukon's Department of Environment. This includes hunted and trapped harvest mortalities, human-wildlife conflict mortalities, research mortalities, and collared wildlife mortalities.
+This service is used to manage wildlife mortality data collected by Yukon's Department of Environment. This includes [hunted and trapped harvest](https://yukon.ca/en/outdoor-recreation-and-wildlife/hunting-and-trapping/report-harvest-results) mortalities, [human-wildlife conflict](https://yukon.ca/en/report-human-wildlife-conflict) mortalities, research mortalities, and collared wildlife mortalities. Additionally, this service handles all deterministic checks for legality of reported harvests, preceeding any in-depth investigations by Conservation Officers (if required).
 
 ## Stack
 
