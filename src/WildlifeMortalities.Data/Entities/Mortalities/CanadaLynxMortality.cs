@@ -2,4 +2,5 @@
 
 public class CanadaLynxMortality : Mortality
 {
+    public override Species Species => Species.CanadaLynx;
 }

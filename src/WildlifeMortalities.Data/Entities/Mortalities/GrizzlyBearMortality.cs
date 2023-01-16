@@ -7,6 +7,8 @@ public class GrizzlyBearMortality : Mortality<GrizzlyBearMortality>
 {
     public bool IsShotInConflict { get; set; }
 
+    public override Species Species => Species.GrizzlyBear;
+
     public override IEntityTypeConfiguration<GrizzlyBearMortality> GetConfig() =>
         new GrizzlyBearMortalityConfig();
 }

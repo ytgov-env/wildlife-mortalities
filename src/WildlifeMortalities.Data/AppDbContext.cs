@@ -2,10 +2,9 @@
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-using WildlifeMortalities.Data.Entities.GuidedReports;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.MortalityReports;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Reports;
 
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
@@ -25,14 +24,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Authorization> Authorizations => Set<Authorization>();
     public DbSet<Mortality> Mortalities => Set<Mortality>();
-    public DbSet<MortalityReport> MortalityReports => Set<MortalityReport>();
+    public DbSet<Report> Reports => Set<Report>();
     public DbSet<Violation> Violations => Set<Violation>();
-
-    public DbSet<OutfitterGuidedHuntReport> OutfitterGuidedHuntReports =>
-        Set<OutfitterGuidedHuntReport>();
-
-    public DbSet<SpecialGuidedHuntReport> SpecialGuidedHuntReports =>
-        Set<SpecialGuidedHuntReport>();
 
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 

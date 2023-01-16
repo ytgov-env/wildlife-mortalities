@@ -41,6 +41,8 @@ public class CaribouMortality : Mortality
     }
 
     public CaribouHerd Herd { get; set; }
+
+    public override Species Species => Species.Caribou;
 }
 
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>

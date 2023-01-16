@@ -2,11 +2,10 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
-namespace WildlifeMortalities.Data.Entities.MortalityReports;
+namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-public abstract class MortalityReport
+public abstract class MortalityReport : Report
 {
-    public int Id { get; set; }
     public Mortality Mortality { get; set; } = null!;
 }
 

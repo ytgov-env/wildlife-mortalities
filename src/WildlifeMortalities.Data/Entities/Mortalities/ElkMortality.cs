@@ -12,6 +12,8 @@ public class ElkMortality : Mortality
     }
 
     public ElkHerd Herd { get; set; }
+
+    public override Species Species => Species.Elk;
 }
 
 public class ElkMortalityConfig : IEntityTypeConfiguration<ElkMortality>

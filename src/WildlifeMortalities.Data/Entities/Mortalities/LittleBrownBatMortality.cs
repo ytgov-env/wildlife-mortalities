@@ -2,4 +2,5 @@
 
 public class LittleBrownBatMortality : Mortality
 {
+    public override Species Species => Species.LittleBrownBat;
 }

@@ -2,4 +2,5 @@
 
 public class MountainGoatMortality : Mortality
 {
+    public override Species Species => Species.MountainGoat;
 }

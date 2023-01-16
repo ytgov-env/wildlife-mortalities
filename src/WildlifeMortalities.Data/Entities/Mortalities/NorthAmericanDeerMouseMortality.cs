@@ -2,4 +2,5 @@
 
 public class NorthAmericanDeerMouseMortality : Mortality
 {
+    public override Species Species => Species.NorthAmericanDeermouse;
 }

@@ -2,4 +2,5 @@
 
 public class AmericanMinkMortality : Mortality
 {
+    public override Species Species => Species.AmericanMink;
 }

@@ -2,4 +2,5 @@
 
 public class PolarBearMortality : Mortality
 {
+    public override Species Species => Species.PolarBear;
 }

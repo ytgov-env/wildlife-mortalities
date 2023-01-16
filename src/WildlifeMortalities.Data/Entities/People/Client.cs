@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
-using WildlifeMortalities.Data.Entities.GuidedReports;
+using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.People;
 
@@ -17,6 +18,9 @@ public class Client : Person
     public DateTime BirthDate { get; set; }
     public List<Authorization> Authorizations { get; set; } = null!;
     public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReports { get; set; } = null!;
+    public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
+    public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsClient { get; set; } = null!;
+    public List<TrappedMortalityReport> TrappedMortalityReports { get; set; } = null!;
 }
 
 public class ClientConfig : IEntityTypeConfiguration<Client>

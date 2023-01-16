@@ -1,4 +1,4 @@
-﻿using WildlifeMortalities.Data.Entities.MortalityReports;
+﻿using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities;
 

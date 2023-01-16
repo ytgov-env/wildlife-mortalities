@@ -2,4 +2,5 @@
 
 public class SnowshoeHareMortality : Mortality
 {
+    public override Species Species => Species.SnowshoeHare;
 }

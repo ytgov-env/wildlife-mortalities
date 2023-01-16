@@ -7,6 +7,8 @@ public class AmericanBlackBearMortality : Mortality<AmericanBlackBearMortality>
 {
     public bool IsShotInConflict { get; set; }
 
+    public override Species Species => Species.AmericanBlackBear;
+
     public override IEntityTypeConfiguration<AmericanBlackBearMortality> GetConfig() =>
         new AmericanBlackBearMortalityConfig();
 }

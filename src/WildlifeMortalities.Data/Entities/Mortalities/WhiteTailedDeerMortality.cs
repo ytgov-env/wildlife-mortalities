@@ -2,4 +2,5 @@
 
 public class WhiteTailedDeerMortality : Mortality
 {
+    public override Species Species => Species.WhiteTailedDeer;
 }

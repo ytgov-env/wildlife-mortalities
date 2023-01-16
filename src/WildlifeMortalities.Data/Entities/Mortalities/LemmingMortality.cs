@@ -2,4 +2,5 @@
 
 public class LemmingMortality : Mortality
 {
+    public override Species Species => Species.Lemming;
 }

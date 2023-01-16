@@ -2,4 +2,5 @@
 
 public class FisherMortality : Mortality
 {
+    public override Species Species => Species.Fisher;
 }

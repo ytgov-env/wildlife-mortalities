@@ -2,4 +2,5 @@
 
 public class RedFoxMortality : Mortality
 {
+    public override Species Species => Species.RedFox;
 }

@@ -2,4 +2,5 @@
 
 public class ShrewMortality : Mortality
 {
+    public override Species Species => Species.Shrew;
 }

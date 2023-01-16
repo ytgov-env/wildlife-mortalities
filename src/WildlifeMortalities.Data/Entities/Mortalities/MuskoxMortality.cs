@@ -2,4 +2,5 @@
 
 public class MuskoxMortality : Mortality
 {
+    public override Species Species => Species.Muskox;
 }

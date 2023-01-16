@@ -2,4 +2,5 @@
 
 public class BushyTailedWoodratMortality : Mortality
 {
+    public override Species Species => Species.BushyTailedWoodrat;
 }

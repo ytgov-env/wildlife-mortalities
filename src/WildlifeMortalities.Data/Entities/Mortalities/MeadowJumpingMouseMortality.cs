@@ -2,4 +2,5 @@
 
 public class MeadowJumpingMouseMortality : Mortality
 {
+    public override Species Species => Species.MeadowJumpingMouse;
 }

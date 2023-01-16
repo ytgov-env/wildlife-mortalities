@@ -2,4 +2,5 @@
 
 public class WolverineMortality : Mortality
 {
+    public override Species Species => Species.Wolverine;
 }

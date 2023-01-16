@@ -2,4 +2,5 @@
 
 public class NorthernRiverOtterMortality : Mortality
 {
+    public override Species Species => Species.NorthernRiverOtter;
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WildlifeMortalities.Data.Entities.MortalityReports;
-using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -20,6 +19,7 @@ public abstract class Mortality
     public decimal? Longitude { get; set; }
     public Sex Sex { get; set; }
     public string Discriminator { get; set; } = null!;
+    public abstract Species Species { get; }
 }
 
 public class MortalityConfig<T> : IEntityTypeConfiguration<T> where T : Mortality
@@ -29,5 +29,6 @@ public class MortalityConfig<T> : IEntityTypeConfiguration<T> where T : Mortalit
         builder.ToTable("Mortalities");
         builder.Property(m => m.Latitude).HasPrecision(10, 8);
         builder.Property(m => m.Longitude).HasPrecision(11, 8);
+        builder.Ignore(m => m.Species);
     }
 }

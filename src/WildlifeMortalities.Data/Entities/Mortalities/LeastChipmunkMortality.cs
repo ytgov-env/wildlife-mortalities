@@ -2,4 +2,5 @@
 
 public class LeastChipmunkMortality : Mortality
 {
+    public override Species Species => Species.LeastChipmunk;
 }

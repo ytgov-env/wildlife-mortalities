@@ -2,4 +2,5 @@
 
 public class AmericanBeaverMortality : Mortality
 {
+    public override Species Species => Species.AmericanBeaver;
 }

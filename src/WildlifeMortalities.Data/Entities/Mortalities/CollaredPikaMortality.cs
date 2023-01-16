@@ -2,4 +2,5 @@
 
 public class CollaredPikaMortality : Mortality
 {
+    public override Species Species => Species.CollaredPika;
 }

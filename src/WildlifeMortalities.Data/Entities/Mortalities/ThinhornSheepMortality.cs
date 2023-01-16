@@ -4,6 +4,8 @@ public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>
 {
     public ThinhornSheepBodyColour BodyColour { get; set; }
     public ThinhornSheepTailColour TailColour { get; set; }
+
+    public override Species Species => Species.ThinhornSheep;
 }
 
 public enum ThinhornSheepBodyColour

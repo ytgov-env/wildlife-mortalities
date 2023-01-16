@@ -2,4 +2,5 @@
 
 public class ArcticGroundSquirrelMortality : Mortality
 {
+    public override Species Species => Species.ArcticGroundSquirrel;
 }
