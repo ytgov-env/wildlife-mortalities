@@ -5,30 +5,52 @@ using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Shared.Services;
 
-public class ClientService : IDisposable
+public class ClientService
 {
-    private readonly AppDbContext _dbContext;
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public ClientService(IDbContextFactory<AppDbContext> dbContextFactory)
-    {
+    public ClientService(IDbContextFactory<AppDbContext> dbContextFactory) =>
         _dbContextFactory = dbContextFactory;
-        _dbContext = _dbContextFactory.CreateDbContext();
+
+    public async Task<IEnumerable<Client>> SearchByEnvClientId(string input)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+        return await context.People
+            .OfType<Client>()
+            .Where(c => c.EnvClientId.StartsWith(input))
+            .ToArrayAsync();
     }
 
-    public void Dispose() => _dbContext.Dispose();
+    public async Task<int> GetPersonIdByEnvClientId(string envClientID)
+    {
+        var context = await _dbContextFactory.CreateDbContextAsync();
+        return await context.People
+            .OfType<Client>()
+            .Where(c => c.EnvClientId == envClientID)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync();
+    }
 
-    public async Task<IEnumerable<Client>> SearchByEnvClientId(string input) =>
-        // await using var context = await _dbContextFactory.CreateDbContextAsync();
-        _dbContext.People.OfType<Client>().Where(c => c.EnvClientId.StartsWith(input));
+    public async Task<IEnumerable<Client>> SearchByLastName(string input)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+        return await context.People
+            .OfType<Client>()
+            .Where(c => c.LastName.StartsWith(input))
+            .ToArrayAsync();
+    }
 
-    public async Task<IEnumerable<Client>> SearchByLastName(string input) =>
-        // await using var context = await _dbContextFactory.CreateDbContextAsync();
-        _dbContext.People.OfType<Client>().Where(c => c.LastName.StartsWith(input));
+    public async Task<IEnumerable<Authorization>> GetAuthorizationsByEnvClientId(string input)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+        return await context.Authorizations
+            .Where(a => a.Client.EnvClientId == input)
+            .ToArrayAsync();
+    }
 
-    public async Task<IEnumerable<Authorization>> GetAuthorizationsByEnvClientId(string input) =>
-        _dbContext.Authorizations.Where(a => a.Client.EnvClientId == input);
-
-    public async Task<IEnumerable<Authorization>> GetAuthorizationsByClientId(int clientId) =>
-        _dbContext.Authorizations.Where(a => a.Client.Id == clientId);
+    public async Task<IEnumerable<Authorization>> GetAuthorizationsByClientId(int clientId)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+        return await context.Authorizations.Where(a => a.Client.Id == clientId).ToArrayAsync();
+    }
 }

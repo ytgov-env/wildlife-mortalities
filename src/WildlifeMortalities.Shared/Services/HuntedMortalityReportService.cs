@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.MortalityReports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Validators;
 
 namespace WildlifeMortalities.Shared.Services;
@@ -31,10 +31,12 @@ public class HuntedMortalityReportService : IDisposable
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        return await context.MortalityReports
-            .OfType<HuntedMortalityReport>()
-            .Include(h => h.Mortality)
-            .FirstOrDefaultAsync(h => h.Id == id);
+        //return await context.MortalityReports
+        //    .OfType<HuntedMortalityReport>()
+        //    .Include(h => h.Mortality)
+        //    .FirstOrDefaultAsync(h => h.Id == id);
+
+        return null;
     }
 
     public async Task<Result<HuntedMortalityReport>> CreateHuntedMortalityReport<T>(

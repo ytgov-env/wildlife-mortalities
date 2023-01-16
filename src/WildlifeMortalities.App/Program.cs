@@ -46,6 +46,7 @@ try
     // });
     builder.Services.AddScoped<ClientService>();
     builder.Services.AddScoped<ConservationOfficerService>();
+    builder.Services.AddScoped<IMortalityService2, MortalityService2>();
 
     // Add authentication services
     builder.Services

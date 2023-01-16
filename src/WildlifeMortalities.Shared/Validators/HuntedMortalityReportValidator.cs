@@ -1,5 +1,5 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.MortalityReports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Shared.Validators;
 

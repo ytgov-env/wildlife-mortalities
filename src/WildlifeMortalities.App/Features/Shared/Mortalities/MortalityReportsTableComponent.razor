@@ -1,0 +1,87 @@
+﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.Reports
+@using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
+@using WildlifeMortalities.Data.Entities.Reports.SingleMortality
+@using WildlifeMortalities.Shared.Services
+<MudTable ServerData="ServerReload">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Reports</MudText>
+        @* <MudSpacer/> *@
+        @* <MudTextField @bind-Value="_searchString" Placeholder="Search by lead, title, or description" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField> *@
+        @if (EnvClientId != null)
+        {
+            <MudSpacer/>
+            <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" OnClick="CreateMortalityReport" Class="flex-shrink-0">Report a mortality</MudButton>
+        }
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Species</MudTh>
+        <MudTh>Date Submitted</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Type">
+            @switch (context)
+            {
+                case OutfitterGuidedHuntReport e:
+                    <span>Hunting (outfitted) - @e.Result.GetDisplayName().ToLower()</span>
+                    break;
+                case SpecialGuidedHuntReport e:
+                    <span>Hunting (special guided) - @e.Result.GetDisplayName().ToLower()</span>
+                    break;
+                case HuntedMortalityReport e:
+                    <span>Hunting (individual)</span>
+                    break;
+            }
+
+        </MudTd>
+        <MudTd DataLabel="Species">
+            @switch (context)
+            {
+                case OutfitterGuidedHuntReport e:
+                    <span>@string.Join(", ", e.HuntedMortalityReports.Select(x => x.Mortality.Species.GetDisplayName()))</span>
+                    break;
+                case HuntedMortalityReport e:
+                    <span>@e.Mortality.Species.GetDisplayName()</span>
+                    break;
+            }
+        </MudTd>
+        <MudTd DataLabel="Date Submitted">@context.DateSubmitted.ToString("f")</MudTd>
+
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager/>
+    </PagerContent>
+</MudTable>
+
+@code {
+
+    [Parameter]
+    public string? EnvClientId { get; set; }
+
+
+    [Inject]
+    private IMortalityService2 MortalityService { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+
+    private async Task<TableData<Report>> ServerReload(TableState state)
+    {
+        var start = state.Page * state.PageSize;
+        var totalItems = EnvClientId == null ? await MortalityService.CountAllReports() : await MortalityService.CountReportsByEnvClientId(EnvClientId);
+        var data = EnvClientId == null ? await MortalityService.GetAllReports(start, state.PageSize) : await MortalityService.GetReportsByEnvClientId(EnvClientId, start, state.PageSize);
+
+        return new TableData<Report> { TotalItems = totalItems, Items = data };
+    }
+
+
+    private void CreateMortalityReport()
+    {
+        NavigationManager.NavigateTo($"mortality-reports/new/{EnvClientId}");
+    }
+
+}

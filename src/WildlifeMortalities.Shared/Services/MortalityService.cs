@@ -3,7 +3,7 @@ using Ardalis.Result.FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.MortalityReports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Validators;
 
 namespace WildlifeMortalities.Shared.Services;

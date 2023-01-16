@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.App.Features.Shared.Mortalities;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.MortalityReports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;

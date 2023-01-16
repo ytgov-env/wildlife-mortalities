@@ -34,10 +34,10 @@
     @if (_selectedClientViewModel.SelectedClient is not null)
     {
         <MudItem xs="12" sm="6">
-            <AuthorizationsComponent ClientId="_selectedClientViewModel.SelectedClient.Id"/>
+            <AuthorizationsComponent ClientId="@_selectedClientViewModel.SelectedClient.Id"/>
         </MudItem>
         <MudItem xs="12">
-            <MortalitiesTableComponent PersonId="_selectedClientViewModel.SelectedClient.Id"/>
+            <MortalityReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvClientId"/>
         </MudItem>
     }
 </MudGrid>

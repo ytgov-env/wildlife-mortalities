@@ -1,7 +1,15 @@
-﻿@page "/mortality-reports/new/{personid:int}"
+﻿@page "/mortality-reports/new/{envClientId}"
 @using WildlifeMortalities.App.Extensions
 
 <MudText Typo="Typo.h3" Class="mb-8">@_vm.MortalityReportType.GetDisplayName() report</MudText>
+
+
+@if (_personId == 0)
+{
+    <MudAlert Severity="Severity.Error">No client with that EnvClientId was found.</MudAlert>
+
+    return;
+}
 
 <EditForm OnValidSubmit="CreateMortalityReport" Model="_vm">
     <FluentValidationValidator/>

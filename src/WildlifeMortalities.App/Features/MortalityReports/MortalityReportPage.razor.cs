@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
-using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities.GuidedReports;
-using WildlifeMortalities.Data.Entities.MortalityReports;
-using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.MortalityReports;
 
@@ -12,19 +9,25 @@ public partial class MortalityReportPage
 {
     private readonly IList<IBrowserFile> _files = new List<IBrowserFile>();
     private EditContext _editContext;
+    private int? _personId;
     private MortalityReportPageViewModel _vm;
 
-    [Parameter] public int PersonId { get; set; }
+    [Parameter] public string EnvClientId { get; set; }
 
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
-    [Inject] private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
+    [Inject] public IMortalityService2 MortalityService { get; set; } = default!;
+
+    [Inject] public ClientService ClientService { get; set; } = default!;
 
     protected override void OnInitialized()
     {
         _vm = new MortalityReportPageViewModel();
         _editContext = new EditContext(_vm);
     }
+
+    protected override async Task OnInitializedAsync() =>
+        _personId = await ClientService.GetPersonIdByEnvClientId(EnvClientId);
 
     private void ReportTypeChanged(MortalityReportType type)
     {
@@ -53,15 +56,14 @@ public partial class MortalityReportPage
 
     private async Task CreateMortalityReport()
     {
-        await using var context = await DbContextFactory.CreateDbContextAsync();
+        var personId = _personId!.Value;
 
         switch (_vm.MortalityReportType)
         {
-            //MortalityReport report = null;
             case MortalityReportType.Conflict:
                 {
                     var report = new HumanWildlifeConflictMortalityReport();
-                    context.Add(report);
+                    await MortalityService.CreateReport(report);
                     break;
                 }
             case MortalityReportType.IndividualHunt:
@@ -70,62 +72,29 @@ public partial class MortalityReportPage
                     var result = await validator.ValidateAsync(_vm.HuntedMortalityReportViewModel);
                     if (result.IsValid)
                     {
-                        var report = _vm.HuntedMortalityReportViewModel!.GetReport(PersonId);
-                        context.Add(report);
+                        var report = _vm.HuntedMortalityReportViewModel!.GetReport(personId);
+                        await MortalityService.CreateReport(report);
                     }
 
                     break;
                 }
             case MortalityReportType.OutfitterGuidedHunt:
                 {
-                    // Clear mortality reports if the hunter wasn't successful
-                    var outfitterViewModel = _vm.OutfitterGuidedHuntReportViewModel;
-                    if (outfitterViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
-                    {
-                        outfitterViewModel.HuntedMortalityReportViewModels.Clear();
-                    }
-
-                    var report = new OutfitterGuidedHuntReport
-                    {
-                        HuntStartDate = (DateTime)outfitterViewModel.HuntingDateRange.Start,
-                        HuntEndDate = (DateTime)outfitterViewModel.HuntingDateRange.End!,
-                        Guides = outfitterViewModel.Guides,
-                        OutfitterArea = outfitterViewModel.OutfitterArea,
-                        Result = outfitterViewModel.Result!.Value,
-                        HuntedMortalityReports = outfitterViewModel.HuntedMortalityReportViewModels
-                            .Select(x => x.GetReport(PersonId))
-                            .ToList()
-                    };
-                    context.Add(report);
+                    var report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
+                    await MortalityService.CreateReport(report);
                     break;
                 }
             case MortalityReportType.SpecialGuidedHunt:
                 {
-                    // Clear mortality reports if the hunter wasn't successful
-                    var specialViewModel = _vm.SpecialGuidedHuntReportViewModel;
-                    if (specialViewModel!.Result is not GuidedHuntResult.SuccessfulHunt)
-                    {
-                        specialViewModel.HuntedMortalityReportViewModels.Clear();
-                    }
-
-                    var report = new SpecialGuidedHuntReport
-                    {
-                        HuntedMortalityReports = specialViewModel.HuntedMortalityReportViewModels
-                            .Select(x => x.GetReport(PersonId))
-                            .ToList()
-                    };
-                    context.Add(report);
+                    var report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
+                    await MortalityService.CreateReport(report);
                     break;
                 }
             case MortalityReportType.Trapped:
                 break;
         }
 
-        await context.SaveChangesAsync();
-        //await Service.CreateMortalityReport(report);
-
-        //Todo fix route parameter to use envClientId
-        NavigationManager.NavigateTo($"reporters/clients/{PersonId}");
+        NavigationManager.NavigateTo($"reporters/clients/{EnvClientId}");
     }
 
     private void UploadFiles(InputFileChangeEventArgs e)

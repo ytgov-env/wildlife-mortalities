@@ -5,12 +5,12 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
 @using Microsoft.EntityFrameworkCore
-<MudDateRangePicker Editable="true" Label="Hunting dates" bind-DateRange="ViewModel.HuntingDateRange"/>
+<MudDateRangePicker Editable="true" Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange"/>
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
 <MudPaper Class="pa-4 my-4">
-    <MudAutocomplete T="Client?" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
+    <MudAutocomplete T="Client" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
                      Value="ViewModel.SelectedGuide" ValueChanged="AddClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
     </MudAutocomplete>
@@ -42,7 +42,7 @@
     <MudGrid Class="my-3">
         @foreach (var item in ViewModel.HuntedMortalityReportViewModels)
         {
-            <MudItem md="3" xs="12">
+            <MudItem md="2" xs="6">
                 <MudCard Elevation="5" Class="flex-column d-flex" Style="height: 100%">
                     <MudCardHeader>
                         <CardHeaderContent>
