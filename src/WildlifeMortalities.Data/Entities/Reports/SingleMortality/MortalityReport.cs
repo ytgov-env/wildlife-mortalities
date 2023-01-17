@@ -7,6 +7,8 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 public abstract class MortalityReport : Report
 {
     public Mortality Mortality { get; set; } = null!;
+
+    public override IEnumerable<Mortality> GetMortalities() => new[] { Mortality };
 }
 
 public class MortalityReportConfig : IEntityTypeConfiguration<MortalityReport>

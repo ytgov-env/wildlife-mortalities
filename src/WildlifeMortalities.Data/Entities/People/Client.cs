@@ -20,7 +20,7 @@ public class Client : Person
     public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReports { get; set; } = null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsClient { get; set; } = null!;
-    public List<TrappedMortalityReport> TrappedMortalityReports { get; set; } = null!;
+    public List<TrappedMortalitiesReport> TrappedMortalitiesReports { get; set; } = null!;
 }
 
 public class ClientConfig : IEntityTypeConfiguration<Client>

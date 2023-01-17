@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
-public class SpecialGuidedHuntReport : Report, IClientBasedMortalityReport
+public class SpecialGuidedHuntReport : Report, IHasClientReporter
 {
     public DateTime HuntStartDate { get; set; }
     public DateTime HuntEndDate { get; set; }
@@ -15,6 +16,9 @@ public class SpecialGuidedHuntReport : Report, IClientBasedMortalityReport
     public List<HuntedMortalityReport> HuntedMortalityReports { get; set; } = null!;
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
+
+    public override IEnumerable<Mortality> GetMortalities() =>
+        HuntedMortalityReports.Select(x => x.Mortality).ToArray();
 }
 
 public class SpecialGuidedHuntReportConfig : IEntityTypeConfiguration<SpecialGuidedHuntReport>

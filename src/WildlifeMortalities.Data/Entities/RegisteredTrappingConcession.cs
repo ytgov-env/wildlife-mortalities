@@ -1,6 +1,6 @@
 ﻿namespace WildlifeMortalities.Data.Entities;
 
-public class TrappingConcessionArea
+public class RegisteredTrappingConcession
 {
     public int Id { get; set; }
     public string Area { get; } = string.Empty;

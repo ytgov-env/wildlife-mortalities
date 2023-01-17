@@ -6,7 +6,7 @@ using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-public class HuntedMortalityReport : MortalityReport, IClientBasedMortalityReport
+public class HuntedMortalityReport : MortalityReport, IHasClientReporter
 {
     public int GameManagementAreaId { get; set; }
     public GameManagementArea GameManagementArea { get; set; } = null!;
@@ -30,7 +30,8 @@ public class HuntedMortalityReport : MortalityReport, IClientBasedMortalityRepor
 
 public class HuntedMortalityReportConfig : IEntityTypeConfiguration<HuntedMortalityReport>
 {
-    public void Configure(EntityTypeBuilder<HuntedMortalityReport> builder) => builder.ToTable("Reports");
+    public void Configure(EntityTypeBuilder<HuntedMortalityReport> builder) =>
+        builder.ToTable("Reports");
 }
 
 public enum HuntedMortalityReportStatus

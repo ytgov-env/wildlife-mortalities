@@ -2,13 +2,16 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-public class TrappedMortalityReport : MortalityReport, IClientBasedMortalityReport
+public class TrappedMortalityReport : MortalityReport /*, IHasClientReporter*/
 {
+    public int TrappedMortalitiesReportId { get; set; }
+    public TrappedMortalitiesReport TrappedMortalitiesReport { get; set; } = null!;
     public int TrappingConcessionAreaId { get; set; }
-    public TrappingConcessionArea TrappingConcessionArea { get; set; } = null!;
+    public RegisteredTrappingConcession RegisteredTrappingConcession { get; set; } = null!;
     public DateTimeOffset DateStarted { get; set; }
     public DateTimeOffset DateCompleted { get; set; }
     public int? AuthorizationId { get; set; }
@@ -16,20 +19,18 @@ public class TrappedMortalityReport : MortalityReport, IClientBasedMortalityRepo
     public TrappedMortalityReportStatus Status { get; set; }
     public string Comment { get; set; } = string.Empty;
     public List<Violation> Violations { get; set; } = null!;
-    public int ClientId { get; set; }
-    public Client Client { get; set; } = null!;
+    //public int ClientId { get; set; }
+    //public Client Client { get; set; } = null!;
 }
 
-public enum TrappedMortalityReportStatus
-{
-}
+public enum TrappedMortalityReportStatus { }
 
 public class TrappedMortalityReportConfig : IEntityTypeConfiguration<TrappedMortalityReport>
 {
     public void Configure(EntityTypeBuilder<TrappedMortalityReport> builder) =>
         builder
             .ToTable("Reports")
-            .HasOne(t => t.Client)
+            .HasOne(t => t.TrappedMortalitiesReport)
             .WithMany(t => t.TrappedMortalityReports)
             .OnDelete(DeleteBehavior.NoAction);
 }

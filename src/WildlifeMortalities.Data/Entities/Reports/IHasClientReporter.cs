@@ -2,7 +2,7 @@
 
 namespace WildlifeMortalities.Data.Entities.Reports;
 
-internal interface IClientBasedMortalityReport
+internal interface IHasClientReporter
 {
     public int ClientId { get; set; }
     public Client Client { get; set; }
