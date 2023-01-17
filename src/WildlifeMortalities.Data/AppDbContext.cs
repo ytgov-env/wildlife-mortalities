@@ -12,13 +12,9 @@ namespace WildlifeMortalities.Data;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext()
-    {
-    }
+    public AppDbContext() { }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<Person> People => Set<Person>();
 
@@ -48,8 +44,6 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AmericanBlackBearBioSubmission>();
-
         ConfigureMortalities(modelBuilder);
         modelBuilder.ApplyConfiguration(new MortalityConfig<Mortality>());
 

@@ -1,9 +1,12 @@
-﻿namespace WildlifeMortalities.Data.Entities.Mortalities;
+﻿using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+
+namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>
 {
     public ThinhornSheepBodyColour BodyColour { get; set; }
     public ThinhornSheepTailColour TailColour { get; set; }
+    public ThinhornSheepBioSubmission? BioSubmission { get; set; }
 
     public override Species Species => Species.ThinhornSheep;
 }

@@ -4,15 +4,15 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
-public class MuleDeerBioSubmission : BioSubmission<MuleDeerMortality>
+public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>
 {
-    public bool IsHornIncluded { get; set; }
-    public bool IsHeadIncluded { get; set; }
+    public int PeltLengthMillimetres { get; set; }
+    public int PeltWidthMillimetres { get; set; }
 }
 
-public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioSubmission>
+public class CanadaLynxBioSubmissionConfig : IEntityTypeConfiguration<CanadaLynxBioSubmission>
 {
-    public void Configure(EntityTypeBuilder<MuleDeerBioSubmission> builder) =>
+    public void Configure(EntityTypeBuilder<CanadaLynxBioSubmission> builder) =>
         builder
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
