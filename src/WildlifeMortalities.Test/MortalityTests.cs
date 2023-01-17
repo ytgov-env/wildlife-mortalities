@@ -70,20 +70,20 @@ public class MortalityTests
     //    mortality.Id.Should().Be(id);
     //}
 
-    [Fact]
-    public async Task CannotGetMortalityByIdUsingMismatchedDerivedType()
-    {
-        // Arrange
-        var dbContextFactory = CreateTestDbContextFactory();
-        var service = new MortalityService(dbContextFactory);
+    //[Fact]
+    //public async Task CannotGetMortalityByIdUsingMismatchedDerivedType()
+    //{
+    //    // Arrange
+    //    var dbContextFactory = CreateTestDbContextFactory();
+    //    var service = new MortalityService(dbContextFactory);
 
-        // Act
-        const int id = 1;
-        var mortality = await service.GetMortalityById<AmericanBlackBearMortality>(id);
+    //    // Act
+    //    const int id = 1;
+    //    var mortality = await service.GetMortalityById<AmericanBlackBearMortality>(id);
 
-        // Assert
-        mortality.Should().Be(null);
-    }
+    //    // Assert
+    //    mortality.Should().Be(null);
+    //}
 
     //[Fact]
     //public async Task CanGetBisonMortalitiesByEnvClientId()

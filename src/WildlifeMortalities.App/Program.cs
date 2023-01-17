@@ -35,7 +35,6 @@ try
     builder.Services.AddMudServices();
 
     // builder.Services.AddHostedService<PosseSyncService>();
-    builder.Services.AddScoped<MortalityService>();
     // builder.Services.AddHttpClient<IPosseClientService, PosseClientService>(client =>
     // {
     //     client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
@@ -46,7 +45,7 @@ try
     // });
     builder.Services.AddScoped<ClientService>();
     builder.Services.AddScoped<ConservationOfficerService>();
-    builder.Services.AddScoped<IMortalityService2, MortalityService2>();
+    builder.Services.AddScoped<IMortalityService, MortalityService>();
 
     // Add authentication services
     builder.Services

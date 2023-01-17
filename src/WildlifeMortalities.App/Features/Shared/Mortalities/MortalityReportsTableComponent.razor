@@ -3,7 +3,7 @@
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @using WildlifeMortalities.Shared.Services
-<MudTable ServerData="ServerReload">
+<MudTable ServerData="ServerReload" T="Report" OnRowClick="GotoDetails">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Reports</MudText>
         @* <MudSpacer/> *@
@@ -25,7 +25,7 @@
         <MudTd DataLabel="Type">
             @switch (context)
             {
-                case OutfitterGuidedHuntReport e:
+                @*case OutfitterGuidedHuntReport e:
                     <span>Hunting (outfitted) - @e.Result.GetDisplayName().ToLower()</span>
                     break;
                 case SpecialGuidedHuntReport e:
@@ -33,6 +33,15 @@
                     break;
                 case HuntedMortalityReport e:
                     <span>Hunting (individual)</span>
+                    break;*@
+                    case OutfitterGuidedHuntReport e:
+                    <span>Outfitted hunt - @e.Result.GetDisplayName().ToLower()</span>
+                    break;
+                case SpecialGuidedHuntReport e:
+                    <span>Special guided hunt - @e.Result.GetDisplayName().ToLower()</span>
+                    break;
+                case HuntedMortalityReport e:
+                    <span>Individual hunt</span>
                     break;
             }
 
@@ -49,7 +58,6 @@
             }
         </MudTd>
         <MudTd DataLabel="Date Submitted">@context.DateSubmitted.ToString("f")</MudTd>
-
     </RowTemplate>
     <PagerContent>
         <MudTablePager/>
@@ -63,7 +71,7 @@
 
 
     [Inject]
-    private IMortalityService2 MortalityService { get; set; } = default!;
+    private IMortalityService MortalityService { get; set; } = default!;
 
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
@@ -84,4 +92,8 @@
         NavigationManager.NavigateTo($"mortality-reports/new/{EnvClientId}");
     }
 
+    public void GotoDetails(TableRowClickEventArgs<Report> args)
+    {
+        NavigationManager.NavigateTo($"mortality-reports/{args.Item.Id}");
+    }
 }

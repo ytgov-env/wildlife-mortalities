@@ -1,91 +1,182 @@
-﻿using Ardalis.Result;
-using Ardalis.Result.FluentValidation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
-using WildlifeMortalities.Shared.Validators;
 
 namespace WildlifeMortalities.Shared.Services;
 
-public class MortalityService
+public class MortalityService : IMortalityService
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
     public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) =>
         _dbContextFactory = dbContextFactory;
 
-    public async Task<List<Mortality>> GetAllMortalities()
+    public async Task<int> CountAllReports()
     {
-        await using var context = await _dbContextFactory.CreateDbContextAsync();
-
-        return await context.Mortalities.ToListAsync();
+        using var context = _dbContextFactory.CreateDbContext();
+        return await GetReportsQuery(null, context).CountAsync();
     }
 
-    public async Task<T?> GetMortalityById<T>(int id) where T : Mortality
+    public async Task<int> CountReportsByEnvClientId(string envClientId)
     {
-        await using var context = await _dbContextFactory.CreateDbContextAsync();
+        using var context = _dbContextFactory.CreateDbContext();
+        return await GetReportsQuery(envClientId, context).CountAsync();
+    }
 
-        var mortality = await context.Mortalities.FirstOrDefaultAsync(m => m.Id == id);
-        if (mortality?.GetType() == typeof(T))
+    public async Task<IEnumerable<Report>> GetAllReports(int start = 0, int length = 10)
+    {
+        var result = await GetReports(null, start, length);
+
+        return result;
+    }
+
+    public async Task<IEnumerable<Report>> GetReportsByEnvClientId(
+        string envClientId,
+        int start = 0,
+        int length = 10
+    )
+    {
+        var result = await GetReports(envClientId, start, length);
+
+        return result;
+    }
+
+    public async Task CreateReport(HuntedMortalityReport report)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+        context.Add(report);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task CreateReport(OutfitterGuidedHuntReport report)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        var guideIds = report.Guides.Select(x => x.Id).ToList();
+        var guides = await context.People
+            .OfType<Client>()
+            .Where(x => guideIds.Contains(x.Id) == true)
+            .ToListAsync();
+
+        var area = await context.OutfitterAreas.FirstOrDefaultAsync(
+            x => x.Area == report.OutfitterArea.Area
+        );
+        if (area != null)
         {
-            return mortality as T;
+            report.OutfitterArea = area;
+        }
+        else
+        {
+            throw new ArgumentException(nameof(report.OutfitterArea));
         }
 
-        return null;
+        report.Guides = guides;
+
+        context.Add(report);
+        await context.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyList<T>> GetMortalitiesByEnvClientId<T>(string envClientId)
-        where T : Mortality
+    public async Task CreateReport(SpecialGuidedHuntReport report)
     {
-        await using var context = await _dbContextFactory.CreateDbContextAsync();
+        using var context = _dbContextFactory.CreateDbContext();
+        context.Add(report);
+        await context.SaveChangesAsync();
+    }
 
-        return await context.Mortalities
-            .OfType<T>()
+    public async Task CreateReport(HumanWildlifeConflictMortalityReport report)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+        context.Add(report);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Report>> GetReports(
+        string? envClientId,
+        int start = 0,
+        int length = 10
+    )
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        var query = GetReportsQuery(envClientId, context);
+
+        var result = await query
+            .OrderBy(x => x.DateSubmitted)
+            .Skip(start)
+            .Take(length)
+            .AsSplitQuery()
+            .ToArrayAsync();
+
+        return result;
+    }
+
+    private static IQueryable<Report> GetReportsIncludingMortalities(AppDbContext context) =>
+        context.Reports
+            .Include(x => ((SpecialGuidedHuntReport)x).HuntedMortalityReports)
+            .ThenInclude(x => x.Mortality)
+            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedMortalityReports)
+            .ThenInclude(x => x.Mortality)
+            .Include(x => ((MortalityReport)x).Mortality);
+
+    private static IQueryable<Report> GetReportsQuery(string? envClientId, AppDbContext context)
+    {
+        var query = GetReportsIncludingMortalities(context)
             .Where(
-                m =>
-                    m.MortalityReport is HuntedMortalityReport
-                    && (m.MortalityReport as HuntedMortalityReport)!.Client.EnvClientId
-                    == envClientId
-            )
-            .AsNoTracking()
-            .ToListAsync();
+                x =>
+                    x is HuntedMortalityReport
+                        ? ((HuntedMortalityReport)x).OutfitterGuidedHuntReport == null
+                            && ((HuntedMortalityReport)x).SpecialGuidedHuntReport == null
+                        : true
+            );
+
+        if (string.IsNullOrEmpty(envClientId) == false)
+        {
+            query = query.Where(
+                r =>
+                    r is HuntedMortalityReport
+                        ? ((HuntedMortalityReport)r).Client.EnvClientId == envClientId
+                        : r is SpecialGuidedHuntReport
+                            ? ((SpecialGuidedHuntReport)r).Client.EnvClientId == envClientId
+                            : r is OutfitterGuidedHuntReport
+                                ? ((OutfitterGuidedHuntReport)r).Client.EnvClientId == envClientId
+                                : r is TrappedMortalitiesReport
+                                    && ((TrappedMortalitiesReport)r).Client.EnvClientId
+                                        == envClientId
+            );
+        }
+
+        return query;
     }
 
-    public async Task<IReadOnlyList<T>> GetMortalitiesByConservationOfficerBadgeNumber<T>(
-        string conservationOfficerBadgeNumber
-    ) where T : Mortality
+    public async Task<ReportDetail?> GetReport(int id)
     {
-        await using var context = await _dbContextFactory.CreateDbContextAsync();
+        using AppDbContext? context = _dbContextFactory.CreateDbContext();
 
-        return await context.Mortalities
-            .OfType<T>()
-            .Where(
-                m =>
-                    m.MortalityReport is HumanWildlifeConflictMortalityReport
-                    && (m.MortalityReport as HumanWildlifeConflictMortalityReport)!
-                    .ConservationOfficer
-                    .BadgeNumber == conservationOfficerBadgeNumber
-            )
-            .AsNoTracking()
-            .ToListAsync();
-    }
+        var result = await GetReportsIncludingMortalities(context)
+            .FirstOrDefaultAsync(x => x.Id == id);
 
-    public async Task<Result<T>> CreateMortality<T>(T mortality) where T : Mortality
-    {
-        var validator = new MortalityValidator<T>();
-        var validation = await validator.ValidateAsync(mortality);
-        return !validation.IsValid
-            ? Result<T>.Invalid(validation.AsErrors())
-            : Result<T>.Success(mortality);
-    }
+        if (result == null)
+        {
+            return null;
+        }
 
-    public async Task<Result<T>> UpdateMortality<T>(T mortality) where T : Mortality
-    {
-        var validator = new MortalityValidator<T>();
-        var validation = await validator.ValidateAsync(mortality);
-        return !validation.IsValid
-            ? Result<T>.Invalid(validation.AsErrors())
-            : Result<T>.Success(mortality);
+        var mortalities = result.GetMortalities();
+
+        Dictionary<int, BioSubmission> bioSubmissions = new();
+        foreach (var item in mortalities.OfType<IHasBioSubmission>())
+        {
+            var bioSubmission = await context.BioSubmissions.FindAsync(item.BioSubmissionId);
+            if (bioSubmission != null)
+            {
+                bioSubmissions.Add(item.Id, bioSubmission);
+            }
+        }
+
+        return new ReportDetail(result, bioSubmissions);
     }
 }

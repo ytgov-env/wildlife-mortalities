@@ -1,10 +1,13 @@
-﻿using WildlifeMortalities.Data.Entities.Reports;
+﻿using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Shared.Services;
 
-public interface IMortalityService2
+public record ReportDetail(Report reprot, IDictionary<int, BioSubmission> submission);
+
+public interface IMortalityService
 {
     Task CreateReport(HumanWildlifeConflictMortalityReport report);
     Task CreateReport(HuntedMortalityReport report);
@@ -20,4 +23,5 @@ public interface IMortalityService2
 
     Task<int> CountAllReports();
     Task<int> CountReportsByEnvClientId(string envClientId);
+    Task<ReportDetail?> GetReport(int id);
 }
