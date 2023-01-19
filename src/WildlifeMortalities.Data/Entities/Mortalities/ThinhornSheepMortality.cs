@@ -2,7 +2,7 @@
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>
+public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>, IHasBioSubmission
 {
     public ThinhornSheepBodyColour BodyColour { get; set; }
     public ThinhornSheepTailColour TailColour { get; set; }

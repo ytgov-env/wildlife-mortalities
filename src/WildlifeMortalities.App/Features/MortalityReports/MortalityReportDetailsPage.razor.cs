@@ -5,6 +5,8 @@ namespace WildlifeMortalities.App.Features.MortalityReports
 {
     public partial class MortalityReportDetailsPage
     {
+        private ReportDetail? _reportDetail;
+
         [Inject]
         private IMortalityService MortalityService { get; set; } = null!;
 
@@ -13,7 +15,7 @@ namespace WildlifeMortalities.App.Features.MortalityReports
 
         protected override async Task OnInitializedAsync()
         {
-            var report = await MortalityService.GetReport(Id);
+            _reportDetail = await MortalityService.GetReport(Id);
         }
     }
 }

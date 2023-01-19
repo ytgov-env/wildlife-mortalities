@@ -1,7 +1,11 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.App.Extensions;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
@@ -25,25 +29,39 @@ public class MortalityViewModel
             { Data.Enums.Species.WoodBison, () => new WoodBisonMortality() }
         };
 
-    public MortalityViewModel()
-    {
-    }
+    private Mortality? _existingMortality;
+    private BioSubmission _existingBioSubmission;
 
-    public MortalityViewModel(Mortality mortality)
+    public MortalityViewModel() { }
+
+    public MortalityViewModel(Mortality mortality, ReportDetail? reportDetail = null)
     {
         DateOfDeath = mortality.DateOfDeath;
         Latitude = mortality.Latitude;
         Longitude = mortality.Longitude;
         Sex = mortality.Sex;
+        Species = mortality.Species;
+
+        _existingMortality = mortality;
+        _existingBioSubmission = reportDetail.bioSubmissions
+            .FirstOrDefault(x => x.mortalityId == mortality.Id)
+            .submission;
+
+        if (reportDetail?.report is not null and HuntedMortalityReport huntedMortalityReport)
+        {
+            Landmark = huntedMortalityReport.Landmark;
+            Comment = huntedMortalityReport.Comment;
+        }
     }
 
     public MortalityViewModel(Species species) => Species = species;
 
     public Species? Species { get; init; }
-
     public DateTime? DateOfDeath { get; set; }
     public decimal? Longitude { get; set; }
     public decimal? Latitude { get; set; }
+    public string? Landmark { get; set; }
+    public string? Comment { get; set; }
     public Sex? Sex { get; set; }
 
     public virtual Dictionary<string, string> GetProperties()
@@ -70,6 +88,11 @@ public class MortalityViewModel
 
     public Mortality GetMortality(Species species)
     {
+        if (_existingMortality != null)
+        {
+            return _existingMortality;
+        }
+
         var mortalityFactory = s_mortalityFactory[species];
         var mortality = mortalityFactory.Invoke();
         SetBaseValues(mortality);
@@ -126,6 +149,4 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
-{
-}
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }

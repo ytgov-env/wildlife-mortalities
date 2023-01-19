@@ -5,7 +5,10 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Shared.Services;
 
-public record ReportDetail(Report reprot, IDictionary<int, BioSubmission> submission);
+public record ReportDetail(
+    Report report,
+    IEnumerable<(int mortalityId, BioSubmission submission)> bioSubmissions
+);
 
 public interface IMortalityService
 {

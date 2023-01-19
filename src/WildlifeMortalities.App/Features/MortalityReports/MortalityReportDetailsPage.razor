@@ -1,3 +1,33 @@
 ﻿@page "/mortality-reports/{id:int}"
+@using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 <MudText Typo="Typo.h3" Class="mb-8">Report</MudText>
+
+@if (_reportDetail is null)
+{
+    <MudAlert Severity="Severity.Error">Report not found.</MudAlert>
+    return;
+}
+@switch (_reportDetail.report)
+{
+    case HumanWildlifeConflictMortalityReport report:
+        break;
+    case HuntedMortalityReport report:
+        <HuntedMortalityReportDetailsComponent Report="@report" />
+        break;
+    case OutfitterGuidedHuntReport report:
+        <OutfitterGuidedHuntReportDetailsComponent Report="@report" />
+        break;
+    case SpecialGuidedHuntReport report:
+        <SpecialGuidedHuntReportDetailsComponent Report="@report" />
+        break;
+    default:
+        break;
+}
+
+@foreach (var item in _reportDetail.report.GetMortalities())
+{
+    <MortalityCardComponent MortalityViewModel="@(new MortalityViewModel(item, _reportDetail))" />
+}

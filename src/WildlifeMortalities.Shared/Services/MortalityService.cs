@@ -167,13 +167,20 @@ public class MortalityService : IMortalityService
 
         var mortalities = result.GetMortalities();
 
-        Dictionary<int, BioSubmission> bioSubmissions = new();
+        List<(int, BioSubmission)> bioSubmissions = new();
         foreach (var item in mortalities.OfType<IHasBioSubmission>())
         {
-            var bioSubmission = await context.BioSubmissions.FindAsync(item.BioSubmissionId);
+            BioSubmission? bioSubmission = null;
+            if (item is AmericanBlackBearMortality)
+            {
+                bioSubmission = await context.BioSubmissions
+                    .OfType<AmericanBlackBearBioSubmission>()
+                    .FirstOrDefaultAsync(x => x.MortalityId == x.Id);
+            }
+
             if (bioSubmission != null)
             {
-                bioSubmissions.Add(item.Id, bioSubmission);
+                bioSubmissions.Add((item.Id, bioSubmission));
             }
         }
 

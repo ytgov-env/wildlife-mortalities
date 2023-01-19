@@ -4,7 +4,7 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class GrizzlyBearMortality : Mortality<GrizzlyBearMortality>
+public class GrizzlyBearMortality : Mortality<GrizzlyBearMortality>, IHasBioSubmission
 {
     public bool IsShotInConflict { get; set; }
     public GrizzlyBearBioSubmission? BioSubmission { get; set; }

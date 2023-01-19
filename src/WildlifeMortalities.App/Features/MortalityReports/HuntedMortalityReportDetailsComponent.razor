@@ -1,0 +1,8 @@
+@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+
+<MudText>This is an individual hunt report: @Report.Id</MudText>
+
+@code {
+    [Parameter]
+    public HuntedMortalityReport Report { get; set; }
+}
