@@ -3,11 +3,9 @@
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @using WildlifeMortalities.Shared.Services
-<MudTable ServerData="ServerReload" T="Report" OnRowClick="GotoDetails">
+<MudTable ServerData="ServerReload" T="Report" OnRowClick="GotoDetails" @key="@EnvClientId">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Reports</MudText>
-        @* <MudSpacer/> *@
-        @* <MudTextField @bind-Value="_searchString" Placeholder="Search by lead, title, or description" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField> *@
         @if (EnvClientId != null)
         {
             <MudSpacer/>
@@ -25,15 +23,6 @@
         <MudTd DataLabel="Type">
             @switch (context)
             {
-                @*case OutfitterGuidedHuntReport e:
-                    <span>Hunting (outfitted) - @e.Result.GetDisplayName().ToLower()</span>
-                    break;
-                case SpecialGuidedHuntReport e:
-                    <span>Hunting (special guided) - @e.Result.GetDisplayName().ToLower()</span>
-                    break;
-                case HuntedMortalityReport e:
-                    <span>Hunting (individual)</span>
-                    break;*@
                     case OutfitterGuidedHuntReport e:
                     <span>Outfitted hunt - @e.Result.GetDisplayName().ToLower()</span>
                     break;
