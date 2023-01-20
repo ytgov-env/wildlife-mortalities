@@ -1,0 +1,58 @@
+﻿@using FluentValidation;
+@using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@inject ISnackbar Snackbar
+<EditForm OnValidSubmit="Create" Model="BioSubmission">
+    <FluentValidationValidator/>
+    <MudDialog>
+            <TitleContent>
+                <MudText Typo="Typo.h6">
+                    @*<MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>*@
+                    Bio Submission
+                </MudText>
+            </TitleContent>
+            <DialogContent>
+                @switch (BioSubmission)
+                {
+                    case AmericanBlackBearBioSubmission submission:
+                        <AmericanBlackBearBioSubmissionComponent BioSubmission="submission" />
+                    break;
+                }
+                <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="(() => BioSubmission.Age.Years)" />
+            <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="(() => BioSubmission.Age.Confidence)">
+                @foreach(var item in Enum.GetValues<ConfidenceInAge>())
+                {
+                    <MudSelectItem Value="item">@item.GetDisplayName()</MudSelectItem>
+                }
+            </MudSelect>
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="Cancel">Cancel</MudButton>
+                <MudButton Color="Color.Error" ButtonType="ButtonType.Submit">Submit</MudButton>
+            </DialogActions>
+    </MudDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public BioSubmission BioSubmission { get; set; } = null!;
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void Create()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    public class BioSubmissionValidator<T> : AbstractValidator<T> where T: BioSubmission
+    {
+        public BioSubmissionValidator()
+        {
+            RuleFor(x => x.Age.Years).InclusiveBetween(0, 80);
+        }
+    }
+}

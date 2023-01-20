@@ -30,7 +30,7 @@ public class MortalityViewModel
         };
 
     private Mortality? _existingMortality;
-    private BioSubmission _existingBioSubmission;
+    public BioSubmission? ExistingBioSubmission { get; }
 
     public MortalityViewModel() { }
 
@@ -43,7 +43,8 @@ public class MortalityViewModel
         Species = mortality.Species;
 
         _existingMortality = mortality;
-        _existingBioSubmission = reportDetail.bioSubmissions
+        Id = mortality.Id;
+        ExistingBioSubmission = reportDetail.bioSubmissions
             .FirstOrDefault(x => x.mortalityId == mortality.Id)
             .submission;
 
@@ -56,6 +57,7 @@ public class MortalityViewModel
 
     public MortalityViewModel(Species species) => Species = species;
 
+    public int? Id { get; }
     public Species? Species { get; init; }
     public DateTime? DateOfDeath { get; set; }
     public decimal? Longitude { get; set; }

@@ -9,6 +9,10 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
     public string SkullCondition { get; set; } = string.Empty;
     public int SkullLengthMillimetres { get; set; }
     public int SkullHeightMillimetres { get; set; }
+
+    public AmericanBlackBearBioSubmission() { }
+
+    public AmericanBlackBearBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class AmericanBlackBearBioSubmissionConfig

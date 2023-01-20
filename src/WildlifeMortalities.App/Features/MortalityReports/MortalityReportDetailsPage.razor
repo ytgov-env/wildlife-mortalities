@@ -3,8 +3,6 @@
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-<MudText Typo="Typo.h3" Class="mb-8">Report</MudText>
-
 @if (_reportDetail is null)
 {
     <MudAlert Severity="Severity.Error">Report not found.</MudAlert>
@@ -13,21 +11,29 @@
 @switch (_reportDetail.report)
 {
     case HumanWildlifeConflictMortalityReport report:
+        <MudText Typo="Typo.h3" Class="mb-8">Human-wildlife conflict report</MudText>
         break;
     case HuntedMortalityReport report:
+        <MudText Typo="Typo.h3" Class="mb-8">Individual hunt report</MudText>
         <HuntedMortalityReportDetailsComponent Report="@report" />
         break;
     case OutfitterGuidedHuntReport report:
+        <MudText Typo="Typo.h3" Class="mb-8">Outfitter guided hunt report</MudText>
         <OutfitterGuidedHuntReportDetailsComponent Report="@report" />
         break;
     case SpecialGuidedHuntReport report:
+        <MudText Typo="Typo.h3" Class="mb-8">Special guided hunt report</MudText>
         <SpecialGuidedHuntReportDetailsComponent Report="@report" />
         break;
     default:
         break;
 }
+<MudGrid>
+    @foreach (var item in _reportDetail.report.GetMortalities())
+    {
+        <MudItem sm="3" xs="6">
+            <MortalityCardComponent MortalityViewModel="@(new MortalityViewModel(item, _reportDetail))" />
+        </MudItem>
+    }
+</MudGrid>
 
-@foreach (var item in _reportDetail.report.GetMortalities())
-{
-    <MortalityCardComponent MortalityViewModel="@(new MortalityViewModel(item, _reportDetail))" />
-}

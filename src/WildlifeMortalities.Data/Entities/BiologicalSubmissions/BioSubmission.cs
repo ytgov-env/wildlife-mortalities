@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -8,6 +9,7 @@ public abstract class BioSubmission
 {
     public int Id { get; set; }
     public Age Age { get; set; } = null!;
+    public List<UploadFileInfo> UploadFileInfo { get; set; } = null!;
 }
 
 public abstract class BioSubmission<T> : BioSubmission where T : Mortality
@@ -15,11 +17,28 @@ public abstract class BioSubmission<T> : BioSubmission where T : Mortality
     public int MortalityId { get; set; }
 
     public T Mortality { get; set; }
+
+    public BioSubmission() { }
+
+    public BioSubmission(int mortalityId)
+    {
+        MortalityId = mortalityId;
+    }
 }
 
 public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
 {
-    public void Configure(EntityTypeBuilder<BioSubmission> builder) => builder.OwnsOne(b => b.Age);
+    public void Configure(EntityTypeBuilder<BioSubmission> builder)
+    {
+        builder.OwnsOne(b => b.Age);
+        builder.OwnsMany(
+            b => b.UploadFileInfo,
+            ownedNavigationBuilder =>
+            {
+                ownedNavigationBuilder.ToJson();
+            }
+        );
+    }
 }
 
 public class Age
@@ -28,9 +47,20 @@ public class Age
     public ConfidenceInAge Confidence { get; set; }
 }
 
+public class UploadFileInfo
+{
+    public string PathToFile { get; set; } = string.Empty;
+    public string MimeType { get; set; } = string.Empty;
+}
+
 public enum ConfidenceInAge
 {
+    [Display(Name = "Fair")]
     Fair = 10,
+
+    [Display(Name = "Good")]
     Good = 20,
+
+    [Display(Name = "Poor")]
     Poor = 30
 }

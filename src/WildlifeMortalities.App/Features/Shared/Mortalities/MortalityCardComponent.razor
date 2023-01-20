@@ -1,6 +1,8 @@
 ﻿@using WildlifeMortalities.App.Extensions;
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+@using WildlifeMortalities.Data.Enums;
+@using WildlifeMortalities.Shared.Services;
 <MudCard Elevation="5" Class="flex-column d-flex" Style="height: 100%">
     <MudCardHeader>
         <CardHeaderContent>
@@ -9,7 +11,7 @@
          <CardHeaderActions>
             @if(MortalityViewModel.GetMortality() is IHasBioSubmission)
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" OnClick="(() => OpenBioSubmissionDialog())" />
+                <MudButton Color="Color.Default" OnClick="(() => OpenBioSubmissionDialog())" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
             }
          </CardHeaderActions> 
     </MudCardHeader>
@@ -51,8 +53,45 @@
     [Parameter]
     public MortalityViewModel MortalityViewModel { get; set; } = null!;
 
-    private void OpenBioSubmissionDialog()
+    [Inject] IDialogService DialogService { get; set; } = null!;
+    [Inject] IMortalityService Service { get; set; } = null!;
+
+    private async Task OpenBioSubmissionDialog()
     {
-        
+        BioSubmission bioSubmission;
+        var isNewSubmission = true;
+        if (MortalityViewModel.ExistingBioSubmission != null)
+        {
+            bioSubmission = MortalityViewModel.ExistingBioSubmission;
+            isNewSubmission = false;
+        }
+        else
+        {
+            bioSubmission = MortalityViewModel.Species switch
+            {
+                Species.AmericanBlackBear => new AmericanBlackBearBioSubmission(MortalityViewModel.Id!.Value),
+                _ => new AmericanBlackBearBioSubmission(MortalityViewModel.Id!.Value)
+            };
+
+            bioSubmission.Age = new();
+        }
+
+        var parameters = new DialogParameters();
+        parameters.Add(nameof(BioSubmissionDialog.BioSubmission), bioSubmission);
+
+        var dialog = await DialogService.ShowAsync<BioSubmissionDialog>("", parameters);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            if(isNewSubmission == true)
+            {
+                await Service.CreateBioSubmission(bioSubmission);
+            }
+            else
+            {
+                await Service.UpdateBioSubmission(bioSubmission);
+            }
+        }
     }
 }

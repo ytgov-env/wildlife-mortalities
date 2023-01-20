@@ -27,4 +27,6 @@ public interface IMortalityService
     Task<int> CountAllReports();
     Task<int> CountReportsByEnvClientId(string envClientId);
     Task<ReportDetail?> GetReport(int id);
+    Task CreateBioSubmission(BioSubmission bioSubmission);
+    Task UpdateBioSubmission(BioSubmission bioSubmission);
 }

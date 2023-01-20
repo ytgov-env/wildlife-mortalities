@@ -155,7 +155,7 @@ public class MortalityService : IMortalityService
 
     public async Task<ReportDetail?> GetReport(int id)
     {
-        using AppDbContext? context = _dbContextFactory.CreateDbContext();
+        using var context = _dbContextFactory.CreateDbContext();
 
         var result = await GetReportsIncludingMortalities(context)
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -175,7 +175,7 @@ public class MortalityService : IMortalityService
             {
                 bioSubmission = await context.BioSubmissions
                     .OfType<AmericanBlackBearBioSubmission>()
-                    .FirstOrDefaultAsync(x => x.MortalityId == x.Id);
+                    .FirstOrDefaultAsync(x => x.MortalityId == item.Id);
             }
 
             if (bioSubmission != null)
@@ -185,5 +185,21 @@ public class MortalityService : IMortalityService
         }
 
         return new ReportDetail(result, bioSubmissions);
+    }
+
+    public async Task CreateBioSubmission(BioSubmission bioSubmission)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        context.BioSubmissions.Add(bioSubmission);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task UpdateBioSubmission(BioSubmission bioSubmission)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        context.BioSubmissions.Update(bioSubmission);
+        await context.SaveChangesAsync();
     }
 }
