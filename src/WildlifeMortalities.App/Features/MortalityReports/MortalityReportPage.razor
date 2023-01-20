@@ -39,6 +39,8 @@
             throw new ArgumentOutOfRangeException();
     }
 
+    <SignaturePadComponent @ref="_signaturePad"/>
+
     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
 
     <MudButton HtmlTag="label"

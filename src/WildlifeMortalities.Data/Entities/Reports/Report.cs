@@ -6,6 +6,7 @@ public abstract class Report
 {
     public int Id { get; set; }
     public DateTimeOffset DateSubmitted { get; set; }
+    public ReportPdf? Pdf { get; set; }
 
     public abstract IEnumerable<Mortality> GetMortalities();
 }

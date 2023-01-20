@@ -11,6 +11,7 @@ public partial class MortalityReportPage
     private EditContext _editContext;
     private int? _personId;
     private MortalityReportPageViewModel _vm;
+    private SignaturePadComponent _signaturePad = null!;
 
     [Parameter]
     public string EnvClientId { get; set; }
@@ -60,6 +61,8 @@ public partial class MortalityReportPage
 
     private async Task CreateMortalityReport()
     {
+        var signature = await _signaturePad.GetSignature();
+
         var personId = _personId!.Value;
 
         switch (_vm.MortalityReportType)
