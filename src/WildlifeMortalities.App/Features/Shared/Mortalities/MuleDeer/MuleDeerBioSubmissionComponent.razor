@@ -1,0 +1,20 @@
+@using FluentValidation;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+
+<MudCheckBox @bind-Checked="BioSubmission.IsHornIncluded" Label="Horn included?" For="(() => BioSubmission.IsHornIncluded)" />
+<MudCheckBox @bind-Checked="BioSubmission.IsHeadIncluded" Label="Head included?" For="(() => BioSubmission.IsHeadIncluded)" />
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public MuleDeerBioSubmission BioSubmission { get; set; } = null!;
+
+    public class MuleDeerBioSubmissionValidator : BioSubmissionValidator<MuleDeerBioSubmission>
+    {
+        public MuleDeerBioSubmissionValidator()
+        {
+
+        }
+    }
+}

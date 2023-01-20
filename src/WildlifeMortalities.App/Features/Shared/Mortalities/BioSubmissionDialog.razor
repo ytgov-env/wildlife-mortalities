@@ -7,17 +7,42 @@
     <MudDialog>
             <TitleContent>
                 <MudText Typo="Typo.h6">
-                    @*<MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>*@
-                    Bio Submission
+                    Biological submission
                 </MudText>
             </TitleContent>
             <DialogContent>
                 @switch (BioSubmission)
                 {
-                    case AmericanBlackBearBioSubmission submission:
-                        <AmericanBlackBearBioSubmissionComponent BioSubmission="submission" />
+                case AmericanBlackBearBioSubmission bioSubmission:
+                    <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" />
                     break;
-                }
+                case CanadaLynxBioSubmission bioSubmission:
+                    <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                case GreyWolfBioSubmission bioSubmission:
+                    <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                case GrizzlyBearBioSubmission bioSubmission:
+                    <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                case MountainGoatBioSubmission bioSubmission:
+                    <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                case MuleDeerBioSubmission bioSubmission:
+                    <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                case ThinhornSheepBioSubmission bioSubmission:
+                    <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                case WhiteTailedDeerBioSubmission bioSubmission:
+                    <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                case WoodBisonBioSubmission bioSubmission:
+                    <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission" />
+                    break;
+                default:
+                    throw new ArgumentException(nameof(BioSubmission));
+            }
                 <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="(() => BioSubmission.Age.Years)" />
             <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="(() => BioSubmission.Age.Confidence)">
                 @foreach(var item in Enum.GetValues<ConfidenceInAge>())

@@ -1,0 +1,31 @@
+@using FluentValidation;
+@using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+
+<MudSelect @bind-Value="BioSubmission.BroomedStatus" Label="Broomed?" For="(() => BioSubmission.BroomedStatus)">
+    @foreach (var item in Enum.GetValues<BroomedStatus>())
+    {
+        <MudSelectItem Value="item">@item.GetDisplayName()</MudSelectItem>
+    }
+</MudSelect>
+<MudTextField Label="Plug number" @bind-Value="BioSubmission.PlugNumber" For="(() => BioSubmission.PlugNumber)" />
+<MudNumericField Label="Length to 3rd annulus on short side" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.LengthToThirdAnnulusMillimetres" For="(() => BioSubmission.LengthToThirdAnnulusMillimetres)" />
+
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public ThinhornSheepBioSubmission BioSubmission { get; set; } = null!;
+
+    public class ThinhornSheepBioSubmissionValidator : BioSubmissionValidator<ThinhornSheepBioSubmission>
+    {
+        public ThinhornSheepBioSubmissionValidator()
+        {
+            RuleFor(x => x.BroomedStatus).NotEmpty();
+            RuleFor(x => x.PlugNumber).NotEmpty();
+            //Todo get correct min/max
+            RuleFor(x => x.LengthToThirdAnnulusMillimetres).GreaterThan(50).LessThan(1000);
+        }
+    }
+}

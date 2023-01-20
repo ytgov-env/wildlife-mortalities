@@ -1,0 +1,25 @@
+@using FluentValidation;
+@using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+
+<MudSelect @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="(() => BioSubmission.PeltColour)">
+    @foreach(var item in Enum.GetValues<PeltColour>())
+    {
+        <MudSelectItem Value="item">@item.GetDisplayName()</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public GreyWolfBioSubmission BioSubmission { get; set; } = null!;
+
+    public class GreyWolfBioSubmissionValidator : BioSubmissionValidator<GreyWolfBioSubmission>
+    {
+        public GreyWolfBioSubmissionValidator()
+        {
+            RuleFor(x => x.PeltColour).NotNull().IsInEnum();
+        }
+    }
+}

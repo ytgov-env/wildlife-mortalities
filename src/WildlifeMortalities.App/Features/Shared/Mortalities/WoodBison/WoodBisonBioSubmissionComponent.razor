@@ -1,0 +1,19 @@
+@using FluentValidation;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+
+<MudCheckBox @bind-Checked="BioSubmission.IsIncisorBarIncluded" Label="Incisor bar included?" For="(() => BioSubmission.IsIncisorBarIncluded)" />
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public WoodBisonBioSubmission BioSubmission { get; set; } = null!;
+
+    public class WoodBisonBioSubmissionValidator : BioSubmissionValidator<WoodBisonBioSubmission>
+    {
+        public WoodBisonBioSubmissionValidator()
+        {
+
+        }
+    }
+}

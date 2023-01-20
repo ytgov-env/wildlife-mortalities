@@ -1,0 +1,25 @@
+@using FluentValidation;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+
+<MudTextField Label="Skull condition" @bind-Value="BioSubmission.SkullCondition" For="(() => BioSubmission.SkullCondition)" Lines="2"/>
+<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"  @bind-Value="BioSubmission.SkullLengthMillimetres" For="(() => BioSubmission.SkullLengthMillimetres)" />
+<MudNumericField Label="Skull height (mm)" Min="0" Max="1000" @bind-Value="BioSubmission.SkullHeightMillimetres" For="(() => BioSubmission.SkullHeightMillimetres)" />
+<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexIncluded" Label="Evidence of sex included?" For="(() => BioSubmission.IsEvidenceOfSexIncluded)" />
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public GrizzlyBearBioSubmission BioSubmission { get; set; } = null!;
+
+    public class GrizzlyBearBioSubmissionValidator : BioSubmissionValidator<GrizzlyBearBioSubmission>
+    {
+        public GrizzlyBearBioSubmissionValidator()
+        {
+            RuleFor(x => x.SkullCondition).NotEmpty();
+            //Todo get correct min/max
+            RuleFor(x => x.SkullLengthMillimetres).GreaterThan(50).LessThan(1000);
+            RuleFor(x => x.SkullHeightMillimetres).GreaterThan(50).LessThan(1000);
+        }
+    }
+}

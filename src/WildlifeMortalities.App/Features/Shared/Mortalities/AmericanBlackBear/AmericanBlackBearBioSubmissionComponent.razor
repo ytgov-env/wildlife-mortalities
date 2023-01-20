@@ -8,7 +8,8 @@
 
 @code {
     [Parameter]
-    public AmericanBlackBearBioSubmission BioSubmission { get; set; }
+    [EditorRequired]
+    public AmericanBlackBearBioSubmission BioSubmission { get; set; } = null!;
 
     public class AmericanBlackBearBioSubmissionValidator : BioSubmissionValidator<AmericanBlackBearBioSubmission>
     {
@@ -17,7 +18,7 @@
             RuleFor(x => x.SkullCondition).NotEmpty();
             //Todo get correct min/max
             RuleFor(x => x.SkullLengthMillimetres).GreaterThan(50).LessThan(1000);
-            RuleFor(x => x.SkullHeightMillimetres).GreaterThan(50).LessThan(1000); ;
+            RuleFor(x => x.SkullHeightMillimetres).GreaterThan(50).LessThan(1000);
         }
     }
 }

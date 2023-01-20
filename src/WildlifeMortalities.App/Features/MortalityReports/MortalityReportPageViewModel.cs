@@ -1,5 +1,9 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.App.Features.Shared.Mortalities;
+using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
+using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
+using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
+using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Enums;

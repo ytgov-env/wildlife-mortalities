@@ -7,6 +7,10 @@ namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 public class WoodBisonBioSubmission : BioSubmission<WoodBisonMortality>
 {
     public bool IsIncisorBarIncluded { get; set; }
+
+    public WoodBisonBioSubmission() { }
+
+    public WoodBisonBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class WoodBisonBioSubmissionConfig : IEntityTypeConfiguration<WoodBisonBioSubmission>

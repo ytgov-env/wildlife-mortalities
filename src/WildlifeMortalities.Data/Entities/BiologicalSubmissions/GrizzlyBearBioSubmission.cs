@@ -10,6 +10,10 @@ public class GrizzlyBearBioSubmission : BioSubmission<GrizzlyBearMortality>
     public int SkullLengthMillimetres { get; set; }
     public int SkullHeightMillimetres { get; set; }
     public bool IsEvidenceOfSexIncluded { get; set; }
+
+    public GrizzlyBearBioSubmission() { }
+
+    public GrizzlyBearBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class GrizzlyBearBioSubmissionConfig : IEntityTypeConfiguration<GrizzlyBearBioSubmission>

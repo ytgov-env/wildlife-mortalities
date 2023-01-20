@@ -1,0 +1,22 @@
+@using FluentValidation;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+
+<MudNumericField Label="Pelt length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.PeltLengthMillimetres" For="(() => BioSubmission.PeltLengthMillimetres)" />
+<MudNumericField Label="Pelt width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.PeltWidthMillimetres" For="(() => BioSubmission.PeltWidthMillimetres)" />
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public CanadaLynxBioSubmission BioSubmission { get; set; } = null!;
+
+    public class CanadaLynxBioSubmissionValidator : BioSubmissionValidator<CanadaLynxBioSubmission>
+    {
+        public CanadaLynxBioSubmissionValidator()
+        {
+            //Todo get correct min/max
+            RuleFor(x => x.PeltLengthMillimetres).GreaterThan(50).LessThan(1000);
+            RuleFor(x => x.PeltWidthMillimetres).GreaterThan(50).LessThan(1000);
+        }
+    }
+}

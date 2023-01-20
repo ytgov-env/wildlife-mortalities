@@ -10,6 +10,10 @@ public class ThinhornSheepBioSubmission : BioSubmission<ThinhornSheepMortality>
     public BroomedStatus BroomedStatus { get; set; }
     public int LengthToThirdAnnulusMillimetres { get; set; }
     public string PlugNumber { get; set; } = string.Empty;
+
+    public ThinhornSheepBioSubmission() { }
+
+    public ThinhornSheepBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public enum BroomedStatus

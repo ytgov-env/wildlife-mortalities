@@ -9,6 +9,10 @@ public class MountainGoatBioSubmission : BioSubmission<MountainGoatMortality>
     public bool IsHornIncluded { get; set; }
     public bool IsHeadIncluded { get; set; }
     public MountainGoatMortality Mortality { get; set; } = null!;
+
+    public MountainGoatBioSubmission() { }
+
+    public MountainGoatBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<MountainGoatBioSubmission>

@@ -8,6 +8,10 @@ public class WhiteTailedDeerBioSubmission : BioSubmission<WhiteTailedDeerMortali
 {
     public bool IsHornIncluded { get; set; }
     public bool IsHeadIncluded { get; set; }
+
+    public WhiteTailedDeerBioSubmission() { }
+
+    public WhiteTailedDeerBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class WhiteTailedDeerBioSubmissionConfig

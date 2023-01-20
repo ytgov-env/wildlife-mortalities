@@ -8,6 +8,10 @@ public class MuleDeerBioSubmission : BioSubmission<MuleDeerMortality>
 {
     public bool IsHornIncluded { get; set; }
     public bool IsHeadIncluded { get; set; }
+
+    public MuleDeerBioSubmission() { }
+
+    public MuleDeerBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioSubmission>

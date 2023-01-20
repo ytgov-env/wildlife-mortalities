@@ -39,7 +39,10 @@
             throw new ArgumentOutOfRangeException();
     }
 
-    <SignaturePadComponent @ref="_signaturePad"/>
+    <MudPaper Elevation="0" Class="mt-4">
+        <MudText Typo="Typo.h6">Signature</MudText>
+        <SignaturePadComponent @ref="_signaturePad"/>
+    </MudPaper>
 
     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
 
