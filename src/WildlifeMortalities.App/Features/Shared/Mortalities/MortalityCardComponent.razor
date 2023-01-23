@@ -67,10 +67,19 @@
         }
         else
         {
+            var mortalityId = (MortalityViewModel.Id!.Value);
             bioSubmission = MortalityViewModel.Species switch
             {
-                Species.AmericanBlackBear => new AmericanBlackBearBioSubmission(MortalityViewModel.Id!.Value),
-                _ => new AmericanBlackBearBioSubmission(MortalityViewModel.Id!.Value)
+                Species.AmericanBlackBear => new AmericanBlackBearBioSubmission(mortalityId),
+                Species.CanadaLynx => new CanadaLynxBioSubmission(mortalityId),
+                Species.GreyWolf => new GreyWolfBioSubmission(mortalityId),
+                Species.GrizzlyBear => new GrizzlyBearBioSubmission(mortalityId),
+                Species.MountainGoat => new MountainGoatBioSubmission(mortalityId),
+                Species.MuleDeer => new MuleDeerBioSubmission(mortalityId),
+                Species.ThinhornSheep => new ThinhornSheepBioSubmission(mortalityId),
+                Species.WhiteTailedDeer => new WhiteTailedDeerBioSubmission(mortalityId),
+                Species.WoodBison => new WoodBisonBioSubmission(mortalityId),
+                _ => throw new InvalidOperationException($"{nameof(MortalityViewModel.Species)} is not a registered bio submission species." )
             };
 
             bioSubmission.Age = new();

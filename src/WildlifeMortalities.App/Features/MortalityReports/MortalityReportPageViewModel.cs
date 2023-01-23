@@ -64,9 +64,7 @@ public class HuntedMortalityReportViewModel
 
         var report = new HuntedMortalityReport
         {
-            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(
-                species
-            ),
+            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
             Landmark = Landmark,
             GameManagementAreaId = GameManagementArea.Id,
             Comment = Comment,

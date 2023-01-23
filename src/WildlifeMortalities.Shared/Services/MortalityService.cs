@@ -48,6 +48,8 @@ public class MortalityService : IMortalityService
 
     public async Task CreateReport(HuntedMortalityReport report)
     {
+        report.DateSubmitted = DateTimeOffset.Now;
+
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
         await context.SaveChangesAsync();
@@ -76,6 +78,7 @@ public class MortalityService : IMortalityService
         }
 
         report.Guides = guides;
+        report.DateSubmitted = DateTimeOffset.Now;
 
         context.Add(report);
         await context.SaveChangesAsync();
@@ -83,6 +86,8 @@ public class MortalityService : IMortalityService
 
     public async Task CreateReport(SpecialGuidedHuntReport report)
     {
+        report.DateSubmitted = DateTimeOffset.Now;
+
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
         await context.SaveChangesAsync();
@@ -171,12 +176,46 @@ public class MortalityService : IMortalityService
         foreach (var item in mortalities.OfType<IHasBioSubmission>())
         {
             BioSubmission? bioSubmission = null;
-            if (item is AmericanBlackBearMortality)
+            bioSubmission = item switch
             {
-                bioSubmission = await context.BioSubmissions
-                    .OfType<AmericanBlackBearBioSubmission>()
-                    .FirstOrDefaultAsync(x => x.MortalityId == item.Id);
-            }
+                AmericanBlackBearMortality
+                    => await context.BioSubmissions
+                        .OfType<AmericanBlackBearBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                CanadaLynxMortality
+                    => await context.BioSubmissions
+                        .OfType<CanadaLynxBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                GreyWolfMortality
+                    => await context.BioSubmissions
+                        .OfType<GreyWolfBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                GrizzlyBearMortality
+                    => await context.BioSubmissions
+                        .OfType<GrizzlyBearBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                MountainGoatMortality
+                    => await context.BioSubmissions
+                        .OfType<MountainGoatBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                MuleDeerMortality
+                    => await context.BioSubmissions
+                        .OfType<MuleDeerBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                ThinhornSheepMortality
+                    => await context.BioSubmissions
+                        .OfType<ThinhornSheepBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                WhiteTailedDeerMortality
+                    => await context.BioSubmissions
+                        .OfType<WhiteTailedDeerBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                WoodBisonMortality
+                    => await context.BioSubmissions
+                        .OfType<WoodBisonBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                _ => throw new InvalidOperationException()
+            };
 
             if (bioSubmission != null)
             {

@@ -1,5 +1,14 @@
 ﻿@using FluentValidation;
 @using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear
+@using WildlifeMortalities.App.Features.Shared.Mortalities.CanadaLynx
+@using WildlifeMortalities.App.Features.Shared.Mortalities.GreyWolf
+@using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear
+@using WildlifeMortalities.App.Features.Shared.Mortalities.MountainGoat
+@using WildlifeMortalities.App.Features.Shared.Mortalities.MuleDeer
+@using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
+@using WildlifeMortalities.App.Features.Shared.Mortalities.WhiteTailedDeer
+@using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 @inject ISnackbar Snackbar
 <EditForm OnValidSubmit="Create" Model="BioSubmission">

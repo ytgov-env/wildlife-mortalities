@@ -88,7 +88,7 @@ public class MortalityViewModel
         return result;
     }
 
-    public Mortality GetMortality(Species species)
+    private Mortality GetMortality(Species species)
     {
         if (_existingMortality != null)
         {
