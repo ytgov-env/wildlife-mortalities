@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Result" Version="4.1.0"/>
-    <PackageReference Include="Ardalis.Result.FluentValidation" Version="4.1.0"/>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2"/>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+    <PackageReference Include="QuestPDF" Version="2022.12.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj"/>
+    <ProjectReference Include="..\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj" />
   </ItemGroup>
 
 </Project>
