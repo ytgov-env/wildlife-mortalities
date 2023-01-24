@@ -10,21 +10,21 @@
     }
 </MudSelect>
 <MudTextField Label="Plug number" @bind-Value="BioSubmission.PlugNumber" For="(() => BioSubmission.PlugNumber)" />
-<MudNumericField Label="Length to 3rd annulus on short side" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.HornLengthToThirdAnnulusMillimetres" For="(() => BioSubmission.HornLengthToThirdAnnulusMillimetres)" />
 
 <MudToolBar>
-    <MudText>Annuluses</MudText>
+    <MudText>Annuli measurements</MudText>
     <MudSpacer />
-    <MudTooltip Text="Add a Annulus">
-        <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddHornMeasurementEntries" />
+    <MudTooltip Text="Add an annulus">
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Success" OnClick="AddHornMeasurementEntry" />
     </MudTooltip>
 </MudToolBar>
-@if (BioSubmission.HornMeasurementEntries.Any() == false && Context.GetValidationMessages().Any() == true)
+<ValidationMessage For="@(() => BioSubmission.HornMeasurementEntries)" Style="font-size: 12px; color: var(--mud-palette-error);" />
+@*@if (BioSubmission.HornMeasurementEntries.Any() == false && Context.GetValidationMessages().Any() == true)
 {
     <MudAlert Severity="MudBlazor.Severity.Error" Square="true">
         <ValidationMessage For="@( () =>  BioSubmission.HornMeasurementEntries )" />
     </MudAlert>
-}
+}*@
 
 
 <MudList>
@@ -32,19 +32,23 @@
     {
         <MudListItem>
             <MudStack Row="true">
-                <MudTextField Value="@item.Annulus" Disabled="true" ReadOnly="true" />
+                <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true" />
                 <MudNumericField @bind-Value="@item.LengthMillimetres" For="@( () => item.LengthMillimetres)" Label="Length" Adornment="Adornment.End" AdornmentText="mm" />
                 <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@( () => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" />
                 @if (item == BioSubmission.HornMeasurementEntries.Last())
                 {
                     <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="RemoveLastHornMeasurementEntries" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="RemoveLastHornMeasurementEntry" />
 
                 }
             </MudStack>
         </MudListItem>
     }
 </MudList>
+
+<MudNumericField Label="Length to third annulus" Placeholder="on the short side" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+                 @bind-Value="BioSubmission.HornLengthToThirdAnnulusMillimetres" For="(() => BioSubmission.HornLengthToThirdAnnulusMillimetres)" />
+
 
 @code {
         [Parameter]
@@ -87,13 +91,13 @@
         }
     }
 
-    private void AddHornMeasurementEntries()
+    private void AddHornMeasurementEntry()
     {
         var HornMeasurementEntry = new HornMeasurementEntry() { Annulus = (BioSubmission.HornMeasurementEntries.Count + 1) };
         BioSubmission.HornMeasurementEntries.Add(HornMeasurementEntry);
     }
 
-    private void RemoveLastHornMeasurementEntries()
+    private void RemoveLastHornMeasurementEntry()
     {
         BioSubmission.HornMeasurementEntries.RemoveAt(BioSubmission.HornMeasurementEntries.Count - 1);
     }

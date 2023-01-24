@@ -1,11 +1,17 @@
 @using FluentValidation;
+@using WildlifeMortalities.App.Extensions;
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
 
-<MudTextField Label="Skull condition" @bind-Value="BioSubmission.SkullCondition" For="(() => BioSubmission.SkullCondition)" Lines="2"/>
+<MudSelect T="GrizzlyBearSkullCondition" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="(() => BioSubmission.SkullCondition)">
+    @foreach (var item in Enum.GetValues<GrizzlyBearSkullCondition>())
+    {
+        <MudSelectItem T="GrizzlyBearSkullCondition" Value="@item">@item.GetDisplayName()</MudSelectItem>
+    }
+</MudSelect>
 <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"  @bind-Value="BioSubmission.SkullLengthMillimetres" For="(() => BioSubmission.SkullLengthMillimetres)" />
 <MudNumericField Label="Skull height (mm)" Min="0" Max="1000" @bind-Value="BioSubmission.SkullHeightMillimetres" For="(() => BioSubmission.SkullHeightMillimetres)" />
-<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexIncluded" Label="Evidence of sex included?" For="(() => BioSubmission.IsEvidenceOfSexIncluded)" />
+<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="(() => BioSubmission.IsEvidenceOfSexAttached)" />
 
 @code {
     [Parameter]

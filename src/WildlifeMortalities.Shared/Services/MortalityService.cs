@@ -87,7 +87,6 @@ public class MortalityService : IMortalityService
     public async Task CreateReport(SpecialGuidedHuntReport report)
     {
         report.DateSubmitted = DateTimeOffset.Now;
-
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
         await context.SaveChangesAsync();

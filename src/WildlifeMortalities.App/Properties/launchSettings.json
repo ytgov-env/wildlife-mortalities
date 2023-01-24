@@ -6,7 +6,7 @@
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
-            "launchUrl": "/reporters/clients/165569",
+            "launchUrl": "reporters/clients/086373",
             "applicationUrl": "https://localhost:5003;http://localhost:5002",
             "dotnetRunMessages": true
         },
