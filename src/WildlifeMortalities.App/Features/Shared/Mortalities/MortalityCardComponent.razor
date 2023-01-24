@@ -1,19 +1,18 @@
-﻿@using WildlifeMortalities.App.Extensions;
-@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
-@using WildlifeMortalities.Data.Enums;
-@using WildlifeMortalities.Shared.Services;
+﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using WildlifeMortalities.Data.Enums
+@using WildlifeMortalities.Shared.Services
 <MudCard Elevation="5" Class="flex-column d-flex" Style="height: 100%">
     <MudCardHeader>
         <CardHeaderContent>
             <MudText Typo="Typo.h6">@MortalityViewModel.Species!.Value.GetDisplayName()</MudText>
         </CardHeaderContent>
-         <CardHeaderActions>
-            @if(MortalityViewModel.GetMortality() is IHasBioSubmission)
+        <CardHeaderActions>
+            @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
             {
-                <MudButton Color="Color.Default" OnClick="(() => OpenBioSubmissionDialog())" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
+                <MudButton Color="Color.Default" OnClick="() => OpenBioSubmissionDialog()" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
             }
-         </CardHeaderActions> 
+        </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent Class="flex-column d-flex" Style="height: 100%">
         <MudStack Row="false">
@@ -22,7 +21,7 @@
                 var normalizedValue = (property.Value ?? string.Empty).ToLower();
                 @if (bool.TryParse(property.Value, out var value))
                 {
-                    <MudCheckBox T="bool" ReadOnly="true" Checked="value" Label="@property.Key" />
+                    <MudCheckBox T="bool" ReadOnly="true" Checked="value" Label="@property.Key"/>
                 }
                 else if (DateTime.TryParse(property.Value, out var dateValue))
                 {
@@ -39,22 +38,27 @@
                 <MudField DisableUnderLine="true" Label="Comment">@MortalityViewModel.Comment</MudField>
             }
         </MudStack>
-        <MudSpacer />
+        <MudSpacer/>
     </MudCardContent>
     <MudCardActions>
         <MudStack Row="true" Class="justify-right">
-            <MudSpacer />
+            <MudSpacer/>
             @*<MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => Edit(item))" Color="Color.Primary" />
             <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => Delete(item))" Color="Color.Error" />*@
         </MudStack>
     </MudCardActions>
 </MudCard>
+
 @code {
+
     [Parameter]
     public MortalityViewModel MortalityViewModel { get; set; } = null!;
 
-    [Inject] IDialogService DialogService { get; set; } = null!;
-    [Inject] IMortalityService Service { get; set; } = null!;
+    [Inject]
+    IDialogService DialogService { get; set; } = null!;
+
+    [Inject]
+    IMortalityService Service { get; set; } = null!;
 
     private async Task OpenBioSubmissionDialog()
     {
@@ -67,7 +71,7 @@
         }
         else
         {
-            var mortalityId = (MortalityViewModel.Id!.Value);
+            var mortalityId = MortalityViewModel.Id!.Value;
             bioSubmission = MortalityViewModel.Species switch
             {
                 Species.AmericanBlackBear => new AmericanBlackBearBioSubmission(mortalityId),
@@ -79,10 +83,10 @@
                 Species.ThinhornSheep => new ThinhornSheepBioSubmission(mortalityId),
                 Species.WhiteTailedDeer => new WhiteTailedDeerBioSubmission(mortalityId),
                 Species.WoodBison => new WoodBisonBioSubmission(mortalityId),
-                _ => throw new InvalidOperationException($"{nameof(MortalityViewModel.Species)} is not a registered bio submission species." )
-            };
+                _ => throw new InvalidOperationException($"{nameof(MortalityViewModel.Species)} is not a registered bio submission species.")
+                };
 
-            bioSubmission.Age = new();
+            bioSubmission.Age = new Age();
         }
 
         var parameters = new DialogParameters();
@@ -93,7 +97,7 @@
 
         if (result.Canceled == false)
         {
-            if(isNewSubmission == true)
+            if (isNewSubmission)
             {
                 await Service.CreateBioSubmission(bioSubmission);
             }
@@ -103,4 +107,5 @@
             }
         }
     }
+
 }

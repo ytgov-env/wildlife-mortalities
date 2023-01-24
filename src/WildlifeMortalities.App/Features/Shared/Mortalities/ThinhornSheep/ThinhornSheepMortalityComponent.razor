@@ -1,6 +1,4 @@
-﻿@using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data.Entities.Mortalities
-
+﻿@using WildlifeMortalities.Data.Entities.Mortalities
 <MudSelect T="ThinhornSheepBodyColour?" @bind-Value="@ViewModel.BodyColour" Label="Body colour" Placeholder="Select a colour">
     @foreach (var item in Enum.GetValues<ThinhornSheepBodyColour>())
     {

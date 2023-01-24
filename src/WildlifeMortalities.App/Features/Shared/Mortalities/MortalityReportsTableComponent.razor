@@ -23,7 +23,7 @@
         <MudTd DataLabel="Type">
             @switch (context)
             {
-                    case OutfitterGuidedHuntReport e:
+                case OutfitterGuidedHuntReport e:
                     <span>Outfitted hunt - @e.Result.GetDisplayName().ToLower()</span>
                     break;
                 case SpecialGuidedHuntReport e:
@@ -85,4 +85,5 @@
     {
         NavigationManager.NavigateTo($"mortality-reports/{args.Item.Id}");
     }
+
 }

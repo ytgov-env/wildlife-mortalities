@@ -1,12 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
 public class ThinhornSheepBioSubmission : BioSubmission<ThinhornSheepMortality>
 {
+    public ThinhornSheepBioSubmission()
+    {
+    }
+
+    public ThinhornSheepBioSubmission(int mortalityId) : base(mortalityId)
+    {
+    }
+
     public HornMeasured HornMeasured { get; set; }
     public BroomedStatus BroomedStatus { get; set; }
     public string PlugNumber { get; set; } = string.Empty;
@@ -17,10 +25,6 @@ public class ThinhornSheepBioSubmission : BioSubmission<ThinhornSheepMortality>
     public int? HornLengthToThirdAnnulusMillimetres { get; set; }
 
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; }
-
-    public ThinhornSheepBioSubmission() { }
-
-    public ThinhornSheepBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class HornMeasurementEntry
@@ -32,29 +36,22 @@ public class HornMeasurementEntry
 
 public enum BroomedStatus
 {
-    [Display(Name = "Both horns broomed")]
-    BothHornsBroomed = 10,
+    [Display(Name = "Both horns broomed")] BothHornsBroomed = 10,
 
-    [Display(Name = "Left horn broomed")]
-    LeftHornBroomed = 20,
+    [Display(Name = "Left horn broomed")] LeftHornBroomed = 20,
 
-    [Display(Name = "Not broomed")]
-    NotBroomed = 30,
+    [Display(Name = "Not broomed")] NotBroomed = 30,
 
-    [Display(Name = "Right horn broomed")]
-    RightHornBroomed = 40
+    [Display(Name = "Right horn broomed")] RightHornBroomed = 40
 }
 
 public enum HornMeasured
 {
-    [Display(Name = "Left horn")]
-    LeftHorn = 10,
+    [Display(Name = "Left horn")] LeftHorn = 10,
 
-    [Display(Name = "Right horn")]
-    RightHorn = 20,
+    [Display(Name = "Right horn")] RightHorn = 20,
 
-    [Display(Name = "Polled (hornless)")]
-    NoHornToMeasure = 30
+    [Display(Name = "Polled (hornless)")] NoHornToMeasure = 30
 }
 
 public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<ThinhornSheepBioSubmission>

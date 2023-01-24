@@ -1,16 +1,17 @@
-@using FluentValidation;
-@using WildlifeMortalities.App.Extensions;
-@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+@using static BioSubmissionDialog;
+@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using FluentValidation
 
-<MudSelect @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="(() => BioSubmission.PeltColour)">
-    @foreach(var item in Enum.GetValues<PeltColour>())
+<MudSelect @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="() => BioSubmission.PeltColour">
+    @foreach (var item in Enum.GetValues<PeltColour>())
     {
         <MudSelectItem Value="item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
 
 @code {
+
     [Parameter]
     [EditorRequired]
     public GreyWolfBioSubmission BioSubmission { get; set; } = null!;
@@ -22,4 +23,5 @@
             RuleFor(x => x.PeltColour).NotNull().IsInEnum();
         }
     }
+
 }

@@ -1,7 +1,7 @@
 ﻿@page "/mortality-reports/{id:int}"
+@using WildlifeMortalities.Data.Entities.Reports.SingleMortality
+@using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
-@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 @if (_reportDetail is null)
 {
@@ -15,25 +15,22 @@
         break;
     case HuntedMortalityReport report:
         <MudText Typo="Typo.h3" Class="mb-8">Individual hunt report</MudText>
-        <HuntedMortalityReportDetailsComponent Report="@report" />
+        <HuntedMortalityReportDetailsComponent Report="@report"/>
         break;
     case OutfitterGuidedHuntReport report:
         <MudText Typo="Typo.h3" Class="mb-8">Outfitter guided hunt report</MudText>
-        <OutfitterGuidedHuntReportDetailsComponent Report="@report" />
+        <OutfitterGuidedHuntReportDetailsComponent Report="@report"/>
         break;
     case SpecialGuidedHuntReport report:
         <MudText Typo="Typo.h3" Class="mb-8">Special guided hunt report</MudText>
-        <SpecialGuidedHuntReportDetailsComponent Report="@report" />
-        break;
-    default:
+        <SpecialGuidedHuntReportDetailsComponent Report="@report"/>
         break;
 }
 <MudGrid>
     @foreach (var item in _reportDetail.report.GetMortalities())
     {
         <MudItem sm="3" xs="6">
-            <MortalityCardComponent MortalityViewModel="@(new MortalityViewModel(item, _reportDetail))" />
+            <MortalityCardComponent MortalityViewModel="@(new MortalityViewModel(item, _reportDetail))"/>
         </MudItem>
     }
 </MudGrid>
-

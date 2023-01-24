@@ -1,8 +1,8 @@
 @implements IDisposable
 
-<canvas id="@id" style="border: 1px solid black" width="400" height="200" />
+<canvas id="@id" style="border: 1px solid black" width="400" height="200"/>
 
-<MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="Reset" />
+<MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="Reset"/>
 
 @code {
     private Guid id = Guid.NewGuid();
@@ -13,7 +13,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender == true)
+        if (firstRender)
         {
             await JsRuntime.InvokeVoidAsync("mortality.initSignaturePad", id);
         }
@@ -27,7 +27,7 @@
     }
 
 
-    public async Task<String> GetSignature()
+    public async Task<string> GetSignature()
     {
         var content = await JsRuntime.InvokeAsync<string>("mortality.getSignaturePadContent", id);
         return content;

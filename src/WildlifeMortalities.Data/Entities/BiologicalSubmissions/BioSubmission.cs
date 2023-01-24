@@ -8,35 +8,31 @@ namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 public abstract class BioSubmission
 {
     public int Id { get; set; }
-    public Age Age { get; set; } = null!;
+    public Age? Age { get; set; }
     public List<UploadFileInfo> UploadFileInfo { get; set; } = null!;
 }
 
 public abstract class BioSubmission<T> : BioSubmission where T : Mortality
 {
+    public BioSubmission()
+    {
+    }
+
+    public BioSubmission(int mortalityId) => MortalityId = mortalityId;
+
     public int MortalityId { get; set; }
 
     public T Mortality { get; set; }
-
-    public BioSubmission() { }
-
-    public BioSubmission(int mortalityId)
-    {
-        MortalityId = mortalityId;
-    }
 }
 
 public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
 {
     public void Configure(EntityTypeBuilder<BioSubmission> builder)
     {
-        builder.OwnsOne(b => b.Age);
+        builder.OwnsOne(b => b.Age).WithOwner();
         builder.OwnsMany(
             b => b.UploadFileInfo,
-            ownedNavigationBuilder =>
-            {
-                ownedNavigationBuilder.ToJson();
-            }
+            ownedNavigationBuilder => { ownedNavigationBuilder.ToJson(); }
         );
     }
 }
@@ -55,12 +51,9 @@ public class UploadFileInfo
 
 public enum ConfidenceInAge
 {
-    [Display(Name = "Fair")]
-    Fair = 10,
+    [Display(Name = "Fair")] Fair = 10,
 
-    [Display(Name = "Good")]
-    Good = 20,
+    [Display(Name = "Good")] Good = 20,
 
-    [Display(Name = "Poor")]
-    Poor = 30
+    [Display(Name = "Poor")] Poor = 30
 }

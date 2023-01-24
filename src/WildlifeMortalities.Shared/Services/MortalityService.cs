@@ -99,64 +99,6 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Report>> GetReports(
-        string? envClientId,
-        int start = 0,
-        int length = 10
-    )
-    {
-        using var context = _dbContextFactory.CreateDbContext();
-
-        var query = GetReportsQuery(envClientId, context);
-
-        var result = await query
-            .OrderBy(x => x.DateSubmitted)
-            .Skip(start)
-            .Take(length)
-            .AsSplitQuery()
-            .ToArrayAsync();
-
-        return result;
-    }
-
-    private static IQueryable<Report> GetReportsIncludingMortalities(AppDbContext context) =>
-        context.Reports
-            .Include(x => ((SpecialGuidedHuntReport)x).HuntedMortalityReports)
-            .ThenInclude(x => x.Mortality)
-            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedMortalityReports)
-            .ThenInclude(x => x.Mortality)
-            .Include(x => ((MortalityReport)x).Mortality);
-
-    private static IQueryable<Report> GetReportsQuery(string? envClientId, AppDbContext context)
-    {
-        var query = GetReportsIncludingMortalities(context)
-            .Where(
-                x =>
-                    x is HuntedMortalityReport
-                        ? ((HuntedMortalityReport)x).OutfitterGuidedHuntReport == null
-                            && ((HuntedMortalityReport)x).SpecialGuidedHuntReport == null
-                        : true
-            );
-
-        if (string.IsNullOrEmpty(envClientId) == false)
-        {
-            query = query.Where(
-                r =>
-                    r is HuntedMortalityReport
-                        ? ((HuntedMortalityReport)r).Client.EnvClientId == envClientId
-                        : r is SpecialGuidedHuntReport
-                            ? ((SpecialGuidedHuntReport)r).Client.EnvClientId == envClientId
-                            : r is OutfitterGuidedHuntReport
-                                ? ((OutfitterGuidedHuntReport)r).Client.EnvClientId == envClientId
-                                : r is TrappedMortalitiesReport
-                                    && ((TrappedMortalitiesReport)r).Client.EnvClientId
-                                        == envClientId
-            );
-        }
-
-        return query;
-    }
-
     public async Task<ReportDetail?> GetReport(int id)
     {
         using var context = _dbContextFactory.CreateDbContext();
@@ -239,5 +181,63 @@ public class MortalityService : IMortalityService
 
         context.BioSubmissions.Update(bioSubmission);
         await context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Report>> GetReports(
+        string? envClientId,
+        int start = 0,
+        int length = 10
+    )
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        var query = GetReportsQuery(envClientId, context);
+
+        var result = await query
+            .OrderBy(x => x.DateSubmitted)
+            .Skip(start)
+            .Take(length)
+            .AsSplitQuery()
+            .ToArrayAsync();
+
+        return result;
+    }
+
+    private static IQueryable<Report> GetReportsIncludingMortalities(AppDbContext context) =>
+        context.Reports
+            .Include(x => ((SpecialGuidedHuntReport)x).HuntedMortalityReports)
+            .ThenInclude(x => x.Mortality)
+            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedMortalityReports)
+            .ThenInclude(x => x.Mortality)
+            .Include(x => ((MortalityReport)x).Mortality);
+
+    private static IQueryable<Report> GetReportsQuery(string? envClientId, AppDbContext context)
+    {
+        var query = GetReportsIncludingMortalities(context)
+            .Where(
+                x =>
+                    x is HuntedMortalityReport
+                        ? ((HuntedMortalityReport)x).OutfitterGuidedHuntReport == null
+                          && ((HuntedMortalityReport)x).SpecialGuidedHuntReport == null
+                        : true
+            );
+
+        if (string.IsNullOrEmpty(envClientId) == false)
+        {
+            query = query.Where(
+                r =>
+                    r is HuntedMortalityReport
+                        ? ((HuntedMortalityReport)r).Client.EnvClientId == envClientId
+                        : r is SpecialGuidedHuntReport
+                            ? ((SpecialGuidedHuntReport)r).Client.EnvClientId == envClientId
+                            : r is OutfitterGuidedHuntReport
+                                ? ((OutfitterGuidedHuntReport)r).Client.EnvClientId == envClientId
+                                : r is TrappedMortalitiesReport
+                                  && ((TrappedMortalitiesReport)r).Client.EnvClientId
+                                  == envClientId
+            );
+        }
+
+        return query;
     }
 }

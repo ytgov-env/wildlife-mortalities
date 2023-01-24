@@ -1,5 +1,4 @@
-﻿@using FluentValidation;
-@using WildlifeMortalities.App.Extensions;
+﻿@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear
 @using WildlifeMortalities.App.Features.Shared.Mortalities.CanadaLynx
 @using WildlifeMortalities.App.Features.Shared.Mortalities.GreyWolf
@@ -9,68 +8,72 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WhiteTailedDeer
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
-@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using FluentValidation
 @inject ISnackbar Snackbar
 <EditForm OnValidSubmit="Create" Model="BioSubmission">
     <FluentValidationValidator/>
     <MudDialog>
-            <TitleContent>
-                <MudText Typo="Typo.h6">
-                    Biological submission
-                </MudText>
-            </TitleContent>
-            <DialogContent>
-                @switch (BioSubmission)
-                {
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Biological submission
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            @switch (BioSubmission)
+            {
                 case AmericanBlackBearBioSubmission bioSubmission:
-                    <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case CanadaLynxBioSubmission bioSubmission:
-                    <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case GreyWolfBioSubmission bioSubmission:
-                    <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case GrizzlyBearBioSubmission bioSubmission:
-                    <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case MountainGoatBioSubmission bioSubmission:
-                    <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case MuleDeerBioSubmission bioSubmission:
-                    <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case ThinhornSheepBioSubmission bioSubmission:
-                    <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case WhiteTailedDeerBioSubmission bioSubmission:
-                    <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 case WoodBisonBioSubmission bioSubmission:
-                    <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission" />
+                    <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission"/>
                     break;
                 default:
                     throw new ArgumentException(nameof(BioSubmission));
             }
-                <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="(() => BioSubmission.Age.Years)" />
-            <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="(() => BioSubmission.Age.Confidence)">
-                @foreach(var item in Enum.GetValues<ConfidenceInAge>())
+            <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
+            <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+                @foreach (var item in Enum.GetValues<ConfidenceInAge>())
                 {
                     <MudSelectItem Value="item">@item.GetDisplayName()</MudSelectItem>
                 }
             </MudSelect>
-            </DialogContent>
-            <DialogActions>
-                <MudButton OnClick="Cancel">Cancel</MudButton>
-                <MudButton Color="Color.Error" ButtonType="ButtonType.Submit">Submit</MudButton>
-            </DialogActions>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Error" ButtonType="ButtonType.Submit">Submit</MudButton>
+        </DialogActions>
     </MudDialog>
 </EditForm>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
 
-    [Parameter] public BioSubmission BioSubmission { get; set; } = null!;
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter]
+    public BioSubmission BioSubmission { get; set; } = null!;
 
     private void Cancel()
     {
@@ -82,11 +85,12 @@
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    public class BioSubmissionValidator<T> : AbstractValidator<T> where T: BioSubmission
+    public class BioSubmissionValidator<T> : AbstractValidator<T> where T : BioSubmission
     {
         public BioSubmissionValidator()
         {
             RuleFor(x => x.Age.Years).InclusiveBetween(0, 80);
         }
     }
+
 }

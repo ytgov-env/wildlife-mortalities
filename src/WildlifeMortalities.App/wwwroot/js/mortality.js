@@ -1,32 +1,32 @@
 ﻿window.mortality =
-{
-    mapper: {},
+    {
+        mapper: {},
 
-    initSignaturePad: function (id) {
-        const canvas = document.getElementById(id);
+        initSignaturePad: function (id) {
+            const canvas = document.getElementById(id);
 
-        mortality.mapper[id] = new SignaturePad(canvas);
-    },
+            mortality.mapper[id] = new SignaturePad(canvas);
+        },
 
-    resetSignaturePad: function (id) {
+        resetSignaturePad: function (id) {
 
-        const canvas = mortality.mapper[id];
-        if (canvas) {
-            canvas.clear();
+            const canvas = mortality.mapper[id];
+            if (canvas) {
+                canvas.clear();
+            }
+        },
+
+        getSignaturePadContent: function (id) {
+
+            const canvas = mortality.mapper[id];
+            if (canvas) {
+                return canvas.toDataURL();
+            }
+
+            return "";
+        },
+
+        removeSignaturePad: function (id) {
+            delete mortality.mapper[id];
         }
-    },
-
-    getSignaturePadContent: function (id) {
-
-        const canvas = mortality.mapper[id];
-        if (canvas) {
-            return canvas.toDataURL();
-        }
-
-        return "";
-    },
-
-    removeSignaturePad: function (id) {
-        delete mortality.mapper[id];
-    }
-};
+    };

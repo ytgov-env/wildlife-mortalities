@@ -1,6 +1,4 @@
-﻿@using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data.Entities.Mortalities
-
+﻿@using WildlifeMortalities.Data.Entities.Mortalities
 <MudSelect T="PregnancyStatus?" @bind-Value="@ViewModel.PregnancyStatus" Label="Pregnant" Placeholder="Pregnant?">
     @foreach (var item in Enum.GetValues<PregnancyStatus>())
     {

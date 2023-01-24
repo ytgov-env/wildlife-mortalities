@@ -1,19 +1,20 @@
-@using FluentValidation;
-@using WildlifeMortalities.App.Extensions;
-@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+@using static BioSubmissionDialog;
+@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using FluentValidation
 
-<MudSelect T="GrizzlyBearSkullCondition" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="(() => BioSubmission.SkullCondition)">
+<MudSelect T="GrizzlyBearSkullCondition" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="() => BioSubmission.SkullCondition">
     @foreach (var item in Enum.GetValues<GrizzlyBearSkullCondition>())
     {
         <MudSelectItem T="GrizzlyBearSkullCondition" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"  @bind-Value="BioSubmission.SkullLengthMillimetres" For="(() => BioSubmission.SkullLengthMillimetres)" />
-<MudNumericField Label="Skull height (mm)" Min="0" Max="1000" @bind-Value="BioSubmission.SkullHeightMillimetres" For="(() => BioSubmission.SkullHeightMillimetres)" />
-<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="(() => BioSubmission.IsEvidenceOfSexAttached)" />
+<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres"/>
+<MudNumericField Label="Skull height (mm)" Min="0" Max="1000" @bind-Value="BioSubmission.SkullHeightMillimetres" For="() => BioSubmission.SkullHeightMillimetres"/>
+<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached"/>
 
 @code {
+
     [Parameter]
     [EditorRequired]
     public GrizzlyBearBioSubmission BioSubmission { get; set; } = null!;
@@ -23,9 +24,10 @@
         public GrizzlyBearBioSubmissionValidator()
         {
             RuleFor(x => x.SkullCondition).NotEmpty();
-            //Todo get correct min/max
+    //Todo get correct min/max
             RuleFor(x => x.SkullLengthMillimetres).GreaterThan(50).LessThan(1000);
             RuleFor(x => x.SkullHeightMillimetres).GreaterThan(50).LessThan(1000);
         }
     }
+
 }

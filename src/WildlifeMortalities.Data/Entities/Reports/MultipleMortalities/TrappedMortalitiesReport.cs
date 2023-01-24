@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
@@ -8,9 +8,9 @@ namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 public class TrappedMortalitiesReport : Report, IHasClientReporter
 {
+    public List<TrappedMortalityReport> TrappedMortalityReports { get; set; } = null!;
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
-    public List<TrappedMortalityReport> TrappedMortalityReports { get; set; } = null!;
 
     public override IEnumerable<Mortality> GetMortalities() =>
         TrappedMortalityReports.Select(x => x.Mortality).ToArray();

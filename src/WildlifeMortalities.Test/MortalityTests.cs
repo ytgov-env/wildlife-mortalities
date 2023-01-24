@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.Test;
 

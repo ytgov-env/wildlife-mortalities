@@ -2,7 +2,6 @@
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Services;
@@ -29,10 +28,11 @@ public class MortalityViewModel
             { Data.Enums.Species.WoodBison, () => new WoodBisonMortality() }
         };
 
-    private Mortality? _existingMortality;
-    public BioSubmission? ExistingBioSubmission { get; }
+    private readonly Mortality? _existingMortality;
 
-    public MortalityViewModel() { }
+    public MortalityViewModel()
+    {
+    }
 
     public MortalityViewModel(Mortality mortality, ReportDetail? reportDetail = null)
     {
@@ -56,6 +56,7 @@ public class MortalityViewModel
     }
 
     public MortalityViewModel(Species species) => Species = species;
+    public BioSubmission? ExistingBioSubmission { get; }
 
     public int? Id { get; }
     public Species? Species { get; init; }
@@ -151,4 +152,6 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
+{
+}

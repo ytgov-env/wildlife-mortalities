@@ -1,17 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
 public class MuleDeerBioSubmission : BioSubmission<MuleDeerMortality>
 {
+    public MuleDeerBioSubmission()
+    {
+    }
+
+    public MuleDeerBioSubmission(int mortalityId) : base(mortalityId)
+    {
+    }
+
     public bool IsHornIncluded { get; set; }
     public bool IsHeadIncluded { get; set; }
-
-    public MuleDeerBioSubmission() { }
-
-    public MuleDeerBioSubmission(int mortalityId) : base(mortalityId) { }
 }
 
 public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioSubmission>

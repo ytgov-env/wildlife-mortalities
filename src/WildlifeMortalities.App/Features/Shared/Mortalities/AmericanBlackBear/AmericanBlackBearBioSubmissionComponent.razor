@@ -1,18 +1,19 @@
-@using FluentValidation;
-@using WildlifeMortalities.App.Extensions;
-@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionDialog;
+@using static BioSubmissionDialog;
+@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using FluentValidation
 
-<MudSelect T="AmericanBlackBearSkullCondition" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="(() => BioSubmission.SkullCondition)">
+<MudSelect T="AmericanBlackBearSkullCondition" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="() => BioSubmission.SkullCondition">
     @foreach (var item in Enum.GetValues<AmericanBlackBearSkullCondition>())
     {
         <MudSelectItem T="AmericanBlackBearSkullCondition" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"  @bind-Value="BioSubmission.SkullLengthMillimetres" For="(() => BioSubmission.SkullLengthMillimetres)" />
-<MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="(() => BioSubmission.SkullWidthMillimetres)" />
+<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres"/>
+<MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres"/>
 
 @code {
+
     [Parameter]
     [EditorRequired]
     public AmericanBlackBearBioSubmission BioSubmission { get; set; } = null!;
@@ -22,9 +23,10 @@
         public AmericanBlackBearBioSubmissionValidator()
         {
             RuleFor(x => x.SkullCondition).NotEmpty();
-            //Todo get correct min/max
+    //Todo get correct min/max
             RuleFor(x => x.SkullLengthMillimetres).GreaterThan(50).LessThan(1000);
             RuleFor(x => x.SkullWidthMillimetres).GreaterThan(50).LessThan(1000);
         }
     }
+
 }

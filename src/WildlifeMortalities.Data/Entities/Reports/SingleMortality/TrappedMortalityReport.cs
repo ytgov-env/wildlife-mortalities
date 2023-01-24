@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
-using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
@@ -18,12 +17,15 @@ public class TrappedMortalityReport : MortalityReport /*, IHasClientReporter*/
     public Authorization? Authorization { get; set; }
     public TrappedMortalityReportStatus Status { get; set; }
     public string Comment { get; set; } = string.Empty;
+
     public List<Violation> Violations { get; set; } = null!;
     //public int ClientId { get; set; }
     //public Client Client { get; set; } = null!;
 }
 
-public enum TrappedMortalityReportStatus { }
+public enum TrappedMortalityReportStatus
+{
+}
 
 public class TrappedMortalityReportConfig : IEntityTypeConfiguration<TrappedMortalityReport>
 {

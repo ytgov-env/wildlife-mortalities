@@ -10,16 +10,11 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public partial class MortalityComponent
 {
-    [Parameter]
-    [EditorRequired]
-    public MortalityReportType ReportType { get; set; }
+    [Parameter] [EditorRequired] public MortalityReportType ReportType { get; set; }
 
-    [Parameter]
-    public bool DisableSpeciesSelection { get; set; } = false;
+    [Parameter] public bool DisableSpeciesSelection { get; set; } = false;
 
-    [Parameter]
-    [EditorRequired]
-    public MortalityWithSpeciesSelectionViewModel ViewModel { get; set; } = null!;
+    [Parameter] [EditorRequired] public MortalityWithSpeciesSelectionViewModel ViewModel { get; set; } = null!;
 
     public MortalityViewModel GetViewModel() => ViewModel.MortalityViewModel;
 
