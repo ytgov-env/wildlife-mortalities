@@ -21,7 +21,7 @@ public class OutfitterGuidedHuntReportViewModel
     public OutfitterGuidedHuntReport GetReport(int personId)
     {
         // Clear mortality reports if the hunter wasn't successful
-        if (Result is not GuidedHuntResult.SuccessfulHunt)
+        if (Result is not GuidedHuntResult.WentHuntingAndKilledWildlife)
         {
             HuntedMortalityReportViewModels.Clear();
         }
@@ -34,8 +34,8 @@ public class OutfitterGuidedHuntReportViewModel
             OutfitterArea = OutfitterArea!,
             Result = Result!.Value,
             ClientId = personId,
-            HuntedMortalityReports = HuntedMortalityReportViewModels
-                .Select(x => x.GetReport(personId))
+            HuntedActivities = HuntedMortalityReportViewModels
+                .Select(x => x.GetReport(personId).HuntedActivity)
                 .ToList()
         };
 

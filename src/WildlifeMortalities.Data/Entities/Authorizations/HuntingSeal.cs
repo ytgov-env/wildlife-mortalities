@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
@@ -28,9 +29,9 @@ public class HuntingSeal : Authorization
     public SealType Type { get; set; }
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = null!;
-    public HuntedMortalityReport? HuntedMortalityReport { get; set; }
+    public HuntedActivity? HuntedMortalityReport { get; set; }
 
-    public override AuthorizationResult GetResult(MortalityReport report) =>
+    public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
 }
 

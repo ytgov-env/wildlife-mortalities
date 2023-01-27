@@ -48,14 +48,19 @@ public class MortalityViewModel
             .FirstOrDefault(x => x.mortalityId == mortality.Id)
             .submission;
 
-        if (reportDetail?.report is not null and HuntedMortalityReport huntedMortalityReport)
+        if (
+            reportDetail?.report
+            is not null
+            and IndividualHuntedMortalityReport individualHuntedMortalityReport
+        )
         {
-            Landmark = huntedMortalityReport.Landmark;
-            Comment = huntedMortalityReport.Comment;
+            Landmark = individualHuntedMortalityReport.HuntedActivity.Landmark;
+            Comment = individualHuntedMortalityReport.HuntedActivity.Comment;
         }
     }
 
     public MortalityViewModel(Species species) => Species = species;
+
     public BioSubmission? ExistingBioSubmission { get; }
 
     public int? Id { get; }

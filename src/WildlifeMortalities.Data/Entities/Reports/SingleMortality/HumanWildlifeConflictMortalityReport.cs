@@ -1,14 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-public class HumanWildlifeConflictMortalityReport : MortalityReport
+public class HumanWildlifeConflictMortalityReport : Report, ISingleMortalityReport
 {
+    public Mortality Mortality { get; set; } = null!;
     public int ConservationOfficerId { get; set; }
     public ConservationOfficer ConservationOfficer { get; set; } = null!;
     public string HumanWildlifeConflictNumber { get; set; } = string.Empty;
+
+    public Mortality GetMortality() => Mortality;
+
+    public override string GetHumanReadableIdPrefix() => "HWC";
+
+    public override bool HasHuntingActivity() => false;
 }
 
 public class HumanWildlifeConflictMortalityReportConfig

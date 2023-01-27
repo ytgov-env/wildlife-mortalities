@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -9,7 +9,7 @@ public class OutfitterAssistantGuideLicence : Authorization
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
 
-    public override AuthorizationResult GetResult(MortalityReport report) =>
+    public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
 }
 

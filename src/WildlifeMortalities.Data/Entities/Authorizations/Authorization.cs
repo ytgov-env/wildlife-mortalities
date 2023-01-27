@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -67,7 +67,7 @@ public abstract class Authorization
 
     public static AuthorizationsSummary GetSummary(
         IEnumerable<Authorization> authorizations,
-        MortalityReport report
+        Report report
     )
     {
         List<AuthorizationResult> applicableAuthorizationResults = new();
@@ -83,7 +83,7 @@ public abstract class Authorization
         return new AuthorizationsSummary(applicableAuthorizationResults);
     }
 
-    public abstract AuthorizationResult GetResult(MortalityReport report);
+    public abstract AuthorizationResult GetResult(Report report);
 
     public record AuthorizationsSummary(
         IEnumerable<AuthorizationResult> ApplicableAuthorizationResults

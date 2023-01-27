@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -49,9 +49,9 @@ public class HuntingPermit : Authorization
 
     public bool IsWoodBisonRelated() => Type is PermitType.WoodBisonThreshold;
 
-    public override AuthorizationResult GetResult(MortalityReport report)
+    public override AuthorizationResult GetResult(Report report)
     {
-        if (report is HuntedMortalityReport huntedMortalityReport == false)
+        if (report.HasHuntingActivity() == false)
         {
             return AuthorizationResult.NotApplicable(this);
         }

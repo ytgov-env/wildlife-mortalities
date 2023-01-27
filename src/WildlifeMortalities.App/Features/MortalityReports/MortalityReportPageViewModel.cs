@@ -56,18 +56,22 @@ public class HuntedMortalityReportViewModel
     public MortalityWithSpeciesSelectionViewModel MortalityWithSpeciesSelectionViewModel { get; set; } =
         new();
 
-    public HuntedMortalityReport GetReport(int personId)
+    public IndividualHuntedMortalityReport GetReport(int personId)
     {
         var species = GameManagementArea.ResolveSubType(
             MortalityWithSpeciesSelectionViewModel.Species!.Value
         );
 
-        var report = new HuntedMortalityReport
+        var report = new IndividualHuntedMortalityReport
         {
-            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
-            Landmark = Landmark,
-            GameManagementAreaId = GameManagementArea.Id,
-            Comment = Comment,
+            HuntedActivity = new HuntedActivity
+            {
+                Mortality =
+                    MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
+                Landmark = Landmark,
+                GameManagementAreaId = GameManagementArea.Id,
+                Comment = Comment
+            },
             ClientId = personId
         };
 

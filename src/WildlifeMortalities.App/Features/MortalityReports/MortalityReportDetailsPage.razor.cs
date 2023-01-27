@@ -11,5 +11,6 @@ public partial class MortalityReportDetailsPage
 
     [Parameter] public int Id { get; set; }
 
-    protected override async Task OnInitializedAsync() => _reportDetail = await MortalityService.GetReport(Id);
+    protected override async Task OnInitializedAsync() =>
+        _reportDetail = await MortalityService.GetReport(Id);
 }

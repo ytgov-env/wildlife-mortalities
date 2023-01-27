@@ -46,8 +46,10 @@ public class MortalityService : IMortalityService
         return result;
     }
 
-    public async Task CreateReport(HuntedMortalityReport report)
+    public async Task CreateReport(IndividualHuntedMortalityReport report)
     {
+        SetReportNavigationPropertyForMortalities(report);
+
         report.DateSubmitted = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
@@ -57,6 +59,8 @@ public class MortalityService : IMortalityService
 
     public async Task CreateReport(OutfitterGuidedHuntReport report)
     {
+        SetReportNavigationPropertyForMortalities(report);
+
         using var context = _dbContextFactory.CreateDbContext();
 
         var guideIds = report.Guides.Select(x => x.Id).ToList();
@@ -80,12 +84,21 @@ public class MortalityService : IMortalityService
         report.Guides = guides;
         report.DateSubmitted = DateTimeOffset.Now;
 
+        do
+        {
+            report.GenerateHumanReadableId();
+        } while (
+            await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId)
+        );
+
         context.Add(report);
         await context.SaveChangesAsync();
     }
 
     public async Task CreateReport(SpecialGuidedHuntReport report)
     {
+        SetReportNavigationPropertyForMortalities(report);
+
         report.DateSubmitted = DateTimeOffset.Now;
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
@@ -94,6 +107,8 @@ public class MortalityService : IMortalityService
 
     public async Task CreateReport(HumanWildlifeConflictMortalityReport report)
     {
+        SetReportNavigationPropertyForMortalities(report);
+
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
         await context.SaveChangesAsync();
@@ -183,6 +198,15 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
+    // This method is required as the relationship fixup mechanism in EF Core does not handle this correctly
+    private void SetReportNavigationPropertyForMortalities(Report report)
+    {
+        foreach (var item in report.GetMortalities())
+        {
+            item.Report = report;
+        }
+    }
+
     public async Task<IEnumerable<Report>> GetReports(
         string? envClientId,
         int start = 0,
@@ -205,29 +229,22 @@ public class MortalityService : IMortalityService
 
     private static IQueryable<Report> GetReportsIncludingMortalities(AppDbContext context) =>
         context.Reports
-            .Include(x => ((SpecialGuidedHuntReport)x).HuntedMortalityReports)
+            .Include(x => ((SpecialGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.Mortality)
-            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedMortalityReports)
+            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.Mortality)
-            .Include(x => ((MortalityReport)x).Mortality);
+            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Mortality);
 
     private static IQueryable<Report> GetReportsQuery(string? envClientId, AppDbContext context)
     {
-        var query = GetReportsIncludingMortalities(context)
-            .Where(
-                x =>
-                    x is HuntedMortalityReport
-                        ? ((HuntedMortalityReport)x).OutfitterGuidedHuntReport == null
-                          && ((HuntedMortalityReport)x).SpecialGuidedHuntReport == null
-                        : true
-            );
+        var query = GetReportsIncludingMortalities(context);
 
         if (string.IsNullOrEmpty(envClientId) == false)
         {
             query = query.Where(
                 r =>
-                    r is HuntedMortalityReport
-                        ? ((HuntedMortalityReport)r).Client.EnvClientId == envClientId
+                    r is IndividualHuntedMortalityReport
+                        ? ((IndividualHuntedMortalityReport)r).Client.EnvClientId == envClientId
                         : r is SpecialGuidedHuntReport
                             ? ((SpecialGuidedHuntReport)r).Client.EnvClientId == envClientId
                             : r is OutfitterGuidedHuntReport

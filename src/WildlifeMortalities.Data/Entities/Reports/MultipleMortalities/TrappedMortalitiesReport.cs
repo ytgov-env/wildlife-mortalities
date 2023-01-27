@@ -6,14 +6,18 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
-public class TrappedMortalitiesReport : Report, IHasClientReporter
+public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport, IHasClientReporter
 {
-    public List<TrappedMortalityReport> TrappedMortalityReports { get; set; } = null!;
+    public List<TrappedActivity> TrappedActivities { get; set; } = null!;
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
-    public override IEnumerable<Mortality> GetMortalities() =>
-        TrappedMortalityReports.Select(x => x.Mortality).ToArray();
+    public IEnumerable<Mortality> GetMortalities() =>
+        TrappedActivities.Select(x => x.Mortality).ToArray();
+
+    public override string GetHumanReadableIdPrefix() => "THR";
+
+    public override bool HasHuntingActivity() => false;
 }
 
 public class TrappedMortalitiesReportConfig : IEntityTypeConfiguration<TrappedMortalitiesReport>

@@ -19,34 +19,30 @@ public class HuntingPermitTester
     [Fact]
     public void GetResult_WithEltTypeAndNoneElkMortality_ShouldReturnNotApplicableResult()
     {
-        var dummyReport = new DummyHuntedMortalityReport();
-        dummyReport.Mortality = new AmericanBeaverMortality();
+        var report = new IndividualHuntedMortalityReport { HuntedActivity = new HuntedActivity() };
+        report.HuntedActivity.Mortality = new AmericanBeaverMortality();
 
         var permit = new HuntingPermit();
         permit.Type = HuntingPermit.PermitType.ElkExclusion;
 
-        var result = permit.GetResult(dummyReport);
+        var result = permit.GetResult(report);
 
         result.IsApplicable.Should().BeFalse();
     }
 
     [Fact]
-    public void GetResult_WithEltTypeAndElkMortalityInCorrectGameArea_ShouldReturnAllowedResult()
+    public void GetResult_WithElkTypeAndElkMortalityInCorrectGameArea_ShouldReturnAllowedResult()
     {
-        var dummyReport = new DummyHuntedMortalityReport();
-        dummyReport.Mortality = new ElkMortality();
-        dummyReport.GameManagementArea = new GameManagementArea { Subzone = "11" };
+        var report = new IndividualHuntedMortalityReport { HuntedActivity = new HuntedActivity() };
+        report.HuntedActivity.Mortality = new ElkMortality();
+        report.HuntedActivity.GameManagementArea = new GameManagementArea { Subzone = "11" };
 
         var permit = new HuntingPermit();
         permit.Type = HuntingPermit.PermitType.ElkExclusion;
 
-        var result = permit.GetResult(dummyReport);
+        var result = permit.GetResult(report);
 
         result.IsApplicable.Should().BeTrue();
         result.HasViolations.Should().BeFalse();
-    }
-
-    public class DummyHuntedMortalityReport : HuntedMortalityReport
-    {
     }
 }

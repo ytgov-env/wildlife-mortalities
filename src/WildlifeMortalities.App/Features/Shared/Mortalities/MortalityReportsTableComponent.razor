@@ -29,7 +29,7 @@
                 case SpecialGuidedHuntReport e:
                     <span>Special guided hunt - @e.Result.GetDisplayName().ToLower()</span>
                     break;
-                case HuntedMortalityReport e:
+                case IndividualHuntedMortalityReport e:
                     <span>Individual hunt</span>
                     break;
             }
@@ -39,10 +39,13 @@
             @switch (context)
             {
                 case OutfitterGuidedHuntReport e:
-                    <span>@string.Join(", ", e.HuntedMortalityReports.Select(x => x.Mortality.Species.GetDisplayName()))</span>
+                    <span>@string.Join(", ", e.HuntedActivities.Select(x => x.Mortality.Species.GetDisplayName()))</span>
                     break;
-                case HuntedMortalityReport e:
-                    <span>@e.Mortality.Species.GetDisplayName()</span>
+                case SpecialGuidedHuntReport e:
+                    <span>@string.Join(", ", e.HuntedActivities.Select(x => x.Mortality.Species.GetDisplayName()))</span>
+                    break;
+                case IndividualHuntedMortalityReport e:
+                    <span>@e.GetMortality().Species.GetDisplayName()</span>
                     break;
             }
         </MudTd>

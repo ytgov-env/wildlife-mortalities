@@ -37,7 +37,7 @@
         <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-@if (ViewModel.Result is GuidedHuntResult.SuccessfulHunt)
+@if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
     <MudGrid Class="my-3">
         @foreach (var item in ViewModel.HuntedMortalityReportViewModels)

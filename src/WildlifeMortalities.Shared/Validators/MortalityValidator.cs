@@ -22,7 +22,7 @@ public class MortalityValidator<T> : AbstractValidator<Mortality> where T : Mort
             .When(m => m.Latitude is null)
             .WithMessage("Longitude cannot be set when latitude is null");
 
-        RuleFor(m => m.MortalityReportId).NotNull();
+        RuleFor(m => m.ReportId).NotNull();
         RuleFor(m => m.Sex)
             .IsInEnum()
             .Must(sex => sex != 0)
