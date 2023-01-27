@@ -1,10 +1,10 @@
-﻿using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+﻿using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities;
 
 public class FurbearerSealingCertificate
 {
     public int Id { get; set; }
-    public string Number { get; set; } = string.Empty;
-    public List<MortalityReport> MortalityReports { get; set; } = null!;
+    public string HumanReadableId { get; set; } = string.Empty;
+    public List<Mortality> Mortalities { get; set; } = null!;
 }

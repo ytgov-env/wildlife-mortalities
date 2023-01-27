@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -12,8 +12,8 @@ public abstract class Mortality<T> : Mortality where T : Mortality
 public abstract class Mortality
 {
     public int Id { get; set; }
-    public int MortalityReportId { get; set; }
-    public MortalityReport MortalityReport { get; set; } = null!;
+    public int ReportId { get; set; }
+    public Report Report { get; set; } = null!;
     public DateTime? DateOfDeath { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
