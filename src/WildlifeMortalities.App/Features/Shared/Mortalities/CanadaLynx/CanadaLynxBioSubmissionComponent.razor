@@ -8,6 +8,9 @@
 @code {
 
     [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    [Parameter]
     [EditorRequired]
     public CanadaLynxBioSubmission BioSubmission { get; set; } = null!;
 

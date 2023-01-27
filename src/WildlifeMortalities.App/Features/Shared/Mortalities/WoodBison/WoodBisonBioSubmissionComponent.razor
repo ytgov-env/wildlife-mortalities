@@ -6,6 +6,9 @@
 @code {
 
     [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    [Parameter]
     [EditorRequired]
     public WoodBisonBioSubmission BioSubmission { get; set; } = null!;
 

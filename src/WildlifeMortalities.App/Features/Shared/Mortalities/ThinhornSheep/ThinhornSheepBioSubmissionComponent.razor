@@ -30,6 +30,11 @@
 <MudList>
     @foreach (var item in BioSubmission.HornMeasurementEntries)
     {
+        @if (IsReadOnly)
+        {
+            <MudListItem Text="@($"{item.Annulus} - {item.LengthMillimetres}mm")"></MudListItem>
+            continue;
+        }
         <MudListItem>
             <MudStack Row="true">
                 <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true"/>
@@ -50,6 +55,9 @@
 
 
 @code {
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
 
     [Parameter]
     [EditorRequired]

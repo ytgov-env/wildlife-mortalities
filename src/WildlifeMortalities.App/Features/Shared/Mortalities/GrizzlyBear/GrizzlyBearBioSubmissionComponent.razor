@@ -16,6 +16,9 @@
 @code {
 
     [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    [Parameter]
     [EditorRequired]
     public GrizzlyBearBioSubmission BioSubmission { get; set; } = null!;
 
