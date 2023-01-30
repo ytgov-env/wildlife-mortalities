@@ -1,0 +1,40 @@
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@switch (BioSubmission)
+{
+    case AmericanBlackBearBioSubmission bioSubmission:
+        <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case CanadaLynxBioSubmission bioSubmission:
+        <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case GreyWolfBioSubmission bioSubmission:
+        <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case GrizzlyBearBioSubmission bioSubmission:
+        <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case MountainGoatBioSubmission bioSubmission:
+        <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case MuleDeerBioSubmission bioSubmission:
+        <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case ThinhornSheepBioSubmission bioSubmission:
+        <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case WhiteTailedDeerBioSubmission bioSubmission:
+        <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    case WoodBisonBioSubmission bioSubmission:
+        <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission"/>
+        break;
+    default:
+        throw new ArgumentException(nameof(BioSubmission));
+}
+
+@code {
+
+    [Parameter]
+    public BioSubmission BioSubmission { get; set; } = null!;
+
+}
