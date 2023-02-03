@@ -39,7 +39,10 @@
             }
         </MudStack>
         <MudSpacer/>
-        <BioSubmissionDetailsComponent/>
+        @if(MortalityViewModel.GetMortality() is IHasBioSubmission)
+        {
+            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.ExistingBioSubmission"/>
+        }
     </MudCardContent>
     <MudCardActions>
         <MudStack Row="true" Class="justify-right">
@@ -86,8 +89,6 @@
                 Species.WoodBison => new WoodBisonBioSubmission(mortalityId),
                 _ => throw new InvalidOperationException($"{nameof(MortalityViewModel.Species)} is not a registered bio submission species.")
                 };
-
-            bioSubmission.Age = new Age();
         }
 
         var parameters = new DialogParameters();

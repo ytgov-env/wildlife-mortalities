@@ -14,9 +14,7 @@ public abstract class BioSubmission
 
 public abstract class BioSubmission<T> : BioSubmission where T : Mortality
 {
-    public BioSubmission()
-    {
-    }
+    public BioSubmission() { }
 
     public BioSubmission(int mortalityId) => MortalityId = mortalityId;
 
@@ -29,10 +27,20 @@ public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
 {
     public void Configure(EntityTypeBuilder<BioSubmission> builder)
     {
-        builder.OwnsOne(b => b.Age).WithOwner();
+        builder.OwnsOne(
+            b => b.Age,
+            a =>
+            {
+                a.Property(a => a.Confidence).IsRequired();
+                a.WithOwner();
+            }
+        );
         builder.OwnsMany(
             b => b.UploadFileInfo,
-            ownedNavigationBuilder => { ownedNavigationBuilder.ToJson(); }
+            ownedNavigationBuilder =>
+            {
+                ownedNavigationBuilder.ToJson();
+            }
         );
     }
 }
@@ -40,7 +48,7 @@ public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
 public class Age
 {
     public int Years { get; set; }
-    public ConfidenceInAge Confidence { get; set; }
+    public ConfidenceInAge? Confidence { get; set; }
 }
 
 public class UploadFileInfo
@@ -51,9 +59,12 @@ public class UploadFileInfo
 
 public enum ConfidenceInAge
 {
-    [Display(Name = "Fair")] Fair = 10,
+    [Display(Name = "Fair")]
+    Fair = 10,
 
-    [Display(Name = "Good")] Good = 20,
+    [Display(Name = "Good")]
+    Good = 20,
 
-    [Display(Name = "Poor")] Poor = 30
+    [Display(Name = "Poor")]
+    Poor = 30
 }

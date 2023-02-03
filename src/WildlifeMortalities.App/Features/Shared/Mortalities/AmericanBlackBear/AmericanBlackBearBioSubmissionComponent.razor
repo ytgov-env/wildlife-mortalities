@@ -3,14 +3,14 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 
-<MudSelect T="AmericanBlackBearSkullCondition" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="() => BioSubmission.SkullCondition">
+<MudSelect T="AmericanBlackBearSkullCondition?" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="() => BioSubmission.SkullCondition" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<AmericanBlackBearSkullCondition>())
     {
-        <MudSelectItem T="AmericanBlackBearSkullCondition" Value="@item">@item.GetDisplayName()</MudSelectItem>
+        <MudSelectItem T="AmericanBlackBearSkullCondition?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres"/>
-<MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres"/>
+<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly" />
+<MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly" />
 
 @code {
 
@@ -25,7 +25,7 @@
     {
         public AmericanBlackBearBioSubmissionValidator()
         {
-            RuleFor(x => x.SkullCondition).NotEmpty();
+            RuleFor(x => x.SkullCondition).NotEmpty().IsInEnum();
     //Todo get correct min/max
             RuleFor(x => x.SkullLengthMillimetres).GreaterThan(50).LessThan(1000);
             RuleFor(x => x.SkullWidthMillimetres).GreaterThan(50).LessThan(1000);

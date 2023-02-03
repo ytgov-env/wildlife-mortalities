@@ -52,13 +52,23 @@
                 default:
                     throw new ArgumentException(nameof(BioSubmission));
             }
-            <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
-            <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
-                @foreach (var item in Enum.GetValues<ConfidenceInAge>())
-                {
-                    <MudSelectItem Value="item">@item.GetDisplayName()</MudSelectItem>
-                }
-            </MudSelect>
+            @if(BioSubmission.Age == null)
+            {
+                <MudButton StartIcon="@Icons.Material.Filled.Cake" OnClick="(() => BioSubmission.Age = new Age())">Add age</MudButton>
+            }
+            @if(BioSubmission.Age != null)
+            {
+                <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
+                <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+                    @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+                    {
+                        <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudTooltip Text="Remove age">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="(() => BioSubmission.Age = null)"></MudIconButton>
+                </MudTooltip>
+            }
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -89,7 +99,10 @@
     {
         public BioSubmissionValidator()
         {
-            RuleFor(x => x.Age.Years).InclusiveBetween(0, 80);
+            When(x => x.Age != null, () => {
+                RuleFor(x => x.Age!.Years).InclusiveBetween(0, 80);
+                RuleFor(x => x.Age.Confidence).NotEmpty().IsInEnum();
+            });
         }
     }
 
