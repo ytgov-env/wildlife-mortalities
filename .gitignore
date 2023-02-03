@@ -361,4 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/src/WildlifeMortalities.App/wwwroot/lib/print-js
+/src/WildlifeMortalities.App/wwwroot/lib/

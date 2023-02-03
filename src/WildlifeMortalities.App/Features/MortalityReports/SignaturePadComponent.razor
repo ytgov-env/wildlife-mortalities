@@ -15,7 +15,7 @@
     {
         if (firstRender)
         {
-            await JsRuntime.InvokeVoidAsync("mortality.initSignaturePad", id);
+            await JsRuntime.InvokeVoidAsync("signaturePad.initSignaturePad", id);
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -23,19 +23,19 @@
 
     private async Task Reset()
     {
-        await JsRuntime.InvokeVoidAsync("mortality.resetSignaturePad", id);
+        await JsRuntime.InvokeVoidAsync("signaturePad.resetSignaturePad", id);
     }
 
 
     public async Task<string> GetSignature()
     {
-        var content = await JsRuntime.InvokeAsync<string>("mortality.getSignaturePadContent", id);
+        var content = await JsRuntime.InvokeAsync<string>("signaturePad.getSignaturePadContent", id);
         return content;
     }
 
     public void Dispose()
     {
-        JsRuntime.InvokeVoidAsyncWithErrorHandling("mortality.removeSignaturePad", id);
+        JsRuntime.InvokeVoidAsyncWithErrorHandling("signaturePad.removeSignaturePad", id);
     }
 
 }

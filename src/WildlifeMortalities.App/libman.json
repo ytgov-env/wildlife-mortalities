@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+    "libraries": [
+        {
+            "library": "print-js@1.6.0",
+            "destination": "wwwroot/lib/print-js/"
+        },
+        {
+            "provider": "cdnjs",
+            "library": "signature_pad@4.1.4",
+            "destination": "wwwroot/lib/signature_pad/",
+            "files": [
+                "signature_pad.umd.min.js"
+            ]
+        }
+    ]
+}

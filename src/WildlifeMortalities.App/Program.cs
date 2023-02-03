@@ -46,6 +46,7 @@ try
     builder.Services.AddScoped<ClientService>();
     builder.Services.AddScoped<ConservationOfficerService>();
     builder.Services.AddScoped<IMortalityService, MortalityService>();
+    builder.Services.AddScoped<PdfService>();
 
     // Add authentication services
     builder.Services

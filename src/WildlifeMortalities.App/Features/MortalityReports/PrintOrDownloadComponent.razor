@@ -1,0 +1,32 @@
+﻿@using System.IO
+@using WildlifeMortalities.Shared.Services;
+@inject IJSRuntime JS
+@inject PdfService PdfService
+
+<MudIconButton Icon="@Icons.Material.Filled.Download" OnClick="DownloadFileFromStream" />
+<MudIconButton Icon="@Icons.Material.Filled.Print" OnClick="PrintFileFromStream" />
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public ReportDetail ReportDetail { get; set; } = null!;
+
+    private async Task DownloadFileFromStream()
+    {
+        var file = PdfService.GetReportPdf(ReportDetail.report.Id);
+        var fileStream = new MemoryStream(file);
+        var fileName = $"{ReportDetail.report.HumanReadableId}_{DateTimeOffset.Now.ToString("yyyy-MM-dd")}.pdf";
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+    private async Task PrintFileFromStream()
+    {
+        var file = PdfService.GetReportPdf(ReportDetail.report.Id);
+        var fileStream = new MemoryStream(file);
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("printFileFromStream", streamRef);
+    }
+}
