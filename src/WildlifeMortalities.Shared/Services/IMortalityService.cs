@@ -16,6 +16,7 @@ public interface IMortalityService
     Task CreateReport(IndividualHuntedMortalityReport report);
     Task CreateReport(OutfitterGuidedHuntReport report);
     Task CreateReport(SpecialGuidedHuntReport report);
+    Task CreateDraftReport(Report report);
     Task<IEnumerable<Report>> GetAllReports(int start = 0, int length = 10);
 
     Task<IEnumerable<Report>> GetReportsByEnvClientId(

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -8,6 +9,8 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 public abstract class Activity
 {
     public int Id { get; set; }
+
+    [JsonConverter(typeof(MostConcreteClassJsonConverter<Mortality>))]
     public Mortality Mortality { get; set; } = null!;
     public int? AuthorizationId { get; set; }
     public List<Authorization> Authorizations { get; set; } = null!;

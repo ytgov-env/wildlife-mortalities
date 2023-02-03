@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using MudBlazor;
+using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
 
@@ -13,13 +16,20 @@ public partial class MortalityReportPage
     private SignaturePadComponent _signaturePad = null!;
     private MortalityReportPageViewModel _vm;
 
-    [Parameter] public string EnvClientId { get; set; }
+    [Parameter]
+    public string EnvClientId { get; set; }
 
-    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = default!;
 
-    [Inject] public IMortalityService MortalityService { get; set; } = default!;
+    [Inject]
+    public IMortalityService MortalityService { get; set; } = default!;
 
-    [Inject] public ClientService ClientService { get; set; } = default!;
+    [Inject]
+    public ClientService ClientService { get; set; } = default!;
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
 
     protected override void OnInitialized()
     {
@@ -55,7 +65,26 @@ public partial class MortalityReportPage
         }
     }
 
-    private async Task CreateMortalityReport()
+    private async Task CreateDraftReport()
+    {
+        var personId = _personId!.Value;
+
+        Report report = _vm.MortalityReportType switch
+        {
+            MortalityReportType.Conflict => new HumanWildlifeConflictMortalityReport(),
+            MortalityReportType.IndividualHunt
+                => _vm.HuntedMortalityReportViewModel!.GetReport(personId),
+            MortalityReportType.OutfitterGuidedHunt
+                => _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId),
+            MortalityReportType.SpecialGuidedHunt
+                => _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId),
+            _ => throw new InvalidOperationException(),
+        };
+
+        await MortalityService.CreateDraftReport(report);
+    }
+
+    private async Task CreateReport()
     {
         var signature = await _signaturePad.GetSignature();
 
@@ -64,35 +93,35 @@ public partial class MortalityReportPage
         switch (_vm.MortalityReportType)
         {
             case MortalityReportType.Conflict:
-                {
-                    var report = new HumanWildlifeConflictMortalityReport();
-                    await MortalityService.CreateReport(report);
-                    break;
-                }
+            {
+                var report = new HumanWildlifeConflictMortalityReport();
+                await MortalityService.CreateReport(report);
+                break;
+            }
             case MortalityReportType.IndividualHunt:
+            {
+                var validator = new HuntedMortalityReportViewModelValidator();
+                var result = await validator.ValidateAsync(_vm.HuntedMortalityReportViewModel);
+                if (result.IsValid)
                 {
-                    var validator = new HuntedMortalityReportViewModelValidator();
-                    var result = await validator.ValidateAsync(_vm.HuntedMortalityReportViewModel);
-                    if (result.IsValid)
-                    {
-                        var report = _vm.HuntedMortalityReportViewModel!.GetReport(personId);
-                        await MortalityService.CreateReport(report);
-                    }
+                    var report = _vm.HuntedMortalityReportViewModel!.GetReport(personId);
+                    await MortalityService.CreateReport(report);
+                }
 
-                    break;
-                }
+                break;
+            }
             case MortalityReportType.OutfitterGuidedHunt:
-                {
-                    var report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
-                    await MortalityService.CreateReport(report);
-                    break;
-                }
+            {
+                var report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
+                await MortalityService.CreateReport(report);
+                break;
+            }
             case MortalityReportType.SpecialGuidedHunt:
-                {
-                    var report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
-                    await MortalityService.CreateReport(report);
-                    break;
-                }
+            {
+                var report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
+                await MortalityService.CreateReport(report);
+                break;
+            }
             case MortalityReportType.Trapped:
                 break;
         }

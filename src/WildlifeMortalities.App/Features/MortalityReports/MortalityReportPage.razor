@@ -11,7 +11,7 @@
     return;
 }
 
-<EditForm OnValidSubmit="CreateMortalityReport" Model="_vm">
+<EditForm OnValidSubmit="CreateReport" OnInvalidSubmit="CreateDraftReport" EditContext="_editContext">
     <FluentValidationValidator/>
     <MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
         @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
@@ -39,10 +39,10 @@
             throw new ArgumentOutOfRangeException();
     }
 
-    <MudPaper Elevation="0" Class="mt-4">
+    @*<MudPaper Elevation="0" Class="mt-4">
         <MudText Typo="Typo.h6">Signature</MudText>
         <SignaturePadComponent @ref="_signaturePad"/>
-    </MudPaper>
+    </MudPaper>*@
 
     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
 
@@ -70,6 +70,11 @@
 
     <MudStack Row="true" Class="mt-4">
         <MudSpacer/>
-        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Create Report</MudButton>
+        @if (_editContext.GetValidationMessages().Any() == true)
+        {
+            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">Save as draft</MudButton>
+
+        }
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Disabled="@(_editContext.GetValidationMessages().Any())">Create Report</MudButton>
     </MudStack>
 </EditForm>

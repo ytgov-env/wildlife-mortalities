@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -87,9 +88,7 @@ public class MortalityService : IMortalityService
         do
         {
             report.GenerateHumanReadableId();
-        } while (
-            await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId)
-        );
+        } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
 
         context.Add(report);
         await context.SaveChangesAsync();
@@ -111,6 +110,24 @@ public class MortalityService : IMortalityService
 
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task CreateDraftReport(Report report)
+    {
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new MostConcreteClassJsonConverter<Report>());
+        var content = JsonSerializer.Serialize(report, options);
+
+        var draftReport = new DraftReport
+        {
+            LastModifiedDate = DateTimeOffset.Now,
+            SerializedData = content,
+            Type = report.GetType().Name,
+        };
+
+        using var context = _dbContextFactory.CreateDbContext();
+        context.Add(draftReport);
         await context.SaveChangesAsync();
     }
 
@@ -250,8 +267,8 @@ public class MortalityService : IMortalityService
                             : r is OutfitterGuidedHuntReport
                                 ? ((OutfitterGuidedHuntReport)r).Client.EnvClientId == envClientId
                                 : r is TrappedMortalitiesReport
-                                  && ((TrappedMortalitiesReport)r).Client.EnvClientId
-                                  == envClientId
+                                    && ((TrappedMortalitiesReport)r).Client.EnvClientId
+                                        == envClientId
             );
         }
 

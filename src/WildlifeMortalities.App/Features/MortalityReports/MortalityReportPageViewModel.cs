@@ -56,6 +56,20 @@ public class HuntedMortalityReportViewModel
     public MortalityWithSpeciesSelectionViewModel MortalityWithSpeciesSelectionViewModel { get; set; } =
         new();
 
+    public HuntedMortalityReportViewModel() { }
+
+    public HuntedMortalityReportViewModel(
+        IndividualHuntedMortalityReport report,
+        IEnumerable<GameManagementArea> areas
+    )
+    {
+        Landmark = report.HuntedActivity.Landmark;
+        Comment = report.HuntedActivity.Comment;
+        GameManagementArea = areas.FirstOrDefault(
+            x => x.Id == report.HuntedActivity.GameManagementAreaId
+        );
+    }
+
     public IndividualHuntedMortalityReport GetReport(int personId)
     {
         var species = GameManagementArea.ResolveSubType(
@@ -69,7 +83,7 @@ public class HuntedMortalityReportViewModel
                 Mortality =
                     MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
                 Landmark = Landmark,
-                GameManagementAreaId = GameManagementArea.Id,
+                GameManagementAreaId = GameManagementArea?.Id ?? 0,
                 Comment = Comment
             },
             ClientId = personId
