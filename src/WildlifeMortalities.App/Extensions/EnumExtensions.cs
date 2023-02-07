@@ -6,8 +6,10 @@ namespace WildlifeMortalities.App.Extensions;
 public static class EnumExtensions
 {
     public static string GetDisplayName(this Enum enumValue) =>
-        enumValue.GetEnumValueCustomAttribute<DisplayAttribute>()?.GetName()
-        ?? $"Error: enum {enumValue} is missing a displayname attribute";
+        enumValue == null
+            ? string.Empty
+            : enumValue.GetEnumValueCustomAttribute<DisplayAttribute>()?.GetName()
+                ?? $"Error: enum {enumValue} is missing a displayname attribute";
 
     public static T? GetEnumValueCustomAttribute<T>(this Enum enumValue) where T : Attribute =>
         enumValue
