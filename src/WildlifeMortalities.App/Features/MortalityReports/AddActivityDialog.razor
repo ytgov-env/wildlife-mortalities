@@ -1,0 +1,83 @@
+﻿@implements IDisposable
+
+<EditForm EditContext="_context" OnInvalidSubmit="@( () => _invalidSubmissionDetected = true)" OnValidSubmit="Add">
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Add report
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <ValidationSummary />
+            <FluentValidationValidator/>
+            <ActivityComponent ViewModel="_vm" MortalityReportType="ReportType"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+            @if (_context.GetValidationMessages().Any())
+            {
+                <MudButton Color="Color.Primary" ButtonType="ButtonType.Button" OnClick="AddDraft">Save as draft</MudButton>
+            }
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Disabled="(_context.GetValidationMessages().Any() == true)">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+</EditForm>
+
+@code {
+    private EditContext _context = null!;
+    private bool _invalidSubmissionDetected = false;
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = null!;
+
+    private readonly HuntedActivityViewModel _vm = new();
+
+    [Parameter]
+    public MortalityReportType ReportType { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _context = new EditContext(_vm);
+        _context.OnFieldChanged += OnFieldChanged;
+        base.OnInitialized();
+    }
+
+    private void OnFieldChanged(Object? sender, FieldChangedEventArgs args)
+    {
+        if (args.FieldIdentifier.FieldName != nameof(_vm.MortalityWithSpeciesSelectionViewModel.Species) && _invalidSubmissionDetected == true)
+        {
+            _context.Validate();
+            StateHasChanged();
+        }
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void Add()
+    {
+        if (_context.Validate())
+        {
+            _vm.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.IsDraft = false;
+            MudDialog.Close(DialogResult.Ok(_vm));
+        }
+    }
+
+    private void AddDraft()
+    {
+        _vm.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.IsDraft = true;
+        MudDialog.Close(DialogResult.Ok(_vm));
+    }
+
+    public void Dispose()
+    {
+        if(_context != null)
+        {
+            _context.OnFieldChanged -= OnFieldChanged;
+        }
+    }
+
+}

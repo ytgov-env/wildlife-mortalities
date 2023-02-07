@@ -15,7 +15,7 @@ public class MortalityReportPageViewModel
     public MortalityReportType MortalityReportType { get; set; } =
         MortalityReportType.IndividualHunt;
 
-    public HuntedMortalityReportViewModel? HuntedMortalityReportViewModel { get; set; } = new();
+    public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; }
 
     public OutfitterGuidedHuntReportViewModel? OutfitterGuidedHuntReportViewModel { get; set; }
     public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }
@@ -27,8 +27,8 @@ public class MortalityReportPageViewModelValidator : AbstractValidator<Mortality
     {
         RuleFor(x => x.MortalityReportType).NotEmpty();
 
-        RuleFor(x => x.HuntedMortalityReportViewModel)
-            .SetValidator(new HuntedMortalityReportViewModelValidator())
+        RuleFor(x => x.IndividualHuntedMortalityReportViewModel)
+            .SetValidator(new IndividualHuntedMortalityReportViewModelValidator())
             .When(x => x.MortalityReportType == MortalityReportType.IndividualHunt);
 
         RuleFor(x => x.OutfitterGuidedHuntReportViewModel)
@@ -47,56 +47,59 @@ public class MortalityWithSpeciesSelectionViewModel
     public MortalityViewModel MortalityViewModel { get; set; }
 }
 
-public class HuntedMortalityReportViewModel
+public class ActivityViewModel
 {
-    public string Landmark { get; set; } = string.Empty;
-    public GameManagementArea? GameManagementArea { get; set; }
+    public bool IsCompleted { get; set; }
     public string Comment { get; set; } = string.Empty;
 
     public MortalityWithSpeciesSelectionViewModel MortalityWithSpeciesSelectionViewModel { get; set; } =
         new();
+}
 
-    public HuntedMortalityReportViewModel() { }
-
-    public HuntedMortalityReportViewModel(
-        IndividualHuntedMortalityReport report,
-        IEnumerable<GameManagementArea> areas
-    )
+public class TrappedActivityViewModel : ActivityViewModel
+{
+    public TrappedActivity GetActivity()
     {
-        Landmark = report.HuntedActivity.Landmark;
-        Comment = report.HuntedActivity.Comment;
-        GameManagementArea = areas.FirstOrDefault(
-            x => x.Id == report.HuntedActivity.GameManagementAreaId
-        );
-    }
-
-    public IndividualHuntedMortalityReport GetReport(int personId)
-    {
-        var species = GameManagementArea.ResolveSubType(
-            MortalityWithSpeciesSelectionViewModel.Species!.Value
-        );
-
-        var report = new IndividualHuntedMortalityReport
-        {
-            HuntedActivity = new HuntedActivity
-            {
-                Mortality =
-                    MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
-                Landmark = Landmark,
-                GameManagementAreaId = GameManagementArea?.Id ?? 0,
-                Comment = Comment
-            },
-            ClientId = personId
-        };
-
-        return report;
+        throw new NotImplementedException();
     }
 }
 
-public class HuntedMortalityReportViewModelValidator
-    : AbstractValidator<HuntedMortalityReportViewModel>
+public class TrappedActivityViewModelValidator : AbstractValidator<TrappedActivityViewModel>
 {
-    public HuntedMortalityReportViewModelValidator()
+    public TrappedActivityViewModelValidator() { }
+}
+
+public class HuntedActivityViewModel : ActivityViewModel
+{
+    public string Landmark { get; set; } = string.Empty;
+    public GameManagementArea? GameManagementArea { get; set; }
+
+    public HuntedActivityViewModel() { }
+
+    public HuntedActivityViewModel(
+        HuntedActivity huntedActivity,
+        IEnumerable<GameManagementArea> areas
+    )
+    {
+        Landmark = huntedActivity.Landmark;
+        Comment = huntedActivity.Comment;
+        IsCompleted = true;
+        GameManagementArea = areas.FirstOrDefault(x => x.Id == huntedActivity.GameManagementAreaId);
+    }
+
+    public HuntedActivity GetActivity() =>
+        new()
+        {
+            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
+            Landmark = Landmark,
+            GameManagementAreaId = GameManagementArea?.Id ?? 0,
+            Comment = Comment
+        };
+}
+
+public class HuntedActivityViewModelValidator : AbstractValidator<HuntedActivityViewModel>
+{
+    public HuntedActivityViewModelValidator()
     {
         RuleFor(x => x.Landmark).NotNull();
         RuleFor(x => x.GameManagementArea).NotNull();
@@ -104,10 +107,13 @@ public class HuntedMortalityReportViewModelValidator
             .Length(10, 1000)
             .When(x => string.IsNullOrEmpty(x.Comment) == false);
 
-        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species).NotNull();
+        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species)
+            .NotNull()
+            .WithMessage("Please select a species");
 
         RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
             .NotNull()
+            .When(x => x.MortalityWithSpeciesSelectionViewModel.Species != null)
             .SetInheritanceValidator(x =>
             {
                 x.Add(new AmericanBlackBearMortalityViewModelValidator());

@@ -113,17 +113,14 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
-    public async Task CreateDraftReport(Report report)
+    public async Task CreateDraftReport(string report, int personId)
     {
-        var options = new JsonSerializerOptions();
-        options.Converters.Add(new MostConcreteClassJsonConverter<Report>());
-        var content = JsonSerializer.Serialize(report, options);
-
         var draftReport = new DraftReport
         {
             LastModifiedDate = DateTimeOffset.Now,
-            SerializedData = content,
+            SerializedData = report,
             Type = report.GetType().Name,
+            PersonId = personId,
         };
 
         using var context = _dbContextFactory.CreateDbContext();

@@ -2,11 +2,11 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data
 @using WildlifeMortalities.Data.Entities
-<MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
-<MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
-<MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
-<MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4"/>
+<MortalityComponent ViewModel="ViewModel.HuntedActivityViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
+<MudTextField @bind-Value="ViewModel.HuntedActivityViewModel.Landmark" For="@(() => ViewModel.HuntedActivityViewModel.Landmark)" Label="Landmark" />
+<MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.HuntedActivityViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.HuntedActivityViewModel.GameManagementArea)"/>
+<MudTextField @bind-Value="ViewModel.HuntedActivityViewModel.Comment" For="@(() => ViewModel.HuntedActivityViewModel.Comment)" Label="Comment" Lines="4" />
 
 
 @code {
@@ -15,7 +15,7 @@
 
     [Parameter]
     [EditorRequired]
-    public HuntedMortalityReportViewModel ViewModel { get; set; } = null!;
+    public IndividualHuntedMortalityReportViewModel ViewModel { get; set; } = null!;
 
     [Parameter]
     public bool EditMode { get; set; } = false!;

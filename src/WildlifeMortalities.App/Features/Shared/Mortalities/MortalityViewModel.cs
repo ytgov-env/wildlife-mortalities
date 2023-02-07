@@ -30,9 +30,7 @@ public class MortalityViewModel
 
     private readonly Mortality? _existingMortality;
 
-    public MortalityViewModel()
-    {
-    }
+    public MortalityViewModel() { }
 
     public MortalityViewModel(Mortality mortality, ReportDetail? reportDetail = null)
     {
@@ -51,7 +49,7 @@ public class MortalityViewModel
         if (
             reportDetail?.report
             is not null
-            and IndividualHuntedMortalityReport individualHuntedMortalityReport
+                and IndividualHuntedMortalityReport individualHuntedMortalityReport
         )
         {
             Landmark = individualHuntedMortalityReport.HuntedActivity.Landmark;
@@ -71,6 +69,8 @@ public class MortalityViewModel
     public string? Landmark { get; set; }
     public string? Comment { get; set; }
     public Sex? Sex { get; set; }
+
+    public bool IsDraft { get; set; }
 
     public virtual Dictionary<string, string> GetProperties()
     {
@@ -115,7 +115,7 @@ public class MortalityViewModel
         derivatingMortality.DateOfDeath = DateOfDeath;
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitude;
-        derivatingMortality.Sex = Sex!.Value;
+        derivatingMortality.Sex = Sex;
     }
 }
 
@@ -152,11 +152,8 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
             .NotNull()
             .IsInEnum()
             .WithMessage("Sex must be set to Female, Male, or Unknown");
-        // TODO Is DateOfDeath required?
         RuleFor(m => m.DateOfDeath).NotNull().WithMessage("Please select a date of death");
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
-{
-}
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }

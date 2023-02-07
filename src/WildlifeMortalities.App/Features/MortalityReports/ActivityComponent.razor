@@ -1,0 +1,29 @@
+@using Microsoft.EntityFrameworkCore
+@using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.Data
+@using WildlifeMortalities.Data.Entities
+
+<MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
+<MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4" />
+
+@switch (ViewModel)
+{
+    case HuntedActivityViewModel vm:
+        break;
+    case TrappedActivityViewModel vm:
+        break;
+}
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public ActivityViewModel ViewModel { get; set; } = null!;
+
+    [Parameter]
+    public bool EditMode { get; set; } = false;
+
+    [Parameter]
+    [EditorRequired]
+    public MortalityReportType MortalityReportType { get; set; }
+}

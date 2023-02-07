@@ -15,8 +15,7 @@ public class OutfitterGuidedHuntReportViewModel
     public OutfitterArea? OutfitterArea { get; set; }
     public GuidedHuntResult? Result { get; set; }
 
-    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } =
-        new();
+    public List<HuntedActivityViewModel> HuntedMortalityReportViewModels { get; set; } = new();
 
     public OutfitterGuidedHuntReport GetReport(int personId)
     {
@@ -34,9 +33,7 @@ public class OutfitterGuidedHuntReportViewModel
             OutfitterArea = OutfitterArea!,
             Result = Result!.Value,
             ClientId = personId,
-            HuntedActivities = HuntedMortalityReportViewModels
-                .Select(x => x.GetReport(personId).HuntedActivity)
-                .ToList()
+            HuntedActivities = HuntedMortalityReportViewModels.Select(x => x.GetActivity()).ToList()
         };
 
         return report;

@@ -12,8 +12,7 @@ public class SpecialGuidedHuntReportViewModel
     public Client? Guide { get; set; }
     public GuidedHuntResult? Result { get; set; }
 
-    public List<HuntedMortalityReportViewModel> HuntedMortalityReportViewModels { get; set; } =
-        new();
+    public List<HuntedActivityViewModel> HuntedMortalityReportViewModels { get; set; } = new();
 
     public SpecialGuidedHuntReport GetReport(int personId)
     {
@@ -26,9 +25,7 @@ public class SpecialGuidedHuntReportViewModel
         var report = new SpecialGuidedHuntReport
         {
             ClientId = personId,
-            HuntedActivities = HuntedMortalityReportViewModels
-                .Select(x => x.GetReport(personId).HuntedActivity)
-                .ToList()
+            HuntedActivities = HuntedMortalityReportViewModels.Select(x => x.GetActivity()).ToList()
         };
 
         return report;

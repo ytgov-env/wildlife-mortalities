@@ -17,7 +17,7 @@ public abstract class Mortality
     public DateTime? DateOfDeath { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
-    public Sex Sex { get; set; }
+    public Sex? Sex { get; set; }
     public string Discriminator { get; set; } = null!;
     public abstract Species Species { get; }
     public int? FurbearerSealingCertificateId { get; set; }
@@ -31,6 +31,7 @@ public class MortalityConfig<T> : IEntityTypeConfiguration<T> where T : Mortalit
         builder.ToTable("Mortalities");
         builder.Property(m => m.Latitude).HasPrecision(10, 8);
         builder.Property(m => m.Longitude).HasPrecision(11, 8);
+        builder.Property(m => m.Sex).IsRequired();
         builder.Ignore(m => m.Species);
     }
 }

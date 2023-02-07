@@ -5,10 +5,18 @@
 <MudCard Elevation="5" Class="flex-column d-flex" Style="height: 100%">
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">@MortalityViewModel.Species!.Value.GetDisplayName()</MudText>
+            @if (MortalityViewModel.IsDraft == true)
+            {
+                <MudText Typo="Typo.h6" Color="Color.Warning">Draft: @MortalityViewModel.Species!.Value.GetDisplayName()</MudText>
+
+            }
+            else
+            {
+                <MudText Typo="Typo.h6">@MortalityViewModel.Species!.Value.GetDisplayName()</MudText>
+            }
         </CardHeaderContent>
         <CardHeaderActions>
-            @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
+            @if (EnableBioSubmission == true && MortalityViewModel.GetMortality() is IHasBioSubmission)
             {
                 <MudButton Color="Color.Default" OnClick="() => OpenBioSubmissionDialog()" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
             }
@@ -47,8 +55,11 @@
     <MudCardActions>
         <MudStack Row="true" Class="justify-right">
             <MudSpacer/>
-            @*<MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => Edit(item))" Color="Color.Primary" />
-            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => Delete(item))" Color="Color.Error" />*@
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OnEditClicked" Color="Color.Primary" />
+            @if (EnableDelete == true)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="OnDeleteClicked" Color="Color.Error" />
+            }
         </MudStack>
     </MudCardActions>
 </MudCard>
@@ -57,6 +68,18 @@
 
     [Parameter]
     public MortalityViewModel MortalityViewModel { get; set; } = null!;
+
+    [Parameter]
+    public bool EnableBioSubmission { get; set; } = true;
+
+    [Parameter]
+    public bool EnableDelete { get; set; } = false;
+
+    [Parameter]
+    public EventCallback OnEditClicked { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeleteClicked { get; set; }
 
     [Inject]
     IDialogService DialogService { get; set; } = null!;

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
@@ -48,17 +49,18 @@ public partial class MortalityReportPage
         switch (type)
         {
             case MortalityReportType.IndividualHunt:
-                _vm.HuntedMortalityReportViewModel = new HuntedMortalityReportViewModel();
+                _vm.IndividualHuntedMortalityReportViewModel =
+                    new IndividualHuntedMortalityReportViewModel();
                 _vm.OutfitterGuidedHuntReportViewModel = null;
                 _vm.SpecialGuidedHuntReportViewModel = null;
                 break;
             case MortalityReportType.OutfitterGuidedHunt:
-                _vm.HuntedMortalityReportViewModel = null;
+                _vm.IndividualHuntedMortalityReportViewModel = null;
                 _vm.OutfitterGuidedHuntReportViewModel = new OutfitterGuidedHuntReportViewModel();
                 _vm.SpecialGuidedHuntReportViewModel = null!;
                 break;
             case MortalityReportType.SpecialGuidedHunt:
-                _vm.HuntedMortalityReportViewModel = null;
+                _vm.IndividualHuntedMortalityReportViewModel = null;
                 _vm.OutfitterGuidedHuntReportViewModel = null;
                 _vm.SpecialGuidedHuntReportViewModel = new SpecialGuidedHuntReportViewModel();
                 break;
@@ -68,20 +70,9 @@ public partial class MortalityReportPage
     private async Task CreateDraftReport()
     {
         var personId = _personId!.Value;
+        var content = JsonSerializer.Serialize(_vm);
 
-        Report report = _vm.MortalityReportType switch
-        {
-            MortalityReportType.Conflict => new HumanWildlifeConflictMortalityReport(),
-            MortalityReportType.IndividualHunt
-                => _vm.HuntedMortalityReportViewModel!.GetReport(personId),
-            MortalityReportType.OutfitterGuidedHunt
-                => _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId),
-            MortalityReportType.SpecialGuidedHunt
-                => _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId),
-            _ => throw new InvalidOperationException(),
-        };
-
-        await MortalityService.CreateDraftReport(report);
+        await MortalityService.CreateDraftReport(content, personId);
     }
 
     private async Task CreateReport()
@@ -100,14 +91,8 @@ public partial class MortalityReportPage
             }
             case MortalityReportType.IndividualHunt:
             {
-                var validator = new HuntedMortalityReportViewModelValidator();
-                var result = await validator.ValidateAsync(_vm.HuntedMortalityReportViewModel);
-                if (result.IsValid)
-                {
-                    var report = _vm.HuntedMortalityReportViewModel!.GetReport(personId);
-                    await MortalityService.CreateReport(report);
-                }
-
+                var report = _vm.IndividualHuntedMortalityReportViewModel!.GetReport(personId);
+                await MortalityService.CreateReport(report);
                 break;
             }
             case MortalityReportType.OutfitterGuidedHunt:
