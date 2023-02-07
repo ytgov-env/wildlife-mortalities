@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+﻿using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
@@ -30,4 +31,6 @@ public interface IMortalityService
     Task<ReportDetail?> GetReport(int id);
     Task CreateBioSubmission(BioSubmission bioSubmission);
     Task UpdateBioSubmission(BioSubmission bioSubmission);
+    Task<IEnumerable<GameManagementArea>> GetGameManagementAreas();
+    Task<IEnumerable<OutfitterArea>> GetOutfitterAreas();
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WildlifeMortalities.Shared.Services;
 
-namespace WildlifeMortalities.App.Features.MortalityReports;
+namespace WildlifeMortalities.App.Features.Reports;
 
 public partial class MortalityReportDetailsPage
 {

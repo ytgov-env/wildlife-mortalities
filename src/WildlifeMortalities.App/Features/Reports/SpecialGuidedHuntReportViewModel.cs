@@ -4,7 +4,7 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.App.Features.MortalityReports;
+namespace WildlifeMortalities.App.Features.Reports;
 
 public class SpecialGuidedHuntReportViewModel
 {
@@ -12,20 +12,20 @@ public class SpecialGuidedHuntReportViewModel
     public Client? Guide { get; set; }
     public GuidedHuntResult? Result { get; set; }
 
-    public List<HuntedActivityViewModel> HuntedMortalityReportViewModels { get; set; } = new();
+    public List<HuntedActivityViewModel> HuntedActivityViewModels { get; set; } = new();
 
     public SpecialGuidedHuntReport GetReport(int personId)
     {
-        // Clear mortality reports if the hunter wasn't successful
+        // Clear hunted activities if the hunter wasn't successful
         if (Result is not GuidedHuntResult.WentHuntingAndKilledWildlife)
         {
-            HuntedMortalityReportViewModels.Clear();
+            HuntedActivityViewModels.Clear();
         }
 
         var report = new SpecialGuidedHuntReport
         {
             ClientId = personId,
-            HuntedActivities = HuntedMortalityReportViewModels.Select(x => x.GetActivity()).ToList()
+            HuntedActivities = HuntedActivityViewModels.Select(x => x.GetActivity()).ToList()
         };
 
         return report;

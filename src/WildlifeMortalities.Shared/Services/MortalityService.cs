@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
@@ -270,5 +271,22 @@ public class MortalityService : IMortalityService
         }
 
         return query;
+    }
+
+    public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        return await context.GameManagementAreas.ToArrayAsync();
+    }
+
+    public async Task<IEnumerable<OutfitterArea>> GetOutfitterAreas()
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        return await context.OutfitterAreas
+            .OrderBy(o => o.Area.Length)
+            .ThenBy(o => o.Area)
+            .ToArrayAsync();
     }
 }

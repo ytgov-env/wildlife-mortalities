@@ -20,7 +20,7 @@
 @if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
     <MudList>
-        @foreach (var item in ViewModel.HuntedMortalityReportViewModels)
+        @foreach (var item in ViewModel.HuntedActivityViewModels)
         {
             <MudItem md="2" xs="6">
                 <MudCard Elevation="5" Class="flex-column d-flex" Style="height: 100%">
@@ -101,7 +101,7 @@
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            ViewModel.HuntedMortalityReportViewModels.Add(result.Data as HuntedActivityViewModel);
+            ViewModel.HuntedActivityViewModels.Add(result.Data as HuntedActivityViewModel);
         }
     }
 
@@ -118,7 +118,7 @@
 
     private void Delete(HuntedActivityViewModel viewModel)
     {
-        ViewModel.HuntedMortalityReportViewModels.Remove(viewModel);
+        ViewModel.HuntedActivityViewModels.Remove(viewModel);
     }
 
     private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input)

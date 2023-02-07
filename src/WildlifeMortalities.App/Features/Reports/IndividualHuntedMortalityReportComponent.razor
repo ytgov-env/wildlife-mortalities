@@ -2,6 +2,7 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data
 @using WildlifeMortalities.Data.Entities
+@using WildlifeMortalities.Shared.Services;
 <MortalityComponent ViewModel="ViewModel.HuntedActivityViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
 <MudTextField @bind-Value="ViewModel.HuntedActivityViewModel.Landmark" For="@(() => ViewModel.HuntedActivityViewModel.Landmark)" Label="Landmark" />
 <MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.HuntedActivityViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
@@ -18,16 +19,16 @@
     public IndividualHuntedMortalityReportViewModel ViewModel { get; set; } = null!;
 
     [Parameter]
-    public bool EditMode { get; set; } = false!;
+    public bool EditMode { get; set; } = false;
 
     [Inject]
-    private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
+    public IMortalityService MortalityService { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
-        await using var dbContext = await ContextFactory.CreateDbContextAsync();
-        _gameManagementAreas = await dbContext.GameManagementAreas.ToListAsync();
+        var gameManagementAreas = await MortalityService.GetGameManagementAreas();
+        _gameManagementAreas.AddRange(gameManagementAreas);
     }
 
     [Parameter]

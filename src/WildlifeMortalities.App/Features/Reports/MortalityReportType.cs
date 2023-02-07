@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WildlifeMortalities.App.Features.MortalityReports;
+namespace WildlifeMortalities.App.Features.Reports;
 
 public enum MortalityReportType
 {
@@ -16,5 +16,6 @@ public enum MortalityReportType
     [Display(Name = "Hunting (special guided)")]
     SpecialGuidedHunt,
 
-    [Display(Name = "Trapping")] Trapped
+    [Display(Name = "Trapping")]
+    Trapped
 }

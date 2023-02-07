@@ -7,7 +7,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
 
-namespace WildlifeMortalities.App.Features.MortalityReports;
+namespace WildlifeMortalities.App.Features.Reports;
 
 public partial class MortalityReportPage
 {

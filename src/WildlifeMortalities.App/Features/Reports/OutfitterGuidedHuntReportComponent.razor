@@ -41,7 +41,7 @@
 @if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
     <MudGrid Class="my-3">
-        @foreach (var item in ViewModel.HuntedMortalityReportViewModels)
+        @foreach (var item in ViewModel.HuntedActivityViewModels)
         {
             <MudItem md="2" xs="6">
                 <MortalityCardComponent EnableBioSubmission="false"
@@ -79,12 +79,12 @@
     private ISnackbar SnackBar { get; set; } = null!;
 
     [Inject]
-    private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
+    private IMortalityService MortalityService { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        await using var dbContext = await ContextFactory.CreateDbContextAsync();
-        _outfitterAreas = await dbContext.OutfitterAreas.OrderBy(o => o.Area.Length).ThenBy(o => o.Area).ToListAsync();
+        var outfitterAreas = await MortalityService.GetOutfitterAreas();
+        _outfitterAreas.AddRange(outfitterAreas);
     }
 
     public void AddClient(Client? input)
@@ -123,7 +123,7 @@
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            ViewModel.HuntedMortalityReportViewModels.Add(result.Data as HuntedActivityViewModel);
+            ViewModel.HuntedActivityViewModels.Add(result.Data as HuntedActivityViewModel);
         }
     }
 
@@ -140,7 +140,7 @@
 
     private void Delete(HuntedActivityViewModel viewModel)
     {
-        ViewModel.HuntedMortalityReportViewModels.Remove(viewModel);
+        ViewModel.HuntedActivityViewModels.Remove(viewModel);
     }
 
     private void DeleteGuide(Client guide)

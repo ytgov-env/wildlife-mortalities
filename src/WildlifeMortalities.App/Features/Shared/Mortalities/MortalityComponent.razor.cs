@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components;
-using WildlifeMortalities.App.Features.MortalityReports;
+using WildlifeMortalities.App.Features.Reports;
 using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
 using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
 using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;

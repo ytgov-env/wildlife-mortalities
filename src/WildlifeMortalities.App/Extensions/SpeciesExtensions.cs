@@ -1,4 +1,4 @@
-﻿using WildlifeMortalities.App.Features.MortalityReports;
+﻿using WildlifeMortalities.App.Features.Reports;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Extensions;

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-namespace WildlifeMortalities.App.Features.MortalityReports;
+namespace WildlifeMortalities.App.Features.Reports;
 
 public class IndividualHuntedMortalityReportViewModel
 {

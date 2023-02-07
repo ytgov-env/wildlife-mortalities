@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\BioSubmissions\" />
     <Folder Include="Logs\" />
   </ItemGroup>
 
