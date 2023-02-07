@@ -54,10 +54,19 @@
             }
             @if(BioSubmission.Age == null)
             {
-                <MudButton StartIcon="@Icons.Material.Filled.Cake" OnClick="(() => BioSubmission.Age = new Age())">Add age</MudButton>
+                <MudStack Row="true">
+                    <MudSpacer/>
+                    <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Cake" OnClick="(() => BioSubmission.Age = new Age())">Add age</MudButton>
+                    <MudSpacer />
+                </MudStack>
             }
             @if(BioSubmission.Age != null)
             {
+                <MudStack Row="true">
+                    <MudSpacer/>
+                    <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Delete" OnClick="(() => BioSubmission.Age = null)">Remove age</MudButton>
+                    <MudSpacer />
+                </MudStack>
                 <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
                 <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
                     @foreach (var item in Enum.GetValues<ConfidenceInAge>())
@@ -65,9 +74,6 @@
                         <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
                     }
                 </MudSelect>
-                <MudTooltip Text="Remove age">
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="(() => BioSubmission.Age = null)"></MudIconButton>
-                </MudTooltip>
             }
         </DialogContent>
         <DialogActions>
