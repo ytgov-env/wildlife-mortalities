@@ -13,10 +13,12 @@ public class MortalityReportPageViewModel
     public MortalityReportType MortalityReportType { get; set; } =
         MortalityReportType.IndividualHunt;
 
-    public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; }
+    public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; } =
+        new IndividualHuntedMortalityReportViewModel();
 
     public OutfitterGuidedHuntReportViewModel? OutfitterGuidedHuntReportViewModel { get; set; }
     public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }
+    public TrappedReportViewModel? TrappedReportViewModel { get; set; }
 }
 
 public class MortalityReportPageViewModelValidator : AbstractValidator<MortalityReportPageViewModel>

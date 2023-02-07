@@ -68,7 +68,7 @@
     public ThinhornSheepBioSubmission BioSubmission { get; set; } = null!;
 
     [CascadingParameter]
-    EditContext Context { get; set; }
+    EditContext Context { get; set; } = null!;
 
     protected override void OnInitialized()
     {

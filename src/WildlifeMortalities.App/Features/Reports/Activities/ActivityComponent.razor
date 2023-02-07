@@ -4,15 +4,18 @@
 @using WildlifeMortalities.Data.Entities
 
 <MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
-<MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4" />
 
 @switch (ViewModel)
 {
     case HuntedActivityViewModel vm:
+        <HuntedActivityComponent ViewModel="vm"/>
         break;
     case TrappedActivityViewModel vm:
+        <TrappedActivityComponent ViewModel="vm"/>
         break;
 }
+
+<MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4" />
 
 @code {
 
@@ -20,10 +23,9 @@
     [EditorRequired]
     public ActivityViewModel ViewModel { get; set; } = null!;
 
-    [Parameter]
+    [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
 
-    [Parameter]
-    [EditorRequired]
+    [CascadingParameter(Name = Constants.CascadingValues.MortalityReportType)]
     public MortalityReportType MortalityReportType { get; set; }
 }

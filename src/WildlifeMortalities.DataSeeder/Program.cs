@@ -11,6 +11,7 @@ using (var context = new AppDbContext())
     AddAllOutfitterAreas(context);
     // AddAllGameManagementAreaSpecies(context);
     AddFakeClients(context);
+    AddAllRegisteredTrappingConcessions(context);
 }
 
 Console.WriteLine("---------------------");
@@ -66,7 +67,29 @@ void AddAllOutfitterAreas(AppDbContext context)
 {
     if (!context.OutfitterAreas.Any())
     {
-        int[] outfitterAreas = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 22 };
+        int[] outfitterAreas =
+        {
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            19,
+            20,
+            22
+        };
         foreach (var area in outfitterAreas)
         {
             context.OutfitterAreas.Add(new OutfitterArea { Area = area.ToString() });
@@ -78,6 +101,49 @@ void AddAllOutfitterAreas(AppDbContext context)
     else
     {
         Console.WriteLine("OutfitterAreas already exist");
+    }
+}
+
+void AddAllRegisteredTrappingConcessions(AppDbContext context)
+{
+    if (!context.RegisteredTrappingConcessions.Any())
+    {
+        int[] registeredTrappingConcessions =
+        {
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            19,
+            20,
+            22
+        };
+        foreach (var area in registeredTrappingConcessions)
+        {
+            context.RegisteredTrappingConcessions.Add(
+                new RegisteredTrappingConcession { Area = area.ToString() }
+            );
+        }
+
+        context.SaveChanges();
+        Console.WriteLine("Added RTCs");
+    }
+    else
+    {
+        Console.WriteLine("RTCs already exist");
     }
 }
 

@@ -107,7 +107,7 @@
         {
             When(x => x.Age != null, () => {
                 RuleFor(x => x.Age!.Years).InclusiveBetween(0, 80);
-                RuleFor(x => x.Age.Confidence).NotEmpty().IsInEnum();
+                RuleFor(x => x.Age!.Confidence).NotEmpty().IsInEnum();
             });
         }
     }

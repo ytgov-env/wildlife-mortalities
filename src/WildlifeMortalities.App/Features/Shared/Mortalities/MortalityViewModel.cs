@@ -72,9 +72,9 @@ public class MortalityViewModel
 
     public bool IsDraft { get; set; }
 
-    public virtual Dictionary<string, string> GetProperties()
+    public virtual Dictionary<string, string?> GetProperties()
     {
-        var result = new Dictionary<string, string> { { "Sex", Sex!.GetDisplayName() } };
+        var result = new Dictionary<string, string?> { { "Sex", Sex?.GetDisplayName() } };
 
         if (DateOfDeath.HasValue)
         {

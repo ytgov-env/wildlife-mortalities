@@ -19,25 +19,27 @@
             <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
         }
     </MudSelect>
-
-    @switch (_vm.MortalityReportType)
-    {
-        case MortalityReportType.Conflict:
-            break;
-        case MortalityReportType.IndividualHunt:
-            <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
-            break;
-        case MortalityReportType.OutfitterGuidedHunt:
-            <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
-            break;
-        case MortalityReportType.SpecialGuidedHunt:
-            <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
-            break;
-        case MortalityReportType.Trapped:
-            break;
-        default:
-            throw new ArgumentOutOfRangeException();
-    }
+    <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="false">
+        @switch (_vm.MortalityReportType)
+        {
+            case MortalityReportType.Conflict:
+                break;
+            case MortalityReportType.IndividualHunt:
+                <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel" />
+                break;
+            case MortalityReportType.OutfitterGuidedHunt:
+                <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+                break;
+            case MortalityReportType.SpecialGuidedHunt:
+                <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel" MortalityReportType="@_vm.MortalityReportType"/>
+                break;
+            case MortalityReportType.Trapped:
+                <TrappedReportComponent ViewModel="@_vm.TrappedReportViewModel"/>
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    </CascadingValue>
 
     <MudPaper Elevation="0" Class="mt-4">
         <MudText Typo="Typo.h6">Signature</MudText>

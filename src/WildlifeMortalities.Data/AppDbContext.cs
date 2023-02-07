@@ -30,6 +30,8 @@ public class AppDbContext : DbContext
 
     public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
     public DbSet<OutfitterArea> OutfitterAreas => Set<OutfitterArea>();
+    public DbSet<RegisteredTrappingConcession> RegisteredTrappingConcessions =>
+        Set<RegisteredTrappingConcession>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

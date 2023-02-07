@@ -20,10 +20,15 @@ public class ActivityViewModel
 
 public class TrappedActivityViewModel : ActivityViewModel
 {
-    public TrappedActivity GetActivity()
-    {
-        throw new NotImplementedException();
-    }
+    public RegisteredTrappingConcession? RegisteredTrappingConcession { get; set; }
+
+    public TrappedActivity GetActivity() =>
+        new()
+        {
+            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
+            RegisteredTrappingConcessionId = RegisteredTrappingConcession?.Id ?? 0,
+            Comment = Comment
+        };
 }
 
 public class TrappedActivityViewModelValidator : AbstractValidator<TrappedActivityViewModel>

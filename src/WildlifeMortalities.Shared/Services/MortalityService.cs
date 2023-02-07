@@ -114,6 +114,15 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
+    public async Task CreateReport(TrappedMortalitiesReport report)
+    {
+        SetReportNavigationPropertyForMortalities(report);
+
+        using var context = _dbContextFactory.CreateDbContext();
+        context.Add(report);
+        await context.SaveChangesAsync();
+    }
+
     public async Task CreateDraftReport(string report, int personId)
     {
         var draftReport = new DraftReport
@@ -248,7 +257,9 @@ public class MortalityService : IMortalityService
             .ThenInclude(x => x.Mortality)
             .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.Mortality)
-            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Mortality);
+            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Mortality)
+            .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
+            .ThenInclude(x => x.Mortality);
 
     private static IQueryable<Report> GetReportsQuery(string? envClientId, AppDbContext context)
     {
@@ -285,6 +296,16 @@ public class MortalityService : IMortalityService
         using var context = _dbContextFactory.CreateDbContext();
 
         return await context.OutfitterAreas
+            .OrderBy(o => o.Area.Length)
+            .ThenBy(o => o.Area)
+            .ToArrayAsync();
+    }
+
+    public async Task<IEnumerable<RegisteredTrappingConcession>> GetRegisteredTrappingConcessions()
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        return await context.RegisteredTrappingConcessions
             .OrderBy(o => o.Area.Length)
             .ThenBy(o => o.Area)
             .ToArrayAsync();

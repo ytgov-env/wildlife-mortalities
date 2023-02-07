@@ -3,5 +3,5 @@
 public class RegisteredTrappingConcession
 {
     public int Id { get; set; }
-    public string Area { get; } = string.Empty;
+    public string Area { get; set; } = string.Empty;
 }

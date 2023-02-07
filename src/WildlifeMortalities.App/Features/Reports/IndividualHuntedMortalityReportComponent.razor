@@ -1,45 +1,19 @@
 @using Microsoft.EntityFrameworkCore
+@using WildlifeMortalities.App.Features.Reports.Activities
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data
 @using WildlifeMortalities.Data.Entities
 @using WildlifeMortalities.Shared.Services;
-<MortalityComponent ViewModel="ViewModel.HuntedActivityViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
-<MudTextField @bind-Value="ViewModel.HuntedActivityViewModel.Landmark" For="@(() => ViewModel.HuntedActivityViewModel.Landmark)" Label="Landmark" />
-<MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.HuntedActivityViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.HuntedActivityViewModel.GameManagementArea)"/>
-<MudTextField @bind-Value="ViewModel.HuntedActivityViewModel.Comment" For="@(() => ViewModel.HuntedActivityViewModel.Comment)" Label="Comment" Lines="4" />
 
+<CascadingValue Value="MortalityReportType.IndividualHunt" Name="@Constants.CascadingValues.MortalityReportType">
+    <ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel" />
+</CascadingValue>
 
 @code {
-
-    private List<GameManagementArea> _gameManagementAreas = new();
-
     [Parameter]
     [EditorRequired]
     public IndividualHuntedMortalityReportViewModel ViewModel { get; set; } = null!;
 
     [Parameter]
     public bool EditMode { get; set; } = false;
-
-    [Inject]
-    public IMortalityService MortalityService { get; set; }
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        var gameManagementAreas = await MortalityService.GetGameManagementAreas();
-        _gameManagementAreas.AddRange(gameManagementAreas);
-    }
-
-    [Parameter]
-    [EditorRequired]
-    public MortalityReportType MortalityReportType { get; set; }
-
-    private async Task<IEnumerable<GameManagementArea>> SearchGameManagementAreas(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return _gameManagementAreas;
-        return await Task.FromResult(_gameManagementAreas.Where(y => y.Area.StartsWith(value) || (y.Zone + y.Subzone).StartsWith(value)));
-    }
-
 }

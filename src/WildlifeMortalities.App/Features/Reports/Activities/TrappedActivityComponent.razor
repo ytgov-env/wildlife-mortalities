@@ -1,0 +1,30 @@
+@using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.Data.Entities;
+@using WildlifeMortalities.Shared.Services;
+
+<MudAutocomplete T="RegisteredTrappingConcession" Label="Registered Trapping Concession" @bind-Value="ViewModel.RegisteredTrappingConcession" SearchFunc="SearchRegisteredTrappingConcessions"
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a RTC" For="@(() => ViewModel.RegisteredTrappingConcession)" />
+
+@code {
+    private IEnumerable<RegisteredTrappingConcession> _registeredTrappingConcessions = Array.Empty<RegisteredTrappingConcession>();
+
+    [Parameter]
+    [EditorRequired]
+    public TrappedActivityViewModel ViewModel { get; set; } = null!;
+
+    [Inject]
+    public IMortalityService MortalityService { get; set; } = null!;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _registeredTrappingConcessions = await MortalityService.GetRegisteredTrappingConcessions();
+    }
+
+    private async Task<IEnumerable<RegisteredTrappingConcession>> SearchRegisteredTrappingConcessions(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return _registeredTrappingConcessions;
+        return await Task.FromResult(_registeredTrappingConcessions.Where(y => y.Area.StartsWith(value)));
+    }
+}

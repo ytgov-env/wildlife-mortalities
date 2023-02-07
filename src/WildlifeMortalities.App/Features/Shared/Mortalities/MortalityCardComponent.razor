@@ -5,14 +5,16 @@
 <MudCard Elevation="5" Class="flex-column d-flex" Style="height: 100%">
     <MudCardHeader>
         <CardHeaderContent>
+            @{
+                var mortalityName = MortalityViewModel.Species?.GetDisplayName();
+            }
             @if (MortalityViewModel.IsDraft == true)
             {
-                <MudText Typo="Typo.h6" Color="Color.Warning">Draft: @MortalityViewModel.Species!.Value.GetDisplayName()</MudText>
-
+                <MudText Typo="Typo.h6" Color="Color.Warning">Draft: @mortalityName </MudText>
             }
             else
             {
-                <MudText Typo="Typo.h6">@MortalityViewModel.Species!.Value.GetDisplayName()</MudText>
+                <MudText Typo="Typo.h6">@mortalityName</MudText>
             }
         </CardHeaderContent>
         <CardHeaderActions>
@@ -98,7 +100,8 @@
         }
         else
         {
-            var mortalityId = MortalityViewModel.Id!.Value;
+            // The id is set to zero when a biosubmission is created on a draft report
+            var mortalityId = MortalityViewModel.Id ?? 0;
             bioSubmission = MortalityViewModel.Species switch
             {
                 Species.AmericanBlackBear => new AmericanBlackBearBioSubmission(mortalityId),

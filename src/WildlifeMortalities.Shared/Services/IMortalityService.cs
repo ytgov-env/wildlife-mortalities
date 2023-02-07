@@ -33,4 +33,6 @@ public interface IMortalityService
     Task UpdateBioSubmission(BioSubmission bioSubmission);
     Task<IEnumerable<GameManagementArea>> GetGameManagementAreas();
     Task<IEnumerable<OutfitterArea>> GetOutfitterAreas();
+    Task<IEnumerable<RegisteredTrappingConcession>> GetRegisteredTrappingConcessions();
+    Task CreateReport(TrappedMortalitiesReport report);
 }

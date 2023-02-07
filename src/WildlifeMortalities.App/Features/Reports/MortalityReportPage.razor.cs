@@ -46,23 +46,25 @@ public partial class MortalityReportPage
         var typeBefore = _vm.MortalityReportType;
         _vm.MortalityReportType = type;
 
+        _vm.IndividualHuntedMortalityReportViewModel = null;
+        _vm.OutfitterGuidedHuntReportViewModel = null;
+        _vm.SpecialGuidedHuntReportViewModel = null;
+        _vm.TrappedReportViewModel = null;
+
         switch (type)
         {
             case MortalityReportType.IndividualHunt:
                 _vm.IndividualHuntedMortalityReportViewModel =
                     new IndividualHuntedMortalityReportViewModel();
-                _vm.OutfitterGuidedHuntReportViewModel = null;
-                _vm.SpecialGuidedHuntReportViewModel = null;
                 break;
             case MortalityReportType.OutfitterGuidedHunt:
-                _vm.IndividualHuntedMortalityReportViewModel = null;
                 _vm.OutfitterGuidedHuntReportViewModel = new OutfitterGuidedHuntReportViewModel();
-                _vm.SpecialGuidedHuntReportViewModel = null!;
                 break;
             case MortalityReportType.SpecialGuidedHunt:
-                _vm.IndividualHuntedMortalityReportViewModel = null;
-                _vm.OutfitterGuidedHuntReportViewModel = null;
                 _vm.SpecialGuidedHuntReportViewModel = new SpecialGuidedHuntReportViewModel();
+                break;
+            case MortalityReportType.Trapped:
+                _vm.TrappedReportViewModel = new TrappedReportViewModel();
                 break;
         }
     }
@@ -108,7 +110,11 @@ public partial class MortalityReportPage
                 break;
             }
             case MortalityReportType.Trapped:
+            {
+                var report = _vm.TrappedReportViewModel!.GetReport(personId);
+                await MortalityService.CreateReport(report);
                 break;
+            }
         }
 
         NavigationManager.NavigateTo($"reporters/clients/{EnvClientId}");

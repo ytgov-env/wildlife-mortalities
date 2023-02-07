@@ -32,6 +32,9 @@
                 case IndividualHuntedMortalityReport e:
                     <span>Individual hunt</span>
                     break;
+                case TrappedMortalitiesReport e:
+                    <span>Trapped</span>
+                    break;
             }
 
         </MudTd>
@@ -46,6 +49,9 @@
                     break;
                 case IndividualHuntedMortalityReport e:
                     <span>@e.GetMortality().Species.GetDisplayName()</span>
+                    break;
+                case TrappedMortalitiesReport e:
+                    <span>@string.Join(", ", e.TrappedActivities.Select(x => x.Mortality.Species.GetDisplayName()))</span>
                     break;
             }
         </MudTd>
