@@ -6,5 +6,6 @@ public static class Constants
     {
         public const string EditMode = "EditMode";
         public const string MortalityReportType = "MortalityReportType";
+        public const string HasAttemptedFormSubmission = "HasAttemptedFormSubmission";
     }
 }

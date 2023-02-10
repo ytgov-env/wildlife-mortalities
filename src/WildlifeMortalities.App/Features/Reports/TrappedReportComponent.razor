@@ -1,11 +1,9 @@
 @using WildlifeMortalities.App.Features.Reports.Activities
 
-<CascadingValue Value="MortalityReportType.Trapped" Name="@Constants.CascadingValues.MortalityReportType">
-    @foreach (var activity in ViewModel.TrappedActivityViewModels)
-    {
-        <ActivityComponent ViewModel="activity" />
-    }
-</CascadingValue>
+@foreach (var activity in ViewModel.TrappedActivityViewModels)
+{
+    <ActivityComponent ViewModel="activity" />
+}
 
 
 @code {
@@ -13,11 +11,9 @@
     [EditorRequired]
     public TrappedReportViewModel ViewModel { get; set; } = null!;
 
-    [Parameter]
-    public bool EditMode { get; set; } = false;
+    [CascadingParameter(Name = Constants.CascadingValues.MortalityReportType)]
+    public MortalityReportType MortalityReportType { get; set; }
 
-    protected override void OnInitialized()
-    {
-        ViewModel.TrappedActivityViewModels.Add(new TrappedActivityViewModel() { Comment = "blah" });
-    }
+    [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
+    public bool EditMode { get; set; } = false;
 }

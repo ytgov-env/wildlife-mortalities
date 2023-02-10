@@ -10,6 +10,6 @@ public enum HornMeasured
     [Display(Name = "Right horn")]
     RightHorn = 20,
 
-    [Display(Name = "Polled (hornless)")]
-    NoHornToMeasure = 30
+    [Display(Name = "No horn provided")]
+    NoHornProvided = 30
 }

@@ -7,7 +7,7 @@
 @namespace WildlifeMortalities.App.Features.Shared.Mortalities
 
 <MudSelect Disabled="@DisableSpeciesSelection" Placeholder="Select a species" T="Species?" Value="ViewModel.Species" ValueChanged="SpeciesChanged" For="@(() => ViewModel.Species)">
-    @foreach (var species in Enum.GetValues<Species>().Where(x => x.IsSelectable(ReportType)))
+    @foreach (var species in Enum.GetValues<Species>().Where(x => x.IsSelectable(MortalityReportType)))
     {
         <MudSelectItem Value="@species" T="Species?">@species.GetDisplayName()</MudSelectItem>
     }

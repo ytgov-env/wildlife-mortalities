@@ -10,9 +10,8 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public partial class MortalityComponent
 {
-    [Parameter]
-    [EditorRequired]
-    public MortalityReportType ReportType { get; set; }
+    [CascadingParameter(Name = Constants.CascadingValues.MortalityReportType)]
+    public MortalityReportType MortalityReportType { get; set; }
 
     [Parameter]
     public bool DisableSpeciesSelection { get; set; } = false;

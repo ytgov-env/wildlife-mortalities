@@ -5,13 +5,15 @@
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
-            Add report
+            Add mortality
         </MudText>
     </TitleContent>
     <DialogContent>
         <ValidationSummary />
             <FluentValidationValidator/>
-            <ActivityComponent ViewModel="_vm" MortalityReportType="ReportType"/>
+            <CascadingValue Value="MortalityReportType" Name="@Constants.CascadingValues.MortalityReportType">
+                <ActivityComponent ViewModel="_vm"/>
+            </CascadingValue>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -34,7 +36,8 @@
     private readonly HuntedActivityViewModel _vm = new();
 
     [Parameter]
-    public MortalityReportType ReportType { get; set; }
+    [EditorRequired]
+    public MortalityReportType MortalityReportType { get; set; }
 
     protected override void OnInitialized()
     {

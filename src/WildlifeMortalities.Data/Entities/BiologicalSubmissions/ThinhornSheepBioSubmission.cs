@@ -36,7 +36,10 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
         builder.OwnsMany(
             t => t.HornMeasurementEntries,
             ownedNavigationBuilder =>
-                ownedNavigationBuilder.ToJson("ThinhornSheepBioSubmission_HornMeasurementEntries")
+            {
+                ownedNavigationBuilder.Ignore(h => h.IsBroomed);
+                ownedNavigationBuilder.ToJson("ThinhornSheepBioSubmission_HornMeasurementEntries");
+            }
         );
         builder.Property(t => t.HornMeasured).IsRequired();
         builder.Property(t => t.BroomedStatus).IsRequired();

@@ -7,7 +7,7 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
 @using Microsoft.EntityFrameworkCore
-<MudDateRangePicker Editable="true" Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" />
+<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" />
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />
 
@@ -66,9 +66,11 @@
     [EditorRequired]
     public OutfitterGuidedHuntReportViewModel ViewModel { get; set; } = null!;
 
-    [Parameter]
-    [EditorRequired]
-    public MortalityReportType? MortalityReportType { get; set; }
+    [CascadingParameter(Name = Constants.CascadingValues.MortalityReportType)]
+    public MortalityReportType MortalityReportType { get; set; }
+
+    [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
+    public bool EditMode { get; set; } = false;
 
     [Inject]
     private IDialogService DialogService { get; set; } = null!;
@@ -116,7 +118,7 @@
     {
         var parameters = new DialogParameters
             {
-                [nameof(AddActivityDialog.ReportType)] = MortalityReportType
+                [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
             };
 
         var dialog = DialogService.Show<AddActivityDialog>("", parameters);
@@ -131,7 +133,8 @@
     {
         var parameters = new DialogParameters
             {
-                [nameof(EditActivityDialog.ViewModel)] = viewModel
+                [nameof(EditActivityDialog.ViewModel)] = viewModel,
+                [nameof(EditActivityDialog.MortalityReportType)] = MortalityReportType
             };
 
         var dialog = DialogService.Show<EditActivityDialog>("", parameters);

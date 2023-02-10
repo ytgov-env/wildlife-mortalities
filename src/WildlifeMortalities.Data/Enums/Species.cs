@@ -14,6 +14,7 @@ public class HasGameManagementAreaAttribute : Attribute { }
 
 public enum Species
 {
+    [IsTrappable]
     [Display(Name = "American beaver")]
     AmericanBeaver = 10,
 
@@ -24,12 +25,15 @@ public enum Species
     [Display(Name = "American black bear")]
     AmericanBlackBear = 20,
 
+    [IsTrappable]
     [Display(Name = "American martin")]
     AmericanMartin = 30,
 
+    [IsTrappable]
     [Display(Name = "American mink")]
     AmericanMink = 40,
 
+    [IsTrappable]
     [Display(Name = "Arctic fox")]
     ArcticFox = 50,
 
@@ -39,6 +43,7 @@ public enum Species
     [Display(Name = "Bushy-tailed woodrat")]
     BushyTailedWoodrat = 70,
 
+    [IsTrappable]
     [Display(Name = "Canada lynx")]
     CanadaLynx = 80,
 
@@ -58,6 +63,7 @@ public enum Species
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
+    [IsTrappable]
     [Display(Name = "Coyote")]
     Coyote = 120,
 
@@ -66,9 +72,11 @@ public enum Species
     [Display(Name = "Elk")]
     Elk = 130,
 
+    [IsTrappable]
     [Display(Name = "Ermine")]
     Ermine = 140,
 
+    [IsTrappable]
     [Display(Name = "Fisher")]
     Fisher = 150,
 
@@ -94,6 +102,7 @@ public enum Species
     [Display(Name = "Least chipmunk")]
     LeastChipmunk = 190,
 
+    [IsTrappable]
     [Display(Name = "Least weasel")]
     LeastWeasel = 200,
 
@@ -127,6 +136,7 @@ public enum Species
     [Display(Name = "Muskox")]
     Muskox = 270,
 
+    [IsTrappable]
     [Display(Name = "Muskrat")]
     Muskrat = 280,
 
@@ -142,6 +152,7 @@ public enum Species
     [Display(Name = "Northern long-eared bat")]
     NorthernLongEaredBat = 320,
 
+    [IsTrappable]
     [Display(Name = "Northern river otter")]
     NorthernRiverOtter = 330,
 
@@ -151,9 +162,11 @@ public enum Species
     [Display(Name = "Ptarmigan")]
     Ptarmigan = 341,
 
+    [IsTrappable]
     [Display(Name = "Red fox")]
     RedFox = 350,
 
+    [IsTrappable]
     [Display(Name = "Red squirrel")]
     RedSquirrel = 360,
 

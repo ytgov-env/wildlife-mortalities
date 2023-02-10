@@ -36,7 +36,10 @@ public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<Mountain
         builder.OwnsMany(
             t => t.HornMeasurementEntries,
             ownedNavigationBuilder =>
-                ownedNavigationBuilder.ToJson("MountainGoatBioSubmission_HornMeasurementEntries")
+            {
+                ownedNavigationBuilder.Ignore(h => h.IsBroomed);
+                ownedNavigationBuilder.ToJson("MountainGoatBioSubmission_HornMeasurementEntries");
+            }
         );
         builder.Property(m => m.HornMeasured).IsRequired();
         builder.Property(m => m.BroomedStatus).IsRequired();

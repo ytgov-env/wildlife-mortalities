@@ -20,6 +20,7 @@
             </MudText>
         </TitleContent>
         <DialogContent>
+            <CascadingValue Name="@Constants.CascadingValues.HasAttemptedFormSubmission" Value="HasAttemptedFormSubmission">
             @switch (BioSubmission)
             {
                 case AmericanBlackBearBioSubmission bioSubmission:
@@ -52,44 +53,71 @@
                 default:
                     throw new ArgumentException(nameof(BioSubmission));
             }
-            @if(BioSubmission.Age == null)
+            </CascadingValue>
+            @*Age is always visible for sheep and goat, as long as a horn was provided*@
+            @if(BioSubmission is IHasHornMeasurementEntries bioSubmission)
             {
-                <MudStack Row="true">
-                    <MudSpacer/>
-                    <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Cake" OnClick="(() => BioSubmission.Age = new Age())">Add age</MudButton>
-                    <MudSpacer />
-                </MudStack>
-            }
-            @if(BioSubmission.Age != null)
-            {
-                <MudStack Row="true">
-                    <MudSpacer/>
-                    <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Delete" OnClick="(() => BioSubmission.Age = null)">Remove age</MudButton>
-                    <MudSpacer />
-                </MudStack>
-                <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
-                <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
-                    @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+                @if(bioSubmission.HornMeasured is not HornMeasured.NoHornProvided){
+                    @if (BioSubmission.Age == null)
                     {
-                        <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+                        BioSubmission.Age = new();
                     }
-                </MudSelect>
+                    <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years" />
+                    <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+                        @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+                        {
+                            <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            } else
+            @*Age is optional for other species*@
+            {
+               @if(BioSubmission.Age == null)
+                {
+                    <MudStack Row="true">
+                        <MudSpacer/>
+                        <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Cake" OnClick="(() => BioSubmission.Age = new Age())">Add age</MudButton>
+                        <MudSpacer />
+                    </MudStack>
+                }
+                @if(BioSubmission.Age != null)
+                {
+                    <MudStack Row="true">
+                        <MudSpacer/>
+                        <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Delete" OnClick="(() => BioSubmission.Age = null)">Remove age</MudButton>
+                        <MudSpacer />
+                    </MudStack>
+                    <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
+                    <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+                        @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+                        {
+                            <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+                        }
+                    </MudSelect>
+                } 
             }
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton Color="Color.Error" ButtonType="ButtonType.Submit">Submit</MudButton>
+            <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="SubmitClicked">Submit</MudButton>
         </DialogActions>
     </MudDialog>
 </EditForm>
 
 @code {
+    private bool HasAttemptedFormSubmission = false;
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public BioSubmission BioSubmission { get; set; } = null!;
+
+    private void SubmitClicked()
+    {
+        HasAttemptedFormSubmission = true;
+    }
 
     private void Cancel()
     {
@@ -105,8 +133,13 @@
     {
         public BioSubmissionValidator()
         {
+            When(x => x is IHasHornMeasurementEntries bioSubmission && bioSubmission.HornMeasured != HornMeasured.NoHornProvided, () =>
+            {
+                RuleFor(x => x.Age).NotNull();
+                RuleFor(x => x.Age.Years).Equal(x => (x as IHasHornMeasurementEntries).HornMeasurementEntries.Last().Annulus);
+            });
             When(x => x.Age != null, () => {
-                RuleFor(x => x.Age!.Years).InclusiveBetween(0, 80);
+                RuleFor(x => x.Age!.Years).InclusiveBetween(1, 80);
                 RuleFor(x => x.Age!.Confidence).NotEmpty().IsInEnum();
             });
         }

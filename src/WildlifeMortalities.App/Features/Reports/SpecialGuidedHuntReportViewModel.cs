@@ -24,6 +24,10 @@ public class SpecialGuidedHuntReportViewModel
 
         var report = new SpecialGuidedHuntReport
         {
+            HuntStartDate = (DateTime)HuntingDateRange!.Start!,
+            HuntEndDate = (DateTime)HuntingDateRange.End!,
+            GuideId = Guide!.Id,
+            Result = Result!.Value,
             ClientId = personId,
             HuntedActivities = HuntedActivityViewModels.Select(x => x.GetActivity()).ToList()
         };
@@ -37,6 +41,7 @@ public class SpecialGuidedHuntReportViewModelValidator
 {
     public SpecialGuidedHuntReportViewModelValidator()
     {
+        RuleFor(x => x.HuntingDateRange).NotNull();
         RuleFor(x => x.Guide).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
     }

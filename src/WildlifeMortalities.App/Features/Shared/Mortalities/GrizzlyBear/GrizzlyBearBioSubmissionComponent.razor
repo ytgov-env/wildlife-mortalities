@@ -9,8 +9,11 @@
         <MudSelectItem T="GrizzlyBearSkullCondition?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-<MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly" />
-<MudNumericField Label="Skull height (mm)" Min="0" Max="1000" @bind-Value="BioSubmission.SkullHeightMillimetres" For="() => BioSubmission.SkullHeightMillimetres"  Disabled="IsReadOnly"/>
+@if (BioSubmission.SkullCondition is not GrizzlyBearSkullCondition.NoSkullSubmitted && BioSubmission.SkullCondition is not GrizzlyBearSkullCondition.Destroyed)
+{
+    <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly" />
+    <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly" />
+}
 <MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached" Disabled="IsReadOnly" />
 
 @code {
@@ -27,9 +30,11 @@
         public GrizzlyBearBioSubmissionValidator()
         {
             RuleFor(x => x.SkullCondition).NotEmpty().IsInEnum();
-    //Todo get correct min/max
-            RuleFor(x => x.SkullLengthMillimetres).GreaterThan(50).LessThan(1000);
-            RuleFor(x => x.SkullHeightMillimetres).GreaterThan(50).LessThan(1000);
+            When(x => x.SkullCondition != GrizzlyBearSkullCondition.NoSkullSubmitted && x.SkullCondition != GrizzlyBearSkullCondition.Destroyed, () =>
+            {
+                RuleFor(x => x.SkullLengthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
+                RuleFor(x => x.SkullWidthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
+            });
         }
     }
 

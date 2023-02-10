@@ -3,7 +3,7 @@
 @using WildlifeMortalities.Data
 @using WildlifeMortalities.Data.Entities
 
-<MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" ReportType="MortalityReportType" DisableSpeciesSelection="@(EditMode)"/>
+<MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" DisableSpeciesSelection="@(EditMode)"/>
 
 @switch (ViewModel)
 {
@@ -25,7 +25,4 @@
 
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
-
-    [CascadingParameter(Name = Constants.CascadingValues.MortalityReportType)]
-    public MortalityReportType MortalityReportType { get; set; }
 }

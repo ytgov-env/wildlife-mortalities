@@ -13,7 +13,7 @@ public class GrizzlyBearBioSubmission : BioSubmission<GrizzlyBearMortality>
 
     public GrizzlyBearSkullCondition? SkullCondition { get; set; }
     public int? SkullLengthMillimetres { get; set; }
-    public int? SkullHeightMillimetres { get; set; }
+    public int? SkullWidthMillimetres { get; set; }
     public bool IsEvidenceOfSexAttached { get; set; }
 }
 

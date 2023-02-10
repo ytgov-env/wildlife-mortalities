@@ -155,8 +155,7 @@ public class MortalityService : IMortalityService
         List<(int, BioSubmission)> bioSubmissions = new();
         foreach (var item in mortalities.OfType<IHasBioSubmission>())
         {
-            BioSubmission? bioSubmission = null;
-            bioSubmission = item switch
+            BioSubmission? bioSubmission = item switch
             {
                 AmericanBlackBearMortality
                     => await context.BioSubmissions
@@ -199,6 +198,20 @@ public class MortalityService : IMortalityService
 
             if (bioSubmission != null)
             {
+                if (bioSubmission is IHasHornMeasurementEntries submission)
+                {
+                    var firstAnnulusFound =
+                        submission.HornMeasurementEntries.FirstOrDefault()?.Annulus ?? 1;
+
+                    for (var annulus = 1; annulus < firstAnnulusFound; annulus++)
+                    {
+                        submission.HornMeasurementEntries.Insert(
+                            annulus - 1,
+                            new HornMeasurementEntry { IsBroomed = true, Annulus = annulus }
+                        );
+                    }
+                }
+
                 bioSubmissions.Add((item.Id, bioSubmission));
             }
         }
@@ -208,6 +221,25 @@ public class MortalityService : IMortalityService
 
     public async Task CreateBioSubmission(BioSubmission bioSubmission)
     {
+        if (bioSubmission is IHasHornMeasurementEntries submission)
+        {
+            if (submission.HornMeasured is HornMeasured.NoHornProvided)
+            {
+                submission.BroomedStatus = null;
+                submission.HornTipSpreadMillimetres = null;
+                submission.HornTotalLengthMillimetres = null;
+                submission.HornBaseCircumferenceMillimetres = null;
+                submission.HornMeasurementEntries.Clear();
+
+                if (submission is ThinhornSheepBioSubmission sub)
+                {
+                    sub.PlugNumber = string.Empty;
+                    sub.HornLengthToThirdAnnulusMillimetres = null;
+                }
+            }
+            submission.HornMeasurementEntries.RemoveAll(x => x.IsBroomed);
+        }
+
         using var context = _dbContextFactory.CreateDbContext();
 
         context.BioSubmissions.Add(bioSubmission);
@@ -216,6 +248,25 @@ public class MortalityService : IMortalityService
 
     public async Task UpdateBioSubmission(BioSubmission bioSubmission)
     {
+        if (bioSubmission is IHasHornMeasurementEntries submission)
+        {
+            if (submission.HornMeasured is HornMeasured.NoHornProvided)
+            {
+                submission.BroomedStatus = null;
+                submission.HornTipSpreadMillimetres = null;
+                submission.HornTotalLengthMillimetres = null;
+                submission.HornBaseCircumferenceMillimetres = null;
+                submission.HornMeasurementEntries.Clear();
+
+                if (submission is ThinhornSheepBioSubmission sub)
+                {
+                    sub.PlugNumber = string.Empty;
+                    sub.HornLengthToThirdAnnulusMillimetres = null;
+                }
+            }
+            submission.HornMeasurementEntries.RemoveAll(x => x.IsBroomed);
+        }
+
         using var context = _dbContextFactory.CreateDbContext();
 
         context.BioSubmissions.Update(bioSubmission);
@@ -253,11 +304,11 @@ public class MortalityService : IMortalityService
 
     private static IQueryable<Report> GetReportsIncludingMortalities(AppDbContext context) =>
         context.Reports
+            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Mortality)
             .Include(x => ((SpecialGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.Mortality)
             .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.Mortality)
-            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Mortality)
             .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
             .ThenInclude(x => x.Mortality);
 

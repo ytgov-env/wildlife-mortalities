@@ -5,15 +5,13 @@
 @using WildlifeMortalities.Data.Entities
 @using WildlifeMortalities.Shared.Services;
 
-<CascadingValue Value="MortalityReportType.IndividualHunt" Name="@Constants.CascadingValues.MortalityReportType">
-    <ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel" />
-</CascadingValue>
+<ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel" />
 
 @code {
     [Parameter]
     [EditorRequired]
     public IndividualHuntedMortalityReportViewModel ViewModel { get; set; } = null!;
 
-    [Parameter]
+    [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
 }
