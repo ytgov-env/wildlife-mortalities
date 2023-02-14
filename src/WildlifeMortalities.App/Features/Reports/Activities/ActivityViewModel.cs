@@ -106,24 +106,5 @@ public class HuntedActivityViewModelValidator : ActivityViewModelValidator<Hunte
     {
         RuleFor(x => x.Landmark).NotNull();
         RuleFor(x => x.GameManagementArea).NotNull();
-        RuleFor(x => x.Comment)
-            .Length(10, 1000)
-            .When(x => string.IsNullOrEmpty(x.Comment) == false);
-
-        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species)
-            .NotNull()
-            .WithMessage("Please select a species");
-
-        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
-            .NotNull()
-            .When(x => x.MortalityWithSpeciesSelectionViewModel.Species != null)
-            .SetInheritanceValidator(x =>
-            {
-                x.Add(new AmericanBlackBearMortalityViewModelValidator());
-                x.Add(new GrizzlyBearMortalityViewModelValidator());
-                x.Add(new ThinhornSheepViewModelValidator());
-                x.Add(new WoodBisonMortalityViewModelValidator());
-                x.Add(new MortalityViewModelValidator());
-            });
     }
 }
