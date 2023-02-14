@@ -3,10 +3,10 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 
-<MudSelect @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="() => BioSubmission.PeltColour" Disabled="IsReadOnly">
+<MudSelect T="PeltColour?" @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="() => BioSubmission.PeltColour" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<PeltColour>())
     {
-        <MudSelectItem Value="item">@item.GetDisplayName()</MudSelectItem>
+        <MudSelectItem T="PeltColour?" Value="item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
 

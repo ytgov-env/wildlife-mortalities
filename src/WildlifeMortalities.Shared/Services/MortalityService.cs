@@ -98,8 +98,8 @@ public class MortalityService : IMortalityService
     public async Task CreateReport(SpecialGuidedHuntReport report)
     {
         SetReportNavigationPropertyForMortalities(report);
-
         report.DateSubmitted = DateTimeOffset.Now;
+
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
         await context.SaveChangesAsync();
@@ -117,8 +117,22 @@ public class MortalityService : IMortalityService
     public async Task CreateReport(TrappedMortalitiesReport report)
     {
         SetReportNavigationPropertyForMortalities(report);
+        report.DateSubmitted = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
+
+        var concession = await context.RegisteredTrappingConcessions.FirstOrDefaultAsync(
+            x => x.Area == report.RegisteredTrappingConcession.Area
+        );
+        if (concession != null)
+        {
+            report.RegisteredTrappingConcession = concession;
+        }
+        else
+        {
+            throw new ArgumentException(nameof(report.RegisteredTrappingConcession));
+        }
+
         context.Add(report);
         await context.SaveChangesAsync();
     }
@@ -274,7 +288,7 @@ public class MortalityService : IMortalityService
     }
 
     // This method is required as the relationship fixup mechanism in EF Core does not handle this correctly
-    private void SetReportNavigationPropertyForMortalities(Report report)
+    private static void SetReportNavigationPropertyForMortalities(Report report)
     {
         foreach (var item in report.GetMortalities())
         {

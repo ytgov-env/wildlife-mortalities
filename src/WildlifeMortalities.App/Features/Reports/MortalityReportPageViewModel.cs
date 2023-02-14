@@ -38,5 +38,9 @@ public class MortalityReportPageViewModelValidator : AbstractValidator<Mortality
         RuleFor(x => x.SpecialGuidedHuntReportViewModel)
             .SetValidator(new SpecialGuidedHuntReportViewModelValidator())
             .When(x => x.MortalityReportType == MortalityReportType.SpecialGuidedHunt);
+
+        RuleFor(x => x.TrappedReportViewModel)
+            .SetValidator(new TrappedReportViewModelValidator())
+            .When(x => x.MortalityReportType == MortalityReportType.Trapped);
     }
 }

@@ -57,7 +57,10 @@
     <MudCardActions>
         <MudStack Row="true" Class="justify-right">
             <MudSpacer/>
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OnEditClicked" Color="Color.Primary" />
+            @if (EnableEdit == true)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OnEditClicked" Color="Color.Primary" />
+            }
             @if (EnableDelete == true)
             {
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="OnDeleteClicked" Color="Color.Error" />
@@ -73,6 +76,9 @@
 
     [Parameter]
     public bool EnableBioSubmission { get; set; } = true;
+
+    [Parameter]
+    public bool EnableEdit { get; set; } = false;
 
     [Parameter]
     public bool EnableDelete { get; set; } = false;
