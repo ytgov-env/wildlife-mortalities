@@ -1,0 +1,19 @@
+﻿.scrollable-dialog-parent:has(.scrollable-dialog) {
+    height: calc(100% - 64px);
+}
+
+.outline-none:has(.scrollable-dialog) {
+    height: 100%;
+}
+
+div:has(.scrollable-dialog) {
+    height: 100%;
+}
+
+div.mud-dialog-content:has(div.scrollable-dialog) {
+    height: calc(100% - 52.5px);
+    overflow: auto;
+}
+
+.scrollable-dialog {
+}

@@ -11,7 +11,7 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @inject ISnackbar Snackbar
-<EditForm OnValidSubmit="Create" Model="BioSubmission">
+<EditForm OnValidSubmit="Create" Model="BioSubmission" class="scrollable-dialog-parent">
     <FluentValidationValidator/>
     <MudDialog>
         <TitleContent>
@@ -20,6 +20,7 @@
             </MudText>
         </TitleContent>
         <DialogContent>
+            <div class="@(BioSubmission is IHasHornMeasurementEntries == true ? "scrollable-dialog" : "")">
             <CascadingValue Name="@Constants.CascadingValues.HasAttemptedFormSubmission" Value="HasAttemptedFormSubmission">
             @switch (BioSubmission)
             {
@@ -97,6 +98,7 @@
                     </MudSelect>
                 } 
             }
+            </div>
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -133,11 +135,7 @@
     {
         public BioSubmissionValidator()
         {
-            When(x => x is IHasHornMeasurementEntries bioSubmission && bioSubmission.HornMeasured != HornMeasured.NoHornProvided, () =>
-            {
-                RuleFor(x => x.Age).NotNull();
-                RuleFor(x => x.Age.Years).Equal(x => (x as IHasHornMeasurementEntries).HornMeasurementEntries.Last().Annulus);
-            });
+            
             When(x => x.Age != null, () => {
                 RuleFor(x => x.Age!.Years).InclusiveBetween(1, 80);
                 RuleFor(x => x.Age!.Confidence).NotEmpty().IsInEnum();
