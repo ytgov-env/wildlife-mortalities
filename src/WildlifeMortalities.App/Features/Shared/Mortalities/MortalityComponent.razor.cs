@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using WildlifeMortalities.App.Features.Reports;
 using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
+using WildlifeMortalities.App.Features.Shared.Mortalities.Elk;
 using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
 using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
 using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison;
@@ -42,6 +43,10 @@ public partial class MortalityComponent
         {
             case Species.AmericanBlackBear:
                 viewModel = new AmericanBlackBearMortalityViewModel();
+                break;
+
+            case Species.Elk:
+                viewModel = new ElkMortalityViewModel();
                 break;
 
             case Species.GrizzlyBear:

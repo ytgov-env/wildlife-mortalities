@@ -4,9 +4,7 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
 
 public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 {
-    public AmericanBlackBearMortalityViewModel() : base(Data.Enums.Species.AmericanBlackBear)
-    {
-    }
+    public AmericanBlackBearMortalityViewModel() : base(Data.Enums.Species.AmericanBlackBear) { }
 
     public bool IsShotInConflict { get; set; }
 
@@ -18,7 +16,7 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
         return mortality;
     }
 
-    public override Dictionary<string, string> GetProperties()
+    public override Dictionary<string, string?> GetProperties()
     {
         var result = base.GetProperties();
         result.Add("Was shot in conflict", IsShotInConflict.ToString());
@@ -28,6 +26,4 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 }
 
 public class AmericanBlackBearMortalityViewModelValidator
-    : MortalityViewModelBaseValidator<AmericanBlackBearMortalityViewModel>
-{
-}
+    : MortalityViewModelBaseValidator<AmericanBlackBearMortalityViewModel> { }

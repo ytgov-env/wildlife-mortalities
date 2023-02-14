@@ -1,5 +1,6 @@
 ﻿@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear
+@using WildlifeMortalities.App.Features.Shared.Mortalities.Elk
 @using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
@@ -21,6 +22,9 @@
         case AmericanBlackBearMortalityViewModel vm:
             <AmericanBlackBearMortalityComponent ViewModel="vm"/>
             break;
+        case ElkMortalityViewModel vm:
+            <ElkMortalityComponent ViewModel ="vm"/>
+            break;
         case GrizzlyBearMortalityViewModel vm:
             <GrizzlyBearMortalityComponent ViewModel="vm"/>
             break;
@@ -33,4 +37,5 @@
     }
 
     <BaseMortalityComponent ViewModel="ViewModel.MortalityViewModel"/>
+
 }

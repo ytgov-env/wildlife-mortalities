@@ -21,5 +21,9 @@ public class IndividualHuntedMortalityReportViewModel
 public class IndividualHuntedMortalityReportViewModelValidator
     : AbstractValidator<IndividualHuntedMortalityReportViewModel>
 {
-    public IndividualHuntedMortalityReportViewModelValidator() { }
+    public IndividualHuntedMortalityReportViewModelValidator()
+    {
+        RuleFor(x => x.HuntedActivityViewModel)
+            .SetValidator(new HuntedActivityViewModelValidator());
+    }
 }

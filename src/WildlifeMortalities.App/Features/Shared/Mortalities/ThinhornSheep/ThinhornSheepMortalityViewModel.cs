@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
@@ -25,14 +26,15 @@ public class ThinhornSheepMortalityViewModel : MortalityViewModel
     public override Dictionary<string, string?> GetProperties()
     {
         var result = base.GetProperties();
-        result.Add("Body colour", BodyColour?.ToString());
-        result.Add("Tail colour", TailColour?.ToString());
+        result.Add("Body colour", BodyColour?.GetDisplayName());
+        result.Add("Tail colour", TailColour?.GetDisplayName());
 
         return result;
     }
 }
 
-public class ThinhornSheepViewModelValidator : AbstractValidator<ThinhornSheepMortalityViewModel>
+public class ThinhornSheepViewModelValidator
+    : MortalityViewModelBaseValidator<ThinhornSheepMortalityViewModel>
 {
     public ThinhornSheepViewModelValidator()
     {

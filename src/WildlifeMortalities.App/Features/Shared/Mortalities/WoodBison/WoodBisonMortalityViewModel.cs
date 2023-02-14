@@ -32,7 +32,9 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
     }
 }
 
-public class WoodBisonMortalityViewModelValidator : AbstractValidator<WoodBisonMortalityViewModel>
+public class WoodBisonMortalityViewModelValidator
+    : MortalityViewModelBaseValidator<WoodBisonMortalityViewModel>
 {
-    public WoodBisonMortalityViewModelValidator() => RuleFor(x => x.PregnancyStatus).NotNull();
+    public WoodBisonMortalityViewModelValidator() =>
+        RuleFor(x => x.PregnancyStatus).NotNull().IsInEnum();
 }

@@ -1,5 +1,5 @@
 ﻿@using WildlifeMortalities.Data.Entities.Mortalities
-<MudSelect T="PregnancyStatus?" @bind-Value="@ViewModel.PregnancyStatus" Label="Pregnant" Placeholder="Pregnant?">
+<MudSelect T="PregnancyStatus?" @bind-Value="@ViewModel.PregnancyStatus" Label="Pregnant" Placeholder="Pregnant?" For="(() => ViewModel.PregnancyStatus)">
     @foreach (var item in Enum.GetValues<PregnancyStatus>())
     {
         <MudSelectItem T="PregnancyStatus?" Value="@item">@item</MudSelectItem>

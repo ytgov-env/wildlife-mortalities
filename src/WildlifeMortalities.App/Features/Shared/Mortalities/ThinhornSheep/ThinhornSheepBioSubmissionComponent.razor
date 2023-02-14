@@ -3,6 +3,8 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 
+
+
 <MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<HornMeasured>())
     {
@@ -38,11 +40,12 @@
                     <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@(() => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" />
                 @if (ShowAnnuliBroomedCheckbox(item))
                     {
-                        @if (AnnuliCanBeBroomed(item) && BioSubmission.HornMeasurementEntries.First().Equals(item))
+                        @if (BioSubmission.HornMeasurementEntries.First().Equals(item))
                         {
                             item.IsBroomed = true;
                         }
-                        <MudCheckBox Label="Broomed" @bind-Checked="@item.IsBroomed" @bind-Checked:after="(() => ResetHornMeasurementEntryValues(item))" Disabled="(BioSubmission.HornMeasurementEntries.First().Equals(item) || BioSubmission.HornMeasurementEntries.Last().Equals(item) == false)" />
+                        <MudCheckBox Label="Broomed" @bind-Checked="@item.IsBroomed" @bind-Checked:after="(() => ResetHornMeasurementEntryValues(item))"
+                         Disabled="IsAnnuliBroomedCheckboxDisabled(item)" />
                     }
                 @if (item == BioSubmission.HornMeasurementEntries.Last())
                 {
@@ -105,12 +108,41 @@
         {
             return true;
         }
+
+        if (entries.Last() == entry)
+        {
+            return false;
+        }
         // Show checkbox if the previous annulus was missing AND (this is the last annulus OR the annulus was marked as missing)
-        if (entries[BioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed == true && (entries.Last().Equals(entry) || entry.IsBroomed == true))
+        if (entries[BioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed == true)
         {
             return true;
         }
+
         return false;
+    }
+
+    private bool IsAnnuliBroomedCheckboxDisabled(HornMeasurementEntry entry)
+    {
+        var entries = BioSubmission.HornMeasurementEntries;
+
+        if (entries.First().Equals(entry)) { return true; }
+
+        var lastBroomedEntry = entries.Where(x => x.IsBroomed).Last();
+        var lastBroomedIndex = entries.IndexOf(lastBroomedEntry);
+        var currentItemIndex = entries.IndexOf(entry);
+
+        if (currentItemIndex == lastBroomedIndex && entry.IsBroomed == true)
+        {
+            return false;
+        }
+
+        if(currentItemIndex == lastBroomedIndex + 1)
+        {
+            return false;
+        }
+
+        return  true;
     }
 
     private void ResetHornMeasurementEntryValues(HornMeasurementEntry entry)
@@ -146,10 +178,12 @@
             RuleFor(x => x.HornMeasured).NotEmpty().IsInEnum();
             When(x => x.HornMeasured != HornMeasured.NoHornProvided, () =>
             {
+                RuleFor(x => x.Age).NotNull();
                 RuleFor(x => x.BroomedStatus).NotEmpty().IsInEnum();
                 RuleFor(x => x.PlugNumber).NotEmpty();
                 RuleFor(x => x.HornLengthToThirdAnnulusMillimetres).GreaterThan(50).LessThan(1000);
                 RuleFor(x => x.HornMeasurementEntries).NotEmpty();
+                RuleFor(x => x.Age!.Years).Equal(x => x.HornMeasurementEntries.Last().Annulus).When(x => x.Age != null && x.HornMeasurementEntries.Any() == true);
                 RuleForEach(x => x.HornMeasurementEntries).SetValidator(x => new HornMeasurementEntryValidator(x));
             });
         }

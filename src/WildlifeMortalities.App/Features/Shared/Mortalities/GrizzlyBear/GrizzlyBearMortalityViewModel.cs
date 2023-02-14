@@ -4,9 +4,7 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
 
 public class GrizzlyBearMortalityViewModel : MortalityViewModel
 {
-    public GrizzlyBearMortalityViewModel() : base(Data.Enums.Species.GrizzlyBear)
-    {
-    }
+    public GrizzlyBearMortalityViewModel() : base(Data.Enums.Species.GrizzlyBear) { }
 
     public bool IsShotInConflict { get; set; }
 
@@ -18,7 +16,7 @@ public class GrizzlyBearMortalityViewModel : MortalityViewModel
         return mortality;
     }
 
-    public override Dictionary<string, string> GetProperties()
+    public override Dictionary<string, string?> GetProperties()
     {
         var result = base.GetProperties();
         result.Add("Was shot in conflict", IsShotInConflict.ToString());
@@ -28,6 +26,4 @@ public class GrizzlyBearMortalityViewModel : MortalityViewModel
 }
 
 public class GrizzlyBearMortalityViewModelValidator
-    : MortalityViewModelBaseValidator<GrizzlyBearMortalityViewModel>
-{
-}
+    : MortalityViewModelBaseValidator<GrizzlyBearMortalityViewModel> { }

@@ -12,9 +12,6 @@ public class IndividualHuntedMortalityReport : Report, ISingleMortalityReport, I
     public DateTimeOffset DateStarted { get; set; }
     public DateTimeOffset DateCompleted { get; set; }
     public HuntedActivity HuntedActivity { get; set; } = null!;
-
-    // Todo add status resolution logic
-    public HuntedMortalityReportStatus Status { get; set; } = HuntedMortalityReportStatus.Complete;
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 

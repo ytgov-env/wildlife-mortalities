@@ -2,8 +2,6 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
-using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
 
@@ -71,10 +69,14 @@ public partial class MortalityReportPage
 
     private async Task CreateDraftReport()
     {
-        var personId = _personId!.Value;
-        var content = JsonSerializer.Serialize(_vm);
+        if (_editContext.GetValidationMessages().Any())
+        {
+            var personId = _personId!.Value;
+            var content = JsonSerializer.Serialize(_vm);
 
-        await MortalityService.CreateDraftReport(content, personId);
+            await MortalityService.CreateDraftReport(content, personId);
+            NavigationManager.NavigateTo($"reporters/clients/{EnvClientId}");
+        }
     }
 
     private async Task CreateReport()
