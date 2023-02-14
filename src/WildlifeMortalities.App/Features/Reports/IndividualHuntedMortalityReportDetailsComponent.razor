@@ -1,7 +1,7 @@
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @code {
-
     [Parameter]
-    public IndividualHuntedMortalityReport Report { get; set; }
+    [EditorRequired]
+    public IndividualHuntedMortalityReport Report { get; set; } = null!;
 
 }

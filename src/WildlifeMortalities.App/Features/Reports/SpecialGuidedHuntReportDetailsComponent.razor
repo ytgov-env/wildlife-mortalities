@@ -2,6 +2,7 @@
 @code {
 
     [Parameter]
-    public SpecialGuidedHuntReport Report { get; set; }
+    [EditorRequired]
+    public SpecialGuidedHuntReport Report { get; set; } = null!;
 
 }

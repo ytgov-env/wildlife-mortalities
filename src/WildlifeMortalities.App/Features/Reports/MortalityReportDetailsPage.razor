@@ -26,6 +26,10 @@
         <MudText Typo="Typo.h3" Class="mb-8">Special guided hunt report</MudText>
         <SpecialGuidedHuntReportDetailsComponent Report="@report"/>
         break;
+    case TrappedMortalitiesReport report:
+        <MudText Typo="Typo.h3" Class="mb-8">Trapped report</MudText>
+        <TrappedReportDetailsComponent Report="@report" />
+        break;
 }
 <MudGrid>
     @foreach (var item in _reportDetail.report.GetMortalities())
