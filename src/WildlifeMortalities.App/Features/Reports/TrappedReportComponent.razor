@@ -1,12 +1,32 @@
 @using WildlifeMortalities.App.Features.Reports.Activities
+@using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.Data.Entities;
+@using WildlifeMortalities.Shared.Services;
 
-@foreach (var activity in ViewModel.TrappedActivityViewModels)
-{
-    <ActivityComponent ViewModel="activity" />
-}
+<MudAutocomplete T="RegisteredTrappingConcession" Label="Registered Trapping Concession" @bind-Value="ViewModel.RegisteredTrappingConcession" SearchFunc="SearchRegisteredTrappingConcessions"
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a RTC" For="@(() => ViewModel.RegisteredTrappingConcession)" />
+
+<MudGrid Class="my-3">
+        @foreach (var item in ViewModel.TrappedActivityViewModels)
+        {
+            <MudItem md="2" xs="6">
+                <MortalityCardComponent EnableBioSubmission="false"
+                                OnEditClicked="@(() => Edit(item))" EnableDelete="true"
+                                MortalityViewModel="item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel"
+                                OnDeleteClicked="@(() => Delete(item))" />
+            </MudItem>
+        }
+    </MudGrid>
+    <MudStack Row="true">
+        <MudSpacer />
+        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
+        <MudSpacer />
+    </MudStack>
 
 
 @code {
+    private IEnumerable<RegisteredTrappingConcession> _registeredTrappingConcessions = Array.Empty<RegisteredTrappingConcession>();
+
     [Parameter]
     [EditorRequired]
     public TrappedReportViewModel ViewModel { get; set; } = null!;
@@ -16,4 +36,55 @@
 
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
+
+    [Inject]
+    private IDialogService DialogService { get; set; } = null!;
+
+    [Inject]
+    public IMortalityService MortalityService { get; set; } = null!;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _registeredTrappingConcessions = await MortalityService.GetRegisteredTrappingConcessions();
+    }
+
+    private async Task Add()
+    {
+        var parameters = new DialogParameters
+            {
+                [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
+            };
+
+        var dialog = DialogService.Show<AddActivityDialog>("", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            ViewModel.TrappedActivityViewModels.Add(result.Data as TrappedActivityViewModel);
+        }
+    }
+
+    private async Task Edit(TrappedActivityViewModel viewModel)
+    {
+        var parameters = new DialogParameters
+            {
+                [nameof(EditActivityDialog.ViewModel)] = viewModel,
+                [nameof(EditActivityDialog.MortalityReportType)] = MortalityReportType
+            };
+
+        var dialog = DialogService.Show<EditActivityDialog>("", parameters);
+        var result = await dialog.Result;
+    }
+
+    private void Delete(TrappedActivityViewModel viewModel)
+    {
+        ViewModel.TrappedActivityViewModels.Remove(viewModel);
+    }
+
+    private async Task<IEnumerable<RegisteredTrappingConcession>> SearchRegisteredTrappingConcessions(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return _registeredTrappingConcessions;
+        return await Task.FromResult(_registeredTrappingConcessions.Where(y => y.Area.StartsWith(value)));
+    }
 }

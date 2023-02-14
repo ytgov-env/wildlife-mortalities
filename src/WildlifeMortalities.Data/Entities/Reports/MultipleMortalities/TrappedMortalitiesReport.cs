@@ -11,6 +11,8 @@ public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport, IHas
     public List<TrappedActivity> TrappedActivities { get; set; } = null!;
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
+    public int RegisteredTrappingConcessionId { get; set; }
+    public RegisteredTrappingConcession RegisteredTrappingConcession { get; set; } = null!;
 
     public IEnumerable<Mortality> GetMortalities() =>
         TrappedActivities.Select(x => x.Mortality).ToArray();

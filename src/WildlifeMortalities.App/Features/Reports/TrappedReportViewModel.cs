@@ -1,10 +1,12 @@
-﻿using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+﻿using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
 public class TrappedReportViewModel
 {
     public List<TrappedActivityViewModel> TrappedActivityViewModels { get; set; } = new();
+    public RegisteredTrappingConcession? RegisteredTrappingConcession { get; set; }
 
     public TrappedMortalitiesReport GetReport(int personId)
     {
