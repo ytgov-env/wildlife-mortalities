@@ -5,7 +5,7 @@ namespace WildlifeMortalities.App.Features.Reporters;
 
 public class SelectConservationOfficerViewModel
 {
-    public ConservationOfficer SelectedConservationOfficer { get; set; } = default!;
+    public ConservationOfficer? SelectedConservationOfficer { get; set; }
 }
 
 public class SelectConservationOfficerViewModelValidator
