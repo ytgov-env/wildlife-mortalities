@@ -6,6 +6,8 @@ using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
 using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
 using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
 using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison;
+using FluentValidation.Validators;
+using WildlifeMortalities.App.Features.Shared.Mortalities.Elk;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
@@ -32,8 +34,42 @@ public class TrappedActivityViewModel : ActivityViewModel
 }
 
 public class TrappedActivityViewModelValidator : AbstractValidator<TrappedActivityViewModel>
+public class ActivityViewModelValidator<T> : AbstractValidator<T> where T : ActivityViewModel
 {
-    public TrappedActivityViewModelValidator() { }
+    public ActivityViewModelValidator()
+    {
+        RuleFor(x => x.Comment)
+            .Length(10, 1000)
+            .When(x => string.IsNullOrEmpty(x.Comment) == false);
+
+        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species)
+            .NotNull()
+            .WithMessage("Please select a species");
+
+        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
+            .NotNull()
+            .When(x => x.MortalityWithSpeciesSelectionViewModel.Species != null)
+            .SetInheritanceValidator(x =>
+            {
+                //x.AddMortalityValidators();
+                // Todo replace explicit adds with reflection
+                x.Add(new AmericanBlackBearMortalityViewModelValidator());
+                x.Add(new ElkMortalityViewModelValidator());
+                x.Add(new GrizzlyBearMortalityViewModelValidator());
+                x.Add(new ThinhornSheepViewModelValidator());
+                x.Add(new WoodBisonMortalityViewModelValidator());
+                x.Add(new MortalityViewModelValidator());
+            });
+    }
+}
+
+public class TrappedActivityViewModelValidator
+    : ActivityViewModelValidator<TrappedActivityViewModel>
+{
+    public TrappedActivityViewModelValidator()
+{
+        RuleFor(x => x.RegisteredTrappingConcession).NotEmpty();
+    }
 }
 
 public class HuntedActivityViewModel : ActivityViewModel
@@ -64,7 +100,7 @@ public class HuntedActivityViewModel : ActivityViewModel
         };
 }
 
-public class HuntedActivityViewModelValidator : AbstractValidator<HuntedActivityViewModel>
+public class HuntedActivityViewModelValidator : ActivityViewModelValidator<HuntedActivityViewModel>
 {
     public HuntedActivityViewModelValidator()
     {

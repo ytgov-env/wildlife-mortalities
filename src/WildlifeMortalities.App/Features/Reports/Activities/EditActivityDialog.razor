@@ -1,6 +1,7 @@
 ﻿@implements IDisposable
 
 <EditForm EditContext="_context" OnInvalidSubmit="@( () => _invalidSubmissionDetected = true)" OnValidSubmit="Edit">
+    <FluentValidationValidator />
 
 <MudDialog>
     <TitleContent>
@@ -9,8 +10,6 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <ValidationSummary />
-            <FluentValidationValidator/>
             <CascadingValue Name="@Constants.CascadingValues.MortalityReportType" Value="MortalityReportType">
                 <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="true">
                     <ActivityComponent ViewModel="ViewModel"/>
@@ -35,7 +34,7 @@
     MudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
-    public HuntedActivityViewModel ViewModel { get; set; } = null!;
+    public ActivityViewModel ViewModel { get; set; } = null!;
 
     [Parameter]
     [EditorRequired]

@@ -9,11 +9,10 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <ValidationSummary />
-            <FluentValidationValidator/>
-            <CascadingValue Value="MortalityReportType" Name="@Constants.CascadingValues.MortalityReportType">
-                <ActivityComponent ViewModel="_vm"/>
-            </CascadingValue>
+        <FluentValidationValidator/>
+        <CascadingValue Value="MortalityReportType" Name="@Constants.CascadingValues.MortalityReportType">
+            <ActivityComponent ViewModel="_vm"/>
+        </CascadingValue>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -33,7 +32,7 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = null!;
 
-    private readonly HuntedActivityViewModel _vm = new();
+    private ActivityViewModel _vm = null!;
 
     [Parameter]
     [EditorRequired]
@@ -41,6 +40,12 @@
 
     protected override void OnInitialized()
     {
+        _vm = MortalityReportType switch
+        {
+            MortalityReportType.Trapped => new TrappedActivityViewModel(),
+            MortalityReportType.IndividualHunt or MortalityReportType.SpecialGuidedHunt or MortalityReportType.OutfitterGuidedHunt => new HuntedActivityViewModel(),
+            _ => throw new NotImplementedException()
+        };
         _context = new EditContext(_vm);
         _context.OnFieldChanged += OnFieldChanged;
         base.OnInitialized();
