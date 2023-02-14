@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -10,23 +11,33 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public class MortalityViewModel
 {
-    private static readonly Dictionary<Species, Func<Mortality>> s_mortalityFactory =
-        new()
+    private static readonly Dictionary<Species, Func<Mortality>> s_mortalityFactory = new();
+
+    static MortalityViewModel()
+    {
+        var mortalityType = typeof(Mortality);
+        var relevantAssembly = mortalityType.Assembly;
+        var allTypes = relevantAssembly.GetTypes();
+
+        foreach (var item in allTypes)
         {
-            { Data.Enums.Species.AmericanBlackBear, () => new AmericanBlackBearMortality() },
-            { Data.Enums.Species.Caribou, () => new CaribouMortality() },
-            { Data.Enums.Species.Coyote, () => new CoyoteMortality() },
-            { Data.Enums.Species.Elk, () => new ElkMortality() },
-            { Data.Enums.Species.GreyWolf, () => new GreyWolfMortality() },
-            { Data.Enums.Species.GrizzlyBear, () => new GrizzlyBearMortality() },
-            { Data.Enums.Species.Moose, () => new MooseMortality() },
-            { Data.Enums.Species.MountainGoat, () => new MountainGoatMortality() },
-            { Data.Enums.Species.MuleDeer, () => new MuleDeerMortality() },
-            { Data.Enums.Species.ThinhornSheep, () => new ThinhornSheepMortality() },
-            { Data.Enums.Species.WhiteTailedDeer, () => new WhiteTailedDeerMortality() },
-            { Data.Enums.Species.Wolverine, () => new WolverineMortality() },
-            { Data.Enums.Species.WoodBison, () => new WoodBisonMortality() }
-        };
+            if (!item.IsSubclassOf(mortalityType))
+            {
+                continue;
+            }
+
+            var defaultConstructor = item.GetConstructor(Array.Empty<Type>());
+            if (defaultConstructor == null)
+            {
+                continue;
+            }
+
+            var instance = (Mortality)defaultConstructor.Invoke(null);
+            var species = instance.Species;
+
+            s_mortalityFactory.Add(species, () => (Mortality)defaultConstructor.Invoke(null));
+        }
+    }
 
     private readonly Mortality? _existingMortality;
 
