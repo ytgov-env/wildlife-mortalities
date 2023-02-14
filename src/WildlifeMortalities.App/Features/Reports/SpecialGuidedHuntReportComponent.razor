@@ -4,7 +4,7 @@
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
-<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" />
+<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="(() => ViewModel.HuntingDateRange.Start)"/>
 
 <MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="Client" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"

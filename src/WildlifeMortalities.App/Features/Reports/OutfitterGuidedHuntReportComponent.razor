@@ -7,7 +7,7 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
 @using Microsoft.EntityFrameworkCore
-<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" />
+<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="(() => ViewModel.HuntingDateRange.Start)" />
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />
 

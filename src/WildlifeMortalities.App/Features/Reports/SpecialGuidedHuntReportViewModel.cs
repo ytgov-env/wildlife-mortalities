@@ -8,7 +8,7 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class SpecialGuidedHuntReportViewModel
 {
-    public DateRange? HuntingDateRange { get; set; }
+    public DateRange HuntingDateRange { get; set; } = new DateRange();
     public Client? Guide { get; set; }
     public GuidedHuntResult? Result { get; set; }
 
@@ -41,8 +41,23 @@ public class SpecialGuidedHuntReportViewModelValidator
 {
     public SpecialGuidedHuntReportViewModelValidator()
     {
-        RuleFor(x => x.HuntingDateRange).NotNull();
+        RuleFor(x => x.HuntingDateRange.Start)
+            .NotNull()
+            .WithMessage("Please enter the hunting dates");
         RuleFor(x => x.Guide).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
+        //RuleForEach(report => report.HuntedActivityViewModels)
+        //    .Must(
+        //        (report, activity) =>
+        //            activity.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.DateOfDeath
+        //                >= report.HuntingDateRange.Start
+        //            && activity
+        //                .MortalityWithSpeciesSelectionViewModel
+        //                .MortalityViewModel
+        //                .DateOfDeath <= report.HuntingDateRange.End
+        //    )
+        //    .WithMessage(
+        //        "The date of death for each mortality must be between the specified hunting dates"
+        //    );
     }
 }

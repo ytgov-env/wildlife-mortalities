@@ -9,7 +9,7 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class OutfitterGuidedHuntReportViewModel
 {
-    public DateRange? HuntingDateRange { get; set; }
+    public DateRange HuntingDateRange { get; set; } = new();
     public Client? SelectedGuide { get; set; }
     public List<Client> Guides { get; set; } = new();
     public OutfitterArea? OutfitterArea { get; set; }
@@ -45,7 +45,9 @@ public class OutfitterGuidedHuntReportViewModelValidator
 {
     public OutfitterGuidedHuntReportViewModelValidator()
     {
-        RuleFor(x => x.HuntingDateRange).NotNull();
+        RuleFor(x => x.HuntingDateRange.Start)
+            .NotNull()
+            .WithMessage("Please enter the hunting dates");
         RuleFor(x => x.Guides).NotEmpty();
         RuleFor(x => x.OutfitterArea).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
