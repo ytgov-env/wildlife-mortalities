@@ -10,6 +10,7 @@ Log.Logger = new LoggerConfiguration().MinimumLevel
     .Override("Microsoft", LogEventLevel.Information)
     .Enrich.FromLogContext()
     .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341")
     .CreateBootstrapLogger();
 
 try
@@ -33,6 +34,7 @@ try
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
     builder.Services.AddMudServices();
+    builder.Services.AddLocalization();
 
     // builder.Services.AddHostedService<PosseSyncService>();
     // builder.Services.AddHttpClient<IPosseClientService, PosseClientService>(client =>
@@ -158,6 +160,7 @@ try
     app.UseHttpsRedirection();
     app.UseStaticFiles();
     app.UseRouting();
+    app.UseRequestLocalization("en-CA");
 
     app.UseCookiePolicy();
     app.UseAuthentication();
@@ -165,6 +168,17 @@ try
 
     app.MapBlazorHub();
     app.MapFallbackToPage("/_Host");
+
+    Log.Logger = new LoggerConfiguration().MinimumLevel
+        .Override("Default", LogEventLevel.Information)
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+#if DEBUG
+        .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
+        .WriteTo.Console()
+#endif
+        .WriteTo.Seq(configuration["Seq:Url"])
+        .CreateLogger();
 
     app.Run();
     return 0;
