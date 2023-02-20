@@ -1,4 +1,5 @@
 ﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
@@ -8,7 +9,7 @@
             @{
                 var mortalityName = MortalityViewModel.Species?.GetDisplayName();
             }
-            @if (MortalityViewModel.IsDraft == true)
+            @if (MortalityViewModel.IsDraft)
             {
                 <MudText Typo="Typo.h6" Color="Color.Warning">Draft: @mortalityName </MudText>
             }
@@ -18,7 +19,7 @@
             }
         </CardHeaderContent>
         <CardHeaderActions>
-            @if (EnableBioSubmission == true && MortalityViewModel.GetMortality() is IHasBioSubmission)
+            @if (EnableBioSubmission && MortalityViewModel.GetMortality() is IHasBioSubmission)
             {
                 <MudButton Color="Color.Default" OnClick="() => OpenBioSubmissionDialog()" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
             }
@@ -42,14 +43,19 @@
                     <MudField DisableUnderLine="true" Label="@property.Key">@property.Value</MudField>
                 }
             }
-            @if (MortalityViewModel.Landmark is not null && MortalityViewModel.Comment is not null)
+            <MudField DisableUnderLine="true" Label="Comment">@ActivityViewModel.Comment</MudField>
+            @switch (ActivityViewModel)
             {
-                <MudField DisableUnderLine="true" Label="Landmark">@MortalityViewModel.Landmark</MudField>
-                <MudField DisableUnderLine="true" Label="Comment">@MortalityViewModel.Comment</MudField>
+                case HuntedActivityViewModel vm:
+                    <MudField DisableUnderLine="true" Label="Landmark">@vm.Landmark</MudField>
+                    <MudField DisableUnderLine="true" Label="Game management area">@vm.GameManagementArea.Area</MudField>
+                    break;
+                case TrappedActivityViewModel vm:
+                    break;
             }
         </MudStack>
         <MudSpacer/>
-        @if(MortalityViewModel.GetMortality() is IHasBioSubmission)
+        @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
         {
             <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.ExistingBioSubmission"/>
         }
@@ -57,13 +63,13 @@
     <MudCardActions>
         <MudStack Row="true" Class="justify-right">
             <MudSpacer/>
-            @if (EnableEdit == true)
+            @if (EnableEdit)
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OnEditClicked" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OnEditClicked" Color="Color.Primary"/>
             }
-            @if (EnableDelete == true)
+            @if (EnableDelete)
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="OnDeleteClicked" Color="Color.Error" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="OnDeleteClicked" Color="Color.Error"/>
             }
         </MudStack>
     </MudCardActions>
@@ -72,7 +78,9 @@
 @code {
 
     [Parameter]
-    public MortalityViewModel MortalityViewModel { get; set; } = null!;
+    public ActivityViewModel ActivityViewModel { get; set; } = null!;
+
+    public MortalityViewModel MortalityViewModel => ActivityViewModel.MortalityWithSpeciesSelectionViewModel.MortalityViewModel;
 
     [Parameter]
     public bool EnableBioSubmission { get; set; } = true;
@@ -106,7 +114,7 @@
         }
         else
         {
-            // The id is set to zero when a biosubmission is created on a draft report
+    // The id is set to zero when a biosubmission is created on a draft report
             var mortalityId = MortalityViewModel.Id ?? 0;
             bioSubmission = MortalityViewModel.Species switch
             {
