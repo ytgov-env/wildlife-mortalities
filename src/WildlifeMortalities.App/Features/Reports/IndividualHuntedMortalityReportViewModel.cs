@@ -7,23 +7,18 @@ public class IndividualHuntedMortalityReportViewModel
 {
     public HuntedActivityViewModel HuntedActivityViewModel { get; set; } = new();
 
-    public IndividualHuntedMortalityReport GetReport(int personId)
-    {
-        return new IndividualHuntedMortalityReport()
+    public IndividualHuntedMortalityReport GetReport(int personId) =>
+        new()
         {
-            HuntedActivity = HuntedActivityViewModel.GetActivity(),
-            ClientId = personId
+            HuntedActivity = HuntedActivityViewModel.GetActivity(), ClientId = personId
             // Todo add date logic
         };
-    }
 }
 
 public class IndividualHuntedMortalityReportViewModelValidator
     : AbstractValidator<IndividualHuntedMortalityReportViewModel>
 {
-    public IndividualHuntedMortalityReportViewModelValidator()
-    {
+    public IndividualHuntedMortalityReportViewModelValidator() =>
         RuleFor(x => x.HuntedActivityViewModel)
             .SetValidator(new HuntedActivityViewModelValidator());
-    }
 }

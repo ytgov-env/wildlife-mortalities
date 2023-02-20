@@ -47,9 +47,15 @@ public class OutfitterGuidedHuntReportViewModelValidator
     {
         RuleFor(x => x.HuntingDateRange.Start)
             .NotNull()
-            .WithMessage("Please enter the hunting dates");
+            .WithMessage("Please enter the hunting dates.");
+        RuleFor(x => x.HuntingDateRange.End)
+            .Must(x => x <= DateTimeOffset.Now)
+            .WithMessage("The hunting dates cannot be in the future.");
         RuleFor(x => x.Guides).NotEmpty();
         RuleFor(x => x.OutfitterArea).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
+        RuleFor(x => x.HuntedActivityViewModels)
+            .NotEmpty()
+            .When(x => x.Result is GuidedHuntResult.WentHuntingAndKilledWildlife);
     }
 }

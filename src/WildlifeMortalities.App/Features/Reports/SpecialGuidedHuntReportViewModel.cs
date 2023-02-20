@@ -8,7 +8,7 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class SpecialGuidedHuntReportViewModel
 {
-    public DateRange HuntingDateRange { get; set; } = new DateRange();
+    public DateRange HuntingDateRange { get; set; } = new();
     public Client? Guide { get; set; }
     public GuidedHuntResult? Result { get; set; }
 

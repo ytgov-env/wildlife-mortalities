@@ -1,11 +1,5 @@
-@using Microsoft.EntityFrameworkCore
 @using WildlifeMortalities.App.Features.Reports.Activities
-@using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data
-@using WildlifeMortalities.Data.Entities
-@using WildlifeMortalities.Shared.Services;
-
-<ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel" />
+<ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel"/>
 
 @code {
 
@@ -15,4 +9,5 @@
 
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
+
 }

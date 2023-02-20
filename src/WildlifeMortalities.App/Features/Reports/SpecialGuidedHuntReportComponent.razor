@@ -1,10 +1,9 @@
 ﻿@using WildlifeMortalities.App.Extensions
-@using WildlifeMortalities.App.Features.Reports.Activities;
-@using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.App.Features.Reports.Activities
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
-<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="(() => ViewModel.HuntingDateRange.Start)"/>
+<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="() => ViewModel.HuntingDateRange.Start"/>
 
 <MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="Client" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
@@ -21,21 +20,21 @@
 </MudSelect>
 @if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
-   <MudGrid Class="my-3">
+    <MudGrid Class="my-3">
         @foreach (var item in ViewModel.HuntedActivityViewModels)
         {
             <MudItem md="2" xs="6">
-                <MortalityCardComponent EnableBioSubmission="false"
-                                OnEditClicked="@(() => Edit(item))" EnableDelete="true"
-                                MortalityViewModel="item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel"
-                                OnDeleteClicked="@(() => Delete(item))" />
+                <ActivityCardComponent EnableBioSubmission="false"
+                                       OnEditClicked="@(() => Edit(item))" EnableDelete="true" EnableEdit="true"
+                                       ActivityViewModel="item"
+                                       OnDeleteClicked="@(() => Delete(item))"/>
             </MudItem>
         }
     </MudGrid>
     <MudStack Row="true">
-        <MudSpacer />
+        <MudSpacer/>
         <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
-        <MudSpacer />
+        <MudSpacer/>
     </MudStack>
 }
 
@@ -62,7 +61,7 @@
     {
         var parameters = new DialogParameters
         {
-                [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
+            [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
         };
 
         var dialog = DialogService.Show<AddActivityDialog>("", parameters);

@@ -1,19 +1,16 @@
 ﻿@using WildlifeMortalities.App.Extensions
-@using WildlifeMortalities.App.Features.Reports.Activities;
-@using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data
+@using WildlifeMortalities.App.Features.Reports.Activities
 @using WildlifeMortalities.Data.Entities
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Services
-@using Microsoft.EntityFrameworkCore
-<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="(() => ViewModel.HuntingDateRange.Start)" />
+<MudDateRangePicker Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="() => ViewModel.HuntingDateRange.Start"/>
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
 <MudPaper Class="pa-4 my-4">
-    <MudAutocomplete T="Client" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
-                     Value="ViewModel.SelectedGuide" ValueChanged="AddClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+    <MudAutocomplete T="Client" @key="ViewModel.Guides.Count" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
+                     @bind-Value="ViewModel.SelectedGuide" @bind-Value:after="AddClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
     </MudAutocomplete>
 
@@ -23,14 +20,14 @@
             <MudListItem>
                 <MudStack Row="true">
                     <MudField DisableUnderLine="true" Label="Guide">@item.FirstName @item.LastName</MudField>
-                    <MudSpacer />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteGuide(item))" />
+                    <MudSpacer/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteGuide(item))"/>
                 </MudStack>
             </MudListItem>
         }
     </MudList>
     <!--suppress CssUnresolvedCustomProperty -->
-    <ValidationMessage For="@(() => ViewModel.Guides)" Style="font-size: 12px; color: var(--mud-palette-error);" />
+    <ValidationMessage For="@(() => ViewModel.Guides)" Style="font-size: 12px; color: var(--mud-palette-error);"/>
 </MudPaper>
 
 <MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result" For="@(() => ViewModel.Result)">
@@ -45,17 +42,17 @@
         @foreach (var item in ViewModel.HuntedActivityViewModels)
         {
             <MudItem md="2" xs="6">
-                <MortalityCardComponent EnableBioSubmission="false"
-                                OnEditClicked="@(() => Edit(item))" EnableDelete="true"
-                                MortalityViewModel="item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel"
-                                OnDeleteClicked="@(() => Delete(item))" />
+                <ActivityCardComponent EnableBioSubmission="false"
+                                       OnEditClicked="@(() => Edit(item))" EnableDelete="true" EnableEdit="true"
+                                       ActivityViewModel="item"
+                                       OnDeleteClicked="@(() => Delete(item))"/>
             </MudItem>
         }
     </MudGrid>
     <MudStack Row="true">
-        <MudSpacer />
+        <MudSpacer/>
         <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
-        <MudSpacer />
+        <MudSpacer/>
     </MudStack>
 }
 
@@ -71,6 +68,9 @@
 
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
+
+    [CascadingParameter]
+    public EditContext EditContext { get; set; } = null!;
 
     [Inject]
     private IDialogService DialogService { get; set; } = null!;
@@ -89,9 +89,9 @@
         _outfitterAreas = await MortalityService.GetOutfitterAreas();
     }
 
-    public void AddClient(Client? input)
+    public void AddClient()
     {
-        ViewModel.SelectedGuide = input;
+        var input = ViewModel.SelectedGuide;
         if (input != null)
         {
             var hasErrors = false;
@@ -110,6 +110,7 @@
             {
                 ViewModel.Guides.Add(input);
                 ViewModel.SelectedGuide = null;
+                EditContext.NotifyFieldChanged(FieldIdentifier.Create(() => ViewModel.Guides));
             }
         }
     }
@@ -117,9 +118,9 @@
     private async Task Add()
     {
         var parameters = new DialogParameters
-            {
-                [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
-            };
+        {
+            [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
+        };
 
         var dialog = DialogService.Show<AddActivityDialog>("", parameters);
         var result = await dialog.Result;
@@ -127,15 +128,19 @@
         {
             ViewModel.HuntedActivityViewModels.Add(result.Data as HuntedActivityViewModel);
         }
+        if (EditContext.GetValidationMessages().Any())
+        {
+            EditContext.Validate();
+        }
     }
 
     private async Task Edit(HuntedActivityViewModel viewModel)
     {
         var parameters = new DialogParameters
-            {
-                [nameof(EditActivityDialog.ViewModel)] = viewModel,
-                [nameof(EditActivityDialog.MortalityReportType)] = MortalityReportType
-            };
+        {
+            [nameof(EditActivityDialog.ViewModel)] = viewModel,
+            [nameof(EditActivityDialog.MortalityReportType)] = MortalityReportType
+        };
 
         var dialog = DialogService.Show<EditActivityDialog>("", parameters);
         var result = await dialog.Result;
@@ -149,6 +154,7 @@
     private void DeleteGuide(Client guide)
     {
         ViewModel.Guides.Remove(guide);
+        EditContext.NotifyFieldChanged(FieldIdentifier.Create(() => ViewModel.Guides));
     }
 
     private async Task<IEnumerable<Client?>> SearchClientByEnvClientIdOrLastName(string input)

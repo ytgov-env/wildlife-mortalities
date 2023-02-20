@@ -1,5 +1,8 @@
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
+<MudText Typo="Typo.h5" Class="mb-2">@Report.HumanReadableId</MudText>
+
 @code {
+
     [Parameter]
     [EditorRequired]
     public IndividualHuntedMortalityReport Report { get; set; } = null!;

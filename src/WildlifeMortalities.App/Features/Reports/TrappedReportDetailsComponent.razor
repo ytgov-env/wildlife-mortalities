@@ -1,5 +1,9 @@
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
+<MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
+<MudField Label="Outfitter area" DisableUnderLine="true">@Report.RegisteredTrappingConcession.Area</MudField>
+
 @code {
+
     [Parameter]
     [EditorRequired]
     public TrappedMortalitiesReport Report { get; set; } = null!;

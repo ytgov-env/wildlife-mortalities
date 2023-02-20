@@ -1,12 +1,12 @@
-﻿@using System.IO
-@using WildlifeMortalities.Shared.Services;
+﻿@using WildlifeMortalities.Shared.Services
 @inject IJSRuntime JS
 @inject PdfService PdfService
 
-<MudIconButton Icon="@Icons.Material.Filled.Download" OnClick="DownloadFileFromStream" />
-<MudIconButton Icon="@Icons.Material.Filled.Print" OnClick="PrintFileFromStream" />
+<MudIconButton Icon="@Icons.Material.Filled.Download" OnClick="DownloadFileFromStream"/>
+<MudIconButton Icon="@Icons.Material.Filled.Print" OnClick="PrintFileFromStream"/>
 
 @code {
+
     [Parameter]
     [EditorRequired]
     public ReportDetail ReportDetail { get; set; } = null!;
@@ -16,7 +16,7 @@
         var file = PdfService.GetReportPdf(ReportDetail.report.Id);
         var fileStream = new MemoryStream(file);
         var fileName = $"{ReportDetail.report.HumanReadableId}_{DateTimeOffset.Now.ToString("yyyy-MM-dd")}.pdf";
-        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        using var streamRef = new DotNetStreamReference(fileStream);
 
         await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
@@ -25,8 +25,9 @@
     {
         var file = PdfService.GetReportPdf(ReportDetail.report.Id);
         var fileStream = new MemoryStream(file);
-        using var streamRef = new DotNetStreamReference(stream: fileStream);
+        using var streamRef = new DotNetStreamReference(fileStream);
 
         await JS.InvokeVoidAsync("printFileFromStream", streamRef);
     }
+
 }

@@ -1,7 +1,7 @@
 ﻿@page "/mortality-reports/{id:int}"
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
-@using WildlifeMortalities.App.Features.Shared.Mortalities
+@using WildlifeMortalities.App.Features.Reports.Activities
 
 @if (_reportDetail is null)
 {
@@ -28,14 +28,19 @@
         break;
     case TrappedMortalitiesReport report:
         <MudText Typo="Typo.h3" Class="mb-8">Trapped report</MudText>
-        <TrappedReportDetailsComponent Report="@report" />
+        <TrappedReportDetailsComponent Report="@report"/>
         break;
 }
+
+@if (_reportDetail.report is not IndividualHuntedMortalityReport)
+{
+    <MudText Typo="Typo.h5" Class="my-2">Mortalities</MudText>
+}
 <MudGrid>
-    @foreach (var item in _reportDetail.report.GetMortalities())
+    @foreach (var item in _reportDetail.report.GetActivities())
     {
         <MudItem sm="3" xs="6">
-            <MortalityCardComponent MortalityViewModel="@(new MortalityViewModel(item, _reportDetail))"/>
+            <ActivityCardComponent ActivityViewModel="@GetActivityVm(item)"/>
         </MudItem>
     }
 </MudGrid>

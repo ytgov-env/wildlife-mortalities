@@ -1,27 +1,25 @@
+@using WildlifeMortalities.Data.Entities
+@using WildlifeMortalities.Shared.Services
 @using WildlifeMortalities.App.Features.Reports.Activities
-@using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data.Entities;
-@using WildlifeMortalities.Shared.Services;
-
 <MudAutocomplete T="RegisteredTrappingConcession" Label="Registered Trapping Concession" @bind-Value="ViewModel.RegisteredTrappingConcession" SearchFunc="SearchRegisteredTrappingConcessions"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a RTC" For="@(() => ViewModel.RegisteredTrappingConcession)" />
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a RTC" For="@(() => ViewModel.RegisteredTrappingConcession)"/>
 
 <MudGrid Class="my-3">
-        @foreach (var item in ViewModel.TrappedActivityViewModels)
-        {
-            <MudItem md="2" xs="6">
-                <MortalityCardComponent EnableBioSubmission="false"
-                                OnEditClicked="@(() => Edit(item))" EnableDelete="true"
-                                MortalityViewModel="item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel"
-                                OnDeleteClicked="@(() => Delete(item))" />
-            </MudItem>
-        }
-    </MudGrid>
-    <MudStack Row="true">
-        <MudSpacer />
-        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
-        <MudSpacer />
-    </MudStack>
+    @foreach (var item in ViewModel.TrappedActivityViewModels)
+    {
+        <MudItem md="2" xs="6">
+            <ActivityCardComponent EnableBioSubmission="false"
+                                   OnEditClicked="@(() => Edit(item))" EnableDelete="true" EnableEdit="true"
+                                   ActivityViewModel="item"
+                                   OnDeleteClicked="@(() => Delete(item))"/>
+        </MudItem>
+    }
+</MudGrid>
+<MudStack Row="true">
+    <MudSpacer/>
+    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
+    <MudSpacer/>
+</MudStack>
 
 
 @code {
@@ -52,9 +50,9 @@
     private async Task Add()
     {
         var parameters = new DialogParameters
-            {
-                [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
-            };
+        {
+            [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
+        };
 
         var dialog = DialogService.Show<AddActivityDialog>("", parameters);
         var result = await dialog.Result;
@@ -67,10 +65,10 @@
     private async Task Edit(TrappedActivityViewModel viewModel)
     {
         var parameters = new DialogParameters
-            {
-                [nameof(EditActivityDialog.ViewModel)] = viewModel,
-                [nameof(EditActivityDialog.MortalityReportType)] = MortalityReportType
-            };
+        {
+            [nameof(EditActivityDialog.ViewModel)] = viewModel,
+            [nameof(EditActivityDialog.MortalityReportType)] = MortalityReportType
+        };
 
         var dialog = DialogService.Show<EditActivityDialog>("", parameters);
         var result = await dialog.Result;
@@ -87,4 +85,5 @@
             return _registeredTrappingConcessions;
         return await Task.FromResult(_registeredTrappingConcessions.Where(y => y.Area.StartsWith(value)));
     }
+
 }
