@@ -11,8 +11,8 @@
 </MudSelect>
 @if (BioSubmission.SkullCondition is not AmericanBlackBearSkullCondition.NoSkullSubmitted && BioSubmission.SkullCondition is not AmericanBlackBearSkullCondition.Destroyed)
 {
-    <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly" />
-    <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly" />
+    <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly"/>
+    <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly"/>
 }
 
 @code {
@@ -29,7 +29,8 @@
         public AmericanBlackBearBioSubmissionValidator()
         {
             RuleFor(x => x.SkullCondition).NotEmpty().IsInEnum();
-            When(x => x.SkullCondition != AmericanBlackBearSkullCondition.NoSkullSubmitted && x.SkullCondition != AmericanBlackBearSkullCondition.Destroyed, () => {
+            When(x => x.SkullCondition != AmericanBlackBearSkullCondition.NoSkullSubmitted && x.SkullCondition != AmericanBlackBearSkullCondition.Destroyed, () =>
+            {
                 RuleFor(x => x.SkullLengthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
                 RuleFor(x => x.SkullWidthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
             });

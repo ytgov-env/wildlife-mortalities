@@ -7,7 +7,9 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.Elk;
 
 public class ElkMortalityViewModel : MortalityViewModel
 {
-    public ElkMortalityViewModel() : base(Data.Enums.Species.Elk) { }
+    public ElkMortalityViewModel() : base(Data.Enums.Species.Elk)
+    {
+    }
 
     public ElkHerd? Herd { get; set; }
 
@@ -30,8 +32,5 @@ public class ElkMortalityViewModel : MortalityViewModel
 
 public class ElkMortalityViewModelValidator : MortalityViewModelBaseValidator<ElkMortalityViewModel>
 {
-    public ElkMortalityViewModelValidator()
-    {
-        RuleFor(x => x.Herd).NotNull().IsInEnum();
-    }
+    public ElkMortalityViewModelValidator() => RuleFor(x => x.Herd).NotNull().IsInEnum();
 }

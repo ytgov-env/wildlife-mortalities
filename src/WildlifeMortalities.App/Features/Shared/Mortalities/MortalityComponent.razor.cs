@@ -15,7 +15,7 @@ public partial class MortalityComponent
     public MortalityReportType MortalityReportType { get; set; }
 
     [Parameter]
-    public bool DisableSpeciesSelection { get; set; } = false;
+    public bool DisableSpeciesSelection { get; set; }
 
     [Parameter]
     [EditorRequired]

@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using System.Text.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace WildlifeMortalities.Data;
 
@@ -29,7 +29,7 @@ public class MostConcreteClassJsonConverter<T> : JsonConverter<T>
             if (reader.TokenType == JsonTokenType.PropertyName)
             {
                 var propertyName = reader.GetString();
-                if (propertyName == MostConcreteClassJsonConverter<T>.TypeNodeName)
+                if (propertyName == TypeNodeName)
                 {
                     reader.Read();
                     var value = reader.GetString();
@@ -66,7 +66,7 @@ public class MostConcreteClassJsonConverter<T> : JsonConverter<T>
         {
             var type = value.GetType();
 
-            writer.WritePropertyName(MostConcreteClassJsonConverter<T>.TypeNodeName);
+            writer.WritePropertyName(TypeNodeName);
             writer.WriteStringValue(type.AssemblyQualifiedName);
 
             var doc = JsonSerializer.SerializeToDocument(value, type);

@@ -1,5 +1,5 @@
-﻿@using static WildlifeMortalities.Data.Entities.Mortalities.ElkMortality;
-<MudSelect T="ElkHerd?" @bind-Value="@ViewModel.Herd" Label="Herd" Placeholder="Select a herd" For="(() => ViewModel.Herd)">
+﻿@using static Data.Entities.Mortalities.ElkMortality;
+<MudSelect T="ElkHerd?" @bind-Value="@ViewModel.Herd" Label="Herd" Placeholder="Select a herd" For="() => ViewModel.Herd">
     @foreach (var item in Enum.GetValues<ElkHerd>())
     {
         <MudSelectItem T="ElkHerd?" Value="@item">@item</MudSelectItem>

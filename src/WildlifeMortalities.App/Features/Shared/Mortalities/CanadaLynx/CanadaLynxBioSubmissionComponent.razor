@@ -3,9 +3,9 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 
 <MudNumericField Label="Pelt length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
-                 @bind-Value="BioSubmission.PeltLengthMillimetres" For="() => BioSubmission.PeltLengthMillimetres"  Disabled="IsReadOnly"/>
+                 @bind-Value="BioSubmission.PeltLengthMillimetres" For="() => BioSubmission.PeltLengthMillimetres" Disabled="IsReadOnly"/>
 <MudNumericField Label="Pelt width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
-                 @bind-Value="BioSubmission.PeltWidthMillimetres" For="() => BioSubmission.PeltWidthMillimetres" Disabled="IsReadOnly" />
+                 @bind-Value="BioSubmission.PeltWidthMillimetres" For="() => BioSubmission.PeltWidthMillimetres" Disabled="IsReadOnly"/>
 
 @code {
 

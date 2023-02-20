@@ -1,8 +1,8 @@
 @using static BioSubmissionDialog;
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 
-<MudCheckBox @bind-Checked="BioSubmission.IsHornIncluded" Label="Horn included?" For="() => BioSubmission.IsHornIncluded" Disabled="IsReadOnly" />
-<MudCheckBox @bind-Checked="BioSubmission.IsHeadIncluded" Label="Head included?" For="() => BioSubmission.IsHeadIncluded" Disabled="IsReadOnly" />
+<MudCheckBox @bind-Checked="BioSubmission.IsHornIncluded" Label="Horn included?" For="() => BioSubmission.IsHornIncluded" Disabled="IsReadOnly"/>
+<MudCheckBox @bind-Checked="BioSubmission.IsHeadIncluded" Label="Head included?" For="() => BioSubmission.IsHeadIncluded" Disabled="IsReadOnly"/>
 
 @code {
 

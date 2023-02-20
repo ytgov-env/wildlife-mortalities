@@ -9,7 +9,7 @@ public static class EnumExtensions
         enumValue == null
             ? string.Empty
             : enumValue.GetEnumValueCustomAttribute<DisplayAttribute>()?.GetName()
-                ?? $"Error: enum {enumValue} is missing a displayname attribute";
+              ?? $"Error: enum {enumValue} is missing a displayname attribute";
 
     public static T? GetEnumValueCustomAttribute<T>(this Enum enumValue) where T : Attribute =>
         enumValue

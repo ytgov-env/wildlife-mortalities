@@ -12,9 +12,13 @@ namespace WildlifeMortalities.Data;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext() { }
+    public AppDbContext()
+    {
+    }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+    }
 
     public DbSet<Person> People => Set<Person>();
 
@@ -25,11 +29,13 @@ public class AppDbContext : DbContext
     public DbSet<Violation> Violations => Set<Violation>();
 
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
+
     public DbSet<FurbearerSealingCertificate> FurbearerSealingCertificates =>
         Set<FurbearerSealingCertificate>();
 
     public DbSet<GameManagementArea> GameManagementAreas => Set<GameManagementArea>();
     public DbSet<OutfitterArea> OutfitterAreas => Set<OutfitterArea>();
+
     public DbSet<RegisteredTrappingConcession> RegisteredTrappingConcessions =>
         Set<RegisteredTrappingConcession>();
 

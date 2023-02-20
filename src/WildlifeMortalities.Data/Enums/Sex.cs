@@ -4,9 +4,12 @@ namespace WildlifeMortalities.Data.Enums;
 
 public enum Sex
 {
-    [Display(Name = "Female")] Female = 10,
+    [Display(Name = "Female")]
+    Female = 10,
 
-    [Display(Name = "Male")] Male = 20,
+    [Display(Name = "Male")]
+    Male = 20,
 
-    [Display(Name = "Unknown")] Unknown = 30
+    [Display(Name = "Unknown")]
+    Unknown = 30
 }

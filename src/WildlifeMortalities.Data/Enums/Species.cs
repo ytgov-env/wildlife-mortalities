@@ -2,15 +2,25 @@
 
 namespace WildlifeMortalities.Data.Enums;
 
-public class IsOutfitterGuidedHuntableAttribute : Attribute { }
+public class IsOutfitterGuidedHuntableAttribute : Attribute
+{
+}
 
-public class IsSpecialGuidedHuntableAttribute : Attribute { }
+public class IsSpecialGuidedHuntableAttribute : Attribute
+{
+}
 
-public class IsIndividualHuntableAttribute : Attribute { }
+public class IsIndividualHuntableAttribute : Attribute
+{
+}
 
-public class IsTrappableAttribute : Attribute { }
+public class IsTrappableAttribute : Attribute
+{
+}
 
-public class HasGameManagementAreaAttribute : Attribute { }
+public class HasGameManagementAreaAttribute : Attribute
+{
+}
 
 public enum Species
 {

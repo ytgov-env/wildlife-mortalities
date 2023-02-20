@@ -2,7 +2,6 @@
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Services;
 
@@ -11,6 +10,8 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 public class MortalityViewModel
 {
     private static readonly Dictionary<Species, Func<Mortality>> s_mortalityFactory = new();
+
+    private readonly Mortality? _existingMortality;
 
     static MortalityViewModel()
     {
@@ -38,9 +39,9 @@ public class MortalityViewModel
         }
     }
 
-    private readonly Mortality? _existingMortality;
-
-    public MortalityViewModel() { }
+    public MortalityViewModel()
+    {
+    }
 
     public MortalityViewModel(Mortality mortality, ReportDetail? reportDetail = null)
     {
@@ -55,16 +56,6 @@ public class MortalityViewModel
         ExistingBioSubmission = reportDetail.bioSubmissions
             .FirstOrDefault(x => x.mortalityId == mortality.Id)
             .submission;
-
-        if (
-            reportDetail?.report
-            is not null
-                and IndividualHuntedMortalityReport individualHuntedMortalityReport
-        )
-        {
-            Landmark = individualHuntedMortalityReport.HuntedActivity.Landmark;
-            Comment = individualHuntedMortalityReport.HuntedActivity.Comment;
-        }
     }
 
     public MortalityViewModel(Species species) => Species = species;
@@ -76,8 +67,6 @@ public class MortalityViewModel
     public DateTime? DateOfDeath { get; set; }
     public decimal? Longitude { get; set; }
     public decimal? Latitude { get; set; }
-    public string? Landmark { get; set; }
-    public string? Comment { get; set; }
     public Sex? Sex { get; set; }
 
     public bool IsDraft { get; set; }
@@ -91,14 +80,14 @@ public class MortalityViewModel
             result.Add("Date of death", DateOfDeath.Value.Date.ToString());
         }
 
-        if (Longitude.HasValue)
-        {
-            result.Add("Longitude", Longitude.Value.ToString());
-        }
-
         if (Latitude.HasValue)
         {
             result.Add("Latitude", Latitude.Value.ToString());
+        }
+
+        if (Longitude.HasValue)
+        {
+            result.Add("Longitude", Longitude.Value.ToString());
         }
 
         return result;
@@ -166,4 +155,6 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
+{
+}

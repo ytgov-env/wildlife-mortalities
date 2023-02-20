@@ -1,5 +1,4 @@
-﻿using WildlifeMortalities.App.Features.Shared.Mortalities;
-using WildlifeMortalities.Data.Enums;
+﻿using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 

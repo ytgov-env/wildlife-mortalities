@@ -4,7 +4,8 @@ namespace WildlifeMortalities.Data.Enums;
 
 public enum GuidedHuntResult
 {
-    [Display(Name = "Did not hunt")] DidNotHunt = 10,
+    [Display(Name = "Did not hunt")]
+    DidNotHunt = 10,
 
     [Display(Name = "Went hunting and didn't kill wildlife")]
     WentHuntingAndDidntKillWildlife = 20,

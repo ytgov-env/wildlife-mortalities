@@ -1,3 +1,4 @@
+@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear
 @using WildlifeMortalities.App.Features.Shared.Mortalities.CanadaLynx
 @using WildlifeMortalities.App.Features.Shared.Mortalities.GreyWolf
@@ -8,7 +9,6 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WhiteTailedDeer
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
-
 @if (BioSubmission is null)
 {
     return;
@@ -18,34 +18,39 @@
     @switch (BioSubmission)
     {
         case AmericanBlackBearBioSubmission bioSubmission:
-            <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case CanadaLynxBioSubmission bioSubmission:
-            <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case GreyWolfBioSubmission bioSubmission:
-            <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case GrizzlyBearBioSubmission bioSubmission:
-            <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case MountainGoatBioSubmission bioSubmission:
-            <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case MuleDeerBioSubmission bioSubmission:
-            <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case ThinhornSheepBioSubmission bioSubmission:
-            <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case WhiteTailedDeerBioSubmission bioSubmission:
-            <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         case WoodBisonBioSubmission bioSubmission:
-            <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true" />
+            <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
             break;
         default:
             throw new ArgumentException(nameof(BioSubmission));
+    }
+    @if (BioSubmission.Age is not null)
+    {
+        <MudField Label="Age (years)" DisableUnderLine="true">@BioSubmission.Age.Years</MudField>
+        <MudField Label="Confidence in age" DisableUnderLine="true">@BioSubmission.Age.Confidence?.GetDisplayName()</MudField>
     }
 </EditForm>
 

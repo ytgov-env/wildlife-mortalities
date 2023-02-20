@@ -4,7 +4,9 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
 
 public class GrizzlyBearMortalityViewModel : MortalityViewModel
 {
-    public GrizzlyBearMortalityViewModel() : base(Data.Enums.Species.GrizzlyBear) { }
+    public GrizzlyBearMortalityViewModel() : base(Data.Enums.Species.GrizzlyBear)
+    {
+    }
 
     public bool IsShotInConflict { get; set; }
 
@@ -26,4 +28,6 @@ public class GrizzlyBearMortalityViewModel : MortalityViewModel
 }
 
 public class GrizzlyBearMortalityViewModelValidator
-    : MortalityViewModelBaseValidator<GrizzlyBearMortalityViewModel> { }
+    : MortalityViewModelBaseValidator<GrizzlyBearMortalityViewModel>
+{
+}

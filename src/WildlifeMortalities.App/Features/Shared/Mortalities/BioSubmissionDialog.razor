@@ -11,7 +11,7 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @inject ISnackbar Snackbar
-<EditForm OnValidSubmit="Create" Model="BioSubmission" class="scrollable-dialog-parent">
+<EditForm OnValidSubmit="Create" Model="BioSubmission" class="scrollable-dialog-parent" onkeypress="preventEnterFromSubmitting(event)">
     <FluentValidationValidator/>
     <MudDialog>
         <TitleContent>
@@ -20,84 +20,86 @@
             </MudText>
         </TitleContent>
         <DialogContent>
-            <div class="@(BioSubmission is IHasHornMeasurementEntries == true ? "scrollable-dialog" : "")">
-            <CascadingValue Name="@Constants.CascadingValues.HasAttemptedFormSubmission" Value="HasAttemptedFormSubmission">
-            @switch (BioSubmission)
-            {
-                case AmericanBlackBearBioSubmission bioSubmission:
-                    <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case CanadaLynxBioSubmission bioSubmission:
-                    <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case GreyWolfBioSubmission bioSubmission:
-                    <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case GrizzlyBearBioSubmission bioSubmission:
-                    <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case MountainGoatBioSubmission bioSubmission:
-                    <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case MuleDeerBioSubmission bioSubmission:
-                    <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case ThinhornSheepBioSubmission bioSubmission:
-                    <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case WhiteTailedDeerBioSubmission bioSubmission:
-                    <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                case WoodBisonBioSubmission bioSubmission:
-                    <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission"/>
-                    break;
-                default:
-                    throw new ArgumentException(nameof(BioSubmission));
-            }
-            </CascadingValue>
-            @*Age is always visible for sheep and goat, as long as a horn was provided*@
-            @if(BioSubmission is IHasHornMeasurementEntries bioSubmission)
-            {
-                @if(bioSubmission.HornMeasured is not HornMeasured.NoHornProvided){
+            <div class="@(BioSubmission is IHasHornMeasurementEntries ? "scrollable-dialog" : "")">
+                <CascadingValue Name="@Constants.CascadingValues.HasAttemptedFormSubmission" Value="HasAttemptedFormSubmission">
+                    @switch (BioSubmission)
+                    {
+                        case AmericanBlackBearBioSubmission bioSubmission:
+                            <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case CanadaLynxBioSubmission bioSubmission:
+                            <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case GreyWolfBioSubmission bioSubmission:
+                            <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case GrizzlyBearBioSubmission bioSubmission:
+                            <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case MountainGoatBioSubmission bioSubmission:
+                            <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case MuleDeerBioSubmission bioSubmission:
+                            <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case ThinhornSheepBioSubmission bioSubmission:
+                            <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case WhiteTailedDeerBioSubmission bioSubmission:
+                            <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        case WoodBisonBioSubmission bioSubmission:
+                            <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission"/>
+                            break;
+                        default:
+                            throw new ArgumentException(nameof(BioSubmission));
+                    }
+                </CascadingValue>
+                @*Age is always visible for sheep and goat, as long as a horn was provided*@
+                @if (BioSubmission is IHasHornMeasurementEntries bioSubmission)
+                {
+                    @if (bioSubmission.HornMeasured is not HornMeasured.NoHornProvided)
+                    {
+                        @if (BioSubmission.Age == null)
+                        {
+                            BioSubmission.Age = new Age();
+                        }
+                        <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
+                        <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+                            @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+                            {
+                                <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+                            }
+                        </MudSelect>
+                    }
+                }
+                else
+            @*Age is optional for other species*@
+                {
                     @if (BioSubmission.Age == null)
                     {
-                        BioSubmission.Age = new();
+                        <MudStack Row="true">
+                            <MudSpacer/>
+                            <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Cake" OnClick="() => BioSubmission.Age = new Age()">Add age</MudButton>
+                            <MudSpacer/>
+                        </MudStack>
                     }
-                    <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years" />
-                    <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
-                        @foreach (var item in Enum.GetValues<ConfidenceInAge>())
-                        {
-                            <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
-                        }
-                    </MudSelect>
+                    @if (BioSubmission.Age != null)
+                    {
+                        <MudStack Row="true">
+                            <MudSpacer/>
+                            <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => BioSubmission.Age = null">Remove age</MudButton>
+                            <MudSpacer/>
+                        </MudStack>
+                        <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
+                        <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+                            @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+                            {
+                                <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+                            }
+                        </MudSelect>
+                    }
                 }
-            } else
-            @*Age is optional for other species*@
-            {
-               @if(BioSubmission.Age == null)
-                {
-                    <MudStack Row="true">
-                        <MudSpacer/>
-                        <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Cake" OnClick="(() => BioSubmission.Age = new Age())">Add age</MudButton>
-                        <MudSpacer />
-                    </MudStack>
-                }
-                @if(BioSubmission.Age != null)
-                {
-                    <MudStack Row="true">
-                        <MudSpacer/>
-                        <MudButton Class="mt-4" StartIcon="@Icons.Material.Filled.Delete" OnClick="(() => BioSubmission.Age = null)">Remove age</MudButton>
-                        <MudSpacer />
-                    </MudStack>
-                    <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
-                    <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
-                        @foreach (var item in Enum.GetValues<ConfidenceInAge>())
-                        {
-                            <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
-                        }
-                    </MudSelect>
-                } 
-            }
             </div>
         </DialogContent>
         <DialogActions>
@@ -108,7 +110,7 @@
 </EditForm>
 
 @code {
-    private bool HasAttemptedFormSubmission = false;
+    private bool HasAttemptedFormSubmission;
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = null!;
@@ -135,8 +137,8 @@
     {
         public BioSubmissionValidator()
         {
-            
-            When(x => x.Age != null, () => {
+            When(x => x.Age != null, () =>
+            {
                 RuleFor(x => x.Age!.Years).InclusiveBetween(1, 80);
                 RuleFor(x => x.Age!.Confidence).NotEmpty().IsInEnum();
             });

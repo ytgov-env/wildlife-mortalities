@@ -11,10 +11,10 @@
 </MudSelect>
 @if (BioSubmission.SkullCondition is not GrizzlyBearSkullCondition.NoSkullSubmitted && BioSubmission.SkullCondition is not GrizzlyBearSkullCondition.Destroyed)
 {
-    <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly" />
-    <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly" />
+    <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly"/>
+    <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly"/>
 }
-<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached" Disabled="IsReadOnly" />
+<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached" Disabled="IsReadOnly"/>
 
 @code {
 
