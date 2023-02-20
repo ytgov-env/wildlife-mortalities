@@ -11,7 +11,8 @@
     return;
 }
 
-<EditForm OnValidSubmit="CreateReport" EditContext="_editContext">
+<EditForm OnValidSubmit="CreateReport" OnInvalidSubmit="@(() => _invalidSubmitDetected = true)" EditContext="_editContext" onkeypress="preventEnterFromSubmitting(event)">
+    <ValidationSummary/>
     <FluentValidationValidator/>
     <MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
         @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
@@ -26,7 +27,7 @@
                 case MortalityReportType.Conflict:
                     break;
                 case MortalityReportType.IndividualHunt:
-                    <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel" />
+                    <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel"/>
                     break;
                 case MortalityReportType.OutfitterGuidedHunt:
                     <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel"/>
@@ -38,7 +39,7 @@
                     <TrappedReportComponent ViewModel="@_vm.TrappedReportViewModel"/>
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new NotImplementedException();
             }
         </CascadingValue>
     </CascadingValue>
@@ -74,10 +75,9 @@
 
     <MudStack Row="true" Class="mt-4">
         <MudSpacer/>
-        @if (_editContext.GetValidationMessages().Any() == true)
+        @if (_editContext.GetValidationMessages().Any())
         {
             <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="CreateDraftReport" Color="Color.Primary">Save as draft</MudButton>
-
         }
         <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Disabled="@(_editContext.GetValidationMessages().Any())">Create Report</MudButton>
     </MudStack>

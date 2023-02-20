@@ -11,6 +11,7 @@ public partial class MortalityReportPage
 {
     private readonly IList<IBrowserFile> _files = new List<IBrowserFile>();
     private EditContext _editContext;
+    private bool _invalidSubmitDetected;
     private int? _personId;
     private SignaturePadComponent _signaturePad = null!;
     private MortalityReportPageViewModel _vm;
@@ -34,6 +35,18 @@ public partial class MortalityReportPage
     {
         _vm = new MortalityReportPageViewModel();
         _editContext = new EditContext(_vm);
+        _editContext.OnFieldChanged += _editContext_OnFieldChanged;
+    }
+
+    private void _editContext_OnFieldChanged(object? sender, FieldChangedEventArgs e)
+    {
+        if (_invalidSubmitDetected == false)
+        {
+            return;
+        }
+
+        _editContext.Validate();
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync() =>
@@ -91,35 +104,40 @@ public partial class MortalityReportPage
             {
                 var report = new HumanWildlifeConflictMortalityReport();
                 await MortalityService.CreateReport(report);
+                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
                 break;
             }
             case MortalityReportType.IndividualHunt:
             {
                 var report = _vm.IndividualHuntedMortalityReportViewModel!.GetReport(personId);
                 await MortalityService.CreateReport(report);
+                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
                 break;
             }
             case MortalityReportType.OutfitterGuidedHunt:
             {
                 var report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
                 await MortalityService.CreateReport(report);
+                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
                 break;
             }
             case MortalityReportType.SpecialGuidedHunt:
             {
                 var report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
                 await MortalityService.CreateReport(report);
+                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
                 break;
             }
             case MortalityReportType.Trapped:
             {
                 var report = _vm.TrappedReportViewModel!.GetReport(personId);
                 await MortalityService.CreateReport(report);
+                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
                 break;
             }
         }
 
-        NavigationManager.NavigateTo($"reporters/clients/{EnvClientId}");
+        //NavigationManager.NavigateTo($"reporters/clients/{EnvClientId}");
     }
 
     private void UploadFiles(InputFileChangeEventArgs e)
