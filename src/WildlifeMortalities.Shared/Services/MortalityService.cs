@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -55,6 +54,11 @@ public class MortalityService : IMortalityService
         report.DateSubmitted = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
+        do
+        {
+            report.GenerateHumanReadableId();
+        } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
+
         context.Add(report);
         await context.SaveChangesAsync();
     }
@@ -101,6 +105,11 @@ public class MortalityService : IMortalityService
         report.DateSubmitted = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
+        do
+        {
+            report.GenerateHumanReadableId();
+        } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
+
         context.Add(report);
         await context.SaveChangesAsync();
     }
@@ -133,6 +142,11 @@ public class MortalityService : IMortalityService
             throw new ArgumentException(nameof(report.RegisteredTrappingConcession));
         }
 
+        do
+        {
+            report.GenerateHumanReadableId();
+        } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
+
         context.Add(report);
         await context.SaveChangesAsync();
     }
@@ -144,7 +158,7 @@ public class MortalityService : IMortalityService
             LastModifiedDate = DateTimeOffset.Now,
             SerializedData = report,
             Type = report.GetType().Name,
-            PersonId = personId,
+            PersonId = personId
         };
 
         using var context = _dbContextFactory.CreateDbContext();
@@ -224,6 +238,8 @@ public class MortalityService : IMortalityService
                             new HornMeasurementEntry { IsBroomed = true, Annulus = annulus }
                         );
                     }
+
+                    submission.HornMeasurementEntries = submission.HornMeasurementEntries.ToList();
                 }
 
                 bioSubmissions.Add((item.Id, bioSubmission));
@@ -251,6 +267,7 @@ public class MortalityService : IMortalityService
                     sub.HornLengthToThirdAnnulusMillimetres = null;
                 }
             }
+
             submission.HornMeasurementEntries.RemoveAll(x => x.IsBroomed);
         }
 
@@ -262,6 +279,9 @@ public class MortalityService : IMortalityService
 
     public async Task UpdateBioSubmission(BioSubmission bioSubmission)
     {
+        var biosubmissionId = bioSubmission.Id;
+        bioSubmission.Id = 0;
+
         if (bioSubmission is IHasHornMeasurementEntries submission)
         {
             if (submission.HornMeasured is HornMeasured.NoHornProvided)
@@ -278,13 +298,76 @@ public class MortalityService : IMortalityService
                     sub.HornLengthToThirdAnnulusMillimetres = null;
                 }
             }
+
             submission.HornMeasurementEntries.RemoveAll(x => x.IsBroomed);
         }
 
         using var context = _dbContextFactory.CreateDbContext();
 
-        context.BioSubmissions.Update(bioSubmission);
-        await context.SaveChangesAsync();
+        var submissionFromDb = await context.BioSubmissions.FirstOrDefaultAsync(
+            x => x.Id == biosubmissionId
+        );
+        var strategy = context.Database.CreateExecutionStrategy();
+        await strategy.Execute(async () =>
+        {
+            using var transaction = context.Database.BeginTransaction();
+
+            if (submissionFromDb != null)
+            {
+                context.BioSubmissions.Remove(submissionFromDb);
+                await context.SaveChangesAsync();
+            }
+
+            bioSubmission.ClearDependencies();
+            context.BioSubmissions.Add(bioSubmission);
+            await context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+        });
+
+        //using var transaction = await context.Database.BeginTransactionAsync();
+        //try
+        //{
+        //    if (submissionFromDb != null)
+        //    {
+        //        context.BioSubmissions.Remove(submissionFromDb);
+        //        await context.SaveChangesAsync();
+        //    }
+        //    bioSubmission.ClearDependencies();
+        //    context.BioSubmissions.Add(bioSubmission);
+        //    await context.SaveChangesAsync();
+        //}
+        //finally
+        //{
+        //    await transaction.CommitAsync();
+        //}
+    }
+
+    public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        return await context.GameManagementAreas.ToArrayAsync();
+    }
+
+    public async Task<IEnumerable<OutfitterArea>> GetOutfitterAreas()
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        return await context.OutfitterAreas
+            .OrderBy(o => o.Area.Length)
+            .ThenBy(o => o.Area)
+            .ToArrayAsync();
+    }
+
+    public async Task<IEnumerable<RegisteredTrappingConcession>> GetRegisteredTrappingConcessions()
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        return await context.RegisteredTrappingConcessions
+            .OrderBy(o => o.Area.Length)
+            .ThenBy(o => o.Area)
+            .ToArrayAsync();
     }
 
     // This method is required as the relationship fixup mechanism in EF Core does not handle this correctly
@@ -319,10 +402,19 @@ public class MortalityService : IMortalityService
     private static IQueryable<Report> GetReportsIncludingMortalities(AppDbContext context) =>
         context.Reports
             .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Mortality)
+            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.GameManagementArea)
+            .Include(x => ((SpecialGuidedHuntReport)x).Guide)
             .Include(x => ((SpecialGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.Mortality)
+            .Include(x => ((SpecialGuidedHuntReport)x).HuntedActivities)
+            .ThenInclude(x => x.GameManagementArea)
             .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.Mortality)
+            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
+            .ThenInclude(x => x.GameManagementArea)
+            .Include(x => ((OutfitterGuidedHuntReport)x).Guides)
+            .Include(x => ((OutfitterGuidedHuntReport)x).OutfitterArea)
+            .Include(x => ((TrappedMortalitiesReport)x).RegisteredTrappingConcession)
             .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
             .ThenInclude(x => x.Mortality);
 
@@ -341,38 +433,11 @@ public class MortalityService : IMortalityService
                             : r is OutfitterGuidedHuntReport
                                 ? ((OutfitterGuidedHuntReport)r).Client.EnvClientId == envClientId
                                 : r is TrappedMortalitiesReport
-                                    && ((TrappedMortalitiesReport)r).Client.EnvClientId
-                                        == envClientId
+                                  && ((TrappedMortalitiesReport)r).Client.EnvClientId
+                                  == envClientId
             );
         }
 
         return query;
-    }
-
-    public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
-    {
-        using var context = _dbContextFactory.CreateDbContext();
-
-        return await context.GameManagementAreas.ToArrayAsync();
-    }
-
-    public async Task<IEnumerable<OutfitterArea>> GetOutfitterAreas()
-    {
-        using var context = _dbContextFactory.CreateDbContext();
-
-        return await context.OutfitterAreas
-            .OrderBy(o => o.Area.Length)
-            .ThenBy(o => o.Area)
-            .ToArrayAsync();
-    }
-
-    public async Task<IEnumerable<RegisteredTrappingConcession>> GetRegisteredTrappingConcessions()
-    {
-        using var context = _dbContextFactory.CreateDbContext();
-
-        return await context.RegisteredTrappingConcessions
-            .OrderBy(o => o.Area.Length)
-            .ThenBy(o => o.Area)
-            .ToArrayAsync();
     }
 }
