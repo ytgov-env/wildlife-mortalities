@@ -39,5 +39,8 @@ public class GreyWolfBioSubmissionConfig : IEntityTypeConfiguration<GreyWolfBioS
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
         builder.Property(g => g.PeltColour).IsRequired();
+        builder
+            .HasIndex(x => x.MortalityId)
+            .HasFilter("[GreyWolfBioSubmission_MortalityId] IS NOT NULL");
     }
 }

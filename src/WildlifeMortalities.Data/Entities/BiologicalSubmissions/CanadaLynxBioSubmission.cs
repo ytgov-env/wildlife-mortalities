@@ -6,13 +6,9 @@ namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
 public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>
 {
-    public CanadaLynxBioSubmission()
-    {
-    }
+    public CanadaLynxBioSubmission() { }
 
-    public CanadaLynxBioSubmission(int mortalityId) : base(mortalityId)
-    {
-    }
+    public CanadaLynxBioSubmission(int mortalityId) : base(mortalityId) { }
 
     public int PeltLengthMillimetres { get; set; }
     public int PeltWidthMillimetres { get; set; }
@@ -20,10 +16,16 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>
 
 public class CanadaLynxBioSubmissionConfig : IEntityTypeConfiguration<CanadaLynxBioSubmission>
 {
-    public void Configure(EntityTypeBuilder<CanadaLynxBioSubmission> builder) =>
+    public void Configure(EntityTypeBuilder<CanadaLynxBioSubmission> builder)
+    {
         builder
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
+
+        builder
+            .HasIndex(x => x.MortalityId)
+            .HasFilter("[CanadaLynxBioSubmission_MortalityId] IS NOT NULL");
+    }
 }

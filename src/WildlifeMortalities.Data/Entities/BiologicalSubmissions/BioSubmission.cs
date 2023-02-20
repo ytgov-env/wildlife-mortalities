@@ -8,8 +8,11 @@ namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 public abstract class BioSubmission
 {
     public int Id { get; set; }
+    public string Comment { get; set; } = string.Empty;
     public Age? Age { get; set; }
     public List<UploadFileInfo> UploadFileInfo { get; set; } = null!;
+
+    public abstract void ClearDependencies();
 }
 
 public abstract class BioSubmission<T> : BioSubmission where T : Mortality
@@ -21,6 +24,8 @@ public abstract class BioSubmission<T> : BioSubmission where T : Mortality
     public int MortalityId { get; set; }
 
     public T Mortality { get; set; }
+
+    public override void ClearDependencies() => Mortality = null!;
 }
 
 public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>

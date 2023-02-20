@@ -45,5 +45,8 @@ public class GrizzlyBearBioSubmissionConfig : IEntityTypeConfiguration<GrizzlyBe
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
         builder.Property(g => g.SkullCondition).IsRequired();
+        builder
+            .HasIndex(x => x.MortalityId)
+            .HasFilter("[GrizzlyBearBioSubmission_MortalityId] IS NOT NULL");
     }
 }

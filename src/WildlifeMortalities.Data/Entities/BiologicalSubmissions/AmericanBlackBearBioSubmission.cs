@@ -45,5 +45,6 @@ public class AmericanBlackBearBioSubmissionConfig
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
         builder.Property(a => a.SkullCondition).IsRequired();
+        builder.HasIndex(x => x.MortalityId).HasFilter("[MortalityId] IS NOT NULL");
     }
 }

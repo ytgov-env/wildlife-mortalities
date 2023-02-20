@@ -2,12 +2,12 @@
 
 public interface IHasHornMeasurementEntries
 {
-    public HornMeasured? HornMeasured { get; set; }
-    public BroomedStatus? BroomedStatus { get; set; }
+    HornMeasured? HornMeasured { get; set; }
+    BroomedStatus? BroomedStatus { get; set; }
 
-    public int? HornTotalLengthMillimetres { get; set; }
-    public int? HornBaseCircumferenceMillimetres { get; set; }
-    public int? HornTipSpreadMillimetres { get; set; }
+    int? HornTotalLengthMillimetres { get; set; }
+    int? HornBaseCircumferenceMillimetres { get; set; }
+    int? HornTipSpreadMillimetres { get; set; }
 
-    public List<HornMeasurementEntry> HornMeasurementEntries { get; set; }
+    List<HornMeasurementEntry> HornMeasurementEntries { get; set; }
 }

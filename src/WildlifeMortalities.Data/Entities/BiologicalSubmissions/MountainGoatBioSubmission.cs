@@ -12,6 +12,9 @@ public class MountainGoatBioSubmission
 
     public MountainGoatBioSubmission(int mortalityId) : base(mortalityId) { }
 
+    public bool IsHornIncluded { get; set; }
+    public bool IsHeadIncluded { get; set; }
+
     public HornMeasured? HornMeasured { get; set; }
     public BroomedStatus? BroomedStatus { get; set; }
 
@@ -19,9 +22,6 @@ public class MountainGoatBioSubmission
     public int? HornBaseCircumferenceMillimetres { get; set; }
     public int? HornTipSpreadMillimetres { get; set; }
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
-
-    public bool IsHornIncluded { get; set; }
-    public bool IsHeadIncluded { get; set; }
 }
 
 public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<MountainGoatBioSubmission>
@@ -43,5 +43,8 @@ public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<Mountain
         );
         builder.Property(m => m.HornMeasured).IsRequired();
         builder.Property(m => m.BroomedStatus).IsRequired();
+        builder
+            .HasIndex(x => x.MortalityId)
+            .HasFilter("[MountainGoatBioSubmission_MortalityId] IS NOT NULL");
     }
 }

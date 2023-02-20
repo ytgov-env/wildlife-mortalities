@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-
-namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+﻿namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
 public class HornMeasurementEntry
 {
