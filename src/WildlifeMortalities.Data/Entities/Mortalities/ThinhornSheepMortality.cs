@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+﻿using System.ComponentModel.DataAnnotations;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -13,13 +14,21 @@ public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>, IHasBio
 
 public enum ThinhornSheepBodyColour
 {
+    [Display(Name = "Dark")]
     Dark = 10,
+
+    [Display(Name = "Fannin")]
     Fannin = 20,
+
+    [Display(Name = "White")]
     White = 30
 }
 
 public enum ThinhornSheepTailColour
 {
+    [Display(Name = "Dark")]
     Dark = 10,
+
+    [Display(Name = "White")]
     White = 20
 }

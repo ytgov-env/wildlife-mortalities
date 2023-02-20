@@ -6,18 +6,16 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
 
 public class ThinhornSheepMortalityViewModel : MortalityViewModel
 {
-    public ThinhornSheepMortalityViewModel() : base(Data.Enums.Species.ThinhornSheep) { }
+    public ThinhornSheepMortalityViewModel() : base(Data.Enums.Species.ThinhornSheep)
+    {
+    }
 
     public ThinhornSheepBodyColour? BodyColour { get; set; }
     public ThinhornSheepTailColour? TailColour { get; set; }
 
     public override Mortality GetMortality()
     {
-        var mortality = new ThinhornSheepMortality
-        {
-            BodyColour = BodyColour!.Value,
-            TailColour = TailColour!.Value
-        };
+        var mortality = new ThinhornSheepMortality { BodyColour = BodyColour!.Value, TailColour = TailColour!.Value };
 
         SetBaseValues(mortality);
         return mortality;
@@ -38,7 +36,7 @@ public class ThinhornSheepViewModelValidator
 {
     public ThinhornSheepViewModelValidator()
     {
-        RuleFor(x => x.BodyColour).NotNull();
-        RuleFor(x => x.TailColour).NotNull();
+        RuleFor(x => x.BodyColour).NotNull().IsInEnum();
+        RuleFor(x => x.TailColour).NotNull().IsInEnum();
     }
 }

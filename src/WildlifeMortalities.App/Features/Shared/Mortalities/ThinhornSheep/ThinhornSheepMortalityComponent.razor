@@ -1,12 +1,14 @@
 ﻿@using WildlifeMortalities.Data.Entities.Mortalities
-<MudSelect T="ThinhornSheepBodyColour?" @bind-Value="@ViewModel.BodyColour" Label="Body colour" Placeholder="Select a colour">
+<MudSelect T="ThinhornSheepBodyColour?" @bind-Value="@ViewModel.BodyColour" Label="Body colour" Placeholder="Select a colour"
+           For="() => ViewModel.BodyColour">
     @foreach (var item in Enum.GetValues<ThinhornSheepBodyColour>())
     {
         <MudSelectItem T="ThinhornSheepBodyColour?" Value="@item">@item</MudSelectItem>
     }
 </MudSelect>
 
-<MudSelect T="ThinhornSheepTailColour?" @bind-Value="@ViewModel.TailColour" Label="Tail colour" Placeholder="Select a colour">
+<MudSelect T="ThinhornSheepTailColour?" @bind-Value="@ViewModel.TailColour" Label="Tail colour" Placeholder="Select a colour"
+           For="() => ViewModel.TailColour">
     @foreach (var item in Enum.GetValues<ThinhornSheepTailColour>())
     {
         <MudSelectItem T="ThinhornSheepTailColour?" Value="@item">@item</MudSelectItem>
