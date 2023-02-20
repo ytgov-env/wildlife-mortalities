@@ -1,33 +1,34 @@
 ﻿@implements IDisposable
 
-<EditForm EditContext="_context" OnInvalidSubmit="@( () => _invalidSubmissionDetected = true)" OnValidSubmit="Add">
+<EditForm EditContext="_context" OnInvalidSubmit="@(() => _invalidSubmissionDetected = true)" OnValidSubmit="Add" onkeypress="preventEnterFromSubmitting(event)">
 
-<MudDialog>
-    <TitleContent>
-        <MudText Typo="Typo.h6">
-            Add mortality
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        <FluentValidationValidator/>
-        <CascadingValue Value="MortalityReportType" Name="@Constants.CascadingValues.MortalityReportType">
-            <ActivityComponent ViewModel="_vm"/>
-        </CascadingValue>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Add mortality
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <FluentValidationValidator/>
+            @*<ValidationSummary/>*@
+            <CascadingValue Value="MortalityReportType" Name="@Constants.CascadingValues.MortalityReportType">
+                <ActivityComponent ViewModel="_vm"/>
+            </CascadingValue>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
             @if (_context.GetValidationMessages().Any())
             {
                 <MudButton Color="Color.Primary" ButtonType="ButtonType.Button" OnClick="AddDraft">Save as draft</MudButton>
             }
-        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Disabled="(_context.GetValidationMessages().Any() == true)">Submit</MudButton>
-    </DialogActions>
-</MudDialog>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Disabled="_context.GetValidationMessages().Any()">Submit</MudButton>
+        </DialogActions>
+    </MudDialog>
 </EditForm>
 
 @code {
     private EditContext _context = null!;
-    private bool _invalidSubmissionDetected = false;
+    private bool _invalidSubmissionDetected;
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = null!;
@@ -45,15 +46,15 @@
             MortalityReportType.Trapped => new TrappedActivityViewModel(),
             MortalityReportType.IndividualHunt or MortalityReportType.SpecialGuidedHunt or MortalityReportType.OutfitterGuidedHunt => new HuntedActivityViewModel(),
             _ => throw new NotImplementedException()
-        };
+            };
         _context = new EditContext(_vm);
         _context.OnFieldChanged += OnFieldChanged;
         base.OnInitialized();
     }
 
-    private void OnFieldChanged(Object? sender, FieldChangedEventArgs args)
+    private void OnFieldChanged(object? sender, FieldChangedEventArgs args)
     {
-        if (args.FieldIdentifier.FieldName != nameof(_vm.MortalityWithSpeciesSelectionViewModel.Species) && _invalidSubmissionDetected == true)
+        if (args.FieldIdentifier.FieldName != nameof(_vm.MortalityWithSpeciesSelectionViewModel.Species) && _invalidSubmissionDetected)
         {
             _context.Validate();
             StateHasChanged();
@@ -82,7 +83,7 @@
 
     public void Dispose()
     {
-        if(_context != null)
+        if (_context != null)
         {
             _context.OnFieldChanged -= OnFieldChanged;
         }

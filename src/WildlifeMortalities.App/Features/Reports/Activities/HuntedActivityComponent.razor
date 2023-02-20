@@ -1,10 +1,8 @@
-@using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data.Entities;
-@using WildlifeMortalities.Shared.Services;
-
-<MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark" />
+@using WildlifeMortalities.Data.Entities
+@using WildlifeMortalities.Shared.Services
+<MudTextField @bind-Value="ViewModel.Landmark" For="@(() => ViewModel.Landmark)" Label="Landmark"/>
 <MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)" />
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
 
 @code {
     private IEnumerable<GameManagementArea> _gameManagementAreas = Array.Empty<GameManagementArea>();
@@ -28,4 +26,5 @@
             return _gameManagementAreas;
         return await Task.FromResult(_gameManagementAreas.Where(y => y.Area.StartsWith(value) || (y.Zone + y.Subzone).StartsWith(value)));
     }
+
 }

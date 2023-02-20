@@ -1,8 +1,4 @@
-@using Microsoft.EntityFrameworkCore
 @using WildlifeMortalities.App.Features.Shared.Mortalities
-@using WildlifeMortalities.Data
-@using WildlifeMortalities.Data.Entities
-
 <MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" DisableSpeciesSelection="@(EditMode)"/>
 
 @switch (ViewModel)
@@ -15,7 +11,7 @@
         break;
 }
 
-<MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4" />
+<MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4"/>
 
 @code {
 
@@ -25,4 +21,5 @@
 
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
+
 }

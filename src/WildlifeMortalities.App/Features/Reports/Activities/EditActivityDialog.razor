@@ -1,30 +1,30 @@
 ﻿@implements IDisposable
 
-<EditForm EditContext="_context" OnInvalidSubmit="@( () => _invalidSubmissionDetected = true)" OnValidSubmit="Edit">
-    <FluentValidationValidator />
+<EditForm EditContext="_context" OnInvalidSubmit="@(() => _invalidSubmissionDetected = true)" OnValidSubmit="Edit" onkeypress="preventEnterFromSubmitting(event)">
+    <FluentValidationValidator/>
 
-<MudDialog>
-    <TitleContent>
-        <MudText Typo="Typo.h6">
-            Edit mortality
-        </MudText>
-    </TitleContent>
-    <DialogContent>
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Edit mortality
+            </MudText>
+        </TitleContent>
+        <DialogContent>
             <CascadingValue Name="@Constants.CascadingValues.MortalityReportType" Value="MortalityReportType">
                 <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="true">
                     <ActivityComponent ViewModel="ViewModel"/>
                 </CascadingValue>
             </CascadingValue>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-            @if (_canGoIntoDraftState == true && _context.GetValidationMessages().Any())
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            @if (_canGoIntoDraftState && _context.GetValidationMessages().Any())
             {
                 <MudButton Color="Color.Primary" ButtonType="ButtonType.Button" OnClick="EditDraft">Save as draft</MudButton>
             }
-        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Disabled="(_context.GetValidationMessages().Any() == true)">Submit</MudButton>
-    </DialogActions>
-</MudDialog>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Disabled="_context.GetValidationMessages().Any()">Submit</MudButton>
+        </DialogActions>
+    </MudDialog>
 </EditForm>
 
 @code {
@@ -40,8 +40,8 @@
     [EditorRequired]
     public MortalityReportType MortalityReportType { get; set; }
 
-    private bool _canGoIntoDraftState = false;
-    private bool _invalidSubmissionDetected = false;
+    private bool _canGoIntoDraftState;
+    private bool _invalidSubmissionDetected;
 
     protected override void OnInitialized()
     {
@@ -51,9 +51,9 @@
         base.OnInitialized();
     }
 
-    private void OnFieldChanged(Object? sender, FieldChangedEventArgs args)
+    private void OnFieldChanged(object? sender, FieldChangedEventArgs args)
     {
-        if (args.FieldIdentifier.FieldName != nameof(ViewModel.MortalityWithSpeciesSelectionViewModel.Species) && _invalidSubmissionDetected == true)
+        if (args.FieldIdentifier.FieldName != nameof(ViewModel.MortalityWithSpeciesSelectionViewModel.Species) && _invalidSubmissionDetected)
         {
             _context.Validate();
             StateHasChanged();
@@ -92,4 +92,5 @@
             _context.OnFieldChanged -= OnFieldChanged;
         }
     }
+
 }
