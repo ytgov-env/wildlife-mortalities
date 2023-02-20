@@ -12,6 +12,7 @@ public abstract class Activity
 
     [JsonConverter(typeof(MostConcreteClassJsonConverter<Mortality>))]
     public Mortality Mortality { get; set; } = null!;
+
     public int? AuthorizationId { get; set; }
     public List<Authorization> Authorizations { get; set; } = null!;
     public string Comment { get; set; } = string.Empty;

@@ -17,12 +17,40 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHa
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
-    IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities() =>
-        HuntedActivities.Select(x => x.Mortality).ToArray();
+    IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities()
+    {
+        if (HuntedActivities == null)
+        {
+            return Enumerable.Empty<Mortality>();
+        }
 
-    public override string GetHumanReadableIdPrefix() => "HHR";
+        return HuntedActivities.Select(x => x.Mortality).ToArray();
+    }
+
+    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities()
+    {
+        if (HuntedActivities == null)
+        {
+            return Enumerable.Empty<HuntedActivity>();
+        }
+
+        return HuntedActivities.ToArray();
+    }
+
+    public override string GetHumanReadableIdPrefix() => "OGH";
 
     public override bool HasHuntingActivity() => true;
+
+    public string GuidesToString()
+    {
+        var guides = string.Empty;
+        foreach (var guide in Guides)
+        {
+            guides += $"{guide.FirstName} {guide.LastName} ({guide.EnvClientId}), ";
+        }
+
+        return guides[..^2];
+    }
 }
 
 public class OutfitterGuidedHuntReportConfig : IEntityTypeConfiguration<OutfitterGuidedHuntReport>

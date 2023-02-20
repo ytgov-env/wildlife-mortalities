@@ -17,8 +17,10 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport, IHasC
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
-    public IEnumerable<Mortality> GetMortalities() =>
+    IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities() =>
         HuntedActivities.Select(x => x.Mortality).ToArray();
+
+    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() => HuntedActivities.ToArray();
 
     public override string GetHumanReadableIdPrefix() => "SGH";
 

@@ -12,6 +12,8 @@ public class ResearchMortalityReport : Report, ISingleMortalityReport
 
     public Mortality GetMortality() => Mortality;
 
+    public Activity GetActivity() => throw new NotImplementedException();
+
     public override string GetHumanReadableIdPrefix() => "RMR";
 
     public override bool HasHuntingActivity() => false;

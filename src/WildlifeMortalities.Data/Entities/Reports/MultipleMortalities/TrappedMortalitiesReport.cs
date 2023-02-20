@@ -9,13 +9,15 @@ namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport, IHasClientReporter
 {
     public List<TrappedActivity> TrappedActivities { get; set; } = null!;
-    public int ClientId { get; set; }
-    public Client Client { get; set; } = null!;
     public int RegisteredTrappingConcessionId { get; set; }
     public RegisteredTrappingConcession RegisteredTrappingConcession { get; set; } = null!;
+    public int ClientId { get; set; }
+    public Client Client { get; set; } = null!;
 
-    public IEnumerable<Mortality> GetMortalities() =>
+    IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities() =>
         TrappedActivities.Select(x => x.Mortality).ToArray();
+
+    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() => TrappedActivities.ToArray();
 
     public override string GetHumanReadableIdPrefix() => "THR";
 

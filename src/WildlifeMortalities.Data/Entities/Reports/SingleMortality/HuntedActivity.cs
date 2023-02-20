@@ -20,7 +20,8 @@ public class HuntedActivity : Activity
 
 public class HuntedActivityConfig : IEntityTypeConfiguration<HuntedActivity>
 {
-    public void Configure(EntityTypeBuilder<HuntedActivity> builder) => builder.ToTable("Activities");
+    public void Configure(EntityTypeBuilder<HuntedActivity> builder) =>
+        builder.ToTable("Activities");
 }
 
 public enum HuntedMortalityReportStatus

@@ -10,11 +10,14 @@ public class HumanWildlifeConflictMortalityReport : Report, ISingleMortalityRepo
 {
     [JsonConverter(typeof(MostConcreteClassJsonConverter<Mortality>))]
     public Mortality Mortality { get; set; } = null!;
+
     public int ConservationOfficerId { get; set; }
     public ConservationOfficer ConservationOfficer { get; set; } = null!;
     public string HumanWildlifeConflictNumber { get; set; } = string.Empty;
 
     public Mortality GetMortality() => Mortality;
+
+    public Activity GetActivity() => throw new NotImplementedException();
 
     public override string GetHumanReadableIdPrefix() => "HWC";
 
