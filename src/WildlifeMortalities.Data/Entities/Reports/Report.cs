@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
+﻿using System;
+using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -35,7 +36,11 @@ public abstract class Report
     public string GenerateHumanReadableId()
     {
         var rand = new Random();
-        var newHumanReadableIdSuffix = rand.Next(0, 1_000_000).ToString("d6");
+        // Excludes O and 0 to avoid users mixing them up
+        const string chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+        var newHumanReadableIdSuffix = new string(
+            Enumerable.Repeat(chars, 4).Select(s => s[rand.Next(s.Length)]).ToArray()
+        );
         HumanReadableId = $"{GetHumanReadableIdPrefix()}-{newHumanReadableIdSuffix}";
 
         return HumanReadableId;
