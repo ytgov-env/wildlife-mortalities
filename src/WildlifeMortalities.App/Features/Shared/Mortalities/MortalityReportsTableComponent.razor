@@ -3,7 +3,7 @@
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @using WildlifeMortalities.Shared.Services
-<MudTable ServerData="ServerReload" T="Report" OnRowClick="GotoDetails" @key="@EnvClientId">
+<MudTable ServerData="ServerReload" T="Report" OnRowClick="GotoDetails" @key="@EnvClientId" RowClass="cursor-pointer" Hover="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Reports</MudText>
         @if (EnvClientId != null)
