@@ -39,9 +39,7 @@ public class MortalityViewModel
         }
     }
 
-    public MortalityViewModel()
-    {
-    }
+    public MortalityViewModel() { }
 
     public MortalityViewModel(Mortality mortality, ReportDetail? reportDetail = null)
     {
@@ -129,11 +127,11 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
         RuleFor(m => m.Latitude)
             .Null()
             .When(m => m.Longitude is null)
-            .WithMessage("Latitude cannot be set when longitude is null");
+            .WithMessage("Latitude cannot be set when longitude is null.");
         RuleFor(m => m.Latitude)
             .NotNull()
             .When(m => m.Longitude is not null)
-            .WithMessage("Latitude must be set if longitude is set");
+            .WithMessage("Latitude must be set if longitude is set.");
 
         RuleFor(m => m.Longitude)
             .Must(longitude => longitude is null or > -143 and < -121)
@@ -141,20 +139,18 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
         RuleFor(m => m.Longitude)
             .Null()
             .When(m => m.Latitude is null)
-            .WithMessage("Longitude cannot be set when latitude is null");
+            .WithMessage("Longitude cannot be set when latitude is null.");
         RuleFor(m => m.Longitude)
             .NotNull()
             .When(m => m.Latitude is not null)
-            .WithMessage("Longitude must be set if latitude is set");
+            .WithMessage("Longitude must be set if latitude is set.");
 
         RuleFor(m => m.Sex)
             .NotNull()
             .IsInEnum()
-            .WithMessage("Sex must be set to Female, Male, or Unknown");
-        RuleFor(m => m.DateOfDeath).NotNull().WithMessage("Please select a date of death");
+            .WithMessage("Sex must be set to Female, Male, or Unknown.");
+        RuleFor(m => m.DateOfDeath).NotNull().WithMessage("Please select a date of death.");
     }
 }
 
-public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel>
-{
-}
+public class MortalityViewModelValidator : MortalityViewModelBaseValidator<MortalityViewModel> { }

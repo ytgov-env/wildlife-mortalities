@@ -32,26 +32,21 @@ public abstract class ActivityViewModel
 
 public class TrappedActivityViewModel : ActivityViewModel
 {
-    public TrappedActivityViewModel()
-    {
-    }
+    public TrappedActivityViewModel() { }
 
     public TrappedActivityViewModel(TrappedActivity activity, ReportDetail? reportDetail = null)
-        : base(activity, reportDetail)
-    {
-    }
+        : base(activity, reportDetail) { }
 
     public TrappedActivity GetActivity() =>
         new()
         {
-            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(), Comment = Comment
+            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
+            Comment = Comment
         };
 }
 
 public class TrappedActivityViewModelValidator
-    : ActivityViewModelValidator<TrappedActivityViewModel>
-{
-}
+    : ActivityViewModelValidator<TrappedActivityViewModel> { }
 
 public static class FluentValidationExtensions
 {
@@ -60,9 +55,7 @@ public static class FluentValidationExtensions
         List<(MethodInfo, ConstructorInfo)>
     > _mortalityValidatorFactories = new();
 
-    static FluentValidationExtensions()
-    {
-    }
+    static FluentValidationExtensions() { }
 
     public static void AddMortalityValidators<T>(
         this PolymorphicValidator<T, MortalityViewModel> builder
@@ -101,8 +94,6 @@ public static class FluentValidationExtensions
                     }
 
                     var defaultConstructor = item.GetConstructor(Array.Empty<Type>());
-
-                    //var validatorType = typeof(IValidator<>);
 
                     var type = typeof(PolymorphicValidator<T, MortalityViewModel>);
                     var addMethod = type.GetMethods()
@@ -143,26 +134,22 @@ public class ActivityViewModelValidator<T> : AbstractValidator<T> where T : Acti
 {
     public ActivityViewModelValidator()
     {
-        RuleFor(x => x.Comment)
-            .Length(10, 1000)
-            .When(x => string.IsNullOrEmpty(x.Comment) == false);
+        RuleFor(x => x.Comment).MaximumLength(1000);
 
         RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species)
             .NotNull()
-            .WithMessage("Please select a species");
+            .WithMessage("Please select a species.");
 
         RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
             .NotNull()
             .When(x => x.MortalityWithSpeciesSelectionViewModel.Species != null)
-            .SetInheritanceValidator(x => { x.AddMortalityValidators(); });
+            .SetInheritanceValidator(x => x.AddMortalityValidators());
     }
 }
 
 public class HuntedActivityViewModel : ActivityViewModel
 {
-    public HuntedActivityViewModel()
-    {
-    }
+    public HuntedActivityViewModel() { }
 
     public HuntedActivityViewModel(HuntedActivity activity, ReportDetail? reportDetail = null)
         : base(activity, reportDetail)
