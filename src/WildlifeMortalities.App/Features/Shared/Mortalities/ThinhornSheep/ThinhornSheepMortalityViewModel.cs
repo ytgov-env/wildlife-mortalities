@@ -6,16 +6,32 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
 
 public class ThinhornSheepMortalityViewModel : MortalityViewModel
 {
-    public ThinhornSheepMortalityViewModel() : base(Data.Enums.Species.ThinhornSheep)
-    {
-    }
+    private ThinhornSheepBodyColour? bodyColour;
 
-    public ThinhornSheepBodyColour? BodyColour { get; set; }
+    public ThinhornSheepMortalityViewModel() : base(Data.Enums.Species.ThinhornSheep) { }
+
+    public ThinhornSheepBodyColour? BodyColour
+    {
+        get { return bodyColour; }
+        set
+        {
+            bodyColour = value;
+            // Fannin sheep always have a dark tail
+            if (value == ThinhornSheepBodyColour.Fannin)
+            {
+                TailColour = ThinhornSheepTailColour.Dark;
+            }
+        }
+    }
     public ThinhornSheepTailColour? TailColour { get; set; }
 
     public override Mortality GetMortality()
     {
-        var mortality = new ThinhornSheepMortality { BodyColour = BodyColour!.Value, TailColour = TailColour!.Value };
+        var mortality = new ThinhornSheepMortality
+        {
+            BodyColour = BodyColour!.Value,
+            TailColour = TailColour!.Value
+        };
 
         SetBaseValues(mortality);
         return mortality;
@@ -38,5 +54,11 @@ public class ThinhornSheepViewModelValidator
     {
         RuleFor(x => x.BodyColour).NotNull().IsInEnum();
         RuleFor(x => x.TailColour).NotNull().IsInEnum();
+        RuleFor(x => x.TailColour)
+            .Equal(ThinhornSheepTailColour.Dark)
+            .When(x => x.BodyColour == ThinhornSheepBodyColour.Fannin)
+            .WithMessage(
+                $"Tail colour must be {nameof(ThinhornSheepBodyColour.Dark)} when body colour is {nameof(ThinhornSheepBodyColour.Fannin)}."
+            );
     }
 }
