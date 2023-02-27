@@ -5,7 +5,7 @@ namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class WoodBisonMortality : Mortality, IHasBioSubmission
 {
-    public PregnancyStatus PregnancyStatus { get; set; }
+    public PregnancyStatus? PregnancyStatus { get; set; }
     public bool IsWounded { get; set; }
     public WoodBisonBioSubmission? BioSubmission { get; set; }
 
