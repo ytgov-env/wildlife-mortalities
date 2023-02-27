@@ -13,6 +13,7 @@ public class ThinhornSheepBioSubmission
     public ThinhornSheepBioSubmission(int mortalityId) : base(mortalityId) { }
 
     public int? HornLengthToThirdAnnulusMillimetres { get; set; }
+    public bool? IsFullCurl { get; set; }
     public string PlugNumber { get; set; } = string.Empty;
 
     public HornMeasured? HornMeasured { get; set; }

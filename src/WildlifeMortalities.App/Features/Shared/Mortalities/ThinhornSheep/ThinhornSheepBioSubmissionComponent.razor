@@ -3,7 +3,7 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 
-
+@*<ValidationSummary/>*@
 <MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<HornMeasured>())
     {
@@ -12,14 +12,19 @@
 </MudSelect>
 @if (BioSubmission.HornMeasured is not null && BioSubmission.HornMeasured is not HornMeasured.NoHornProvided)
 {
+    <MudNumericField Label="Total length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+                 @bind-Value="BioSubmission.HornTotalLengthMillimetres" For="() => BioSubmission.HornTotalLengthMillimetres" Disabled="IsReadOnly" />
+    <MudCheckBox Label="Full curl?" @bind-Checked="BioSubmission.IsFullCurl" For="() => BioSubmission.IsFullCurl"/>
+    <MudNumericField Label="Base circumference" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+                 @bind-Value="BioSubmission.HornBaseCircumferenceMillimetres" For="() => BioSubmission.HornBaseCircumferenceMillimetres" Disabled="IsReadOnly" />
+    <MudNumericField Label="Tip spread" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+                 @bind-Value="BioSubmission.HornTipSpreadMillimetres" For="() => BioSubmission.HornTipSpreadMillimetres" Disabled="IsReadOnly" />
     <MudSelect @bind-Value="BioSubmission.BroomedStatus" Label="Broomed?" For="() => BioSubmission.BroomedStatus" Disabled="IsReadOnly">
         @foreach (var item in Enum.GetValues<BroomedStatus>())
         {
             <MudSelectItem T="BroomedStatus?" Value="item">@item.GetDisplayName()</MudSelectItem>
         }
     </MudSelect>
-    <MudTextField Label="Plug number" @bind-Value="BioSubmission.PlugNumber" For="() => BioSubmission.PlugNumber" Disabled="IsReadOnly"/>
-
     <MudText Typo="Typo.h6">Annuli measurements</MudText>
     <MudSpacer/>
     <ValidationMessage For="@(() => BioSubmission.HornMeasurementEntries)" Style="font-size: 12px; color: var(--mud-palette-error);"/>
@@ -33,9 +38,9 @@
                 <MudTh>Circumference</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Nr">@context.Annulus</MudTd>
-                <MudTd DataLabel="Sign">@(context.LengthMillimetres == 0 ? string.Empty : $"{context.LengthMillimetres}mm")</MudTd>
-                <MudTd DataLabel="Name">@(context.CircumferenceMillimetres == 0 ? string.Empty : $"{context.CircumferenceMillimetres}mm")</MudTd>
+                <MudTd DataLabel="Annulus">@context.Annulus</MudTd>
+                <MudTd DataLabel="Length">@(context.LengthMillimetres == 0 ? string.Empty : $"{context.LengthMillimetres}mm")</MudTd>
+                <MudTd DataLabel="Circumference">@(context.CircumferenceMillimetres == 0 ? string.Empty : $"{context.CircumferenceMillimetres}mm")</MudTd>
             </RowTemplate>
         </MudTable>
     }
@@ -47,8 +52,8 @@
                 <MudListItem>
                     <MudStack Row="true">
                         <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true"/>
-                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed"/>
-                        <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@(() => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed"/>
+                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0"/>
+                        <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@(() => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0"/>
                         @if (ShowAnnuliBroomedCheckbox(item))
                         {
                             @if (BioSubmission.HornMeasurementEntries.First().Equals(item))
@@ -76,9 +81,12 @@
 
     @if (BioSubmission.HornMeasurementEntries.Count >= 3)
     {
-        <MudNumericField Label="Length to third annulus" Placeholder="on the short side" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+        <MudNumericField Label="Length to third annulus (short side)" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                          @bind-Value="BioSubmission.HornLengthToThirdAnnulusMillimetres" For="() => BioSubmission.HornLengthToThirdAnnulusMillimetres" Disabled="IsReadOnly"/>
     }
+    
+    <MudTextField Label="Plug number" @bind-Value="BioSubmission.PlugNumber" For="() => BioSubmission.PlugNumber" Disabled="IsReadOnly"
+              Mask="@(new PatternMask("B0000"))" Placeholder="B" />
 }
 
 @code {
@@ -199,8 +207,18 @@
                 RuleFor(x => x.PlugNumber).NotEmpty();
                 RuleFor(x => x.HornLengthToThirdAnnulusMillimetres).GreaterThan(50).LessThan(1000);
                 RuleFor(x => x.HornMeasurementEntries).NotEmpty();
-                RuleFor(x => x.Age!.Years).Equal(x => x.HornMeasurementEntries.Last().Annulus).When(x => x.Age != null && x.HornMeasurementEntries.Any());
+                RuleFor(x => x.Age!.Years).Equal(x => x.HornMeasurementEntries.Last().Annulus).When(x => x.Age != null && x.HornMeasurementEntries.Any())
+                .WithMessage($"Age must be equal to the number of annuli.");
                 RuleForEach(x => x.HornMeasurementEntries).SetValidator(x => new HornMeasurementEntryValidator(x));
+                RuleFor(x => x.HornTotalLengthMillimetres)
+                .Must((x, length) => length >= x.HornMeasurementEntries[x.HornMeasurementEntries.Count - 1].LengthMillimetres)
+                .When(x => x.HornMeasurementEntries.Count != 0)
+                .WithMessage("Total length must be greater than or equal to the length (from tip) of the last annulus.");
+                RuleFor(x => x.HornBaseCircumferenceMillimetres)
+                .Must((x, circumference) => circumference - x.HornMeasurementEntries[x.HornMeasurementEntries.Count - 1].CircumferenceMillimetres >= -10)
+                .When(x => x.HornMeasurementEntries.Count != 0)
+                .WithMessage("Base circumference can be max of 10mm less than the circumference of the last annulus.");
+                RuleFor(x => x.IsFullCurl).NotNull();
             });
         }
 
@@ -210,13 +228,21 @@
             {
             }
 
-            public HornMeasurementEntryValidator(ThinhornSheepBioSubmission submission)
+            public HornMeasurementEntryValidator(ThinhornSheepBioSubmission bioSubmission)
             {
-                When(x => x.IsBroomed == false, () =>
+                When(entry => entry.IsBroomed == false, () =>
                 {
-                    RuleFor(x => x.LengthMillimetres).InclusiveBetween(10, 1000);
-                    RuleFor(x => x.CircumferenceMillimetres).NotEqual(0).GreaterThanOrEqualTo(x => submission.HornMeasurementEntries[submission.HornMeasurementEntries.IndexOf(x) - 1].CircumferenceMillimetres)
-                        .When(x => submission.HornMeasurementEntries.IndexOf(x) != 0 && submission.HornMeasurementEntries[submission.HornMeasurementEntries.IndexOf(x) - 1].IsBroomed == false);
+                    RuleFor(entry => entry.LengthMillimetres)
+                        .InclusiveBetween(10, 1000)
+                        .GreaterThanOrEqualTo(entry => bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].LengthMillimetres)
+                        .When(entry => bioSubmission.HornMeasurementEntries.IndexOf(entry) != 0 && bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed == false)
+                        .WithMessage("Length must be greater than or equal to the previous annulus.");
+                    RuleFor(entry => entry.CircumferenceMillimetres)
+                        .GreaterThan(0);
+                    RuleFor(entry => entry.CircumferenceMillimetres)
+                        .Must((entry, circumference) => circumference - bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].CircumferenceMillimetres >= -10)
+                        .When((entry, circumference) => bioSubmission.HornMeasurementEntries.IndexOf(entry) != 0 && bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed == false)
+                        .WithMessage("Circumference can be a max of 10mm less than the previous annulus.");
                 });
             }
         }
