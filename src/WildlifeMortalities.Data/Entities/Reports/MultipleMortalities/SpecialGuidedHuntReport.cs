@@ -8,8 +8,8 @@ namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport, IHasClientReporter
 {
-    public DateTime HuntStartDate { get; set; }
-    public DateTime HuntEndDate { get; set; }
+    public DateTime? HuntStartDate { get; set; }
+    public DateTime? HuntEndDate { get; set; }
     public int GuideId { get; set; }
     public Client Guide { get; set; } = null!;
     public GuidedHuntResult Result { get; set; }

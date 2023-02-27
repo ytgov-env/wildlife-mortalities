@@ -33,7 +33,10 @@
     </MudGrid>
     <MudStack Row="true">
         <MudSpacer/>
-        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
+        <MudItem>
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
+            <ValidationMessage For="@(() => ViewModel.HuntedActivityViewModels)" Style="font-size: 12px; color: var(--mud-palette-error);" />
+        </MudItem>
         <MudSpacer/>
     </MudStack>
 }
