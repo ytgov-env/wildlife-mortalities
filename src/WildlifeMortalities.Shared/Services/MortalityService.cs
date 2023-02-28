@@ -69,7 +69,7 @@ public class MortalityService : IMortalityService
 
         using var context = _dbContextFactory.CreateDbContext();
 
-        var guideIds = report.Guides.Select(x => x.Id).ToList();
+        var guideIds = report.AssistantGuides.Select(x => x.Id).ToList();
         var guides = await context.People
             .OfType<Client>()
             .Where(x => guideIds.Contains(x.Id) == true)
@@ -87,7 +87,7 @@ public class MortalityService : IMortalityService
             throw new ArgumentException(nameof(report.OutfitterArea));
         }
 
-        report.Guides = guides;
+        report.AssistantGuides = guides;
         report.DateSubmitted = DateTimeOffset.Now;
 
         do
@@ -412,7 +412,8 @@ public class MortalityService : IMortalityService
             .ThenInclude(x => x.Mortality)
             .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
             .ThenInclude(x => x.GameManagementArea)
-            .Include(x => ((OutfitterGuidedHuntReport)x).Guides)
+            .Include(x => ((OutfitterGuidedHuntReport)x).ChiefGuide)
+            .Include(x => ((OutfitterGuidedHuntReport)x).AssistantGuides)
             .Include(x => ((OutfitterGuidedHuntReport)x).OutfitterArea)
             .Include(x => ((TrappedMortalitiesReport)x).RegisteredTrappingConcession)
             .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
@@ -433,8 +434,8 @@ public class MortalityService : IMortalityService
                             : r is OutfitterGuidedHuntReport
                                 ? ((OutfitterGuidedHuntReport)r).Client.EnvClientId == envClientId
                                 : r is TrappedMortalitiesReport
-                                  && ((TrappedMortalitiesReport)r).Client.EnvClientId
-                                  == envClientId
+                                    && ((TrappedMortalitiesReport)r).Client.EnvClientId
+                                        == envClientId
             );
         }
 
