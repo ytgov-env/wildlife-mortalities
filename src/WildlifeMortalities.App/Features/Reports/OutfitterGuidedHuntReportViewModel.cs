@@ -10,8 +10,9 @@ namespace WildlifeMortalities.App.Features.Reports;
 public class OutfitterGuidedHuntReportViewModel
 {
     public DateRange HuntingDateRange { get; set; } = new();
-    public Client? SelectedGuide { get; set; }
-    public List<Client> Guides { get; set; } = new();
+    public Client? SelectedAssistantGuide { get; set; }
+    public Client? ChiefGuide { get; set; }
+    public List<Client> AssistantGuides { get; set; } = new();
     public OutfitterArea? OutfitterArea { get; set; }
     public GuidedHuntResult? Result { get; set; }
 
@@ -30,7 +31,8 @@ public class OutfitterGuidedHuntReportViewModel
             {
                 HuntStartDate = (DateTime)HuntingDateRange!.Start!,
                 HuntEndDate = (DateTime)HuntingDateRange.End!,
-                Guides = Guides,
+                ChiefGuideId = ChiefGuide!.Id,
+                AssistantGuides = AssistantGuides,
                 OutfitterArea = OutfitterArea!,
                 Result = Result!.Value,
                 ClientId = personId,
@@ -38,7 +40,8 @@ public class OutfitterGuidedHuntReportViewModel
             }
             : new OutfitterGuidedHuntReport
             {
-                Guides = Guides,
+                ChiefGuideId = ChiefGuide!.Id,
+                AssistantGuides = AssistantGuides,
                 OutfitterArea = OutfitterArea!,
                 Result = Result!.Value,
                 ClientId = personId,
@@ -59,7 +62,8 @@ public class OutfitterGuidedHuntReportViewModelValidator
             .Must(x => x <= DateTimeOffset.Now)
             .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
             .WithMessage("The hunting dates cannot be in the future.");
-        RuleFor(x => x.Guides).NotEmpty();
+        RuleFor(x => x.ChiefGuide).NotNull();
+        RuleFor(x => x.AssistantGuides).NotEmpty();
         RuleFor(x => x.OutfitterArea).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
         RuleFor(x => x.HuntedActivityViewModels)

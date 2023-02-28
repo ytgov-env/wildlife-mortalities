@@ -10,7 +10,9 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHa
 {
     public DateTime? HuntStartDate { get; set; }
     public DateTime? HuntEndDate { get; set; }
-    public List<Client> Guides { get; set; } = null!;
+    public int ChiefGuideId { get; set; }
+    public Client ChiefGuide { get; set; } = null!;
+    public List<Client> AssistantGuides { get; set; } = null!;
     public OutfitterArea OutfitterArea { get; set; } = null!;
     public GuidedHuntResult Result { get; set; }
     public List<HuntedActivity> HuntedActivities { get; set; } = null!;
@@ -44,7 +46,7 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHa
     public string GuidesToString()
     {
         var guides = string.Empty;
-        foreach (var guide in Guides)
+        foreach (var guide in AssistantGuides)
         {
             guides += $"{guide.FirstName} {guide.LastName} ({guide.EnvClientId}), ";
         }
@@ -55,10 +57,19 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHa
 
 public class OutfitterGuidedHuntReportConfig : IEntityTypeConfiguration<OutfitterGuidedHuntReport>
 {
-    public void Configure(EntityTypeBuilder<OutfitterGuidedHuntReport> builder) =>
+    public void Configure(EntityTypeBuilder<OutfitterGuidedHuntReport> builder)
+    {
         builder
             .ToTable("Reports")
             .HasOne(t => t.Client)
-            .WithMany(t => t.OutfitterGuidedHuntReports)
+            .WithMany(t => t.OutfitterGuidedHuntReportsAsClient)
             .OnDelete(DeleteBehavior.NoAction);
+        builder
+            .HasOne(o => o.ChiefGuide)
+            .WithMany(c => c.OutfitterGuidedHuntReportsAsChiefGuide)
+            .OnDelete(DeleteBehavior.NoAction);
+        //builder
+        //    .HasMany(o => o.AssistantGuides)
+        //    .WithMany(c => c.OutfitterGuidedHuntReportsAsAssistantGuide);
+    }
 }

@@ -3,7 +3,8 @@
 <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
 <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
 <MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>
-<MudField Label="Guide(s)" DisableUnderLine="true">@Report.GuidesToString()</MudField>
+<MudField Label="Chief guide" DisableUnderLine="true">@Report.ChiefGuide.EnvClientId</MudField>
+<MudField Label="Assistant guides" DisableUnderLine="true">@Report.GuidesToString()</MudField>
 <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
 
 @code {

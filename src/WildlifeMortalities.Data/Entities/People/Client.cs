@@ -16,7 +16,12 @@ public class Client : Person
     public List<SpecialGuideLicence> SpecialGuideLicences { get; set; } = null!;
     public DateTime BirthDate { get; set; }
     public List<Authorization> Authorizations { get; set; } = null!;
-    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReports { get; set; } = null!;
+
+    //public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsAssistantGuide { get; set; } =
+    //    null!;
+    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsChiefGuide { get; set; } =
+        null!;
+    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsClient { get; set; } = null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsClient { get; set; } = null!;
     public List<TrappedMortalitiesReport> TrappedMortalitiesReports { get; set; } = null!;

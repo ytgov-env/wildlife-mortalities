@@ -9,17 +9,24 @@
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
 <MudPaper Class="pa-4 my-4">
-    <MudAutocomplete T="Client" @key="ViewModel.Guides.Count" Label="Add guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
-                     @bind-Value="ViewModel.SelectedGuide" @bind-Value:after="AddClient" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+    <MudAutocomplete T="Client" For="@(() => ViewModel.ChiefGuide)" Label="Chief guide" Placeholder="Search by client id or last name" MinCharacters="2"
+                     @bind-Value="ViewModel.ChiefGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
     </MudAutocomplete>
+    @if(ViewModel.AssistantGuides.Count < _maxAssistantGuides)
+    {
+        <MudAutocomplete T="Client" @key="ViewModel.AssistantGuides.Count" Label="Add assistant guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
+                         @bind-Value="ViewModel.SelectedAssistantGuide" @bind-Value:after="AddAssistantGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
+        </MudAutocomplete>
+    }
 
     <MudList>
-        @foreach (var item in ViewModel.Guides)
+        @foreach (var item in ViewModel.AssistantGuides)
         {
             <MudListItem>
                 <MudStack Row="true">
-                    <MudField DisableUnderLine="true" Label="Guide">@item.FirstName @item.LastName</MudField>
+                    <MudField DisableUnderLine="true" Label="Assistant guide">@item.FirstName @item.LastName</MudField>
                     <MudSpacer/>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteGuide(item))"/>
                 </MudStack>
@@ -27,7 +34,7 @@
         }
     </MudList>
     <!--suppress CssUnresolvedCustomProperty -->
-    <ValidationMessage For="@(() => ViewModel.Guides)" Style="font-size: 12px; color: var(--mud-palette-error);"/>
+    <ValidationMessage For="@(() => ViewModel.AssistantGuides)" Style="font-size: 12px; color: var(--mud-palette-error);"/>
 </MudPaper>
 
 <MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result" For="@(() => ViewModel.Result)">
@@ -60,6 +67,7 @@
 }
 
 @code {
+    private const int _maxAssistantGuides = 2;
     private IEnumerable<OutfitterArea> _outfitterAreas = Array.Empty<OutfitterArea>();
 
     [Parameter]
@@ -92,18 +100,18 @@
         _outfitterAreas = await MortalityService.GetOutfitterAreas();
     }
 
-    public void AddClient()
+    public void AddAssistantGuide()
     {
-        var input = ViewModel.SelectedGuide;
+        var input = ViewModel.SelectedAssistantGuide;
         if (input != null)
         {
             var hasErrors = false;
-            if (ViewModel.Guides.Count == 3)
+            if (ViewModel.AssistantGuides.Count == _maxAssistantGuides)
             {
-                SnackBar.Add("You may add up to 3 guides", Severity.Error);
+                SnackBar.Add($"You may add up to {_maxAssistantGuides} assistant guides", Severity.Error);
                 hasErrors = true;
             }
-            else if (ViewModel.Guides.Any(x => x.EnvClientId == input.EnvClientId))
+            else if (ViewModel.AssistantGuides.Any(x => x.EnvClientId == input.EnvClientId))
             {
                 hasErrors = true;
                 SnackBar.Add($"{input.FirstName} {input.LastName} already added", Severity.Error);
@@ -111,9 +119,9 @@
 
             if (hasErrors == false)
             {
-                ViewModel.Guides.Add(input);
-                ViewModel.SelectedGuide = null;
-                EditContext.NotifyFieldChanged(FieldIdentifier.Create(() => ViewModel.Guides));
+                ViewModel.AssistantGuides.Add(input);
+                ViewModel.SelectedAssistantGuide = null;
+                EditContext.NotifyFieldChanged(FieldIdentifier.Create(() => ViewModel.AssistantGuides));
             }
         }
     }
@@ -156,8 +164,8 @@
 
     private void DeleteGuide(Client guide)
     {
-        ViewModel.Guides.Remove(guide);
-        EditContext.NotifyFieldChanged(FieldIdentifier.Create(() => ViewModel.Guides));
+        ViewModel.AssistantGuides.Remove(guide);
+        EditContext.NotifyFieldChanged(FieldIdentifier.Create(() => ViewModel.AssistantGuides));
     }
 
     private async Task<IEnumerable<Client?>> SearchClientByEnvClientIdOrLastName(string input)
