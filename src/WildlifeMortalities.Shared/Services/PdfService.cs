@@ -15,7 +15,7 @@ public class PdfService
 
     public byte[] GetReportPdf(int reportId)
     {
-        var document = Document
+        return Document
             .Create(container =>
             {
                 container.Page(page =>
@@ -51,6 +51,5 @@ public class PdfService
                 });
             })
             .GeneratePdf();
-        return document;
     }
 }

@@ -31,9 +31,7 @@ public class MortalityService : IMortalityService
 
     public async Task<IEnumerable<Report>> GetAllReports(int start = 0, int length = 10)
     {
-        var result = await GetReports(null, start, length);
-
-        return result;
+        return await GetReports(null, start, length);
     }
 
     public async Task<IEnumerable<Report>> GetReportsByEnvClientId(
@@ -42,9 +40,7 @@ public class MortalityService : IMortalityService
         int length = 10
     )
     {
-        var result = await GetReports(envClientId, start, length);
-
-        return result;
+        return await GetReports(envClientId, start, length);
     }
 
     public async Task CreateReport(IndividualHuntedMortalityReport report)
@@ -69,10 +65,10 @@ public class MortalityService : IMortalityService
 
         using var context = _dbContextFactory.CreateDbContext();
 
-        var guideIds = report.AssistantGuides.Select(x => x.Id).ToList();
-        var guides = await context.People
+        var assistantGuideIds = report.AssistantGuides.Select(x => x.Id).ToList();
+        var assistantGuides = await context.People
             .OfType<Client>()
-            .Where(x => guideIds.Contains(x.Id) == true)
+            .Where(x => assistantGuideIds.Contains(x.Id) == true)
             .ToListAsync();
 
         var area = await context.OutfitterAreas.FirstOrDefaultAsync(
@@ -87,7 +83,7 @@ public class MortalityService : IMortalityService
             throw new ArgumentException(nameof(report.OutfitterArea));
         }
 
-        report.AssistantGuides = guides;
+        report.AssistantGuides = assistantGuides;
         report.DateSubmitted = DateTimeOffset.Now;
 
         do
@@ -389,14 +385,12 @@ public class MortalityService : IMortalityService
 
         var query = GetReportsQuery(envClientId, context);
 
-        var result = await query
+        return await query
             .OrderBy(x => x.DateSubmitted)
             .Skip(start)
             .Take(length)
             .AsSplitQuery()
             .ToArrayAsync();
-
-        return result;
     }
 
     private static IQueryable<Report> GetReportsIncludingMortalities(AppDbContext context) =>

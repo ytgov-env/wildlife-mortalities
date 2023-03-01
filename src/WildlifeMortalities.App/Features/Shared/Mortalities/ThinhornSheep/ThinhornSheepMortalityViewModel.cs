@@ -6,16 +6,16 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
 
 public class ThinhornSheepMortalityViewModel : MortalityViewModel
 {
-    private ThinhornSheepBodyColour? bodyColour;
+    private ThinhornSheepBodyColour? _bodyColour;
 
     public ThinhornSheepMortalityViewModel() : base(Data.Enums.Species.ThinhornSheep) { }
 
     public ThinhornSheepBodyColour? BodyColour
     {
-        get { return bodyColour; }
+        get { return _bodyColour; }
         set
         {
-            bodyColour = value;
+            _bodyColour = value;
             // Fannin sheep always have a dark tail
             if (value == ThinhornSheepBodyColour.Fannin)
             {

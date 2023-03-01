@@ -11,14 +11,12 @@ public class TrappedReportViewModel
 
     public TrappedMortalitiesReport GetReport(int personId)
     {
-        var report = new TrappedMortalitiesReport
+        return new TrappedMortalitiesReport
         {
             ClientId = personId,
-            TrappedActivities = TrappedActivityViewModels.Select(x => x.GetActivity()).ToList(),
+            TrappedActivities = TrappedActivityViewModels.ConvertAll(x => x.GetActivity()),
             RegisteredTrappingConcession = RegisteredTrappingConcession!
         };
-
-        return report;
     }
 }
 

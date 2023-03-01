@@ -17,9 +17,7 @@ public class MortalityViewModel
     {
         var mortalityType = typeof(Mortality);
         var relevantAssembly = mortalityType.Assembly;
-        var allTypes = relevantAssembly.GetTypes();
-
-        foreach (var item in allTypes)
+        foreach (var item in relevantAssembly.GetTypes())
         {
             if (!item.IsSubclassOf(mortalityType))
             {
