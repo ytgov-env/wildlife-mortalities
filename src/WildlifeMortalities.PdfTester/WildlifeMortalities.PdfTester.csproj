@@ -1,22 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     <PackageReference Include="QuestPDF" Version="2022.12.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\" />
+    <ProjectReference Include="..\WildlifeMortalities.Shared\WildlifeMortalities.Shared.csproj" />
   </ItemGroup>
 
 </Project>
