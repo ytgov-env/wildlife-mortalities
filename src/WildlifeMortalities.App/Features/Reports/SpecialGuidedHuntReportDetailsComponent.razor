@@ -2,7 +2,7 @@
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
 <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
-<MudField Label="Guide" DisableUnderLine="true">@Report.Guide.FirstName @Report.Guide.LastName (@Report.Guide.EnvClientId)</MudField>
+<GuideComponent Guide="@Report.Guide" Label="Guide"/>
 <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
 
 @code {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
@@ -25,6 +26,8 @@ public class Client : Person
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsClient { get; set; } = null!;
     public List<TrappedMortalitiesReport> TrappedMortalitiesReports { get; set; } = null!;
+
+    public override string ToString() => $"{FirstName} {LastName} ({EnvClientId})";
 }
 
 public class ClientConfig : IEntityTypeConfiguration<Client>

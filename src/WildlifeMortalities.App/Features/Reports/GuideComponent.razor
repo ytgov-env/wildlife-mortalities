@@ -1,0 +1,25 @@
+﻿@using WildlifeMortalities.Data.Entities.People;
+<MudStack Row="true">
+    <MudField Label="@Label" DisableUnderLine="true">@Guide</MudField>
+    <MudTooltip Text="View client">
+        <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" OnClick="NavigateToClientOverview" />
+    </MudTooltip>
+</MudStack>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public string Label { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public Client Guide { get; set; } = null!;
+
+    [Inject]
+    public NavigationManager Navigation { get; set; } = null!;
+
+    private void NavigateToClientOverview()
+    {
+        Navigation.NavigateTo($"reporters/clients/{Guide.EnvClientId}");
+    }
+}

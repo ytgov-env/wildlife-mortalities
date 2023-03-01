@@ -3,8 +3,17 @@
 <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
 <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
 <MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>
-<MudField Label="Chief guide" DisableUnderLine="true">@Report.ChiefGuide.EnvClientId</MudField>
-<MudField Label="Assistant guides" DisableUnderLine="true">@Report.GuidesToString()</MudField>
+<MudList Dense="true" Class="ml-n4">
+    <MudListItem>
+        <GuideComponent Guide="@Report.ChiefGuide" Label="Chief guide"/>
+    </MudListItem>
+    @foreach (var item in Report.AssistantGuides)
+    {
+        <MudListItem>
+            <GuideComponent Guide="item" Label="Assistant guide"/>
+        </MudListItem>
+    }
+</MudList>
 <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
 
 @code {
