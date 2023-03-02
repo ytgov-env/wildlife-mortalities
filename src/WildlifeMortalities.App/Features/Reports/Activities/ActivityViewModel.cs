@@ -2,7 +2,6 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.Validators;
 using WildlifeMortalities.App.Features.Shared.Mortalities;
-using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
 
@@ -30,23 +29,23 @@ public abstract class ActivityViewModel
     public MortalityWithSpeciesSelectionViewModel MortalityWithSpeciesSelectionViewModel { get; set; }
 }
 
-public class TrappedActivityViewModel : ActivityViewModel
+public abstract class ActivityViewModelValidator<T> : AbstractValidator<T>
+    where T : ActivityViewModel
 {
-    public TrappedActivityViewModel() { }
+    protected ActivityViewModelValidator()
+    {
+        RuleFor(x => x.Comment).MaximumLength(1000);
 
-    public TrappedActivityViewModel(TrappedActivity activity, ReportDetail? reportDetail = null)
-        : base(activity, reportDetail) { }
+        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species)
+            .NotNull()
+            .WithMessage("Please select a species.");
 
-    public TrappedActivity GetActivity() =>
-        new()
-        {
-            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
-            Comment = Comment
-        };
+        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
+            .NotNull()
+            .When(x => x.MortalityWithSpeciesSelectionViewModel.Species != null)
+            .SetInheritanceValidator(x => x.AddMortalityValidators());
+    }
 }
-
-public class TrappedActivityViewModelValidator
-    : ActivityViewModelValidator<TrappedActivityViewModel> { }
 
 public static class FluentValidationExtensions
 {
@@ -127,58 +126,5 @@ public static class FluentValidationExtensions
                 new[] { validatorFactory.Invoke(null), Array.Empty<string>() }
             );
         }
-    }
-}
-
-public abstract class ActivityViewModelValidator<T> : AbstractValidator<T>
-    where T : ActivityViewModel
-{
-    public ActivityViewModelValidator()
-    {
-        RuleFor(x => x.Comment).MaximumLength(1000);
-
-        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species)
-            .NotNull()
-            .WithMessage("Please select a species.");
-
-        RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
-            .NotNull()
-            .When(x => x.MortalityWithSpeciesSelectionViewModel.Species != null)
-            .SetInheritanceValidator(x => x.AddMortalityValidators());
-    }
-}
-
-public class HuntedActivityViewModel : ActivityViewModel
-{
-    public HuntedActivityViewModel() { }
-
-    public HuntedActivityViewModel(HuntedActivity activity, ReportDetail? reportDetail = null)
-        : base(activity, reportDetail)
-    {
-        Landmark = activity.Landmark;
-        Comment = activity.Comment;
-        IsCompleted = true;
-        GameManagementArea = activity.GameManagementArea;
-    }
-
-    public string Landmark { get; set; } = string.Empty;
-    public GameManagementArea? GameManagementArea { get; set; }
-
-    public HuntedActivity GetActivity() =>
-        new()
-        {
-            Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
-            Landmark = Landmark,
-            GameManagementAreaId = GameManagementArea?.Id ?? 0,
-            Comment = Comment
-        };
-}
-
-public class HuntedActivityViewModelValidator : ActivityViewModelValidator<HuntedActivityViewModel>
-{
-    public HuntedActivityViewModelValidator()
-    {
-        RuleFor(x => x.Landmark).NotNull();
-        RuleFor(x => x.GameManagementArea).NotNull();
     }
 }
