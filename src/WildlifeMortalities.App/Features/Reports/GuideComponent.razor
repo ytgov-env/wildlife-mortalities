@@ -1,9 +1,12 @@
 ﻿@using WildlifeMortalities.Data.Entities.People;
 <MudStack Row="true">
     <MudField Label="@Label" DisableUnderLine="true">@Guide</MudField>
-    <MudTooltip Text="View client">
-        <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" OnClick="NavigateToClientOverview" />
-    </MudTooltip>
+    @if(Guide is not null)
+    {
+        <MudTooltip Text="View client">
+            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" OnClick="NavigateToClientOverview" />
+        </MudTooltip>
+    }
 </MudStack>
 
 @code {
@@ -13,13 +16,16 @@
 
     [Parameter]
     [EditorRequired]
-    public Client Guide { get; set; } = null!;
+    public Client? Guide { get; set; }
 
     [Inject]
     public NavigationManager Navigation { get; set; } = null!;
 
     private void NavigateToClientOverview()
     {
-        Navigation.NavigateTo($"reporters/clients/{Guide.EnvClientId}");
+        if (Guide is not null)
+        {
+            Navigation.NavigateTo($"reporters/clients/{Guide.EnvClientId}");
+        }
     }
 }
