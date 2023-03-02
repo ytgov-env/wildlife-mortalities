@@ -32,7 +32,10 @@
             RuleFor(x => x.SkullCondition).NotEmpty().IsInEnum();
             When(x => x.SkullCondition != GrizzlyBearSkullCondition.NoSkullSubmitted && x.SkullCondition != GrizzlyBearSkullCondition.Destroyed, () =>
             {
-                RuleFor(x => x.SkullLengthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
+                RuleFor(x => x.SkullLengthMillimetres)
+                    .NotNull()
+                    .GreaterThan(x => x.SkullWidthMillimetres).WithMessage("Skull length must be greater than skull width.")
+                    .LessThan(1000);
                 RuleFor(x => x.SkullWidthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
             });
         }
