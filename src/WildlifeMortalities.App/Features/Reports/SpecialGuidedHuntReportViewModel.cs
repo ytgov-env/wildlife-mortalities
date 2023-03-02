@@ -47,35 +47,39 @@ public class SpecialGuidedHuntReportViewModelValidator
 {
     public SpecialGuidedHuntReportViewModelValidator()
     {
-        RuleFor(x => x.HuntingDateRange.Start)
-            .NotNull()
-            .WithMessage("Please enter the hunting dates");
-        RuleFor(x => x.HuntingDateRange.End)
-            .Must(x => x <= DateTimeOffset.Now)
-            .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
-            .WithMessage("The hunting dates cannot be in the future.");
         RuleFor(x => x.Guide).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
+
+        RuleFor(x => x.HuntingDateRange)
+            .NotNull()
+            .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
+            .WithMessage("Please enter the hunting dates.");
+        RuleFor(x => x.HuntingDateRange)
+            .Must(x => x.End <= DateTimeOffset.Now)
+            .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
+            .WithMessage("The hunting dates cannot be in the future.");
+        RuleFor(x => x.HuntingDateRange)
+            .Must(
+                (model, _) =>
+                    model.HuntedActivityViewModels.Any(
+                        y =>
+                            y.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.DateOfDeath
+                                > model.HuntingDateRange.End
+                            || y.MortalityWithSpeciesSelectionViewModel
+                                .MortalityViewModel
+                                .DateOfDeath < model.HuntingDateRange.Start
+                    ) == false
+            )
+            .WithMessage(
+                "The date of death for each mortality must be between the specified hunting dates"
+            );
+
         RuleFor(x => x.HuntedActivityViewModels)
             .NotEmpty()
             .When(x => x.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
             .WithMessage(
                 x =>
                     $"Please add at least one mortality, or change the {nameof(x.Result).ToLower()}."
-            );
-        // Todo: show validation message in activity card
-        RuleForEach(report => report.HuntedActivityViewModels)
-            .Must(
-                (report, activity) =>
-                    activity.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.DateOfDeath
-                        >= report.HuntingDateRange.Start
-                    && activity
-                        .MortalityWithSpeciesSelectionViewModel
-                        .MortalityViewModel
-                        .DateOfDeath <= report.HuntingDateRange.End
-            )
-            .WithMessage(
-                "The date of death for each mortality must be between the specified hunting dates"
             );
     }
 }

@@ -130,7 +130,8 @@ public static class FluentValidationExtensions
     }
 }
 
-public class ActivityViewModelValidator<T> : AbstractValidator<T> where T : ActivityViewModel
+public abstract class ActivityViewModelValidator<T> : AbstractValidator<T>
+    where T : ActivityViewModel
 {
     public ActivityViewModelValidator()
     {

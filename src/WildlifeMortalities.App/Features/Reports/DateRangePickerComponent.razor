@@ -1,0 +1,24 @@
+﻿@using System.Linq.Expressions;
+<MudDateRangePicker Label="Hunting dates" DateRange="DateRange" DateRangeChanged="DateRangeChanged"
+                    Error="@HasRangeError()" ErrorText="@GetRangeError()" />
+
+@code {
+    [Parameter] public string Label { get; set; } = null!;
+    [Parameter] public Expression<Func<object>> For { get; set; } = null!;
+    [Parameter] public DateRange DateRange { get; set; } = null!;
+    [Parameter] public EventCallback<DateRange> DateRangeChanged { get; set; }
+
+    [CascadingParameter] EditContext EditContext { get; set; } = null!;
+
+    private bool HasRangeError()
+    {
+        var messages = EditContext.GetValidationMessages(For);
+        return messages.Any();
+    }
+
+    private string? GetRangeError()
+    {
+        var messages = EditContext.GetValidationMessages(For);
+        return messages.FirstOrDefault();
+    }
+}
