@@ -31,11 +31,21 @@ public partial class MortalityReportPage
     [Inject]
     private IDialogService DialogService { get; set; }
 
+    private void CreateNewEditContext()
+    {
+        if (_editContext != null)
+        {
+            _editContext.OnFieldChanged -= _editContext_OnFieldChanged;
+        }
+
+        _editContext = new EditContext(_vm);
+        _editContext.OnFieldChanged += _editContext_OnFieldChanged;
+    }
+
     protected override void OnInitialized()
     {
         _vm = new MortalityReportPageViewModel();
-        _editContext = new EditContext(_vm);
-        _editContext.OnFieldChanged += _editContext_OnFieldChanged;
+        CreateNewEditContext();
     }
 
     private void _editContext_OnFieldChanged(object? sender, FieldChangedEventArgs e)
@@ -54,7 +64,8 @@ public partial class MortalityReportPage
 
     private void ReportTypeChanged(MortalityReportType type)
     {
-        var typeBefore = _vm.MortalityReportType;
+        CreateNewEditContext();
+
         _vm.MortalityReportType = type;
 
         _vm.IndividualHuntedMortalityReportViewModel = null;
@@ -94,7 +105,7 @@ public partial class MortalityReportPage
 
     private async Task CreateReport()
     {
-        var signature = await _signaturePad.GetSignature();
+        _ = await _signaturePad.GetSignature();
 
         var personId = _personId!.Value;
 
