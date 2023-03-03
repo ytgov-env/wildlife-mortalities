@@ -146,8 +146,12 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
         RuleFor(m => m.Sex)
             .NotNull()
             .IsInEnum()
-            .WithMessage("Sex must be set to Female, Male, or Unknown.");
+            .WithMessage("Sex must be set to female, male, or unknown.");
         RuleFor(m => m.DateOfDeath).NotNull().WithMessage("Please select a date of death.");
+        RuleFor(m => m.DateOfDeath)
+            .Must(x => x <= DateTime.Now)
+            .When(m => m.DateOfDeath is not null)
+            .WithMessage("The date of death cannot occur in the future.");
     }
 }
 
