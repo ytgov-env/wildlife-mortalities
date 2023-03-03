@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.People;

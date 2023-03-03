@@ -1,4 +1,4 @@
-namespace WildlifeMortalities.PosseExampleApi.Models;
+﻿namespace WildlifeMortalities.PosseExampleApi.Models;
 
 /// <param name="Type"></param>
 /// <param name="EnvClientId"></param>

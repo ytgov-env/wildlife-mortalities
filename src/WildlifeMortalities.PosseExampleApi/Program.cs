@@ -1,4 +1,4 @@
-global using FastEndpoints;
+﻿global using FastEndpoints;
 using System.Text.Json.Serialization;
 using FastEndpoints.Swagger;
 using NSwag;
@@ -28,7 +28,9 @@ builder.Services.AddSwaggerDoc(
             "ApiKey",
             new OpenApiSecurityScheme
             {
-                Name = "api_key", In = OpenApiSecurityApiKeyLocation.Header, Type = OpenApiSecuritySchemeType.ApiKey
+                Name = "api_key",
+                In = OpenApiSecurityApiKeyLocation.Header,
+                Type = OpenApiSecuritySchemeType.ApiKey
             }
         );
 

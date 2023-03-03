@@ -10,7 +10,8 @@ public class IndividualHuntedMortalityReportViewModel
     public IndividualHuntedMortalityReport GetReport(int personId) =>
         new()
         {
-            HuntedActivity = HuntedActivityViewModel.GetActivity(), ClientId = personId
+            HuntedActivity = HuntedActivityViewModel.GetActivity(),
+            ClientId = personId
             // Todo add date logic
         };
 }

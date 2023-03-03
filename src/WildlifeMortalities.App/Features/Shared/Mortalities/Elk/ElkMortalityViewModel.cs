@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using static WildlifeMortalities.Data.Entities.Mortalities.ElkMortality;

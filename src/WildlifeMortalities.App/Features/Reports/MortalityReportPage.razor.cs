@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
@@ -101,40 +101,40 @@ public partial class MortalityReportPage
         switch (_vm.MortalityReportType)
         {
             case MortalityReportType.Conflict:
-            {
-                var report = new HumanWildlifeConflictMortalityReport();
-                await MortalityService.CreateReport(report);
-                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
-                break;
-            }
+                {
+                    var report = new HumanWildlifeConflictMortalityReport();
+                    await MortalityService.CreateReport(report);
+                    NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
+                    break;
+                }
             case MortalityReportType.IndividualHunt:
-            {
-                var report = _vm.IndividualHuntedMortalityReportViewModel!.GetReport(personId);
-                await MortalityService.CreateReport(report);
-                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
-                break;
-            }
+                {
+                    var report = _vm.IndividualHuntedMortalityReportViewModel!.GetReport(personId);
+                    await MortalityService.CreateReport(report);
+                    NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
+                    break;
+                }
             case MortalityReportType.OutfitterGuidedHunt:
-            {
-                var report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
-                await MortalityService.CreateReport(report);
-                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
-                break;
-            }
+                {
+                    var report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
+                    await MortalityService.CreateReport(report);
+                    NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
+                    break;
+                }
             case MortalityReportType.SpecialGuidedHunt:
-            {
-                var report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
-                await MortalityService.CreateReport(report);
-                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
-                break;
-            }
+                {
+                    var report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
+                    await MortalityService.CreateReport(report);
+                    NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
+                    break;
+                }
             case MortalityReportType.Trapped:
-            {
-                var report = _vm.TrappedReportViewModel!.GetReport(personId);
-                await MortalityService.CreateReport(report);
-                NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
-                break;
-            }
+                {
+                    var report = _vm.TrappedReportViewModel!.GetReport(personId);
+                    await MortalityService.CreateReport(report);
+                    NavigationManager.NavigateTo($"mortality-reports/{report.Id}");
+                    break;
+                }
         }
 
         //NavigationManager.NavigateTo($"reporters/clients/{EnvClientId}");
