@@ -4,7 +4,8 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public abstract class Mortality<T> : Mortality where T : Mortality
+public abstract class Mortality<T> : Mortality
+    where T : Mortality
 {
     public virtual IEntityTypeConfiguration<T> GetConfig() => new MortalityConfig<T>();
 }
@@ -24,7 +25,8 @@ public abstract class Mortality
     public FurbearerSealingCertificate? FurbearerSealingCertificate { get; set; }
 }
 
-public class MortalityConfig<T> : IEntityTypeConfiguration<T> where T : Mortality
+public class MortalityConfig<T> : IEntityTypeConfiguration<T>
+    where T : Mortality
 {
     public void Configure(EntityTypeBuilder<T> builder)
     {

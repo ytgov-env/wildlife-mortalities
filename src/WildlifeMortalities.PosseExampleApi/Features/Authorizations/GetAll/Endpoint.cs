@@ -93,7 +93,7 @@ public class Endpoint : Endpoint<GetAuthorizationsRequest, GetAuthorizationsResp
             {
                 new(
                     req.AuthorizationType
-                    ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
+                        ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
                     "41203",
                     "EHL-24202",
                     null,

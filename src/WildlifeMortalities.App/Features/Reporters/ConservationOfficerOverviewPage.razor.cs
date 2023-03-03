@@ -11,11 +11,14 @@ public partial class ConservationOfficerOverviewPage : IDisposable
 
     private SelectConservationOfficerViewModel _selectedConservationOfficerViewModel = null!;
 
-    [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
+    [Parameter]
+    public EventCallback<bool> ValidationChanged { get; set; }
 
-    [Parameter] public int Id { get; set; }
+    [Parameter]
+    public int Id { get; set; }
 
-    [Inject] private ConservationOfficerService ConservationOfficerService { get; set; } = default!;
+    [Inject]
+    private ConservationOfficerService ConservationOfficerService { get; set; } = default!;
 
     public void Dispose()
     {
@@ -42,6 +45,6 @@ public partial class ConservationOfficerOverviewPage : IDisposable
         IEnumerable<ConservationOfficer>
     > SearchConservationOfficerByBadgeNumberOrLastName(string input) =>
         (await ConservationOfficerService.SearchByBadgeNumber(input))
-        .Union(await ConservationOfficerService.SearchByLastName(input))
-        .OrderBy(x => x.LastName);
+            .Union(await ConservationOfficerService.SearchByLastName(input))
+            .OrderBy(x => x.LastName);
 }

@@ -9,7 +9,8 @@ public class GrizzlyBearBioSubmission : BioSubmission<GrizzlyBearMortality>
 {
     public GrizzlyBearBioSubmission() { }
 
-    public GrizzlyBearBioSubmission(int mortalityId) : base(mortalityId) { }
+    public GrizzlyBearBioSubmission(int mortalityId)
+        : base(mortalityId) { }
 
     public GrizzlyBearSkullCondition? SkullCondition { get; set; }
     public int? SkullLengthMillimetres { get; set; }

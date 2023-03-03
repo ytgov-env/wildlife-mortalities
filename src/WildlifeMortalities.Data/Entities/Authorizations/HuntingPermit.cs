@@ -20,9 +20,7 @@ public class HuntingPermit : Authorization
         WoodBisonThreshold = 100
     }
 
-    public HuntingPermit()
-    {
-    }
+    public HuntingPermit() { }
 
     public HuntingPermit(PermitType type) => Type = type;
 
@@ -34,16 +32,16 @@ public class HuntingPermit : Authorization
     public bool IsCaribouRelated() =>
         Type
             is PermitType.CaribouFortymileFall
-            or PermitType.CaribouFortymileSummer
-            or PermitType.CaribouFortymileWinter
-            or PermitType.CaribouHartRiver
-            or PermitType.CaribouNelchina;
+                or PermitType.CaribouFortymileSummer
+                or PermitType.CaribouFortymileWinter
+                or PermitType.CaribouHartRiver
+                or PermitType.CaribouNelchina;
 
     public bool IsElkRelated() =>
         Type
             is PermitType.ElkExclusion
-            or PermitType.ElkAdaptive
-            or PermitType.ElkAdaptiveFirstNations;
+                or PermitType.ElkAdaptive
+                or PermitType.ElkAdaptiveFirstNations;
 
     public bool IsMooseRelated() => Type is PermitType.MooseThreshold;
 

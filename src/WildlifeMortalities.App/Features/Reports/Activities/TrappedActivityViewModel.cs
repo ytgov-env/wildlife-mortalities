@@ -20,5 +20,4 @@ public class TrappedActivityViewModel : ActivityViewModel
 }
 
 public class TrappedActivityViewModelValidator
-    : ActivityViewModelValidator<TrappedActivityViewModel>
-{ }
+    : ActivityViewModelValidator<TrappedActivityViewModel> { }

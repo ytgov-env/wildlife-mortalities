@@ -8,7 +8,8 @@ public class ThinhornSheepMortalityViewModel : MortalityViewModel
 {
     private ThinhornSheepBodyColour? _bodyColour;
 
-    public ThinhornSheepMortalityViewModel() : base(Data.Enums.Species.ThinhornSheep) { }
+    public ThinhornSheepMortalityViewModel()
+        : base(Data.Enums.Species.ThinhornSheep) { }
 
     public ThinhornSheepBodyColour? BodyColour
     {

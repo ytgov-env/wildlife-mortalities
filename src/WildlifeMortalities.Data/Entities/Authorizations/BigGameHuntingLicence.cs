@@ -18,9 +18,7 @@ public class BigGameHuntingLicence : Authorization
         YukonResidentTrapper = 80
     }
 
-    public BigGameHuntingLicence()
-    {
-    }
+    public BigGameHuntingLicence() { }
 
     public BigGameHuntingLicence(LicenceType type) => Type = type;
 

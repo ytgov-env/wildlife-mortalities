@@ -88,7 +88,7 @@ public class Endpoint
             {
                 new(
                     req.AuthorizationType
-                    ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
+                        ?? AuthorizationType.BigGameHuntingLicence_CanadianResident,
                     req.EnvClientId ?? "41203",
                     "EHL-24202",
                     null,

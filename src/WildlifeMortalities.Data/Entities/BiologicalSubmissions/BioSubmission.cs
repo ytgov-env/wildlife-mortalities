@@ -15,7 +15,8 @@ public abstract class BioSubmission
     public abstract void ClearDependencies();
 }
 
-public abstract class BioSubmission<T> : BioSubmission where T : Mortality
+public abstract class BioSubmission<T> : BioSubmission
+    where T : Mortality
 {
     public BioSubmission() { }
 

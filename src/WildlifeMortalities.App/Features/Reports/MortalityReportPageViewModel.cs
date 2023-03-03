@@ -7,7 +7,8 @@ public class MortalityReportPageViewModel
     public MortalityReportType MortalityReportType { get; set; } =
         MortalityReportType.IndividualHunt;
 
-    public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; } = new();
+    public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; } =
+        new();
 
     public OutfitterGuidedHuntReportViewModel? OutfitterGuidedHuntReportViewModel { get; set; }
     public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }

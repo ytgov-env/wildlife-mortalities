@@ -8,7 +8,8 @@ public class WoodBisonBioSubmission : BioSubmission<WoodBisonMortality>
 {
     public WoodBisonBioSubmission() { }
 
-    public WoodBisonBioSubmission(int mortalityId) : base(mortalityId) { }
+    public WoodBisonBioSubmission(int mortalityId)
+        : base(mortalityId) { }
 
     public bool IsIncisorBarIncluded { get; set; }
 }

@@ -11,13 +11,17 @@ public partial class ClientOverviewPage : IDisposable
 
     private SelectClientViewModel _selectedClientViewModel = default!;
 
-    [Inject] private ClientService ClientService { get; set; } = default!;
+    [Inject]
+    private ClientService ClientService { get; set; } = default!;
 
-    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
 
-    [Parameter] public EventCallback<bool> ValidationChanged { get; set; }
+    [Parameter]
+    public EventCallback<bool> ValidationChanged { get; set; }
 
-    [Parameter] public string EnvClientId { get; set; } = string.Empty;
+    [Parameter]
+    public string EnvClientId { get; set; } = string.Empty;
 
     public void Dispose()
     {
@@ -61,6 +65,6 @@ public partial class ClientOverviewPage : IDisposable
 
     private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input) =>
         (await ClientService.SearchByEnvClientId(input))
-        .Union(await ClientService.SearchByLastName(input))
-        .OrderBy(x => x.LastName);
+            .Union(await ClientService.SearchByLastName(input))
+            .OrderBy(x => x.LastName);
 }

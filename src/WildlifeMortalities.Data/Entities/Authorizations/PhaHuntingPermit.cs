@@ -17,9 +17,7 @@ public class PhaHuntingPermit : Authorization
         ThinhornSheepKluane = 70
     }
 
-    public PhaHuntingPermit()
-    {
-    }
+    public PhaHuntingPermit() { }
 
     public PhaHuntingPermit(PermitType type) => Type = type;
 

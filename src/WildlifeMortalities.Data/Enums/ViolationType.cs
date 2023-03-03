@@ -1,5 +1,3 @@
 ﻿namespace WildlifeMortalities.Data.Enums;
 
-public enum ViolationType
-{
-}
+public enum ViolationType { }

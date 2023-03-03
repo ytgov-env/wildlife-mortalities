@@ -20,9 +20,7 @@ public class HuntingSeal : Authorization
         WoodBison = 90
     }
 
-    public HuntingSeal()
-    {
-    }
+    public HuntingSeal() { }
 
     public HuntingSeal(SealType type) => Type = type;
 

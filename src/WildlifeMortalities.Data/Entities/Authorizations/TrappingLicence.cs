@@ -16,9 +16,7 @@ public class TrappingLicence : Authorization
         GroupConcessionAreaMemberSenior = 60
     }
 
-    public TrappingLicence()
-    {
-    }
+    public TrappingLicence() { }
 
     public TrappingLicence(LicenceType type) => Type = type;
 

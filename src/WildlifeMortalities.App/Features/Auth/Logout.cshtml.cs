@@ -14,7 +14,10 @@ public class LogoutModel : PageModel
     {
         await HttpContext.SignOutAsync(
             Configuration["AuthNProvider:Name"],
-            new AuthenticationProperties { RedirectUri = Configuration["AuthNProvider:SignedOutCallbackPath"] }
+            new AuthenticationProperties
+            {
+                RedirectUri = Configuration["AuthNProvider:SignedOutCallbackPath"]
+            }
         );
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }

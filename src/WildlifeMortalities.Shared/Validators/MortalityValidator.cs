@@ -2,7 +2,8 @@
 
 namespace WildlifeMortalities.Shared.Validators;
 
-public class MortalityValidator<T> : AbstractValidator<Mortality> where T : Mortality
+public class MortalityValidator<T> : AbstractValidator<Mortality>
+    where T : Mortality
 {
     public MortalityValidator()
     {

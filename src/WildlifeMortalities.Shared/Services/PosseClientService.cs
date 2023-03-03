@@ -73,7 +73,8 @@ public class PosseClientService : IPosseClientService
                 () => new BigGameHuntingLicence(BigGameHuntingLicence.LicenceType.CanadianResident)
             },
             {
-                AuthorizationType.BigGameHuntingLicence_CanadianResidentSpecialGuided, () =>
+                AuthorizationType.BigGameHuntingLicence_CanadianResidentSpecialGuided,
+                () =>
                     new BigGameHuntingLicence(
                         BigGameHuntingLicence.LicenceType.CanadianResidentSpecialGuided
                     )
@@ -87,23 +88,27 @@ public class PosseClientService : IPosseClientService
                 () => new BigGameHuntingLicence(BigGameHuntingLicence.LicenceType.YukonResident)
             },
             {
-                AuthorizationType.BigGameHuntingLicence_YukonResidentSenior, () =>
+                AuthorizationType.BigGameHuntingLicence_YukonResidentSenior,
+                () =>
                     new BigGameHuntingLicence(BigGameHuntingLicence.LicenceType.YukonResidentSenior)
             },
             {
-                AuthorizationType.BigGameHuntingLicence_YukonResidentFirstNationsOrInuit, () =>
+                AuthorizationType.BigGameHuntingLicence_YukonResidentFirstNationsOrInuit,
+                () =>
                     new BigGameHuntingLicence(
                         BigGameHuntingLicence.LicenceType.YukonResidentFirstNationsOrInuit
                     )
             },
             {
-                AuthorizationType.BigGameHuntingLicence_YukonResidentFirstNationsOrInuitSenior, () =>
+                AuthorizationType.BigGameHuntingLicence_YukonResidentFirstNationsOrInuitSenior,
+                () =>
                     new BigGameHuntingLicence(
                         BigGameHuntingLicence.LicenceType.YukonResidentFirstNationsOrInuitSenior
                     )
             },
             {
-                AuthorizationType.BigGameHuntingLicence_YukonResidentTrapper, () =>
+                AuthorizationType.BigGameHuntingLicence_YukonResidentTrapper,
+                () =>
                     new BigGameHuntingLicence(
                         BigGameHuntingLicence.LicenceType.YukonResidentTrapper
                     )
@@ -152,23 +157,59 @@ public class PosseClientService : IPosseClientService
                 AuthorizationType.HuntingSeal_AmericanBlackBear,
                 () => new HuntingSeal(HuntingSeal.SealType.AmericanBlackBear)
             },
-            { AuthorizationType.HuntingSeal_Caribou, () => new HuntingSeal(HuntingSeal.SealType.Caribou) },
-            { AuthorizationType.HuntingSeal_Deer, () => new HuntingSeal(HuntingSeal.SealType.Deer) },
+            {
+                AuthorizationType.HuntingSeal_Caribou,
+                () => new HuntingSeal(HuntingSeal.SealType.Caribou)
+            },
+            {
+                AuthorizationType.HuntingSeal_Deer,
+                () => new HuntingSeal(HuntingSeal.SealType.Deer)
+            },
             { AuthorizationType.HuntingSeal_Elk, () => new HuntingSeal(HuntingSeal.SealType.Elk) },
-            { AuthorizationType.HuntingSeal_GrizzlyBear, () => new HuntingSeal(HuntingSeal.SealType.GrizzlyBear) },
-            { AuthorizationType.HuntingSeal_Moose, () => new HuntingSeal(HuntingSeal.SealType.Moose) },
-            { AuthorizationType.HuntingSeal_MountainGoat, () => new HuntingSeal(HuntingSeal.SealType.MountainGoat) },
-            { AuthorizationType.HuntingSeal_ThinhornSheep, () => new HuntingSeal(HuntingSeal.SealType.ThinhornSheep) },
-            { AuthorizationType.HuntingSeal_WoodBison, () => new HuntingSeal(HuntingSeal.SealType.WoodBison) },
-            { AuthorizationType.OutfitterAssistantGuideLicence, () => new OutfitterAssistantGuideLicence() },
-            { AuthorizationType.OutfitterChiefGuideLicence, () => new OutfitterChiefGuideLicence() },
+            {
+                AuthorizationType.HuntingSeal_GrizzlyBear,
+                () => new HuntingSeal(HuntingSeal.SealType.GrizzlyBear)
+            },
+            {
+                AuthorizationType.HuntingSeal_Moose,
+                () => new HuntingSeal(HuntingSeal.SealType.Moose)
+            },
+            {
+                AuthorizationType.HuntingSeal_MountainGoat,
+                () => new HuntingSeal(HuntingSeal.SealType.MountainGoat)
+            },
+            {
+                AuthorizationType.HuntingSeal_ThinhornSheep,
+                () => new HuntingSeal(HuntingSeal.SealType.ThinhornSheep)
+            },
+            {
+                AuthorizationType.HuntingSeal_WoodBison,
+                () => new HuntingSeal(HuntingSeal.SealType.WoodBison)
+            },
+            {
+                AuthorizationType.OutfitterAssistantGuideLicence,
+                () => new OutfitterAssistantGuideLicence()
+            },
+            {
+                AuthorizationType.OutfitterChiefGuideLicence,
+                () => new OutfitterChiefGuideLicence()
+            },
             {
                 AuthorizationType.PhaHuntingPermit_Caribou,
                 () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.Caribou)
             },
-            { AuthorizationType.PhaHuntingPermit_Deer, () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.Deer) },
-            { AuthorizationType.PhaHuntingPermit_Elk, () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.Elk) },
-            { AuthorizationType.PhaHuntingPermit_Moose, () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.Moose) },
+            {
+                AuthorizationType.PhaHuntingPermit_Deer,
+                () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.Deer)
+            },
+            {
+                AuthorizationType.PhaHuntingPermit_Elk,
+                () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.Elk)
+            },
+            {
+                AuthorizationType.PhaHuntingPermit_Moose,
+                () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.Moose)
+            },
             {
                 AuthorizationType.PhaHuntingPermit_MountainGoat,
                 () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.MountainGoat)
@@ -182,13 +223,15 @@ public class PosseClientService : IPosseClientService
                 () => new PhaHuntingPermit(PhaHuntingPermit.PermitType.ThinhornSheepKluane)
             },
             {
-                AuthorizationType.SmallGameHuntingLicence_CanadianResident, () =>
+                AuthorizationType.SmallGameHuntingLicence_CanadianResident,
+                () =>
                     new SmallGameHuntingLicence(
                         SmallGameHuntingLicence.LicenceType.CanadianResident
                     )
             },
             {
-                AuthorizationType.SmallGameHuntingLicence_CanadianResidentFirstNationsOrInuit, () =>
+                AuthorizationType.SmallGameHuntingLicence_CanadianResidentFirstNationsOrInuit,
+                () =>
                     new SmallGameHuntingLicence(
                         SmallGameHuntingLicence.LicenceType.CanadianResidentFirstNationsOrInuit
                     )
@@ -198,7 +241,8 @@ public class PosseClientService : IPosseClientService
                 () => new SmallGameHuntingLicence(SmallGameHuntingLicence.LicenceType.NonResident)
             },
             {
-                AuthorizationType.SmallGameHuntingLicence_NonResidentFirstNationsOrInuit, () =>
+                AuthorizationType.SmallGameHuntingLicence_NonResidentFirstNationsOrInuit,
+                () =>
                     new SmallGameHuntingLicence(
                         SmallGameHuntingLicence.LicenceType.NonResidentFirstNationsOrInuit
                     )
@@ -208,19 +252,22 @@ public class PosseClientService : IPosseClientService
                 () => new SmallGameHuntingLicence(SmallGameHuntingLicence.LicenceType.YukonResident)
             },
             {
-                AuthorizationType.SmallGameHuntingLicence_YukonResidentSenior, () =>
+                AuthorizationType.SmallGameHuntingLicence_YukonResidentSenior,
+                () =>
                     new SmallGameHuntingLicence(
                         SmallGameHuntingLicence.LicenceType.YukonResidentSenior
                     )
             },
             {
-                AuthorizationType.SmallGameHuntingLicence_YukonResidentFirstNationsOrInuit, () =>
+                AuthorizationType.SmallGameHuntingLicence_YukonResidentFirstNationsOrInuit,
+                () =>
                     new SmallGameHuntingLicence(
                         SmallGameHuntingLicence.LicenceType.YukonResidentFirstNationsOrInuit
                     )
             },
             {
-                AuthorizationType.SmallGameHuntingLicence_YukonResidentFirstNationsOrInuitSenior, () =>
+                AuthorizationType.SmallGameHuntingLicence_YukonResidentFirstNationsOrInuitSenior,
+                () =>
                     new SmallGameHuntingLicence(
                         SmallGameHuntingLicence.LicenceType.YukonResidentFirstNationsOrInuitSenior
                     )
@@ -247,7 +294,8 @@ public class PosseClientService : IPosseClientService
                 () => new TrappingLicence(TrappingLicence.LicenceType.GroupConcessionAreaMember)
             },
             {
-                AuthorizationType.TrappingLicence_GroupConcessionAreaMemberSenior, () =>
+                AuthorizationType.TrappingLicence_GroupConcessionAreaMemberSenior,
+                () =>
                     new TrappingLicence(TrappingLicence.LicenceType.GroupConcessionAreaMemberSenior)
             },
             { AuthorizationType.CustomWildlifeActPermit, () => new CustomWildlifeActPermit() }

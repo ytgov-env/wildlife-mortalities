@@ -9,9 +9,11 @@ public partial class BaseMortalityComponent : IDisposable
 
     private bool _ignoreChangedEvent;
 
-    [Parameter] public MortalityViewModel ViewModel { get; set; } = default!;
+    [Parameter]
+    public MortalityViewModel ViewModel { get; set; } = default!;
 
-    [CascadingParameter] public EditContext Context { get; set; } = default!;
+    [CascadingParameter]
+    public EditContext Context { get; set; } = default!;
 
     public void Dispose()
     {

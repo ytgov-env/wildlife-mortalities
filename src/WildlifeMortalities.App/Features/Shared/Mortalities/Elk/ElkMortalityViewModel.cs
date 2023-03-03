@@ -7,9 +7,8 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities.Elk;
 
 public class ElkMortalityViewModel : MortalityViewModel
 {
-    public ElkMortalityViewModel() : base(Data.Enums.Species.Elk)
-    {
-    }
+    public ElkMortalityViewModel()
+        : base(Data.Enums.Species.Elk) { }
 
     public ElkHerd? Herd { get; set; }
 

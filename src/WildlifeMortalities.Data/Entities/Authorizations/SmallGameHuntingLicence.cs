@@ -18,9 +18,7 @@ public class SmallGameHuntingLicence : Authorization
         YukonResidentFirstNationsOrInuitSenior = 80
     }
 
-    public SmallGameHuntingLicence()
-    {
-    }
+    public SmallGameHuntingLicence() { }
 
     public SmallGameHuntingLicence(LicenceType type) => Type = type;
 
