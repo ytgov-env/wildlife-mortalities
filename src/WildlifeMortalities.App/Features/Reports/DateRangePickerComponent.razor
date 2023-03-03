@@ -1,5 +1,5 @@
 ﻿@using System.Linq.Expressions;
-<MudDateRangePicker Label="Hunting dates" DateRange="DateRange" DateRangeChanged="DateRangeChanged"
+<MudDateRangePicker Label="Hunting dates" DateRange="DateRange" DateRangeChanged="OnDateRangeChanged"
                     Error="@HasRangeError()" ErrorText="@GetRangeError()" />
 
 @code {
@@ -14,6 +14,15 @@
     {
         var messages = EditContext.GetValidationMessages(For);
         return messages.Any();
+    }
+
+    private async Task OnDateRangeChanged(DateRange value)
+    {
+        DateRange = value;
+        await DateRangeChanged.InvokeAsync(value);
+        
+        var identifier = FieldIdentifier.Create(For);
+        EditContext.NotifyFieldChanged(identifier);
     }
 
     private string? GetRangeError()
