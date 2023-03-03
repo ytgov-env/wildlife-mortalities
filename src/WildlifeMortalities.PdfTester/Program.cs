@@ -27,15 +27,7 @@ var document = Document.Create(container =>
                     .Row(row =>
                     {
                         row.RelativeItem()
-                            .Image(
-                                "C:\\Users\\jhodgins\\source\\repos\\ytgov-env\\wildlife-mortalities\\src\\WildlifeMortalities.Shared\\Resources\\GYWordmark_2018_RGB.png",
-                                ImageScaling.FitHeight
-                            );
-                        //row.RelativeItem()
-                        //    .Image(
-                        //        "..\\WildlifeMortalities.Shared\\Resources\\GYWordmark_2018_RGB.png",
-                        //        ImageScaling.FitHeight
-                        //    );
+                            .Image("Resources\\GYWordmark_2018_RGB.png", ImageScaling.FitHeight);
                         row.RelativeItem()
                             .Column(column =>
                             {
@@ -74,12 +66,7 @@ var document = Document.Create(container =>
                 table.Cell().Row(2).Column(2).Element(Block).Text("B");
                 table.Cell().Row(3).Column(3).Element(Block).Text("C");
 
-                table
-                    .Cell()
-                    .ColumnSpan(3)
-                    .Image(
-                        "C:\\Users\\jhodgins\\source\\repos\\ytgov-env\\wildlife-mortalities\\src\\WildlifeMortalities.Shared\\Resources\\YG_Wildlife_Lichen_RGB.png"
-                    );
+                table.Cell().ColumnSpan(3).Image("Resources\\YG_Wildlife_Lichen_RGB.png");
 
                 static IContainer Block(IContainer container)
                 {

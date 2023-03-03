@@ -7,16 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     <PackageReference Include="QuestPDF" Version="2022.12.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
 
 </Project>
