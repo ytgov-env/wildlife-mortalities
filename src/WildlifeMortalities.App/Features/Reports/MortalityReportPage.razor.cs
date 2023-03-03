@@ -35,11 +35,11 @@ public partial class MortalityReportPage
     {
         if (_editContext != null)
         {
-            _editContext.OnFieldChanged -= _editContext_OnFieldChanged;
+            _editContext.OnFieldChanged -= EditContext_OnFieldChanged;
         }
 
         _editContext = new EditContext(_vm);
-        _editContext.OnFieldChanged += _editContext_OnFieldChanged;
+        _editContext.OnFieldChanged += EditContext_OnFieldChanged;
     }
 
     protected override void OnInitialized()
@@ -48,7 +48,7 @@ public partial class MortalityReportPage
         CreateNewEditContext();
     }
 
-    private void _editContext_OnFieldChanged(object? sender, FieldChangedEventArgs e)
+    private void EditContext_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         if (_invalidSubmitDetected == false)
         {

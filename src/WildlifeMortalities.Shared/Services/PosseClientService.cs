@@ -2,6 +2,8 @@
 using System.Text.Json;
 using WildlifeMortalities.Data.Entities.Authorizations;
 
+// ReSharper disable InconsistentNaming
+
 namespace WildlifeMortalities.Shared.Services;
 
 public class PosseClientService : IPosseClientService
@@ -341,7 +343,7 @@ public class PosseClientService : IPosseClientService
                 }
             }
 
-            if (authorization is SpecialGuideLicence specialGuideLicence)
+            if (authorization is SpecialGuideLicence)
             {
                 if (
                     string.IsNullOrEmpty(
