@@ -1,19 +1,23 @@
-﻿using QuestPDF.Fluent;
+﻿using Microsoft.EntityFrameworkCore;
+using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities.People;
 
 using var context = new AppDbContext();
+
+var client = await context.People.OfType<Client>().FirstOrDefaultAsync();
 
 var document = Document.Create(container =>
 {
     container.Page(page =>
     {
         page.Size(PageSizes.A4);
-        page.Margin(2, Unit.Centimetre);
+        page.Margin(15, Unit.Millimetre);
         page.PageColor(Colors.White);
-        page.DefaultTextStyle(x => x.FontFamily(Fonts.Arial).FontSize(20));
+        page.DefaultTextStyle(x => x.FontFamily("Nunito Sans").FontSize(12));
 
         page.Header()
             .Column(column =>
@@ -24,79 +28,101 @@ var document = Document.Create(container =>
                     {
                         row.RelativeItem()
                             .Image(
-                                "..\\WildlifeMortalities.Shared\\Resources\\GYWordmark_2018_RGB.png",
+                                "C:\\Users\\jhodgins\\source\\repos\\ytgov-env\\wildlife-mortalities\\src\\WildlifeMortalities.Shared\\Resources\\GYWordmark_2018_RGB.png",
                                 ImageScaling.FitHeight
                             );
+                        //row.RelativeItem()
+                        //    .Image(
+                        //        "..\\WildlifeMortalities.Shared\\Resources\\GYWordmark_2018_RGB.png",
+                        //        ImageScaling.FitHeight
+                        //    );
                         row.RelativeItem()
-                            .Text("Harvest report")
-                            .SemiBold()
-                            .FontSize(24)
-                            .FontColor(Colors.Black);
+                            .Column(column =>
+                            {
+                                column
+                                    .Item()
+                                    .AlignRight()
+                                    .Text("4X9H")
+                                    .FontSize(16)
+                                    .FontColor(Colors.Red.Medium)
+                                    .FontFamily("Montserrat");
+                                column
+                                    .Item()
+                                    .AlignRight()
+                                    .Text("Individual hunt report")
+                                    .SemiBold()
+                                    .FontSize(18)
+                                    .FontColor(Colors.Black)
+                                    .FontFamily("Montserrat");
+                            });
                     });
             });
 
         page.Content()
             .PaddingVertical(1, Unit.Centimetre)
-            .Column(column =>
+            .Table(table =>
             {
-                column
-                    .Item()
-                    .Row(row =>
-                    {
-                        row.RelativeItem().LabelCell("Label 1");
+                table.ColumnsDefinition(columns =>
+                {
+                    columns.RelativeColumn();
+                    columns.RelativeColumn();
+                    columns.RelativeColumn();
+                });
 
-                        row.RelativeItem(3)
-                            .Grid(grid =>
-                            {
-                                grid.Columns(3);
+                table.Cell().Row(1).Column(1).Component(new ClientComponent(client));
+                table.Cell().Row(1).Column(3).Element(Block).Text("A");
+                table.Cell().Row(2).Column(2).Element(Block).Text("B");
+                table.Cell().Row(3).Column(3).Element(Block).Text("C");
 
-                                grid.Item(2).LabelCell("Label 2");
-                                grid.Item().LabelCell("Label 3");
+                table
+                    .Cell()
+                    .ColumnSpan(3)
+                    .Image(
+                        "C:\\Users\\jhodgins\\source\\repos\\ytgov-env\\wildlife-mortalities\\src\\WildlifeMortalities.Shared\\Resources\\YG_Wildlife_Lichen_RGB.png"
+                    );
 
-                                grid.Item(2).ValueCell().Text("Value 2");
-                                grid.Item().ValueCell().Text("Value 3");
-                            });
-                    });
-
-                column
-                    .Item()
-                    .Row(row =>
-                    {
-                        row.RelativeItem().ValueCell().Text("Value 1");
-
-                        row.RelativeItem(3)
-                            .Grid(grid =>
-                            {
-                                grid.Columns(3);
-
-                                grid.Item().LabelCell("Label 4");
-                                grid.Item(2).LabelCell("Label 5");
-
-                                grid.Item().ValueCell().Text("Value 4");
-                                grid.Item(2).ValueCell().Text("Value 5");
-                            });
-                    });
-
-                column
-                    .Item()
-                    .Row(row =>
-                    {
-                        row.RelativeItem().LabelCell("Label 6");
-                        row.RelativeItem()
-                            .Image(
-                                "..\\WildlifeMortalities.Shared\\Resources\\YG_Environment_Lichen_RGB.png"
-                            );
-                    });
+                static IContainer Block(IContainer container)
+                {
+                    return container
+                        .Border(1)
+                        .Background(Colors.Grey.Lighten3)
+                        .ShowOnce()
+                        .MinWidth(50)
+                        .MinHeight(50)
+                        .AlignCenter()
+                        .AlignMiddle();
+                }
             });
 
         page.Footer()
             .AlignCenter()
             .Text(x =>
             {
-                x.Span("Page ");
                 x.CurrentPageNumber();
+                x.Span(" / ");
+                x.TotalPages();
             });
     });
 });
 
 document.ShowInPreviewer();
+
+public class ClientComponent : IComponent
+{
+    private readonly Client _client;
+
+    public ClientComponent(Client client)
+    {
+        _client = client;
+    }
+
+    public void Compose(IContainer container)
+    {
+        container.Column(column =>
+        {
+            column.Item().Text($"Client Id: {_client.EnvClientId}");
+            column.Item().Text($"Name: {_client.FirstName} {_client.LastName}");
+            column.Item().Text($"Date of birth: {_client.BirthDate.ToShortDateString()}");
+        });
+    }
+}

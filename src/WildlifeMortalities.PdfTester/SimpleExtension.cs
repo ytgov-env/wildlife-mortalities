@@ -2,7 +2,7 @@
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-static class SimpleExtension
+internal static class SimpleExtension
 {
     private static IContainer Cell(this IContainer container, bool dark)
     {
@@ -13,8 +13,14 @@ static class SimpleExtension
     }
 
     // displays only text label
-    public static void LabelCell(this IContainer container, string text) => container.Cell(true).Text(text).Medium();
+    public static void LabelCell(this IContainer container, string text)
+    {
+        container.Cell(true).Text(text).Medium();
+    }
 
     // allows to inject any type of content, e.g. image
-    public static IContainer ValueCell(this IContainer container) => container.Cell(false);
+    public static IContainer ValueCell(this IContainer container)
+    {
+        return container.Cell(false);
+    }
 }
