@@ -18,9 +18,9 @@ public abstract class BioSubmission
 public abstract class BioSubmission<T> : BioSubmission
     where T : Mortality
 {
-    public BioSubmission() { }
+    protected BioSubmission() { }
 
-    public BioSubmission(int mortalityId) => MortalityId = mortalityId;
+    protected BioSubmission(int mortalityId) => MortalityId = mortalityId;
 
     public int MortalityId { get; set; }
 

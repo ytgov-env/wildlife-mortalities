@@ -13,7 +13,7 @@ public class PdfService
     public PdfService(IDbContextFactory<AppDbContext> dbContextFactory) =>
         _dbContextFactory = dbContextFactory;
 
-    public byte[] GetReportPdf(int reportId)
+    public static byte[] GetReportPdf(int reportId)
     {
         return Document
             .Create(container =>
