@@ -1,6 +1,6 @@
 # Wildlife Mortalities
 
-This service is used to manage wildlife mortality data collected by Yukon's Department of Environment. This includes [hunted and trapped harvest](https://yukon.ca/en/outdoor-recreation-and-wildlife/hunting-and-trapping/report-harvest-results) mortalities, [human-wildlife conflict](https://yukon.ca/en/report-human-wildlife-conflict) mortalities, research mortalities, and collared wildlife mortalities. Additionally, this service handles all deterministic checks for legality of reported harvests, preceeding any in-depth investigations by Conservation Officers (if required).
+This service is used to manage wildlife mortality data collected by Yukon's Department of Environment. This includes [hunted and trapped harvest](https://yukon.ca/en/outdoor-recreation-and-wildlife/hunting-and-trapping/report-harvest-results) mortalities, [human-wildlife conflict](https://yukon.ca/en/report-human-wildlife-conflict) mortalities, research mortalities, and collared wildlife mortalities. Additionally, this service handles all deterministic checks for legality of reported harvests, preceeding any investigation by Conservation Officers (if required).
 
 ## Stack
 
@@ -15,7 +15,7 @@ This service is used to manage wildlife mortality data collected by Yukon's Depa
 
 See <https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations> if you are new to Entity Framework Core.
 
-Ensure that you have LocalDB installed, or override the "AppContext" connection string in appsettings.json
+Ensure that you have LocalDB installed, or override the "AppDbContext" connection string in appsettings.json
 
 ### Build the project and restore packages
 

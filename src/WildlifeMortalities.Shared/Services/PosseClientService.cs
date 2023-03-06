@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using WildlifeMortalities.Data.Entities.Authorizations;
+// ReSharper disable InconsistentNaming
 
 // ReSharper disable InconsistentNaming
 
