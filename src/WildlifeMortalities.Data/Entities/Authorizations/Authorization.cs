@@ -51,6 +51,7 @@ public abstract class Authorization
     public string Number { get; set; } = string.Empty;
     public DateTimeOffset? ActiveFromDate { get; set; }
     public DateTimeOffset? ActiveToDate { get; set; }
+    public DateTimeOffset LastModifiedDateTime { get; set; }
 
     public string Season =>
         ActiveFromDate is null || ActiveToDate is null
