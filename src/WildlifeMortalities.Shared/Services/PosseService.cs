@@ -307,51 +307,42 @@ public class PosseService : IPosseService
 
     public PosseService(HttpClient httpClient) => _httpClient = httpClient;
 
-    public async Task<IEnumerable<Client>> RetrieveClientData(
-        Dictionary<string, Client> clientMapper,
+    public async Task<IEnumerable<(Client, IEnumerable<string>)>> RetrieveClientData(
         DateTimeOffset modifiedSinceDateTime
     )
     {
-        var response = await _httpClient.GetAsync(
+        var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
             $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
         );
 
-        //var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
-        //    $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ss}"
-        //);
-
-        var results = await response.Content.ReadFromJsonAsync<GetClientsResponse>();
-
-        var clients = new List<Client>();
+        var clients = new List<(Client, IEnumerable<string>)>();
         foreach (var recentlyModifiedClient in results.Clients)
         {
-            foreach (var envClientId in recentlyModifiedClient.PreviousEnvClientIds)
+            var client = new Client
             {
-                if (clientMapper.TryGetValue(envClientId, out var value))
-                {
-                    value.EnvClientId = recentlyModifiedClient.EnvClientId;
-                }
-            }
-            //if (clientMapper.Any(x => recentlyModifiedClient.PreviousEnvClientIds.Contains(x.Key)))
-            //{
-            //    // Todo: handle multiple existing clients that were merged into one
-            //}
-            //if(posseClient.PreviousEnvClientIds.Any(clientMapper.ContainsKey))
-            //{
-            //    // Todo: handle multiple existing clients that were merged into one
-            //    var updatedClient = clientMapper
-            //}
-            //else
-            //{
-            //    var client = new Client();
-            //    client.EnvClientId = recentlyModifiedClient.EnvClientId;
-            //    client.FirstName = recentlyModifiedClient.FirstName;
-            //    client.LastName = recentlyModifiedClient.LastName;
-            //    client.BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly());
-            //    client.LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime;
-            //    clients.Add(client);
-            //}
+                EnvClientId = recentlyModifiedClient.EnvClientId,
+                FirstName = recentlyModifiedClient.FirstName,
+                LastName = recentlyModifiedClient.LastName,
+                BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
+                LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
+            };
+
+            clients.Add((client, recentlyModifiedClient.PreviousEnvClientIds));
         }
+
+        clients = new List<(Client, IEnumerable<string>)>
+        {
+            (
+                new Client
+                {
+                    EnvClientId = "217956",
+                    FirstName = "John",
+                    LastName = "Doe",
+                    BirthDate = new DateTime(1974, 1, 1)
+                },
+                new[] { "691025" }
+            )
+        };
 
         return clients;
     }
@@ -386,8 +377,6 @@ public class PosseService : IPosseService
         {
             if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
             {
-                //if(Enum.IsDefined(typeof(AuthorizationType), typeValue)) { }
-
                 var authorization = s_authorizationMapper[typeValue]();
                 authorization.Number = posseAuthorization.Number;
                 authorization.ActiveFromDate = posseAuthorization.ValidFromDateTime;

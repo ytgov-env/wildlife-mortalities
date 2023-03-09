@@ -12,8 +12,7 @@ public interface IPosseService
             string? specialGuidedHunterEnvClientId
         )>
     > RetrieveAuthorizationData(DateTimeOffset modifiedSinceDateTime);
-    Task<IEnumerable<Client>> RetrieveClientData(
-        Dictionary<string, Client> clientMapper,
+    Task<IEnumerable<(Client, IEnumerable<string>)>> RetrieveClientData(
         DateTimeOffset modifiedSinceDateTime
     );
 }
