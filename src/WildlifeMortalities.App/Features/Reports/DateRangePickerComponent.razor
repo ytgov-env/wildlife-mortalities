@@ -1,6 +1,6 @@
 ﻿@using System.Linq.Expressions;
 <MudDateRangePicker Label="Hunting dates" DateRange="DateRange" DateRangeChanged="OnDateRangeChanged"
-                    Error="@HasRangeError()" ErrorText="@GetRangeError()" />
+                    Error="@HasRangeError()" ErrorText="@GetRangeError()" StartMonth="@(DateRange?.Start ?? DateTime.Now.AddMonths(-1))"/>
 
 @code {
     [Parameter] public string Label { get; set; } = null!;
