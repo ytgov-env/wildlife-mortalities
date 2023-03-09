@@ -67,6 +67,10 @@ public class OutfitterGuidedHuntReportViewModelValidator
             .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
             .WithMessage("The hunting dates cannot be in the future.");
         RuleFor(x => x.HuntingDateRange)
+            .Must(IsHuntingDateRangeWithinSameSeason)
+            .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
+            .WithMessage("The hunting dates must occur within the same season.");
+        RuleFor(x => x.HuntingDateRange)
             .Must(
                 (model, _) =>
                     model.HuntedActivityViewModels.Any(
@@ -88,5 +92,22 @@ public class OutfitterGuidedHuntReportViewModelValidator
                 x =>
                     $"Please add at least one mortality, or change the {nameof(x.Result).ToLower()}."
             );
+    }
+
+    private bool IsHuntingDateRangeWithinSameSeason(DateRange dateRange)
+    {
+        if (dateRange.Start == null || dateRange.End == null)
+        {
+            return false;
+        }
+
+        var start = dateRange.Start.Value;
+        var end = dateRange.End.Value;
+
+        var seasonStart =
+            start.Month < 4 ? new DateTime(start.Year - 1, 4, 1) : new DateTime(start.Year, 4, 1);
+        var seasonEnd = seasonStart.AddYears(1).AddDays(-1);
+
+        return start >= seasonStart && end <= seasonEnd;
     }
 }
