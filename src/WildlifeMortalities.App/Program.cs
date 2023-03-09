@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Serilog.Events;
+using WildlifeMortalities.App.HostedServices;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services;
 
@@ -36,15 +37,13 @@ try
     builder.Services.AddMudServices();
     builder.Services.AddLocalization();
 
-    // builder.Services.AddHostedService<PosseSyncService>();
-    // builder.Services.AddHttpClient<IPosseClientService, PosseClientService>(client =>
-    // {
-    //     client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
-    //     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-    //         "ApiKey",
-    //         configuration["PosseClientService:ApiKey"]
-    //     );
-    // });
+    builder.Services.AddHostedService<PosseSyncService>();
+    builder.Services.AddHttpClient<IPosseService, PosseService>(client =>
+    {
+        client.Timeout = TimeSpan.FromMinutes(20);
+        client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
+        client.DefaultRequestHeaders.Add("api_key", configuration["PosseClientService:ApiKey"]);
+    });
     builder.Services.AddScoped<ClientService>();
     builder.Services.AddScoped<ConservationOfficerService>();
     builder.Services.AddScoped<IMortalityService, MortalityService>();
