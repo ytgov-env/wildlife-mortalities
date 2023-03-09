@@ -16,21 +16,17 @@ public class Client : Person
     public DateTime BirthDate { get; set; }
 
     public DateTimeOffset LastModifiedDateTime { get; set; }
-
-    // Client is the guided hunter
-    public List<SpecialGuideLicence> SpecialGuideLicences { get; set; } = null!;
     public List<Authorization> Authorizations { get; set; } = null!;
-
+    public List<SpecialGuideLicence> SpecialGuideLicencesAsClient { get; set; } = null!;
     public List<IndividualHuntedMortalityReport> IndividualHuntedMortalityReports { get; set; } =
         null!;
-
-    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsAssistantGuide { get; set; } =
-        null!;
+    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsClient { get; set; } = null!;
     public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsChiefGuide { get; set; } =
         null!;
-    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsClient { get; set; } = null!;
-    public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
+    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsAssistantGuide { get; set; } =
+        null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsClient { get; set; } = null!;
+    public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
     public List<TrappedMortalitiesReport> TrappedMortalitiesReports { get; set; } = null!;
 
     public void Update(Client client)
@@ -45,24 +41,25 @@ public class Client : Person
 
     public void Merge(Client clientToBeMerged)
     {
-        //foreach(var item in clientToBeMerged.IndividualHuntedMortalityReports)
-        //{
-        //    item.Client = this;
-        //}
+        Authorizations.AddRange(clientToBeMerged.Authorizations);
+        SpecialGuideLicencesAsClient.AddRange(clientToBeMerged.SpecialGuideLicencesAsClient);
 
         IndividualHuntedMortalityReports.AddRange(
             clientToBeMerged.IndividualHuntedMortalityReports
         );
-        OutfitterGuidedHuntReportsAsChiefGuide.AddRange(
-            clientToBeMerged.OutfitterGuidedHuntReportsAsChiefGuide
-        );
         OutfitterGuidedHuntReportsAsClient.AddRange(
             clientToBeMerged.OutfitterGuidedHuntReportsAsClient
         );
-        SpecialGuidedHuntReportsAsGuide.AddRange(clientToBeMerged.SpecialGuidedHuntReportsAsGuide);
+        OutfitterGuidedHuntReportsAsChiefGuide.AddRange(
+            clientToBeMerged.OutfitterGuidedHuntReportsAsChiefGuide
+        );
+        OutfitterGuidedHuntReportsAsAssistantGuide.AddRange(
+            clientToBeMerged.OutfitterGuidedHuntReportsAsAssistantGuide
+        );
         SpecialGuidedHuntReportsAsClient.AddRange(
             clientToBeMerged.SpecialGuidedHuntReportsAsClient
         );
+        SpecialGuidedHuntReportsAsGuide.AddRange(clientToBeMerged.SpecialGuidedHuntReportsAsGuide);
         TrappedMortalitiesReports.AddRange(clientToBeMerged.TrappedMortalitiesReports);
 
         DraftReports.AddRange(clientToBeMerged.DraftReports);

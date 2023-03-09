@@ -22,13 +22,15 @@ public class PosseSyncService : TimerBasedHostedService
         var clientMapper = context.People
             .OfType<Client>()
             .Include(x => x.DraftReports)
-            .Include(x => x.SpecialGuideLicences)
+            .Include(x => x.SpecialGuideLicencesAsClient)
             .Include(x => x.IndividualHuntedMortalityReports)
             .Include(x => x.OutfitterGuidedHuntReportsAsChiefGuide)
+            .Include(x => x.OutfitterGuidedHuntReportsAsAssistantGuide)
             .Include(x => x.OutfitterGuidedHuntReportsAsClient)
             .Include(x => x.SpecialGuidedHuntReportsAsGuide)
             .Include(x => x.SpecialGuidedHuntReportsAsClient)
             .Include(x => x.TrappedMortalitiesReports)
+            .Include(x => x.Authorizations)
             .ToDictionary(x => x.EnvClientId, x => x);
 
         var recentlyModifiedClients = await posseClientService.RetrieveClientData(

@@ -28,7 +28,7 @@ public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLi
             .OnDelete(DeleteBehavior.NoAction);
         builder
             .HasOne(s => s.GuidedClient)
-            .WithMany(c => c.SpecialGuideLicences)
+            .WithMany(c => c.SpecialGuideLicencesAsClient)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }
