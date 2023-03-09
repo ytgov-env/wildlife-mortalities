@@ -5,7 +5,7 @@ This service is used to manage wildlife mortality data collected by Yukon's Depa
 ## Stack
 
 * UI Component Library: [MudBlazor](https://github.com/MudBlazor/MudBlazor)
-* Web Framework: [ASP.NET Core 6](https://github.com/dotnet/aspnetcore) and [Blazor Server](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)
+* Web Framework: [ASP.NET Core 7](https://github.com/dotnet/aspnetcore) and [Blazor Server](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)
 * Authentication: OpenID Connect
 * Data Access: [Entity Framework Core](https://github.com/dotnet/efcore)
 * Data Store: SQL Server
