@@ -68,8 +68,16 @@ public class OutfitterGuidedHuntReportConfig : IEntityTypeConfiguration<Outfitte
             .HasOne(o => o.ChiefGuide)
             .WithMany(c => c.OutfitterGuidedHuntReportsAsChiefGuide)
             .OnDelete(DeleteBehavior.NoAction);
-        //builder
-        //    .HasMany(o => o.AssistantGuides)
-        //    .WithMany(c => c.OutfitterGuidedHuntReportsAsAssistantGuide);
+        builder
+            .HasMany(o => o.AssistantGuides)
+            .WithMany(c => c.OutfitterGuidedHuntReportsAsAssistantGuide)
+            .UsingEntity<Dictionary<string, object>>(
+                "AssistantGuideOutfitterGuidedHuntReport",
+                j => j.HasOne<Client>().WithMany().OnDelete(DeleteBehavior.ClientCascade),
+                j =>
+                    j.HasOne<OutfitterGuidedHuntReport>()
+                        .WithMany()
+                        .OnDelete(DeleteBehavior.ClientCascade)
+            );
     }
 }
