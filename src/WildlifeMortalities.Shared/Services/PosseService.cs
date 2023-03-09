@@ -1,13 +1,12 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json;
 using WildlifeMortalities.Data.Entities.Authorizations;
-// ReSharper disable InconsistentNaming
+using WildlifeMortalities.Data.Entities.People;
 
 // ReSharper disable InconsistentNaming
 
 namespace WildlifeMortalities.Shared.Services;
 
-public class PosseClientService : IPosseClientService
+public class PosseService : IPosseService
 {
     public enum AuthorizationType
     {
@@ -306,76 +305,150 @@ public class PosseClientService : IPosseClientService
 
     private readonly HttpClient _httpClient;
 
-    public PosseClientService(HttpClient httpClient) => _httpClient = httpClient;
+    public PosseService(HttpClient httpClient) => _httpClient = httpClient;
+
+    public async Task<IEnumerable<Client>> RetrieveClientData(
+        Dictionary<string, Client> clientMapper,
+        DateTimeOffset modifiedSinceDateTime
+    )
+    {
+        var response = await _httpClient.GetAsync(
+            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
+        );
+
+        //var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
+        //    $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ss}"
+        //);
+
+        var results = await response.Content.ReadFromJsonAsync<GetClientsResponse>();
+
+        var clients = new List<Client>();
+        foreach (var recentlyModifiedClient in results.Clients)
+        {
+            foreach (var envClientId in recentlyModifiedClient.PreviousEnvClientIds)
+            {
+                if (clientMapper.TryGetValue(envClientId, out var value))
+                {
+                    value.EnvClientId = recentlyModifiedClient.EnvClientId;
+                }
+            }
+            //if (clientMapper.Any(x => recentlyModifiedClient.PreviousEnvClientIds.Contains(x.Key)))
+            //{
+            //    // Todo: handle multiple existing clients that were merged into one
+            //}
+            //if(posseClient.PreviousEnvClientIds.Any(clientMapper.ContainsKey))
+            //{
+            //    // Todo: handle multiple existing clients that were merged into one
+            //    var updatedClient = clientMapper
+            //}
+            //else
+            //{
+            //    var client = new Client();
+            //    client.EnvClientId = recentlyModifiedClient.EnvClientId;
+            //    client.FirstName = recentlyModifiedClient.FirstName;
+            //    client.LastName = recentlyModifiedClient.LastName;
+            //    client.BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly());
+            //    client.LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime;
+            //    clients.Add(client);
+            //}
+        }
+
+        return clients;
+    }
 
     public async Task<
-        IEnumerable<(string envClientId, Authorization, string? specialGuidedHunterEnvClientId)>
-    > RetrieveData(DateTimeOffset modifiedSinceDateTime)
+        IEnumerable<(
+            string envClientId,
+            Authorization authorization,
+            string? specialGuidedHunterEnvClientId
+        )>
+    > RetrieveAuthorizationData(DateTimeOffset modifiedSinceDateTime)
     {
-        var datetimeAsString = JsonSerializer.Serialize(modifiedSinceDateTime);
-        var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-            $"/authorizations?ModifiedSinceDateTime={datetimeAsString}"
+        var response = await _httpClient.GetAsync(
+            $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
         );
+
+        var test = await response.Content.ReadAsStringAsync();
+
+        var results = await response.Content.ReadFromJsonAsync<GetAuthorizationsResponse>();
+
+        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
+        //);
+
+        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime}"
+        //);
 
         var authorizations =
             new List<(string envClientId, Authorization, string? specialGuidedHunterEnvClientId)>();
         foreach (var posseAuthorization in results.Authorizations)
         {
-            var authorization = s_authorizationMapper[posseAuthorization.Type]();
-            authorization.Number = posseAuthorization.Number;
-            authorization.ActiveFromDate = posseAuthorization.ActiveFromDateTime;
-            authorization.ActiveToDate = posseAuthorization.ActiveToDateTime;
-
-            if (authorization is CustomWildlifeActPermit wildlifeActPermit)
+            if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
             {
-                if (string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
-                {
-                    // Todo throw exception?
-                    continue;
-                }
+                //if(Enum.IsDefined(typeof(AuthorizationType), typeValue)) { }
 
-                wildlifeActPermit.Conditions = posseAuthorization.CustomWildlifeActPermitConditions;
+                var authorization = s_authorizationMapper[typeValue]();
+                authorization.Number = posseAuthorization.Number;
+                authorization.ActiveFromDate = posseAuthorization.ValidFromDateTime;
+                authorization.ActiveToDate = posseAuthorization.ValidToDateTime;
+                authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
+
+                authorizations.Add(
+                    (
+                        posseAuthorization.EnvClientId,
+                        authorization,
+                        posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+                    )
+                );
             }
             else
             {
-                if (!string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
-                {
-                    // Todo throw exception?
-                }
+                Console.WriteLine($"Type {posseAuthorization.Type} not found.");
             }
 
-            if (authorization is SpecialGuideLicence)
-            {
-                if (
-                    string.IsNullOrEmpty(
-                        posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-                    )
-                )
-                {
-                    // Todo throw exception?
-                    continue;
-                }
-            }
-            else
-            {
-                if (
-                    !string.IsNullOrEmpty(
-                        posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-                    )
-                )
-                {
-                    // Todo throw exception?
-                    continue;
-                }
-            }
+            //if (authorization is CustomWildlifeActPermit wildlifeActPermit)
+            //{
+            //    if (string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
+            //    {
+            //        // Todo throw exception?
+            //        continue;
+            //    }
 
-            authorizations.Add(
-                (
-                    posseAuthorization.EnvClientId,
-                    authorization,
-                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-                )
-            );
+            //    wildlifeActPermit.Conditions = posseAuthorization.CustomWildlifeActPermitConditions;
+            //}
+            //else
+            //{
+            //    if (!string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
+            //    {
+            //        // Todo throw exception?
+            //    }
+            //}
+
+            //if (authorization is SpecialGuideLicence)
+            //{
+            //    if (
+            //        string.IsNullOrEmpty(
+            //            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+            //        )
+            //    )
+            //    {
+            //        // Todo throw exception?
+            //        continue;
+            //    }
+            //}
+            //else
+            //{
+            //    if (
+            //        !string.IsNullOrEmpty(
+            //            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+            //        )
+            //    )
+            //    {
+            //        // Todo throw exception?
+            //        continue;
+            //    }
+            //}
         }
 
         return authorizations;
@@ -387,13 +460,30 @@ public class PosseClientService : IPosseClientService
     }
 
     public record AuthorizationDto(
-        AuthorizationType Type,
+        string Type,
         string EnvClientId,
         string Number,
         string? CustomWildlifeActPermitConditions,
         string? SpecialGuideLicenceGuidedHunterEnvClientId,
-        DateTimeOffset? ActiveFromDateTime,
-        DateTimeOffset? ActiveToDateTime,
-        DateTimeOffset LastModifiedDateTime
+        string? PhaHuntingPermitHuntCode,
+        string? RegisteredTrappingConcession,
+        DateTimeOffset? ValidFromDateTime,
+        DateTimeOffset? ValidToDateTime,
+        DateTimeOffset LastModifiedDateTime,
+        IEnumerable<string> OutfitterAreas
+    );
+
+    public class GetClientsResponse
+    {
+        public List<ClientDto> Clients { get; set; }
+    }
+
+    public record ClientDto(
+        string EnvClientId,
+        string FirstName,
+        string LastName,
+        DateOnly BirthDate,
+        DateTimeOffset LastModifiedDateTime,
+        IEnumerable<string> PreviousEnvClientIds
     );
 }
