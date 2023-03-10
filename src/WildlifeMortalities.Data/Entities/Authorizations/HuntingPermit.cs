@@ -8,16 +8,15 @@ public class HuntingPermit : Authorization
 {
     public enum PermitType
     {
-        CaribouFortymileFall = 10,
-        CaribouFortymileSummer = 20,
-        CaribouFortymileWinter = 30,
-        CaribouHartRiver = 40,
-        CaribouNelchina = 50,
-        ElkAdaptive = 60,
-        ElkAdaptiveFirstNations = 70,
-        ElkExclusion = 80,
-        MooseThreshold = 90,
-        WoodBisonThreshold = 100
+        CaribouFortymileSummer = 10,
+        CaribouFortymileWinter = 20,
+        CaribouHartRiver = 30,
+        CaribouNelchina = 40,
+        ElkAdaptive = 50,
+        ElkAdaptiveFirstNations = 60,
+        ElkExclusion = 70,
+        MooseThreshold = 80,
+        WoodBisonThreshold = 90
     }
 
     public HuntingPermit() { }
@@ -31,8 +30,7 @@ public class HuntingPermit : Authorization
 
     public bool IsCaribouRelated() =>
         Type
-            is PermitType.CaribouFortymileFall
-                or PermitType.CaribouFortymileSummer
+            is PermitType.CaribouFortymileSummer
                 or PermitType.CaribouFortymileWinter
                 or PermitType.CaribouHartRiver
                 or PermitType.CaribouNelchina;
