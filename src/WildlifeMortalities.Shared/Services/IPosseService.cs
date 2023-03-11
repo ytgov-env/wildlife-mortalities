@@ -5,13 +5,9 @@ namespace WildlifeMortalities.Shared.Services;
 
 public interface IPosseService
 {
-    Task<
-        IEnumerable<(
-            string envClientId,
-            Authorization authorization,
-            string? specialGuidedHunterEnvClientId
-        )>
-    > RetrieveAuthorizationData(DateTimeOffset modifiedSinceDateTime);
+    Task<IEnumerable<(Authorization, string)>> RetrieveAuthorizationData(
+        DateTimeOffset modifiedSinceDateTime
+    );
     Task<IEnumerable<(Client, IEnumerable<string>)>> RetrieveClientData(
         DateTimeOffset modifiedSinceDateTime
     );

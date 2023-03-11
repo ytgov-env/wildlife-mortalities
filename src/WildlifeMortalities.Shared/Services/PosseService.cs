@@ -115,10 +115,6 @@ public class PosseService : IPosseService
                     )
             },
             {
-                AuthorizationType.HuntingPermit_CaribouFortymileFall,
-                () => new HuntingPermit(HuntingPermit.PermitType.CaribouFortymileFall)
-            },
-            {
                 AuthorizationType.HuntingPermit_CaribouFortymileSummer,
                 () => new HuntingPermit(HuntingPermit.PermitType.CaribouFortymileSummer)
             },
@@ -310,68 +306,49 @@ public class PosseService : IPosseService
         DateTimeOffset modifiedSinceDateTime
     )
     {
-        var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
-            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
-        );
-
         var clients = new List<(Client, IEnumerable<string>)>();
-        foreach (var recentlyModifiedClient in results.Clients)
-        {
-            var client = new Client
-            {
-                EnvClientId = recentlyModifiedClient.EnvClientId,
-                FirstName = recentlyModifiedClient.FirstName,
-                LastName = recentlyModifiedClient.LastName,
-                BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
-                LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
-            };
 
-            clients.Add((client, recentlyModifiedClient.PreviousEnvClientIds));
-        }
+        //var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
+        //    $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
+        //);
+
+        //foreach (var recentlyModifiedClient in results.Clients)
+        //{
+        //    var client = new Client
+        //    {
+        //        EnvClientId = recentlyModifiedClient.EnvClientId,
+        //        FirstName = recentlyModifiedClient.FirstName,
+        //        LastName = recentlyModifiedClient.LastName,
+        //        BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
+        //        LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
+        //    };
+
+        //    clients.Add((client, recentlyModifiedClient.PreviousEnvClientIds));
+        //}
 
         clients = new List<(Client, IEnumerable<string>)>
         {
-            (
-                new Client
-                {
-                    EnvClientId = "217956",
-                    FirstName = "John",
-                    LastName = "Doe",
-                    BirthDate = new DateTime(1974, 1, 1)
-                },
-                new[] { "691025" }
-            )
+            (new Client { EnvClientId = "217956", }, new[] { "169422" })
         };
 
         return clients;
     }
 
-    public async Task<
-        IEnumerable<(
-            string envClientId,
-            Authorization authorization,
-            string? specialGuidedHunterEnvClientId
-        )>
-    > RetrieveAuthorizationData(DateTimeOffset modifiedSinceDateTime)
+    public async Task<IEnumerable<(Authorization, string)>> RetrieveAuthorizationData(
+        DateTimeOffset modifiedSinceDateTime
+    )
     {
-        var response = await _httpClient.GetAsync(
+        var authorizations = new List<(Authorization, string)>();
+
+        var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
             $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
         );
 
-        var test = await response.Content.ReadAsStringAsync();
+        if (results == null)
+        {
+            return authorizations;
+        }
 
-        var results = await response.Content.ReadFromJsonAsync<GetAuthorizationsResponse>();
-
-        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
-        //);
-
-        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime}"
-        //);
-
-        var authorizations =
-            new List<(string envClientId, Authorization, string? specialGuidedHunterEnvClientId)>();
         foreach (var posseAuthorization in results.Authorizations)
         {
             if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
@@ -382,69 +359,151 @@ public class PosseService : IPosseService
                 authorization.ActiveToDate = posseAuthorization.ValidToDateTime;
                 authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
 
-                authorizations.Add(
-                    (
-                        posseAuthorization.EnvClientId,
-                        authorization,
-                        posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-                    )
+                var condition = !posseAuthorization.OutfitterAreas.Any();
+                if (authorization is BigGameHuntingLicence bigGameHuntingLicence)
+                {
+                    if (condition)
+                    {
+                        LogRequiredPropertyIsMissing(
+                            posseAuthorization,
+                            nameof(posseAuthorization.OutfitterAreas)
+                        );
+                        continue;
+                    }
+                }
+                else if (!condition)
+                {
+                    LogInvalidPropertyIsSet(
+                        posseAuthorization,
+                        nameof(posseAuthorization.OutfitterAreas)
+                    );
+                }
+
+                condition = string.IsNullOrWhiteSpace(
+                    posseAuthorization.CustomWildlifeActPermitConditions
                 );
+                if (authorization is CustomWildlifeActPermit wildlifeActPermit)
+                {
+                    if (condition)
+                    {
+                        LogRequiredPropertyIsMissing(
+                            posseAuthorization,
+                            nameof(posseAuthorization.CustomWildlifeActPermitConditions)
+                        );
+                        continue;
+                    }
+
+                    wildlifeActPermit.Conditions =
+                        posseAuthorization.CustomWildlifeActPermitConditions!;
+                }
+                else if (!condition)
+                {
+                    LogInvalidPropertyIsSet(
+                        posseAuthorization,
+                        nameof(posseAuthorization.CustomWildlifeActPermitConditions)
+                    );
+                }
+
+                condition = string.IsNullOrWhiteSpace(
+                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+                );
+                if (authorization is SpecialGuideLicence)
+                {
+                    if (condition)
+                    {
+                        LogRequiredPropertyIsMissing(
+                            posseAuthorization,
+                            nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
+                        );
+                        continue;
+                    }
+                }
+                else if (!condition)
+                {
+                    LogInvalidPropertyIsSet(
+                        posseAuthorization,
+                        nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
+                    );
+                }
+
+                condition = string.IsNullOrWhiteSpace(
+                    posseAuthorization.RegisteredTrappingConcession
+                );
+                if (authorization is TrappingLicence)
+                {
+                    if (condition)
+                    {
+                        LogRequiredPropertyIsMissing(
+                            posseAuthorization,
+                            nameof(posseAuthorization.RegisteredTrappingConcession)
+                        );
+                        continue;
+                    }
+                }
+                else if (!condition)
+                {
+                    LogInvalidPropertyIsSet(
+                        posseAuthorization,
+                        nameof(posseAuthorization.RegisteredTrappingConcession)
+                    );
+                }
+
+                authorizations.Add((authorization, posseAuthorization.EnvClientId));
             }
             else
             {
-                Console.WriteLine($"Type {posseAuthorization.Type} not found.");
+                Log.Warning(
+                    "The posse api returned an unrecognized type, which was ignored: {@authorization}",
+                    posseAuthorization
+                );
             }
-
-            //if (authorization is CustomWildlifeActPermit wildlifeActPermit)
-            //{
-            //    if (string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
-            //    {
-            //        // Todo throw exception?
-            //        continue;
-            //    }
-
-            //    wildlifeActPermit.Conditions = posseAuthorization.CustomWildlifeActPermitConditions;
-            //}
-            //else
-            //{
-            //    if (!string.IsNullOrEmpty(posseAuthorization.CustomWildlifeActPermitConditions))
-            //    {
-            //        // Todo throw exception?
-            //    }
-            //}
-
-            //if (authorization is SpecialGuideLicence)
-            //{
-            //    if (
-            //        string.IsNullOrEmpty(
-            //            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-            //        )
-            //    )
-            //    {
-            //        // Todo throw exception?
-            //        continue;
-            //    }
-            //}
-            //else
-            //{
-            //    if (
-            //        !string.IsNullOrEmpty(
-            //            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-            //        )
-            //    )
-            //    {
-            //        // Todo throw exception?
-            //        continue;
-            //    }
-            //}
         }
 
         return authorizations;
     }
 
+    private static void LogRequiredPropertyIsMissing(
+        AuthorizationDto authorization,
+        string nameOfRequiredProperty
+    )
+    {
+        if (authorization is null)
+            throw new ArgumentNullException(nameof(authorization));
+        if (string.IsNullOrEmpty(nameOfRequiredProperty))
+        {
+            throw new ArgumentException(
+                $"'{nameof(nameOfRequiredProperty)}' cannot be null or empty.",
+                nameof(nameOfRequiredProperty)
+            );
+        }
+        Log.Error(
+            "An authorization of type {type} is missing required property {requiredPropertyForType}, and was ignored: {@authorization}",
+            authorization.Type,
+            nameOfRequiredProperty,
+            authorization
+        );
+    }
+
+    private static void LogInvalidPropertyIsSet(
+        AuthorizationDto authorization,
+        string nameOfInvalidProperty
+    )
+    {
+        if (nameOfInvalidProperty is null)
+            throw new ArgumentNullException(nameof(nameOfInvalidProperty));
+        if (authorization is null)
+            throw new ArgumentNullException(nameof(authorization));
+        Log.Warning(
+            "An authorization of type {type} has property {invalidPropertyForType} set, which isn't applicable to this type. The property was ignored. {@authorization}",
+            authorization.Type,
+            nameOfInvalidProperty,
+            authorization
+        );
+    }
+
     public class GetAuthorizationsResponse
     {
-        public List<AuthorizationDto> Authorizations { get; set; }
+        public List<AuthorizationDto> Authorizations { get; set; } = new();
     }
 
     public record AuthorizationDto(
@@ -463,7 +522,7 @@ public class PosseService : IPosseService
 
     public class GetClientsResponse
     {
-        public List<ClientDto> Clients { get; set; }
+        public List<ClientDto> Clients { get; set; } = new();
     }
 
     public record ClientDto(

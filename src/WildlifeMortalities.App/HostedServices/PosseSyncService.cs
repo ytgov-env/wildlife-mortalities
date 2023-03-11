@@ -15,6 +15,7 @@ public class PosseSyncService : TimerBasedHostedService
 
     protected override async void DoWork(object? state)
     {
+        Log.Information("Starting posse sync");
         using var scope = _serviceProvider.CreateScope();
         var posseClientService = scope.ServiceProvider.GetRequiredService<IPosseService>();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -54,6 +55,7 @@ public class PosseSyncService : TimerBasedHostedService
             {
                 context.Add(client);
                 await context.SaveChangesAsync();
+                clientMapper.Add(client.EnvClientId, client);
                 clientInDatabase = client;
             }
 
@@ -64,21 +66,23 @@ public class PosseSyncService : TimerBasedHostedService
                 {
                     clientInDatabase.Merge(clientToBeMerged);
                     context.People.Remove(clientToBeMerged);
+                    clientMapper.Remove(clientToBeMerged.EnvClientId);
                     await context.SaveChangesAsync();
                 }
             }
         }
 
-        //var authorizations = await posseClientService.RetrieveAuthorizationData(
-        //    new DateTimeOffset(new DateTime(2023, 02, 15), new TimeSpan(-7, 0, 0))
-        //);
+        var authorizations = await posseClientService.RetrieveAuthorizationData(
+            new DateTimeOffset(new DateTime(2023, 02, 15), new TimeSpan(-7, 0, 0))
+        );
 
-        //foreach (var auth in authorizations)
-        //{
-        //    auth.authorization.Client = clientMapper[auth.envClientId];
-        //    context.Authorizations.Add(auth.authorization);
-        //}
+        foreach (var (auth, envClientId) in authorizations)
+        {
+            auth.Client = clientMapper[envClientId];
+            context.Authorizations.Add(auth);
+        }
 
         //await context.SaveChangesAsync();
+        Log.Information("Finished posse sync");
     }
 }
