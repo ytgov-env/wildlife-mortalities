@@ -4,7 +4,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class SmallGameHuntingLicence : Authorization
+public class SmallGameHuntingLicence : Authorization, IHasOutfitterAreas
 {
     public enum LicenceType
     {
@@ -23,6 +23,7 @@ public class SmallGameHuntingLicence : Authorization
     public SmallGameHuntingLicence(LicenceType type) => Type = type;
 
     public LicenceType Type { get; set; }
+    public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();

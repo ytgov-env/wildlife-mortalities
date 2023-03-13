@@ -4,7 +4,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class BigGameHuntingLicence : Authorization
+public class BigGameHuntingLicence : Authorization, IHasOutfitterAreas
 {
     public enum LicenceType
     {
@@ -23,6 +23,7 @@ public class BigGameHuntingLicence : Authorization
     public BigGameHuntingLicence(LicenceType type) => Type = type;
 
     public LicenceType Type { get; set; }
+    public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 
     public List<HuntingSeal> HuntingSeals { get; set; } = null!;
     public List<HuntingPermit> HuntingPermits { get; set; } = null!;

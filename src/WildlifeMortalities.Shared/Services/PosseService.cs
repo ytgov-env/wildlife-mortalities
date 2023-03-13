@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 
@@ -299,10 +300,15 @@ public class PosseService : IPosseService
         };
 
     private readonly HttpClient _httpClient;
+    private readonly IMortalityService _mortalityService;
 
-    public PosseService(HttpClient httpClient) => _httpClient = httpClient;
+    public PosseService(HttpClient httpClient, IMortalityService mortalityService)
+    {
+        _httpClient = httpClient;
+        _mortalityService = mortalityService;
+    }
 
-    public async Task<IEnumerable<(Client, IEnumerable<string>)>> RetrieveClientData(
+    public async Task<IEnumerable<(Client, IEnumerable<string>)>> GetClients(
         DateTimeOffset modifiedSinceDateTime
     )
     {
@@ -334,7 +340,7 @@ public class PosseService : IPosseService
         return clients;
     }
 
-    public async Task<IEnumerable<(Authorization, string)>> RetrieveAuthorizationData(
+    public async Task<IEnumerable<(Authorization, string)>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime
     )
     {
@@ -360,7 +366,22 @@ public class PosseService : IPosseService
                 authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
 
                 var condition = !posseAuthorization.OutfitterAreas.Any();
-                if (authorization is BigGameHuntingLicence bigGameHuntingLicence)
+                IHasOutfitterAreas? auth = authorization switch
+                {
+                    BigGameHuntingLicence
+                    and {
+                        Type: BigGameHuntingLicence.LicenceType.CanadianResident
+                            or BigGameHuntingLicence.LicenceType.NonResident
+                    }
+                        => (BigGameHuntingLicence)authorization,
+                    SmallGameHuntingLicence
+                    and { Type: SmallGameHuntingLicence.LicenceType.NonResident }
+                        => (SmallGameHuntingLicence)authorization,
+                    OutfitterChiefGuideLicence => (OutfitterChiefGuideLicence)authorization,
+                    OutfitterAssistantGuideLicence => (OutfitterAssistantGuideLicence)authorization,
+                    _ => null
+                };
+                if (auth != null)
                 {
                     if (condition)
                     {
@@ -369,6 +390,21 @@ public class PosseService : IPosseService
                             nameof(posseAuthorization.OutfitterAreas)
                         );
                         continue;
+                    }
+                    auth.OutfitterAreas = new();
+                    var outfitterAreas = await _mortalityService.GetOutfitterAreas();
+                    foreach (var area in posseAuthorization.OutfitterAreas)
+                    {
+                        var item = outfitterAreas.FirstOrDefault(o => o.Area == area);
+                        if (item != null)
+                        {
+                            auth.OutfitterAreas.Add(item);
+                        }
+                        else
+                        {
+                            // Add log
+                            Log.Warning("");
+                        }
                     }
                 }
                 else if (!condition)

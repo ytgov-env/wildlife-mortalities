@@ -5,10 +5,10 @@ namespace WildlifeMortalities.Shared.Services;
 
 public interface IPosseService
 {
-    Task<IEnumerable<(Authorization, string)>> RetrieveAuthorizationData(
+    Task<IEnumerable<(Authorization, string)>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime
     );
-    Task<IEnumerable<(Client, IEnumerable<string>)>> RetrieveClientData(
+    Task<IEnumerable<(Client, IEnumerable<string>)>> GetClients(
         DateTimeOffset modifiedSinceDateTime
     );
 }

@@ -4,10 +4,12 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class OutfitterChiefGuideLicence : Authorization
+public class OutfitterChiefGuideLicence : Authorization, IHasOutfitterAreas
 {
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
+
+    public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();

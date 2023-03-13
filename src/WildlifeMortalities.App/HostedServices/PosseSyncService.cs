@@ -34,7 +34,7 @@ public class PosseSyncService : TimerBasedHostedService
             .Include(x => x.Authorizations)
             .ToDictionary(x => x.EnvClientId, x => x);
 
-        var recentlyModifiedClients = await posseClientService.RetrieveClientData(
+        var recentlyModifiedClients = await posseClientService.GetClients(
             new DateTimeOffset(new DateTime(2023, 02, 15), new TimeSpan(-7, 0, 0))
         );
 
@@ -72,7 +72,7 @@ public class PosseSyncService : TimerBasedHostedService
             }
         }
 
-        var authorizations = await posseClientService.RetrieveAuthorizationData(
+        var authorizations = await posseClientService.GetAuthorizations(
             new DateTimeOffset(new DateTime(2023, 02, 15), new TimeSpan(-7, 0, 0))
         );
 
