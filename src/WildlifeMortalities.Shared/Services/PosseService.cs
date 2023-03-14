@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using WildlifeMortalities.Data.Entities;
+﻿using System.Text.Json;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 
@@ -301,11 +300,17 @@ public class PosseService : IPosseService
 
     private readonly HttpClient _httpClient;
     private readonly IMortalityService _mortalityService;
+    private readonly ClientService _clientService;
 
-    public PosseService(HttpClient httpClient, IMortalityService mortalityService)
+    public PosseService(
+        HttpClient httpClient,
+        IMortalityService mortalityService,
+        ClientService clientService
+    )
     {
         _httpClient = httpClient;
         _mortalityService = mortalityService;
+        _clientService = clientService;
     }
 
     public async Task<IEnumerable<(Client, IEnumerable<string>)>> GetClients(
@@ -344,12 +349,17 @@ public class PosseService : IPosseService
         DateTimeOffset modifiedSinceDateTime
     )
     {
-        var authorizations = new List<(Authorization, string)>();
-
-        var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-            $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
+        var jsonDoc = await File.ReadAllTextAsync(
+            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\UAT_authorizations.json"
         );
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
 
+        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
+        //);
+
+        var authorizations = new List<(Authorization, string)>();
         if (results == null)
         {
             return authorizations;
@@ -365,6 +375,18 @@ public class PosseService : IPosseService
                 authorization.ActiveToDate = posseAuthorization.ValidToDateTime;
                 authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
 
+                var isNotValidAuth = false;
+
+                //skipAuthorization = await SkipAuthorization<Authorization>(
+                //    authorization,
+                //    posseAuthorization,
+                //    () => !posseAuthorization.OutfitterAreas.Any(), async (authorization) =>
+                //    {
+
+                //    },
+                //    nameof(posseAuthorization.OutfitterAreas)
+                //);
+
                 var condition = !posseAuthorization.OutfitterAreas.Any();
                 IHasOutfitterAreas? auth = authorization switch
                 {
@@ -374,9 +396,9 @@ public class PosseService : IPosseService
                             or BigGameHuntingLicence.LicenceType.NonResident
                     }
                         => (BigGameHuntingLicence)authorization,
-                    SmallGameHuntingLicence
-                    and { Type: SmallGameHuntingLicence.LicenceType.NonResident }
-                        => (SmallGameHuntingLicence)authorization,
+                    //SmallGameHuntingLicence
+                    //and { Type: SmallGameHuntingLicence.LicenceType.NonResident }
+                    //    => (SmallGameHuntingLicence)authorization,
                     OutfitterChiefGuideLicence => (OutfitterChiefGuideLicence)authorization,
                     OutfitterAssistantGuideLicence => (OutfitterAssistantGuideLicence)authorization,
                     _ => null
@@ -395,15 +417,20 @@ public class PosseService : IPosseService
                     var outfitterAreas = await _mortalityService.GetOutfitterAreas();
                     foreach (var area in posseAuthorization.OutfitterAreas)
                     {
-                        var item = outfitterAreas.FirstOrDefault(o => o.Area == area);
+                        var item = outfitterAreas.FirstOrDefault(
+                            o => o.Area == area.TrimStart('0')
+                        );
                         if (item != null)
                         {
                             auth.OutfitterAreas.Add(item);
                         }
                         else
                         {
-                            // Add log
-                            Log.Warning("");
+                            LogPropertyContainsInvalidValue(
+                                posseAuthorization,
+                                nameof(posseAuthorization.OutfitterAreas),
+                                area
+                            );
                         }
                     }
                 }
@@ -415,73 +442,80 @@ public class PosseService : IPosseService
                     );
                 }
 
-                condition = string.IsNullOrWhiteSpace(
-                    posseAuthorization.CustomWildlifeActPermitConditions
-                );
-                if (authorization is CustomWildlifeActPermit wildlifeActPermit)
-                {
-                    if (condition)
+                isNotValidAuth = await ProcessAuthorization<CustomWildlifeActPermit>(
+                    authorization,
+                    posseAuthorization,
+                    () =>
+                        string.IsNullOrWhiteSpace(
+                            posseAuthorization.CustomWildlifeActPermitConditions
+                        ),
+                    async (customWildlifeActPermit) =>
                     {
-                        LogRequiredPropertyIsMissing(
-                            posseAuthorization,
-                            nameof(posseAuthorization.CustomWildlifeActPermitConditions)
+                        await Task.FromResult(
+                            customWildlifeActPermit.Conditions =
+                                posseAuthorization.CustomWildlifeActPermitConditions!
                         );
-                        continue;
-                    }
+                    },
+                    nameof(posseAuthorization.CustomWildlifeActPermitConditions)
+                );
 
-                    wildlifeActPermit.Conditions =
-                        posseAuthorization.CustomWildlifeActPermitConditions!;
-                }
-                else if (!condition)
+                if (isNotValidAuth)
                 {
-                    LogInvalidPropertyIsSet(
-                        posseAuthorization,
-                        nameof(posseAuthorization.CustomWildlifeActPermitConditions)
-                    );
+                    continue;
                 }
 
-                condition = string.IsNullOrWhiteSpace(
-                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-                );
-                if (authorization is SpecialGuideLicence)
-                {
-                    if (condition)
+                isNotValidAuth = await ProcessAuthorization<SpecialGuideLicence>(
+                    authorization,
+                    posseAuthorization,
+                    () =>
+                        string.IsNullOrWhiteSpace(
+                            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+                        ),
+                    async (specialGuideLicence) =>
                     {
-                        LogRequiredPropertyIsMissing(
-                            posseAuthorization,
-                            nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
+                        var client = await _clientService.GetClientByEnvClientId(
+                            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!
                         );
-                        continue;
-                    }
-                }
-                else if (!condition)
+                        if (client != null)
+                        {
+                            specialGuideLicence.GuidedClient = client;
+                        }
+                    },
+                    nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
+                );
+
+                if (isNotValidAuth)
                 {
-                    LogInvalidPropertyIsSet(
-                        posseAuthorization,
-                        nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
-                    );
+                    continue;
                 }
 
-                condition = string.IsNullOrWhiteSpace(
-                    posseAuthorization.RegisteredTrappingConcession
-                );
-                if (authorization is TrappingLicence)
-                {
-                    if (condition)
+                isNotValidAuth = await ProcessAuthorization<TrappingLicence>(
+                    authorization,
+                    posseAuthorization,
+                    () =>
+                        string.IsNullOrWhiteSpace(
+                            posseAuthorization.RegisteredTrappingConcession.ToString()
+                        ),
+                    async (trappingLicence) =>
                     {
-                        LogRequiredPropertyIsMissing(
-                            posseAuthorization,
-                            nameof(posseAuthorization.RegisteredTrappingConcession)
+                        var registeredTrappingConcessions =
+                            await _mortalityService.GetRegisteredTrappingConcessions();
+
+                        var item = registeredTrappingConcessions.FirstOrDefault(
+                            r =>
+                                r.Area == posseAuthorization.RegisteredTrappingConcession.ToString()
                         );
-                        continue;
-                    }
-                }
-                else if (!condition)
+                        if (item != null)
+                        {
+                            trappingLicence.RegisteredTrappingConcession = item;
+                        }
+                    },
+                    nameof(posseAuthorization.RegisteredTrappingConcession)
+                );
+
+                if (isNotValidAuth)
                 {
-                    LogInvalidPropertyIsSet(
-                        posseAuthorization,
-                        nameof(posseAuthorization.RegisteredTrappingConcession)
-                    );
+                    continue;
                 }
 
                 authorizations.Add((authorization, posseAuthorization.EnvClientId));
@@ -496,6 +530,33 @@ public class PosseService : IPosseService
         }
 
         return authorizations;
+    }
+
+    private static async Task<bool> ProcessAuthorization<T>(
+        Authorization authorization,
+        AuthorizationDto posseAuthorization,
+        Func<bool> condition,
+        Func<T, Task> updater,
+        string propertyName
+    )
+    {
+        var conditionResult = condition();
+        if (authorization is T castedAuthorization)
+        {
+            if (conditionResult)
+            {
+                LogRequiredPropertyIsMissing(posseAuthorization, propertyName);
+
+                return true;
+            }
+            await updater.Invoke(castedAuthorization);
+            //return false;
+        }
+        else if (!conditionResult)
+        {
+            LogInvalidPropertyIsSet(posseAuthorization, propertyName);
+        }
+        return false;
     }
 
     private static void LogRequiredPropertyIsMissing(
@@ -537,9 +598,41 @@ public class PosseService : IPosseService
         );
     }
 
+    private static void LogPropertyContainsInvalidValue(
+        AuthorizationDto authorization,
+        string nameOfProperty,
+        string value
+    )
+    {
+        if (authorization is null)
+            throw new ArgumentNullException(nameof(authorization));
+        if (string.IsNullOrEmpty(nameOfProperty))
+        {
+            throw new ArgumentException(
+                $"'{nameof(nameOfProperty)}' cannot be null or empty.",
+                nameof(nameOfProperty)
+            );
+        }
+        if (string.IsNullOrEmpty(value))
+        {
+            throw new ArgumentException(
+                $"'{nameof(value)}' cannot be null or empty.",
+                nameof(value)
+            );
+        }
+
+        Log.Warning(
+            "An authorization of type {type} has property {property} with an invalid value: {value}. The value was ignored. {@authorization}",
+            authorization.Type,
+            nameOfProperty,
+            value,
+            authorization
+        );
+    }
+
     public class GetAuthorizationsResponse
     {
-        public List<AuthorizationDto> Authorizations { get; set; } = new();
+        public IEnumerable<AuthorizationDto> Authorizations { get; set; } = null!;
     }
 
     public record AuthorizationDto(
@@ -549,7 +642,8 @@ public class PosseService : IPosseService
         string? CustomWildlifeActPermitConditions,
         string? SpecialGuideLicenceGuidedHunterEnvClientId,
         string? PhaHuntingPermitHuntCode,
-        string? RegisteredTrappingConcession,
+        //string? RegisteredTrappingConcession,
+        int? RegisteredTrappingConcession,
         DateTimeOffset? ValidFromDateTime,
         DateTimeOffset? ValidToDateTime,
         DateTimeOffset LastModifiedDateTime,
@@ -558,7 +652,7 @@ public class PosseService : IPosseService
 
     public class GetClientsResponse
     {
-        public List<ClientDto> Clients { get; set; } = new();
+        public IEnumerable<ClientDto> Clients { get; set; } = null!;
     }
 
     public record ClientDto(

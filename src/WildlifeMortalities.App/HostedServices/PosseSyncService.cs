@@ -21,6 +21,7 @@ public class PosseSyncService : TimerBasedHostedService
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var clientMapper = context.People
+            .AsSplitQuery()
             .OfType<Client>()
             .Include(x => x.DraftReports)
             .Include(x => x.SpecialGuideLicencesAsClient)
@@ -73,13 +74,25 @@ public class PosseSyncService : TimerBasedHostedService
         }
 
         var authorizations = await posseClientService.GetAuthorizations(
-            new DateTimeOffset(new DateTime(2023, 02, 15), new TimeSpan(-7, 0, 0))
+            new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0))
         );
-
+        await context.OutfitterAreas.LoadAsync();
         foreach (var (auth, envClientId) in authorizations)
         {
-            auth.Client = clientMapper[envClientId];
-            context.Authorizations.Add(auth);
+            clientMapper.TryGetValue(envClientId, out var client);
+            if (client != null)
+            {
+                auth.Client = clientMapper[envClientId];
+                context.Authorizations.Add(auth);
+            }
+            else
+            {
+                Log.Error(
+                    "An authorization is associated with a client {EnvClientId} that doesn't exist, and was ignored: {@authorization}",
+                    envClientId,
+                    auth
+                );
+            }
         }
 
         //await context.SaveChangesAsync();

@@ -31,6 +31,15 @@ public class ClientService
             .FirstOrDefaultAsync();
     }
 
+    public async Task<Client?> GetClientByEnvClientId(string envClientID)
+    {
+        var context = await _dbContextFactory.CreateDbContextAsync();
+        return await context.People
+            .OfType<Client>()
+            .Where(c => c.EnvClientId == envClientID)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<Client>> SearchByLastName(string input)
     {
         using var context = _dbContextFactory.CreateDbContext();

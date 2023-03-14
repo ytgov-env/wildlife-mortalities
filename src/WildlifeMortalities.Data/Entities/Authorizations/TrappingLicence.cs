@@ -21,6 +21,8 @@ public class TrappingLicence : Authorization
     public TrappingLicence(LicenceType type) => Type = type;
 
     public LicenceType Type { get; set; }
+    public int RegisteredTrappingConcessionId { get; set; }
+    public RegisteredTrappingConcession RegisteredTrappingConcession { get; set; } = null!;
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
