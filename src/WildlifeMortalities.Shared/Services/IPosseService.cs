@@ -6,12 +6,16 @@ namespace WildlifeMortalities.Shared.Services;
 
 public interface IPosseService
 {
-    Task<IEnumerable<(Authorization, string)>> GetAuthorizations(
+    Task<IEnumerable<(Authorization authorization, string envClientId)>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime,
         Dictionary<string, Client> clientMapper,
         AppDbContext context
     );
-    Task<IEnumerable<(Client, IEnumerable<string>)>> GetClients(
+    Task<IEnumerable<PosseService.AuthorizationDto>> GetAuthorizationsByEnvClientId(
+        string envClientId,
+        DateTimeOffset modifiedSinceDateTime
+    );
+    Task<IEnumerable<(Client client, IEnumerable<string> previousEnvClientIds)>> GetClients(
         DateTimeOffset modifiedSinceDateTime
     );
 }

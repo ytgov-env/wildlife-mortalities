@@ -22,6 +22,7 @@ public class PhaHuntingPermit : Authorization, IHasBigGameHuntingLicence
     public PhaHuntingPermit(PermitType type) => Type = type;
 
     public PermitType Type { get; set; }
+    public string HuntCode { get; set; } = null!;
 
     public int BigGameHuntingLicenceId { get; set; }
     public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;

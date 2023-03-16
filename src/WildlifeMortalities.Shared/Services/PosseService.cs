@@ -309,14 +309,14 @@ public class PosseService : IPosseService
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<(Client, IEnumerable<string>)>> GetClients(
-        DateTimeOffset modifiedSinceDateTime
-    )
+    public async Task<
+        IEnumerable<(Client client, IEnumerable<string> previousEnvClientIds)>
+    > GetClients(DateTimeOffset modifiedSinceDateTime)
     {
         var clients = new List<(Client, IEnumerable<string>)>();
 
         var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
-            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
+            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddTHH:mm:ssK}"
         );
 
         var rand = new Random();
@@ -343,6 +343,22 @@ public class PosseService : IPosseService
         return clients;
     }
 
+    public async Task<IEnumerable<AuthorizationDto>> GetAuthorizationsByEnvClientId(
+        string envClientId,
+        DateTimeOffset modifiedSinceDateTime
+    )
+    {
+        return await Task.FromResult(Array.Empty<AuthorizationDto>());
+        //return (
+        //    await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+        //        $"authorizations/{envClientId}?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddTHH:mm:ssK}"
+        //    )
+        //)!.Authorizations;
+    }
+
+    public bool IsBigGameHuntingLicence(AuthorizationDto x) =>
+        x.Type.StartsWith(nameof(BigGameHuntingLicence));
+
     public async Task<IEnumerable<(Authorization, string)>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime,
         Dictionary<string, Client> clientMapper,
@@ -359,7 +375,7 @@ public class PosseService : IPosseService
         //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
         //);
 
-        var authorizations = new List<(Authorization, string)>();
+        var authorizations = new List<(Authorization authorization, string envClientId)>();
         if (results == null)
         {
             return authorizations;
@@ -367,7 +383,25 @@ public class PosseService : IPosseService
         var outfitterAreas = await context.OutfitterAreas.ToArrayAsync();
         var registeredTrappingConcessions =
             await context.RegisteredTrappingConcessions.ToArrayAsync();
-        foreach (var posseAuthorization in results.Authorizations.OrderBy(a => a.Type))
+
+        // Since we ignore (don't save) authorizations that
+        List<AuthorizationDto> authorizationToBeProcessed = new();
+        foreach (var item in results.Authorizations.Where(IsBigGameHuntingLicence))
+        {
+            var childList = await GetAuthorizationsByEnvClientId(
+                item.EnvClientId,
+                item.ValidFromDateTime
+            );
+            authorizationToBeProcessed.AddRange(childList);
+        }
+
+        // Big game hunting licences must be processed first because it is a required parent of other authorization types
+        foreach (
+            var posseAuthorization in results.Authorizations
+                .Union(authorizationToBeProcessed)
+                .OrderBy(a => IsBigGameHuntingLicence(a) ? 0 : 1)
+                .DistinctBy(x => $"{x.EnvClientId}-{GetSeason(x)}-{x.Type}")
+        )
         {
             if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
             {
@@ -378,153 +412,139 @@ public class PosseService : IPosseService
                 authorization.Season = GetSeason(authorization);
                 authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
 
-                if (posseAuthorization.EnvClientId == null)
-                {
-                    LogRequiredPropertyIsMissing(
-                        posseAuthorization,
-                        nameof(posseAuthorization.EnvClientId)
-                    );
+                if (HasInvalidEnvClientId(posseAuthorization))
                     continue;
-                }
 
-                if (posseAuthorization.ValidFromDateTime > posseAuthorization.ValidToDateTime)
-                {
-                    Log.Error(
-                        "An authorization of type {type} has a validFromDateTime that occurs after validToDateTime, and was ignored: {@authorization}",
-                        posseAuthorization.Type,
-                        posseAuthorization
-                    );
+                if (HasInvalidDateTimes(posseAuthorization))
                     continue;
-                }
 
-                if (authorization.Season == null)
-                {
-                    Log.Error(
-                        "An authorization of type {type} spans multiple harvest seasons, and was ignored: {@authorization}",
-                        posseAuthorization.Type,
-                        posseAuthorization
-                    );
+                if (HasInvalidSeason(authorization, posseAuthorization))
                     continue;
-                }
 
                 // Ignore authorizations before the 20/21 season
-                if (int.Parse(authorization.Season.Substring(3, 2)) < 21)
+                if (HasSeasonBefore2020_2021(authorization))
+                    continue;
+
+                if (
+                    !TryProcessAuthorizationWithOutfitterAreas(
+                        posseAuthorization,
+                        authorization,
+                        outfitterAreas
+                    )
+                )
                 {
                     continue;
                 }
 
-                var isNotValidAuth = false;
-
-                isNotValidAuth = ProcessOutfitterAreaAuthorization(
-                    posseAuthorization,
-                    authorization,
-                    outfitterAreas
-                );
-
-                if (isNotValidAuth)
-                {
-                    continue;
-                }
-
-                isNotValidAuth = await ProcessAuthorization<CustomWildlifeActPermit>(
-                    authorization,
-                    posseAuthorization,
-                    () =>
-                        string.IsNullOrWhiteSpace(
-                            posseAuthorization.CustomWildlifeActPermitConditions
-                        ),
-                    async (customWildlifeActPermit) =>
-                    {
-                        await Task.FromResult(
+                if (
+                    !TryProcessAuthorization<CustomWildlifeActPermit>(
+                        authorization,
+                        posseAuthorization,
+                        () =>
+                            string.IsNullOrWhiteSpace(
+                                posseAuthorization.CustomWildlifeActPermitConditions
+                            ),
+                        (customWildlifeActPermit) =>
+                        {
                             customWildlifeActPermit.Conditions =
-                                posseAuthorization.CustomWildlifeActPermitConditions!
-                        );
-                    },
-                    nameof(posseAuthorization.CustomWildlifeActPermitConditions)
-                );
-
-                if (isNotValidAuth)
+                                posseAuthorization.CustomWildlifeActPermitConditions!;
+                        },
+                        nameof(posseAuthorization.CustomWildlifeActPermitConditions)
+                    )
+                )
                 {
                     continue;
                 }
 
-                isNotValidAuth = await ProcessAuthorization<SpecialGuideLicence>(
-                    authorization,
-                    posseAuthorization,
-                    () =>
-                        string.IsNullOrWhiteSpace(
-                            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-                        ),
-                    (specialGuideLicence) =>
-                    {
-                        clientMapper.TryGetValue(
-                            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
-                            out var client
-                        );
-                        if (client != null)
+                if (
+                    !TryProcessAuthorization<SpecialGuideLicence>(
+                        authorization,
+                        posseAuthorization,
+                        () =>
+                            string.IsNullOrWhiteSpace(
+                                posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+                            ),
+                        (specialGuideLicence) =>
                         {
-                            specialGuideLicence.GuidedClient = client;
-                        }
-                        return Task.CompletedTask;
-                    },
-                    nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
-                );
-
-                if (isNotValidAuth)
+                            clientMapper.TryGetValue(
+                                posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
+                                out var client
+                            );
+                            if (client != null)
+                            {
+                                specialGuideLicence.GuidedClient = client;
+                            }
+                        },
+                        nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
+                    )
+                )
                 {
                     continue;
                 }
 
-                isNotValidAuth = await ProcessAuthorization<TrappingLicence>(
-                    authorization,
-                    posseAuthorization,
-                    () =>
-                        string.IsNullOrWhiteSpace(posseAuthorization.RegisteredTrappingConcession), (trappingLicence) =>
-                    {
-                        var item = registeredTrappingConcessions.FirstOrDefault(
-                            r => r.Area == posseAuthorization.RegisteredTrappingConcession
-                        );
-                        if (item != null)
+                if (
+                    !TryProcessAuthorization<TrappingLicence>(
+                        authorization,
+                        posseAuthorization,
+                        () =>
+                            string.IsNullOrWhiteSpace(
+                                posseAuthorization.RegisteredTrappingConcession
+                            ),
+                        (trappingLicence) =>
                         {
-                            trappingLicence.RegisteredTrappingConcession = item;
-                        }
-
-                        return Task.CompletedTask;
-                    },
-                    nameof(posseAuthorization.RegisteredTrappingConcession)
-                );
-
-                if (isNotValidAuth)
+                            var item = Array.Find(
+                                registeredTrappingConcessions,
+                                r => r.Area == posseAuthorization.RegisteredTrappingConcession
+                            );
+                            if (item != null)
+                            {
+                                trappingLicence.RegisteredTrappingConcession = item;
+                            }
+                            //else
+                            //{
+                            //    Log.Error(
+                            //        "An authorization of type {type} has an unrecognized {property} value of {unrecognizedValue}, and was ignored: {@authorization}",
+                            //        posseAuthorization.Type,
+                            //        nameof(trappingLicence.RegisteredTrappingConcession),
+                            //        posseAuthorization.RegisteredTrappingConcession,
+                            //        authorization
+                            //    );
+                            //}
+                        },
+                        nameof(posseAuthorization.RegisteredTrappingConcession)
+                    )
+                )
                 {
                     continue;
                 }
 
-                if (authorization is IHasBigGameHuntingLicence auth)
+                if (
+                    !TryProcessAuthorization<PhaHuntingPermit>(
+                        authorization,
+                        posseAuthorization,
+                        () =>
+                            string.IsNullOrWhiteSpace(posseAuthorization.PhaHuntingPermitHuntCode),
+                        (phaHuntingpermit) =>
+                        {
+                            phaHuntingpermit.HuntCode =
+                                posseAuthorization.PhaHuntingPermitHuntCode!;
+                        },
+                        nameof(posseAuthorization.PhaHuntingPermitHuntCode)
+                    )
+                )
                 {
-                    var applicableBigGameHuntingLicences = authorizations.Where(
-                        (a) =>
-                            a.Item2 == posseAuthorization.EnvClientId
-                            && a.Item1 is BigGameHuntingLicence
-                            && a.Item1.ValidFromDateTime <= authorization.ValidFromDateTime
-                            // Pad by 5 minutes to handle authorization "suspensions" in POSSE, which suspend the dependant authorizations after the parent
-                            && a.Item1.ValidToDateTime.AddMinutes(5)
-                                >= authorization.ValidToDateTime
-                    );
-                    var parent = (BigGameHuntingLicence?)
-                        applicableBigGameHuntingLicences.SingleOrDefault().Item1;
-                    if (parent == null)
-                    {
-                        Log.Error(
-                            "EnvClientId {envClientId} does not have a Big Game Hunting Licence for season {season}, so a dependant authorization of type {type} in season {season} was ignored: {@authorization}",
-                            posseAuthorization.EnvClientId,
-                            authorization.Season,
-                            posseAuthorization.Type,
-                            authorization.Season,
-                            posseAuthorization
-                        );
-                        continue;
-                    }
-                    auth.BigGameHuntingLicence = parent;
+                    continue;
+                }
+
+                if (
+                    HasInvalidBigGameHuntingLicenceForDependantAuthorization(
+                        posseAuthorization,
+                        authorization,
+                        authorizations
+                    )
+                )
+                {
+                    continue;
                 }
 
                 authorizations.Add((authorization, posseAuthorization.EnvClientId));
@@ -541,13 +561,150 @@ public class PosseService : IPosseService
         return authorizations;
     }
 
-    private static string? GetSeason(Authorization authorization)
+    private static bool HasSeasonBefore2020_2021(Authorization authorization)
     {
-        var startDate = authorization.ValidFromDateTime;
-        var endDate = authorization.ValidToDateTime;
+        if (authorization.Season == null)
+        {
+            return true;
+        }
+        return int.Parse(authorization.Season.Substring(3, 2)) < 21;
+    }
 
+    private static bool HasInvalidSeason(
+        Authorization authorization,
+        AuthorizationDto posseAuthorization
+    )
+    {
+        if (authorization.Season == null)
+        {
+            Log.Error(
+                "An authorization of type {type} spans multiple harvest seasons, and was ignored: {@authorization}",
+                posseAuthorization.Type,
+                posseAuthorization
+            );
+            return true;
+        }
+        return false;
+    }
+
+    private static bool HasInvalidBigGameHuntingLicenceForDependantAuthorization(
+        AuthorizationDto posseAuthorization,
+        Authorization authorization,
+        List<(Authorization authorization, string envClientId)> authorizations
+    )
+    {
+        if (authorization is IHasBigGameHuntingLicence auth)
+        {
+            var bigGameHuntingLicencesInSameSeason = authorizations.Where(
+                (a) =>
+                    a.envClientId == posseAuthorization.EnvClientId
+                    && a.authorization is BigGameHuntingLicence
+                    && a.authorization.Season == authorization.Season
+            );
+            var applicableBigGameHuntingLicences = bigGameHuntingLicencesInSameSeason.Where(
+                (a) =>
+                    a.authorization.ValidFromDateTime <= authorization.ValidFromDateTime
+                    // Pad by 5 minutes to handle authorization "suspensions" in POSSE, which can suspend the dependant authorizations after suspending the parent
+                    && a.authorization.ValidToDateTime.AddMinutes(5)
+                        >= authorization.ValidToDateTime
+            );
+            var parent = (BigGameHuntingLicence?)
+                applicableBigGameHuntingLicences.SingleOrDefault().authorization;
+            if (parent == null)
+            {
+                if (bigGameHuntingLicencesInSameSeason.Any())
+                {
+                    Log.Error(
+                        "EnvClientId {envClientId} has at least one Big Game Hunting Licence for season {season}, but a dependant authorization of type {type} in season {season} is not within its validity period: {@authorization}. Licences in season: {@licences}",
+                        posseAuthorization.EnvClientId,
+                        authorization.Season,
+                        posseAuthorization.Type,
+                        authorization.Season,
+                        posseAuthorization,
+                        bigGameHuntingLicencesInSameSeason
+                            .Select(x => x.authorization)
+                            .Select(
+                                x =>
+                                    new
+                                    {
+                                        Type = nameof(BigGameHuntingLicence),
+                                        x.Number,
+                                        x.ValidFromDateTime,
+                                        x.ValidToDateTime,
+                                        x.LastModifiedDateTime
+                                    }
+                            )
+                            .ToArray()
+                    );
+                }
+                else
+                {
+                    Log.Error(
+                        "EnvClientId {envClientId} does not have a Big Game Hunting Licence for season {season}, so a dependant authorization of type {type} in season {season} was ignored: {@authorization}",
+                        posseAuthorization.EnvClientId,
+                        authorization.Season,
+                        posseAuthorization.Type,
+                        authorization.Season,
+                        posseAuthorization
+                    );
+                }
+                return true;
+            }
+            auth.BigGameHuntingLicence = parent;
+        }
+        return false;
+    }
+
+    private static bool HasInvalidDateTimes(AuthorizationDto posseAuthorization)
+    {
+        if (posseAuthorization.ValidFromDateTime > posseAuthorization.ValidToDateTime)
+        {
+            Log.Error(
+                "An authorization of type {type} has a validFromDateTime that occurs after validToDateTime, and was ignored: {@authorization}",
+                posseAuthorization.Type,
+                posseAuthorization
+            );
+            return true;
+        }
+        return false;
+    }
+
+    private static bool HasInvalidEnvClientId(AuthorizationDto posseAuthorization)
+    {
+        if (posseAuthorization.EnvClientId == null)
+        {
+            LogRequiredPropertyIsMissing(
+                posseAuthorization,
+                nameof(posseAuthorization.EnvClientId)
+            );
+            return true;
+        }
+        return false;
+    }
+
+    private static string? GetSeason(AuthorizationDto authorization) =>
+        GetSeason(
+            authorization.ValidFromDateTime,
+            authorization.ValidToDateTime,
+            Enum.TryParse(authorization.Type, out AuthorizationType typeValue)
+                && s_authorizationMapper[typeValue]() is TrappingLicence
+        );
+
+    private static string? GetSeason(Authorization authorization) =>
+        GetSeason(
+            authorization.ValidFromDateTime,
+            authorization.ValidToDateTime,
+            authorization is TrappingLicence
+        );
+
+    private static string? GetSeason(
+        DateTimeOffset startDate,
+        DateTimeOffset endDate,
+        bool isTrrapping
+    )
+    {
         // Hunting April-March, Trapping July-June
-        var seasonEndMonth = authorization is TrappingLicence ? 6 : 3;
+        var seasonEndMonth = isTrrapping ? 6 : 3;
 
         int startYear;
         if (startDate.Month <= seasonEndMonth)
@@ -577,11 +734,11 @@ public class PosseService : IPosseService
         return $"{startYear % 100:00}/{endYear % 100:00}";
     }
 
-    private static async Task<bool> ProcessAuthorization<T>(
+    private static bool TryProcessAuthorization<T>(
         Authorization authorization,
         AuthorizationDto posseAuthorization,
         Func<bool> condition,
-        Func<T, Task> updater,
+        Action<T> updater,
         string propertyName
     )
     {
@@ -592,19 +749,18 @@ public class PosseService : IPosseService
             {
                 LogRequiredPropertyIsMissing(posseAuthorization, propertyName);
 
-                return true;
+                return false;
             }
-            await updater.Invoke(castedAuthorization);
-            //return false;
+            updater.Invoke(castedAuthorization);
         }
         else if (!conditionResult)
         {
             LogInvalidPropertyIsSet(posseAuthorization, propertyName);
         }
-        return false;
+        return true;
     }
 
-    private static bool ProcessOutfitterAreaAuthorization(
+    private static bool TryProcessAuthorizationWithOutfitterAreas(
         AuthorizationDto posseAuthorization,
         Authorization authorization,
         IEnumerable<OutfitterArea> outfitterAreas
@@ -631,7 +787,7 @@ public class PosseService : IPosseService
                     posseAuthorization,
                     nameof(posseAuthorization.OutfitterAreas)
                 );
-                return true;
+                return false;
             }
             auth.OutfitterAreas = new();
             foreach (var area in posseAuthorization.OutfitterAreas)
@@ -655,7 +811,7 @@ public class PosseService : IPosseService
         {
             LogInvalidPropertyIsSet(posseAuthorization, nameof(posseAuthorization.OutfitterAreas));
         }
-        return false;
+        return true;
     }
 
     private static void LogRequiredPropertyIsMissing(
