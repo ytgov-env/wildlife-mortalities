@@ -44,25 +44,6 @@ public abstract class Report
         HumanReadableId = $"{GetHumanReadableIdPrefix()}-{newHumanReadableIdSuffix}";
 
         return HumanReadableId;
-
-        //string GetSeason()
-        //{
-        //    var startingDate = GetMortalities().FirstOrDefault()?.DateOfDeath ?? DateSubmitted.Date;
-        //    int startYear;
-        //    int endYear;
-        //    if (startingDate.Month <= 3)
-        //    {
-        //        startYear = startingDate.Year - 1;
-        //        endYear = startingDate.Year;
-        //    }
-        //    else
-        //    {
-        //        startYear = startingDate.Year;
-        //        endYear = startingDate.Year + 1;
-        //    }
-
-        //    return $"{startYear % 100:00}/{endYear % 100:00}";
-        //}
     }
 
     public abstract bool HasHuntingActivity();

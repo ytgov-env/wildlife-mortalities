@@ -39,8 +39,15 @@ public class Client : Person
 
     public override string ToString() => $"{FirstName} {LastName} ({EnvClientId})";
 
-    public void Merge(Client clientToBeMerged)
+    public bool Merge(Client clientToBeMerged)
     {
+        // This check was added because posse returned clients who had previousEnvClientIds that matched the EnvClientId of that client,
+        // which is invalid and shouldn't result in a merge
+        if (EnvClientId == clientToBeMerged.EnvClientId)
+        {
+            return false;
+        }
+
         Authorizations.AddRange(clientToBeMerged.Authorizations);
         SpecialGuideLicencesAsClient.AddRange(clientToBeMerged.SpecialGuideLicencesAsClient);
 
@@ -63,6 +70,8 @@ public class Client : Person
         TrappedMortalitiesReports.AddRange(clientToBeMerged.TrappedMortalitiesReports);
 
         DraftReports.AddRange(clientToBeMerged.DraftReports);
+
+        return true;
     }
 }
 

@@ -5,7 +5,7 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class HuntingSeal : Authorization
+public class HuntingSeal : Authorization, IHasBigGameHuntingLicence
 {
     public enum SealType
     {

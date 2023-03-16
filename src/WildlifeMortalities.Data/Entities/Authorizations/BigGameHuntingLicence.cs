@@ -29,8 +29,6 @@ public class BigGameHuntingLicence : Authorization, IHasOutfitterAreas
     public List<HuntingPermit> HuntingPermits { get; set; } = null!;
     public List<PhaHuntingPermit> PhaHuntingPermits { get; set; } = null!;
     public SpecialGuideLicence? SpecialGuideLicence { get; set; }
-    public OutfitterAssistantGuideLicence? OutfitterAssistantGuideLicence { get; set; }
-    public OutfitterChiefGuideLicence? OutfitterChiefGuideLicence { get; set; }
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();

@@ -4,7 +4,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class PhaHuntingPermit : Authorization
+public class PhaHuntingPermit : Authorization, IHasBigGameHuntingLicence
 {
     public enum PermitType
     {

@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 
@@ -8,7 +12,7 @@ namespace WildlifeMortalities.Shared.Services;
 
 public class PosseService : IPosseService
 {
-    public enum AuthorizationType
+    private enum AuthorizationType
     {
         BigGameHuntingLicence_CanadianResident = 10,
         BigGameHuntingLicence_CanadianResidentSpecialGuided = 20,
@@ -299,18 +303,10 @@ public class PosseService : IPosseService
         };
 
     private readonly HttpClient _httpClient;
-    private readonly IMortalityService _mortalityService;
-    private readonly ClientService _clientService;
 
-    public PosseService(
-        HttpClient httpClient,
-        IMortalityService mortalityService,
-        ClientService clientService
-    )
+    public PosseService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _mortalityService = mortalityService;
-        _clientService = clientService;
     }
 
     public async Task<IEnumerable<(Client, IEnumerable<string>)>> GetClients(
@@ -319,38 +315,42 @@ public class PosseService : IPosseService
     {
         var clients = new List<(Client, IEnumerable<string>)>();
 
-        //var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
-        //    $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
-        //);
+        var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
+            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:yyyy-MM-ddThh:mm:ssK}"
+        );
 
-        //foreach (var recentlyModifiedClient in results.Clients)
-        //{
-        //    var client = new Client
-        //    {
-        //        EnvClientId = recentlyModifiedClient.EnvClientId,
-        //        FirstName = recentlyModifiedClient.FirstName,
-        //        LastName = recentlyModifiedClient.LastName,
-        //        BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
-        //        LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
-        //    };
-
-        //    clients.Add((client, recentlyModifiedClient.PreviousEnvClientIds));
-        //}
-
-        clients = new List<(Client, IEnumerable<string>)>
+        var rand = new Random();
+        foreach (var recentlyModifiedClient in results.Clients)
         {
-            (new Client { EnvClientId = "217956", }, new[] { "169422" })
-        };
+            var client = new Client
+            {
+                EnvClientId = recentlyModifiedClient.EnvClientId,
+                FirstName = recentlyModifiedClient.FirstName,
+                LastName = recentlyModifiedClient.LastName,
+                //BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
+                BirthDate = new DateTime(rand.Next(1930, 2010), rand.Next(1, 12), rand.Next(1, 28)),
+                LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
+            };
+
+            clients.Add((client, recentlyModifiedClient.PreviousEnvClientIds));
+        }
+
+        //clients = new List<(Client, IEnumerable<string>)>
+        //{
+        //    (new Client { EnvClientId = "217956", }, new[] { "169422" })
+        //};
 
         return clients;
     }
 
     public async Task<IEnumerable<(Authorization, string)>> GetAuthorizations(
-        DateTimeOffset modifiedSinceDateTime
+        DateTimeOffset modifiedSinceDateTime,
+        Dictionary<string, Client> clientMapper,
+        AppDbContext context
     )
     {
         var jsonDoc = await File.ReadAllTextAsync(
-            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\UAT_authorizations.json"
+            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations.json"
         );
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
@@ -364,82 +364,66 @@ public class PosseService : IPosseService
         {
             return authorizations;
         }
-
-        foreach (var posseAuthorization in results.Authorizations)
+        var outfitterAreas = await context.OutfitterAreas.ToArrayAsync();
+        var registeredTrappingConcessions =
+            await context.RegisteredTrappingConcessions.ToArrayAsync();
+        foreach (var posseAuthorization in results.Authorizations.OrderBy(a => a.Type))
         {
             if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
             {
                 var authorization = s_authorizationMapper[typeValue]();
                 authorization.Number = posseAuthorization.Number;
-                authorization.ActiveFromDate = posseAuthorization.ValidFromDateTime;
-                authorization.ActiveToDate = posseAuthorization.ValidToDateTime;
+                authorization.ValidFromDateTime = posseAuthorization.ValidFromDateTime;
+                authorization.ValidToDateTime = posseAuthorization.ValidToDateTime;
+                authorization.Season = GetSeason(authorization);
                 authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
+
+                if (posseAuthorization.EnvClientId == null)
+                {
+                    LogRequiredPropertyIsMissing(
+                        posseAuthorization,
+                        nameof(posseAuthorization.EnvClientId)
+                    );
+                    continue;
+                }
+
+                if (posseAuthorization.ValidFromDateTime > posseAuthorization.ValidToDateTime)
+                {
+                    Log.Error(
+                        "An authorization of type {type} has a validFromDateTime that occurs after validToDateTime, and was ignored: {@authorization}",
+                        posseAuthorization.Type,
+                        posseAuthorization
+                    );
+                    continue;
+                }
+
+                if (authorization.Season == null)
+                {
+                    Log.Error(
+                        "An authorization of type {type} spans multiple harvest seasons, and was ignored: {@authorization}",
+                        posseAuthorization.Type,
+                        posseAuthorization
+                    );
+                    continue;
+                }
+
+                // Ignore authorizations before the 20/21 season
+                if (int.Parse(authorization.Season.Substring(3, 2)) < 21)
+                {
+                    continue;
+                }
 
                 var isNotValidAuth = false;
 
-                //skipAuthorization = await SkipAuthorization<Authorization>(
-                //    authorization,
-                //    posseAuthorization,
-                //    () => !posseAuthorization.OutfitterAreas.Any(), async (authorization) =>
-                //    {
+                isNotValidAuth = ProcessOutfitterAreaAuthorization(
+                    posseAuthorization,
+                    authorization,
+                    outfitterAreas
+                );
 
-                //    },
-                //    nameof(posseAuthorization.OutfitterAreas)
-                //);
-
-                var condition = !posseAuthorization.OutfitterAreas.Any();
-                IHasOutfitterAreas? auth = authorization switch
+                if (isNotValidAuth)
                 {
-                    BigGameHuntingLicence
-                    and {
-                        Type: BigGameHuntingLicence.LicenceType.CanadianResident
-                            or BigGameHuntingLicence.LicenceType.NonResident
-                    }
-                        => (BigGameHuntingLicence)authorization,
-                    //SmallGameHuntingLicence
-                    //and { Type: SmallGameHuntingLicence.LicenceType.NonResident }
-                    //    => (SmallGameHuntingLicence)authorization,
-                    OutfitterChiefGuideLicence => (OutfitterChiefGuideLicence)authorization,
-                    OutfitterAssistantGuideLicence => (OutfitterAssistantGuideLicence)authorization,
-                    _ => null
-                };
-                if (auth != null)
-                {
-                    if (condition)
-                    {
-                        LogRequiredPropertyIsMissing(
-                            posseAuthorization,
-                            nameof(posseAuthorization.OutfitterAreas)
-                        );
-                        continue;
-                    }
-                    auth.OutfitterAreas = new();
-                    var outfitterAreas = await _mortalityService.GetOutfitterAreas();
-                    foreach (var area in posseAuthorization.OutfitterAreas)
-                    {
-                        var item = outfitterAreas.FirstOrDefault(
-                            o => o.Area == area.TrimStart('0')
-                        );
-                        if (item != null)
-                        {
-                            auth.OutfitterAreas.Add(item);
-                        }
-                        else
-                        {
-                            LogPropertyContainsInvalidValue(
-                                posseAuthorization,
-                                nameof(posseAuthorization.OutfitterAreas),
-                                area
-                            );
-                        }
-                    }
-                }
-                else if (!condition)
-                {
-                    LogInvalidPropertyIsSet(
-                        posseAuthorization,
-                        nameof(posseAuthorization.OutfitterAreas)
-                    );
+                    continue;
                 }
 
                 isNotValidAuth = await ProcessAuthorization<CustomWildlifeActPermit>(
@@ -471,15 +455,17 @@ public class PosseService : IPosseService
                         string.IsNullOrWhiteSpace(
                             posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
                         ),
-                    async (specialGuideLicence) =>
+                    (specialGuideLicence) =>
                     {
-                        var client = await _clientService.GetClientByEnvClientId(
-                            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!
+                        clientMapper.TryGetValue(
+                            posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
+                            out var client
                         );
                         if (client != null)
                         {
                             specialGuideLicence.GuidedClient = client;
                         }
+                        return Task.CompletedTask;
                     },
                     nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
                 );
@@ -493,22 +479,17 @@ public class PosseService : IPosseService
                     authorization,
                     posseAuthorization,
                     () =>
-                        string.IsNullOrWhiteSpace(
-                            posseAuthorization.RegisteredTrappingConcession.ToString()
-                        ),
-                    async (trappingLicence) =>
+                        string.IsNullOrWhiteSpace(posseAuthorization.RegisteredTrappingConcession), (trappingLicence) =>
                     {
-                        var registeredTrappingConcessions =
-                            await _mortalityService.GetRegisteredTrappingConcessions();
-
                         var item = registeredTrappingConcessions.FirstOrDefault(
-                            r =>
-                                r.Area == posseAuthorization.RegisteredTrappingConcession.ToString()
+                            r => r.Area == posseAuthorization.RegisteredTrappingConcession
                         );
                         if (item != null)
                         {
                             trappingLicence.RegisteredTrappingConcession = item;
                         }
+
+                        return Task.CompletedTask;
                     },
                     nameof(posseAuthorization.RegisteredTrappingConcession)
                 );
@@ -516,6 +497,34 @@ public class PosseService : IPosseService
                 if (isNotValidAuth)
                 {
                     continue;
+                }
+
+                if (authorization is IHasBigGameHuntingLicence auth)
+                {
+                    var applicableBigGameHuntingLicences = authorizations.Where(
+                        (a) =>
+                            a.Item2 == posseAuthorization.EnvClientId
+                            && a.Item1 is BigGameHuntingLicence
+                            && a.Item1.ValidFromDateTime <= authorization.ValidFromDateTime
+                            // Pad by 5 minutes to handle authorization "suspensions" in POSSE, which suspend the dependant authorizations after the parent
+                            && a.Item1.ValidToDateTime.AddMinutes(5)
+                                >= authorization.ValidToDateTime
+                    );
+                    var parent = (BigGameHuntingLicence?)
+                        applicableBigGameHuntingLicences.SingleOrDefault().Item1;
+                    if (parent == null)
+                    {
+                        Log.Error(
+                            "EnvClientId {envClientId} does not have a Big Game Hunting Licence for season {season}, so a dependant authorization of type {type} in season {season} was ignored: {@authorization}",
+                            posseAuthorization.EnvClientId,
+                            authorization.Season,
+                            posseAuthorization.Type,
+                            authorization.Season,
+                            posseAuthorization
+                        );
+                        continue;
+                    }
+                    auth.BigGameHuntingLicence = parent;
                 }
 
                 authorizations.Add((authorization, posseAuthorization.EnvClientId));
@@ -530,6 +539,42 @@ public class PosseService : IPosseService
         }
 
         return authorizations;
+    }
+
+    private static string? GetSeason(Authorization authorization)
+    {
+        var startDate = authorization.ValidFromDateTime;
+        var endDate = authorization.ValidToDateTime;
+
+        // Hunting April-March, Trapping July-June
+        var seasonEndMonth = authorization is TrappingLicence ? 6 : 3;
+
+        int startYear;
+        if (startDate.Month <= seasonEndMonth)
+        {
+            startYear = startDate.Year - 1;
+        }
+        else
+        {
+            startYear = startDate.Year;
+        }
+
+        int endYear;
+        if (endDate.Month <= seasonEndMonth)
+        {
+            endYear = endDate.Year;
+        }
+        else
+        {
+            endYear = endDate.Year + 1;
+        }
+
+        if (endYear - startYear != 1)
+        {
+            return null;
+        }
+
+        return $"{startYear % 100:00}/{endYear % 100:00}";
     }
 
     private static async Task<bool> ProcessAuthorization<T>(
@@ -555,6 +600,60 @@ public class PosseService : IPosseService
         else if (!conditionResult)
         {
             LogInvalidPropertyIsSet(posseAuthorization, propertyName);
+        }
+        return false;
+    }
+
+    private static bool ProcessOutfitterAreaAuthorization(
+        AuthorizationDto posseAuthorization,
+        Authorization authorization,
+        IEnumerable<OutfitterArea> outfitterAreas
+    )
+    {
+        var condition = !posseAuthorization.OutfitterAreas.Any();
+        IHasOutfitterAreas? auth = authorization switch
+        {
+            BigGameHuntingLicence
+            and {
+                Type: BigGameHuntingLicence.LicenceType.CanadianResident
+                    or BigGameHuntingLicence.LicenceType.NonResident
+            }
+                => (BigGameHuntingLicence)authorization,
+            OutfitterChiefGuideLicence licence => licence,
+            OutfitterAssistantGuideLicence licence => licence,
+            _ => null
+        };
+        if (auth != null)
+        {
+            if (condition)
+            {
+                LogRequiredPropertyIsMissing(
+                    posseAuthorization,
+                    nameof(posseAuthorization.OutfitterAreas)
+                );
+                return true;
+            }
+            auth.OutfitterAreas = new();
+            foreach (var area in posseAuthorization.OutfitterAreas)
+            {
+                var item = outfitterAreas.FirstOrDefault(o => o.Area == area.TrimStart('0'));
+                if (item != null)
+                {
+                    auth.OutfitterAreas.Add(item);
+                }
+                else
+                {
+                    LogPropertyContainsInvalidValue(
+                        posseAuthorization,
+                        nameof(posseAuthorization.OutfitterAreas),
+                        area
+                    );
+                }
+            }
+        }
+        else if (!condition)
+        {
+            LogInvalidPropertyIsSet(posseAuthorization, nameof(posseAuthorization.OutfitterAreas));
         }
         return false;
     }
@@ -642,10 +741,9 @@ public class PosseService : IPosseService
         string? CustomWildlifeActPermitConditions,
         string? SpecialGuideLicenceGuidedHunterEnvClientId,
         string? PhaHuntingPermitHuntCode,
-        //string? RegisteredTrappingConcession,
-        int? RegisteredTrappingConcession,
-        DateTimeOffset? ValidFromDateTime,
-        DateTimeOffset? ValidToDateTime,
+        string? RegisteredTrappingConcession,
+        DateTimeOffset ValidFromDateTime,
+        DateTimeOffset ValidToDateTime,
         DateTimeOffset LastModifiedDateTime,
         IEnumerable<string> OutfitterAreas
     );

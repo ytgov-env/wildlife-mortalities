@@ -5,7 +5,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class SpecialGuideLicence : Authorization
+public class SpecialGuideLicence : Authorization, IHasBigGameHuntingLicence
 {
     public int GuidedClientId { get; set; }
     public Client GuidedClient { get; set; } = null!;

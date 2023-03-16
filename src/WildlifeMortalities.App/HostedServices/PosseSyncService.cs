@@ -10,14 +10,14 @@ public class PosseSyncService : TimerBasedHostedService
     private readonly IServiceProvider _serviceProvider;
 
     public PosseSyncService(IServiceProvider serviceProvider)
-        : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(2)) =>
+        : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(20)) =>
         _serviceProvider = serviceProvider;
 
     protected override async void DoWork(object? state)
     {
         Log.Information("Starting posse sync");
         using var scope = _serviceProvider.CreateScope();
-        var posseClientService = scope.ServiceProvider.GetRequiredService<IPosseService>();
+        var posseService = scope.ServiceProvider.GetRequiredService<IPosseService>();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var clientMapper = context.People
@@ -35,8 +35,8 @@ public class PosseSyncService : TimerBasedHostedService
             .Include(x => x.Authorizations)
             .ToDictionary(x => x.EnvClientId, x => x);
 
-        var recentlyModifiedClients = await posseClientService.GetClients(
-            new DateTimeOffset(new DateTime(2023, 02, 15), new TimeSpan(-7, 0, 0))
+        var recentlyModifiedClients = await posseService.GetClients(
+            new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0))
         );
 
         foreach (
@@ -48,8 +48,8 @@ public class PosseSyncService : TimerBasedHostedService
             // Determine which are existing clients, and update them
             if (clientMapper.TryGetValue(client.EnvClientId, out var clientInDatabase))
             {
-                clientInDatabase.Update(client);
-                await context.SaveChangesAsync();
+                //clientInDatabase.Update(client);
+                //await context.SaveChangesAsync();
             }
             // Or, add a new client
             else
@@ -60,23 +60,26 @@ public class PosseSyncService : TimerBasedHostedService
                 clientInDatabase = client;
             }
 
+            // Determine if client was merged in POSSE, and merge them
             foreach (var envClientId in previousEnvClientIds)
             {
-                // Determine if client was merged in POSSE, and merge them
                 if (clientMapper.TryGetValue(envClientId, out var clientToBeMerged))
                 {
-                    clientInDatabase.Merge(clientToBeMerged);
-                    context.People.Remove(clientToBeMerged);
-                    clientMapper.Remove(clientToBeMerged.EnvClientId);
-                    await context.SaveChangesAsync();
+                    var wasMerged = clientInDatabase.Merge(clientToBeMerged);
+                    if (wasMerged)
+                    {
+                        context.People.Remove(clientToBeMerged);
+                        clientMapper.Remove(clientToBeMerged.EnvClientId);
+                        await context.SaveChangesAsync();
+                    }
                 }
             }
         }
-
-        var authorizations = await posseClientService.GetAuthorizations(
-            new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0))
+        var authorizations = await posseService.GetAuthorizations(
+            new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0)),
+            clientMapper,
+            context
         );
-        await context.OutfitterAreas.LoadAsync();
         foreach (var (auth, envClientId) in authorizations)
         {
             clientMapper.TryGetValue(envClientId, out var client);
@@ -84,11 +87,12 @@ public class PosseSyncService : TimerBasedHostedService
             {
                 auth.Client = clientMapper[envClientId];
                 context.Authorizations.Add(auth);
+                await context.SaveChangesAsync();
             }
             else
             {
                 Log.Error(
-                    "An authorization is associated with a client {EnvClientId} that doesn't exist, and was ignored: {@authorization}",
+                    "An authorization is associated with EnvClientId {EnvClientId}, which doesn't exist. The authorization was ignored: {@authorization}",
                     envClientId,
                     auth
                 );
