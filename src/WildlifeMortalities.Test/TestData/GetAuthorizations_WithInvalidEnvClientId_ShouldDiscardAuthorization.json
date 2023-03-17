@@ -1,0 +1,30 @@
+{
+  "authorizations": [
+    {
+      "type": "SmallGameHuntingLicence_YukonResident",
+      "envClientId": "523203",
+      "number": "EHL-9784",
+      "customWildlifeActPermitConditions": null,
+      "specialGuideLicenceGuidedHunterEnvClientId": null,
+      "phaHuntingPermitHuntCode": null,
+      "registeredTrappingConcession": null,
+      "validFromDateTime": "2021-07-09T12:03:22-07:00",
+      "validToDateTime": "2022-03-31T00:00:00-07:00",
+      "lastModifiedDateTime": "2022-12-14T14:57:01-07:00",
+      "outfitterAreas": []
+    },
+    {
+      "type": "HuntingPermit_MooseThreshold",
+      "envClientId": null,
+      "number": "EHP-008953",
+      "customWildlifeActPermitConditions": null,
+      "specialGuideLicenceGuidedHunterEnvClientId": null,
+      "phaHuntingPermitHuntCode": null,
+      "registeredTrappingConcession": null,
+      "validFromDateTime": "2021-07-09T14:16:46-07:00",
+      "validToDateTime": "2022-03-31T00:00:00-07:00",
+      "lastModifiedDateTime": "2022-12-14T14:53:56-07:00",
+      "outfitterAreas": []
+    }
+  ]
+}
