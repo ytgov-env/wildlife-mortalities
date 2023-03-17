@@ -10,10 +10,10 @@ public class PosseSyncService : TimerBasedHostedService
     private readonly IServiceProvider _serviceProvider;
 
     public PosseSyncService(IServiceProvider serviceProvider)
-        : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(20)) =>
+        : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(2)) =>
         _serviceProvider = serviceProvider;
 
-    protected override async void DoWork(object? state)
+    protected override async Task DoWork(object? state)
     {
         Log.Information("Starting posse sync");
         using var scope = _serviceProvider.CreateScope();

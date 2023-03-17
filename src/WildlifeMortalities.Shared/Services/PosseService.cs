@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
@@ -362,15 +361,15 @@ public class PosseService : IPosseService
         AppDbContext context
     )
     {
-        var jsonDoc = await File.ReadAllTextAsync(
-            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations.json"
-        );
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
-
-        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+        //var jsonDoc = await File.ReadAllTextAsync(
+        //    "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations.json"
         //);
+        //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        //var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
+
+        var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+            $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+        );
 
         var authorizations = new List<(Authorization authorization, string envClientId)>();
         if (results == null)
@@ -798,53 +797,54 @@ public class PosseService : IPosseService
         IEnumerable<OutfitterArea> outfitterAreas
     )
     {
-        return TryProcessAuthorization<Authorization>(
-            authorization,
-            posseAuthorization,
-            () => !posseAuthorization.OutfitterAreas.Any(),
-            x =>
+        var condition = !posseAuthorization.OutfitterAreas.Any();
+        IHasOutfitterAreas? auth = authorization switch
+        {
+            BigGameHuntingLicence
+            and {
+                Type: BigGameHuntingLicence.LicenceType.CanadianResident
+                    or BigGameHuntingLicence.LicenceType.NonResident
+            }
+                => (BigGameHuntingLicence)authorization,
+            OutfitterChiefGuideLicence licence => licence,
+            OutfitterAssistantGuideLicence licence => licence,
+            _ => null
+        };
+        if (auth != null)
+        {
+            if (condition)
             {
-                IHasOutfitterAreas? auth = x switch
+                LogRequiredPropertyIsMissing(
+                    posseAuthorization,
+                    nameof(posseAuthorization.OutfitterAreas)
+                );
+                return ProcessResult.Invalid;
+            }
+            auth.OutfitterAreas = new();
+            foreach (var area in posseAuthorization.OutfitterAreas)
+            {
+                var item = outfitterAreas.FirstOrDefault(o => o.Area == area.TrimStart('0'));
+                if (item != null)
                 {
-                    BigGameHuntingLicence
-                    and {
-                        Type: BigGameHuntingLicence.LicenceType.CanadianResident
-                            or BigGameHuntingLicence.LicenceType.NonResident
-                    }
-                        => (BigGameHuntingLicence)authorization,
-                    OutfitterChiefGuideLicence licence => licence,
-                    OutfitterAssistantGuideLicence licence => licence,
-                    _ => null
-                };
-
-                if (auth == null)
-                {
-                    return ProcessResult.NotApplicable;
+                    auth.OutfitterAreas.Add(item);
+                    return ProcessResult.Success;
                 }
-
-                auth.OutfitterAreas = new List<OutfitterArea>();
-                foreach (var area in posseAuthorization.OutfitterAreas)
+                else
                 {
-                    var item = outfitterAreas.FirstOrDefault(o => o.Area == area.TrimStart('0'));
-                    if (item != null)
-                    {
-                        auth.OutfitterAreas.Add(item);
-                    }
-                    else
-                    {
-                        LogPropertyContainsInvalidValue(
-                            posseAuthorization,
-                            nameof(posseAuthorization.OutfitterAreas),
-                            area
-                        );
-                        return ProcessResult.Invalid;
-                    }
+                    LogPropertyContainsInvalidValue(
+                        posseAuthorization,
+                        nameof(posseAuthorization.OutfitterAreas),
+                        area
+                    );
+                    return ProcessResult.Invalid;
                 }
-
-                return ProcessResult.Success;
-            },
-            nameof(posseAuthorization.OutfitterAreas)
-        );
+            }
+        }
+        else if (!condition)
+        {
+            LogInvalidPropertyIsSet(posseAuthorization, nameof(posseAuthorization.OutfitterAreas));
+        }
+        return ProcessResult.NotApplicable;
     }
 
     private enum ProcessResult
