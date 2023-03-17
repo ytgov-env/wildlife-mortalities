@@ -15,7 +15,9 @@ public class PosseServiceTester
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
-            .When("https://localhost/clients?modifiedSinceDateTime=2023-03-16T14:30:10-07:00")
+            .When(
+                "https://localhost/clients?modifiedSinceDateTime=2023-03-16T14:30:10.0000000-07:00"
+            )
             .Respond("application/json", storedClientResponse);
         var client = mockHttp.ToHttpClient();
         client.BaseAddress = new Uri(BaseAddress);

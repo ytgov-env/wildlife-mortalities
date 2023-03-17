@@ -35,46 +35,42 @@ public class PosseSyncService : TimerBasedHostedService
             .Include(x => x.Authorizations)
             .ToDictionary(x => x.EnvClientId, x => x);
 
-        var recentlyModifiedClients = await posseService.GetClients(
-            new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0))
-        );
+        //var recentlyModifiedClients = await posseService.GetClients(
+        //    new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0))
+        //);
 
-        foreach (
-            var (client, previousEnvClientIds) in recentlyModifiedClients.OrderBy(
-                x => x.Item1.LastModifiedDateTime
-            )
-        )
-        {
-            // Determine which are existing clients, and update them
-            if (clientMapper.TryGetValue(client.EnvClientId, out var clientInDatabase))
-            {
-                //clientInDatabase.Update(client);
-                //await context.SaveChangesAsync();
-            }
-            // Or, add a new client
-            else
-            {
-                context.Add(client);
-                await context.SaveChangesAsync();
-                clientMapper.Add(client.EnvClientId, client);
-                clientInDatabase = client;
-            }
+        //foreach (
+        //    var (client, previousEnvClientIds) in recentlyModifiedClients.OrderBy(
+        //        x => x.Item1.LastModifiedDateTime
+        //    )
+        //)
+        //{
+        //    // Determine which are existing clients, and update them
+        //    if (clientMapper.TryGetValue(client.EnvClientId, out var clientInDatabase))
+        //    {
+        //        //clientInDatabase.Update(client);
+        //        //await context.SaveChangesAsync();
+        //    }
+        //    // Or, add a new client
+        //    else
+        //    {
+        //        context.Add(client);
+        //        await context.SaveChangesAsync();
+        //        clientMapper.Add(client.EnvClientId, client);
+        //        clientInDatabase = client;
+        //    }
 
-            // Determine if client was merged in POSSE, and merge them
-            foreach (var envClientId in previousEnvClientIds)
-            {
-                if (clientMapper.TryGetValue(envClientId, out var clientToBeMerged))
-                {
-                    var wasMerged = clientInDatabase.Merge(clientToBeMerged);
-                    if (wasMerged)
-                    {
-                        context.People.Remove(clientToBeMerged);
-                        clientMapper.Remove(clientToBeMerged.EnvClientId);
-                        await context.SaveChangesAsync();
-                    }
-                }
-            }
-        }
+        //    // Determine if client was merged in POSSE, and merge them
+        //    foreach (var envClientId in previousEnvClientIds)
+        //    {
+        //        if (!clientMapper.TryGetValue(envClientId, out var clientToBeMerged)) continue;
+        //        var wasMerged = clientInDatabase.Merge(clientToBeMerged);
+        //        if (!wasMerged) continue;
+        //        context.People.Remove(clientToBeMerged);
+        //        clientMapper.Remove(clientToBeMerged.EnvClientId);
+        //        await context.SaveChangesAsync();
+        //    }
+        //}
         var authorizations = await posseService.GetAuthorizations(
             new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0)),
             clientMapper,
