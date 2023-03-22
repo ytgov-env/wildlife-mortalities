@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.Test", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.PosseExampleApi", "src\WildlifeMortalities.PosseExampleApi\WildlifeMortalities.PosseExampleApi.csproj", "{D041409C-4124-40C3-9231-3725D7CAC56A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WildlifeMortalities.PdfTester", "src\WildlifeMortalities.PdfTester\WildlifeMortalities.PdfTester.csproj", "{6FB79AD8-4B08-4EE1-94B1-19E2176D4343}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildlifeMortalities.PdfTester", "src\WildlifeMortalities.PdfTester\WildlifeMortalities.PdfTester.csproj", "{6FB79AD8-4B08-4EE1-94B1-19E2176D4343}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
