@@ -1,209 +1,215 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Enums;
 
+[AttributeUsage(AttributeTargets.Field)]
 public class IsOutfitterGuidedHuntableAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Field)]
 public class IsSpecialGuidedHuntableAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Field)]
 public class IsIndividualHuntableAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Field)]
 public class IsTrappableAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Field)]
 public class HasGameManagementAreaAttribute : Attribute { }
 
 public enum Species
 {
     [IsTrappable]
-    [Display(Name = "Beaver")]
+    [Display(Name = SpeciesConstants.AmericanBeaver)]
     AmericanBeaver = 10,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Black bear")]
+    [Display(Name = SpeciesConstants.AmericanBlackBear)]
     AmericanBlackBear = 20,
 
     [IsTrappable]
-    [Display(Name = "Martin")]
+    [Display(Name = SpeciesConstants.AmericanMartin)]
     AmericanMartin = 30,
 
     [IsTrappable]
-    [Display(Name = "Mink")]
+    [Display(Name = SpeciesConstants.AmericanMink)]
     AmericanMink = 40,
 
     [IsTrappable]
-    [Display(Name = "Arctic fox")]
+    [Display(Name = SpeciesConstants.ArcticFox)]
     ArcticFox = 50,
 
-    [Display(Name = "Arctic ground squirrel")]
+    [Display(Name = SpeciesConstants.ArcticGroundSquirrel)]
     ArcticGroundSquirrel = 60,
 
-    [Display(Name = "Bushy-tailed woodrat")]
+    [Display(Name = SpeciesConstants.BushyTailedWoodrat)]
     BushyTailedWoodrat = 70,
 
     [IsTrappable]
-    [Display(Name = "Lynx")]
+    [Display(Name = SpeciesConstants.CanadaLynx)]
     CanadaLynx = 80,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Caribou")]
+    [Display(Name = SpeciesConstants.Caribou)]
     Caribou = 90,
 
-    [Display(Name = "Pika")]
+    [Display(Name = SpeciesConstants.CollaredPika)]
     CollaredPika = 100,
 
-    [Display(Name = "Cougar")]
+    [Display(Name = SpeciesConstants.Cougar)]
     Cougar = 110,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [IsTrappable]
-    [Display(Name = "Coyote")]
+    [Display(Name = SpeciesConstants.Coyote)]
     Coyote = 120,
 
     [IsIndividualHuntable]
-    [Display(Name = "Elk")]
+    [Display(Name = SpeciesConstants.Elk)]
     Elk = 130,
 
     [IsTrappable]
-    [Display(Name = "Ermine")]
+    [Display(Name = SpeciesConstants.Ermine)]
     Ermine = 140,
 
     [IsTrappable]
-    [Display(Name = "Fisher")]
+    [Display(Name = SpeciesConstants.Fisher)]
     Fisher = 150,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [IsTrappable]
-    [Display(Name = "Wolf")]
+    [Display(Name = SpeciesConstants.GreyWolf)]
     GreyWolf = 160,
 
-    [Display(Name = "Grouse")]
+    [Display(Name = SpeciesConstants.Grouse)]
     Grouse = 161,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Grizzly bear")]
+    [Display(Name = SpeciesConstants.GrizzlyBear)]
     GrizzlyBear = 170,
 
-    [Display(Name = "Marmot")]
+    [Display(Name = SpeciesConstants.HoaryMarmot)]
     HoaryMarmot = 180,
 
-    [Display(Name = "Chipmunk")]
+    [Display(Name = SpeciesConstants.LeastChipmunk)]
     LeastChipmunk = 190,
 
     [IsTrappable]
-    [Display(Name = "Weasel")]
+    [Display(Name = SpeciesConstants.LeastWeasel)]
     LeastWeasel = 200,
 
-    [Display(Name = "Lemming")]
+    [Display(Name = SpeciesConstants.Lemming)]
     Lemming = 210,
 
-    [Display(Name = "Little brown bat")]
+    [Display(Name = SpeciesConstants.LittleBrownBat)]
     LittleBrownBat = 220,
 
-    [Display(Name = "Meadow jumping mouse")]
+    [Display(Name = SpeciesConstants.MeadowJumpingMouse)]
     MeadowJumpingMouse = 230,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Moose")]
+    [Display(Name = SpeciesConstants.Moose)]
     Moose = 240,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Goat")]
+    [Display(Name = SpeciesConstants.MountainGoat)]
     MountainGoat = 250,
 
     [IsIndividualHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Mule deer")]
+    [Display(Name = SpeciesConstants.MuleDeer)]
     MuleDeer = 260,
 
-    [Display(Name = "Muskox")]
+    [Display(Name = SpeciesConstants.Muskox)]
     Muskox = 270,
 
     [IsTrappable]
-    [Display(Name = "Muskrat")]
+    [Display(Name = SpeciesConstants.Muskrat)]
     Muskrat = 280,
 
-    [Display(Name = "North american deermouse")]
+    [Display(Name = SpeciesConstants.NorthAmericanDeermouse)]
     NorthAmericanDeermouse = 290,
 
-    [Display(Name = "North american porcupine")]
+    [Display(Name = SpeciesConstants.NorthAmericanPorcupine)]
     NorthAmericanPorcupine = 300,
 
-    [Display(Name = "Northern flying squirrel")]
+    [Display(Name = SpeciesConstants.NorthernFlyingSquirrel)]
     NorthernFlyingSquirrel = 310,
 
-    [Display(Name = "Northern long-eared bat")]
+    [Display(Name = SpeciesConstants.NorthernLongEaredBat)]
     NorthernLongEaredBat = 320,
 
     [IsTrappable]
-    [Display(Name = "Otter")]
+    [Display(Name = SpeciesConstants.NorthernRiverOtter)]
     NorthernRiverOtter = 330,
 
-    [Display(Name = "Polar bear")]
+    [Display(Name = SpeciesConstants.PolarBear)]
     PolarBear = 340,
 
-    [Display(Name = "Ptarmigan")]
+    [Display(Name = SpeciesConstants.Ptarmigan)]
     Ptarmigan = 341,
 
     [IsTrappable]
-    [Display(Name = "Red fox")]
+    [Display(Name = SpeciesConstants.RedFox)]
     RedFox = 350,
 
     [IsTrappable]
-    [Display(Name = "Red squirrel")]
+    [Display(Name = SpeciesConstants.RedSquirrel)]
     RedSquirrel = 360,
 
-    [Display(Name = "Shrew")]
+    [Display(Name = SpeciesConstants.Shrew)]
     Shrew = 370,
 
-    [Display(Name = "Snowshoe hare")]
+    [Display(Name = SpeciesConstants.SnowshoeHare)]
     SnowshoeHare = 380,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Sheep")]
+    [Display(Name = SpeciesConstants.ThinhornSheep)]
     ThinhornSheep = 390,
 
-    [Display(Name = "Vole")]
+    [Display(Name = SpeciesConstants.Vole)]
     Vole = 400,
 
     [IsIndividualHuntable]
-    [Display(Name = "White-tailed deer")]
+    [Display(Name = SpeciesConstants.WhiteTailedDeer)]
     WhiteTailedDeer = 410,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsTrappable]
-    [Display(Name = "Wolverine")]
+    [Display(Name = SpeciesConstants.Wolverine)]
     Wolverine = 420,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
-    [Display(Name = "Bison")]
+    [Display(Name = SpeciesConstants.WoodBison)]
     WoodBison = 430,
 
-    [Display(Name = "Woodchuck")]
+    [Display(Name = SpeciesConstants.Woodchuck)]
     Woodchuck = 440,
 
-    [Display(Name = "Bird (other)")]
+    [Display(Name = SpeciesConstants.BirdOther)]
     BirdOther = 450
 }

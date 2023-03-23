@@ -163,7 +163,7 @@ public class PosseService : IPosseService
             },
             {
                 AuthorizationType.HuntingSeal_Deer,
-                () => new HuntingSeal(HuntingSeal.SealType.Deer)
+                () => new HuntingSeal(HuntingSeal.SealType.MuleDeer)
             },
             { AuthorizationType.HuntingSeal_Elk, () => new HuntingSeal(HuntingSeal.SealType.Elk) },
             {

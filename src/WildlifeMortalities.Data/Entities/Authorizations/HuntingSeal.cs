@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -9,14 +11,31 @@ public class HuntingSeal : Authorization, IHasBigGameHuntingLicence
 {
     public enum SealType
     {
+        [Display(Name = SpeciesConstants.AmericanBlackBear)]
         AmericanBlackBear = 10,
+
+        [Display(Name = SpeciesConstants.Caribou)]
         Caribou = 20,
-        Deer = 30,
+
+        [Display(Name = SpeciesConstants.MuleDeer)]
+        MuleDeer = 30,
+
+        [Display(Name = SpeciesConstants.Elk)]
         Elk = 40,
+
+        [Display(Name = SpeciesConstants.GrizzlyBear)]
         GrizzlyBear = 50,
+
+        [Display(Name = SpeciesConstants.Moose)]
         Moose = 60,
+
+        [Display(Name = SpeciesConstants.MountainGoat)]
         MountainGoat = 70,
+
+        [Display(Name = SpeciesConstants.ThinhornSheep)]
         ThinhornSheep = 80,
+
+        [Display(Name = SpeciesConstants.WoodBison)]
         WoodBison = 90
     }
 
