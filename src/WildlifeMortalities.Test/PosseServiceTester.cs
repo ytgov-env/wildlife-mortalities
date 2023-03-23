@@ -25,8 +25,11 @@ public class PosseServiceTester
     [Fact]
     public async Task GetClients_With22ApplicableAuthorizations_ShouldReturn22Authorizations()
     {
+        const string TestName = nameof(
+            GetClients_With22ApplicableAuthorizations_ShouldReturn22Authorizations
+        );
         // Arrange
-        var storedClientResponse = await File.ReadAllTextAsync("TestData/22clients.json");
+        var storedClientResponse = await File.ReadAllTextAsync($"TestData/{TestName}.json");
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
@@ -50,10 +53,11 @@ public class PosseServiceTester
     [Fact]
     public async Task GetAuthorizations_WithInvalidEnvClientId_ShouldDiscardAuthorization()
     {
-        // Arrange
-        var storedClientResponse = await File.ReadAllTextAsync(
-            "TestData/GetAuthorizations_WithInvalidEnvClientId_ShouldDiscardAuthorization.json"
+        const string TestName = nameof(
+            GetAuthorizations_WithInvalidEnvClientId_ShouldDiscardAuthorization
         );
+        // Arrange
+        var storedClientResponse = await File.ReadAllTextAsync($"TestData/{TestName}.json");
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp.When(AuthorizationsUri).Respond("application/json", storedClientResponse);
@@ -71,9 +75,7 @@ public class PosseServiceTester
         };
 
         DbContextOptionsBuilder<AppDbContext> builder = new DbContextOptionsBuilder<AppDbContext>();
-        builder.UseInMemoryDatabase(
-            "GetAuthorizations_WithInvalidEnvClientId_ShouldDiscardAuthorization"
-        );
+        builder.UseInMemoryDatabase(TestName);
 
         AppDbContext context = new AppDbContext(builder.Options);
 

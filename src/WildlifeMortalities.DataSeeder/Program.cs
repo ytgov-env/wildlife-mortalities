@@ -10,7 +10,7 @@ using (var context = new AppDbContext())
     AddAllGameManagementAreas(context);
     AddAllOutfitterAreas(context);
     // AddAllGameManagementAreaSpecies(context);
-    AddFakeClients(context);
+    //AddFakeClients(context);
     AddAllRegisteredTrappingConcessions(context);
 }
 
