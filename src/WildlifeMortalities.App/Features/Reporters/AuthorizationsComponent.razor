@@ -1,5 +1,21 @@
-﻿@using WildlifeMortalities.Shared.Services
+﻿@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.Data.Entities.Authorizations;
+@using WildlifeMortalities.Data;
+@using WildlifeMortalities.Shared.Services;
+@inherits DbContextAwareComponent
+
 <MudText Typo="Typo.h6">Authorizations</MudText>
+
+@if (_isLoading == true)
+{
+    return;
+}
+
+@foreach (var authorization in _authorizationsViewModel.Authorizations.Where(x => x is IHasBigGameHuntingLicence == false))
+{
+    <AuthorizationCardComponent Authorization="@authorization" />
+}
 
 @code {
 
@@ -7,17 +23,22 @@
     [EditorRequired]
     public int ClientId { get; set; }
 
-    private AuthorizationsViewModel _authorizationsViewModel = null!;
-
-    [Inject]
-    private ClientService ClientService { get; set; } = default!;
+    private AuthorizationsViewModel _authorizationsViewModel = new();
+    private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        _authorizationsViewModel = new AuthorizationsViewModel
-        {
-            Authorizations = await ClientService.GetAuthorizationsByClientId(ClientId)
-        };
+        var authorizations = await Context.Authorizations.AsNoTracking().Where(a => a.ClientId == ClientId)
+            .Include(x => ((BigGameHuntingLicence)x).OutfitterAreas)
+            .Include(x => ((BigGameHuntingLicence)x).HuntingSeals)
+            .Include(x => ((BigGameHuntingLicence)x).HuntingPermits)
+            .Include(x => ((BigGameHuntingLicence)x).PhaHuntingPermits)
+            .Include(x => ((BigGameHuntingLicence)x).SpecialGuideLicence)
+            .ToArrayAsync();
+
+        _authorizationsViewModel.Authorizations = authorizations;
+
+        _isLoading = false;
     }
 
 }

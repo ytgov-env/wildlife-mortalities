@@ -1,0 +1,92 @@
+﻿@using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.Data.Entities.Authorizations;
+
+<MudCard Outlined="true" Style="@Style">
+    <MudCardHeader>
+        <CardHeaderAvatar>
+            <MudChip  Class="@GetColourByType()">@GetTypeShortName()</MudChip>
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="Typo.body1">
+                @Authorization.Number
+            </MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body2">
+            @Authorization.ValidFromDateTime.ToString("D")
+        </MudText>
+        <MudText Typo="Typo.body2">
+            @Authorization.ValidToDateTime.ToString("D")
+        </MudText>
+        @if (Authorization is BigGameHuntingLicence bigGameHuntingLicence)
+        {
+            <MudExpansionPanels>
+                <MudExpansionPanel Text="Dependants">
+                    @{
+                        var childAuthorizations = bigGameHuntingLicence.HuntingSeals.ValueOrEmpty().OfType<Authorization>()
+                        .Union(bigGameHuntingLicence.HuntingPermits.ValueOrEmpty()).Union(bigGameHuntingLicence.PhaHuntingPermits.ValueOrEmpty());
+
+                        if (bigGameHuntingLicence.SpecialGuideLicence != null)
+                        {
+                            childAuthorizations = childAuthorizations.Union(new[] { bigGameHuntingLicence.SpecialGuideLicence });
+                        }
+                    }
+
+                    <MudStack Row="true" Class="flex-wrap">
+
+                        @if (childAuthorizations.Any() == true)
+                        {
+                            @foreach (var authorization in childAuthorizations)
+                            {
+                                <AuthorizationCardComponent Authorization="@authorization" Style="height:100%; width:250px" />
+                            }
+                        }
+
+                    </MudStack>
+
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        }
+
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public Authorization Authorization { get; set; } = null!;
+
+    [Parameter]
+    public String Style { get; set; } = String.Empty;
+
+    private string GetTypeShortName() => Authorization switch
+    {
+        BigGameHuntingLicence => "big game hunting licence",
+        CustomWildlifeActPermit => "wildlife act permit",
+        HuntingPermit => "hunting permit",
+        HuntingSeal s => s.Type.GetDisplayName() + " seal",
+        OutfitterAssistantGuideLicence => "assistant guide licence",
+        OutfitterChiefGuideLicence => "chief guide licence",
+        PhaHuntingPermit => "permit hunt authorization",
+        SmallGameHuntingLicence => "small game hunting licence",
+        SpecialGuideLicence => "special guide licence",
+        TrappingLicence => "trapping licence",
+        _ => String.Empty,
+    };
+
+    private string GetColourByType() => Authorization switch
+    {
+        BigGameHuntingLicence => "purple darken-2 shades-text text-white",
+        CustomWildlifeActPermit => "red darken-2 shades-text text-white",
+        HuntingPermit => "pink darken-2 shades-text text-white",
+        HuntingSeal => "deep-purple darken-2 shades-text text-white",
+        OutfitterAssistantGuideLicence => "indigo darken-2 shades-text text-white",
+        OutfitterChiefGuideLicence => "cyan darken-2 shades-text text-white",
+        PhaHuntingPermit => "teal darken-2 shades-text text-white",
+        SmallGameHuntingLicence => "lime darken-2 shades-text text-white",
+        SpecialGuideLicence => "blue-grey darken-2 shades-text text-white",
+        TrappingLicence => "brown darken-2 shades-text text-white",
+        _ => String.Empty,
+    };
+}
