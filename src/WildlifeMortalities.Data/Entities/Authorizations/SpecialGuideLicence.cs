@@ -30,5 +30,8 @@ public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLi
             .HasOne(s => s.GuidedClient)
             .WithMany(c => c.SpecialGuideLicencesAsClient)
             .OnDelete(DeleteBehavior.NoAction);
+        builder
+            .HasIndex(x => x.BigGameHuntingLicenceId)
+            .HasFilter("[SpecialGuideLicence_BigGameHuntingLicenceId] IS NOT NULL");
     }
 }
