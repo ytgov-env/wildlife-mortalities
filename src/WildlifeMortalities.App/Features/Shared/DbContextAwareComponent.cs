@@ -8,11 +8,11 @@ public class DbContextAwareComponent : ComponentBase
 {
     private bool _disposedValue;
 
-    protected AppDbContext Context { get; private set; } = null!;
+    protected ReadOnlyAppDbContext Context { get; private set; } = null!;
 
     [Inject]
 #pragma warning disable RCS1170 // Use read-only auto-implemented property.
-    private IDbContextFactory<AppDbContext> DbContextFactory { get; set; } = null!;
+    private IDbContextFactory<ReadOnlyAppDbContext> DbContextFactory { get; set; } = null!;
 #pragma warning restore RCS1170 // Use read-only auto-implemented property.
 
     protected override void OnInitialized()

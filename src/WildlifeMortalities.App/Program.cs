@@ -134,8 +134,27 @@ try
                 .UseEnumCheckConstraints()
                 .EnableSensitiveDataLogging()
     );
+    builder.Services.AddDbContextFactory<ReadOnlyAppDbContext>(
+        options =>
+            options
+                .UseSqlServer(
+                    configuration.GetConnectionString("AppDbContext"),
+                    options => options.EnableRetryOnFailure()
+                )
+                .UseEnumCheckConstraints()
+                .EnableSensitiveDataLogging()
+    );
 #else
     builder.Services.AddDbContextFactory<AppDbContext>(
+        options =>
+            options
+                .UseSqlServer(
+                    configuration.GetConnectionString("AppDbContext"),
+                    options => options.EnableRetryOnFailure()
+                )
+                .UseEnumCheckConstraints()
+    );
+    builder.Services.AddDbContextFactory<ReadOnlyAppDbContext>(
         options =>
             options
                 .UseSqlServer(
