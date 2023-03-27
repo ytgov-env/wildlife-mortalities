@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Shared.Extensions;
 using static WildlifeMortalities.Data.Entities.Mortalities.ElkMortality;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities.Elk;

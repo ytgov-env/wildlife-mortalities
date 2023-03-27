@@ -46,6 +46,9 @@ public class AmericanBlackBearBioSubmissionConfig
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
         builder.Property(a => a.SkullCondition).IsRequired();
+        // AmericanBlackBearBioSubmission is the first entity in the BioSubmission hierarchy that EF Core looks at
+        // when generating a migration (alphabetically),so it gets the column "MortalityId" (sans prefix) for the foreign key
+        // to Mortality. The other entities in this hierarchy are assigned to a column that contains their name as the prefix.
         builder.HasIndex(x => x.MortalityId).HasFilter("[MortalityId] IS NOT NULL");
     }
 }

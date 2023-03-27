@@ -1,14 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace WildlifeMortalities.Data;
+﻿namespace WildlifeMortalities.Data;
 
 public class ReadOnlyAppDbContext : AppDbContext
 {
-    public ReadOnlyAppDbContext()
-    {
-        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-    }
-
     public override int SaveChanges()
     {
         throw new InvalidOperationException();

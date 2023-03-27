@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Extensions;
 using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;

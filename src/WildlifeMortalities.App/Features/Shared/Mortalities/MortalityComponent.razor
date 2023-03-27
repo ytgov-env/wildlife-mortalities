@@ -5,6 +5,7 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
 @using WildlifeMortalities.Data.Enums
+@using WildlifeMortalities.Shared.Extensions;
 @namespace WildlifeMortalities.App.Features.Shared.Mortalities
 
 <MudSelect Disabled="@DisableSpeciesSelection" Placeholder="Select a species" T="Species?" Value="ViewModel.Species" ValueChanged="SpeciesChanged" For="@(() => ViewModel.Species)">

@@ -1,5 +1,6 @@
 ﻿using WildlifeMortalities.App.Features.Reports;
 using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Extensions;
 
 namespace WildlifeMortalities.App.Extensions;
 

@@ -10,6 +10,7 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
+@using WildlifeMortalities.Shared.Extensions;
 @inject ISnackbar Snackbar
 <EditForm OnValidSubmit="Create" Model="BioSubmission" class="scrollable-dialog-parent" onkeypress="preventEnterFromSubmitting(event)">
     <FluentValidationValidator/>

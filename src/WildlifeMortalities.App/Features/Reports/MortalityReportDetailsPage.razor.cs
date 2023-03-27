@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
 
@@ -27,4 +28,13 @@ public partial class MortalityReportDetailsPage
             TrappedActivity activity => new TrappedActivityViewModel(activity, _reportDetail),
             _ => throw new Exception($"no viewmodel mapping found for type {item.GetType().Name}")
         };
+
+    private bool HasIncompleteBioSubmissions()
+    {
+        var mortalitiesThatRequireABioSubmission = _reportDetail.report
+            .GetMortalities()
+            .OfType<IHasBioSubmission>()
+            .Count();
+        return mortalitiesThatRequireABioSubmission != _reportDetail.bioSubmissions.Count();
+    }
 }

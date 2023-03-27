@@ -1,5 +1,4 @@
-﻿using System;
-using WildlifeMortalities.Data.Entities.Mortalities;
+﻿using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -8,7 +7,9 @@ namespace WildlifeMortalities.Data.Entities.Reports;
 public abstract class Report
 {
     public int Id { get; set; }
+    public string Discriminator { get; set; } = null!;
     public string HumanReadableId { get; set; } = string.Empty;
+    public string Season { get; set; } = string.Empty;
     public DateTimeOffset DateSubmitted { get; set; }
 
     //public User CreatedBy { get; set; } = null!;
@@ -37,9 +38,9 @@ public abstract class Report
     {
         var rand = new Random();
         // Excludes O and 0 to avoid users mixing them up
-        const string chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+        const string Chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
         var newHumanReadableIdSuffix = new string(
-            Enumerable.Repeat(chars, 4).Select(s => s[rand.Next(s.Length)]).ToArray()
+            Enumerable.Repeat(Chars, 4).Select(s => s[rand.Next(s.Length)]).ToArray()
         );
         HumanReadableId = $"{GetHumanReadableIdPrefix()}-{newHumanReadableIdSuffix}";
 

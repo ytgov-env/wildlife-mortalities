@@ -2,6 +2,7 @@
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
+@using WildlifeMortalities.Shared.Extensions;
 
 @*<ValidationSummary/>*@
 <MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">

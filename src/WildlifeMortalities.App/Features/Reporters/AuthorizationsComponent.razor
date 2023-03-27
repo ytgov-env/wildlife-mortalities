@@ -5,17 +5,36 @@
 @using WildlifeMortalities.Shared.Services;
 @inherits DbContextAwareComponent
 
-<MudText Typo="Typo.h6">Authorizations</MudText>
+<MudText Typo="Typo.h5">Authorizations</MudText>
 
 @if (_isLoading == true)
 {
     return;
 }
 
-@foreach (var authorization in _authorizationsViewModel.Authorizations.Where(x => x is IHasBigGameHuntingLicence == false))
-{
-    <AuthorizationCardComponent Authorization="@authorization" />
-}
+<MudTabs Color="Color.Secondary" Rounded="true">
+    @{
+        List<string> seasons = new();
+    }
+    @foreach (var authorization in _authorizationsViewModel.Authorizations.Where(x => x is IHasBigGameHuntingLicence == false))
+    {
+        var season = authorization.Season;
+        if (season != null)
+        {
+            seasons.Add(season);
+        }
+    }
+    @foreach (var season in seasons.Distinct().OrderBy(x => x))
+    {
+        <MudTabPanel Text="@season">
+            @foreach (var authorization in _authorizationsViewModel.Authorizations.Where(x => x is IHasBigGameHuntingLicence == false
+           && x.Season == season))
+            {
+                <AuthorizationCardComponent Authorization="@authorization" />
+            }
+        </MudTabPanel>
+    }
+</MudTabs>
 
 @code {
 

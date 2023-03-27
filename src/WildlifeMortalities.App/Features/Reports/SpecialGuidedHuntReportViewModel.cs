@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MudBlazor;
-using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Enums;

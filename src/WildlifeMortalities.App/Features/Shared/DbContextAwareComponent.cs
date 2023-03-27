@@ -18,6 +18,7 @@ public class DbContextAwareComponent : ComponentBase
     protected override void OnInitialized()
     {
         Context = DbContextFactory.CreateDbContext();
+        Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
     protected virtual void Dispose(bool disposing)

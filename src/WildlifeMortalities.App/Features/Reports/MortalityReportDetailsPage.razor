@@ -9,6 +9,11 @@
     return;
 }
 <PrintOrDownloadComponent ReportDetail="_reportDetail"/>
+
+@if (HasIncompleteBioSubmissions())
+{
+    <MudChip Color="Color.Warning">Missing bio</MudChip>
+}
 @switch (_reportDetail.report)
 {
     case HumanWildlifeConflictMortalityReport report:

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace WildlifeMortalities.App.Extensions;
+namespace WildlifeMortalities.Shared.Extensions;
 
 public static class EnumExtensions
 {

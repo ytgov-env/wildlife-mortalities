@@ -2,6 +2,7 @@
 @using WildlifeMortalities.App.Features.Reports.Activities
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Data.Enums
+@using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services
 <DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
 <MudPaper Class="pa-4 my-4">

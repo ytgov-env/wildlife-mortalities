@@ -1,51 +1,80 @@
-﻿@using WildlifeMortalities.App.Extensions;
+﻿@using System.Text.RegularExpressions;
+@using WildlifeMortalities.App.Extensions;
 @using WildlifeMortalities.Data.Entities.Authorizations;
+@using WildlifeMortalities.Shared.Extensions;
 
 <MudCard Outlined="true" Style="@Style">
-    <MudCardHeader>
+    <MudCardHeader Class="ml-n1">
         <CardHeaderAvatar>
-            <MudChip  Class="@GetColourByType()">@GetTypeShortName()</MudChip>
+            <MudChip Class="@GetColourByType()" DisableRipple="true">@GetTypeShortName()</MudChip>
         </CardHeaderAvatar>
-        <CardHeaderContent>
-            <MudText Typo="Typo.body1">
-                @Authorization.Number
-            </MudText>
-        </CardHeaderContent>
     </MudCardHeader>
-    <MudCardContent>
-        <MudText Typo="Typo.body2">
-            @Authorization.ValidFromDateTime.ToString("D")
-        </MudText>
-        <MudText Typo="Typo.body2">
-            @Authorization.ValidToDateTime.ToString("D")
-        </MudText>
+    <MudCardContent Class="ml-3 mt-n6">
+        <MudField Label="Number" DisableUnderLine="true">
+            @(Regex.Replace(Authorization.Number, "[A-Za-z-]", ""))
+        </MudField>
+        <MudField Label="Validity" DisableUnderLine="true">
+            @Authorization.ValidFromDateTime.ToString("M") - @Authorization.ValidToDateTime.ToString("M")
+        </MudField>
         @if (Authorization is BigGameHuntingLicence bigGameHuntingLicence)
         {
             <MudExpansionPanels>
-                <MudExpansionPanel Text="Dependants">
+                <MudExpansionPanel Text="Child authorizations" IsInitiallyExpanded="true">
                     @{
                         var childAuthorizations = bigGameHuntingLicence.HuntingSeals.ValueOrEmpty().OfType<Authorization>()
                         .Union(bigGameHuntingLicence.HuntingPermits.ValueOrEmpty()).Union(bigGameHuntingLicence.PhaHuntingPermits.ValueOrEmpty());
-
-                        if (bigGameHuntingLicence.SpecialGuideLicence != null)
-                        {
-                            childAuthorizations = childAuthorizations.Union(new[] { bigGameHuntingLicence.SpecialGuideLicence });
-                        }
                     }
-
-                    <MudStack Row="true" Class="flex-wrap">
-
-                        @if (childAuthorizations.Any() == true)
-                        {
-                            @foreach (var authorization in childAuthorizations)
-                            {
-                                <AuthorizationCardComponent Authorization="@authorization" Style="height:100%; width:250px" />
-                            }
+                    @if (bigGameHuntingLicence.SpecialGuideLicence != null)
+                    {
+                        <MudItem Class="my-2">
+                            <MudItem xs="12" md="6" xxl="4">
+                                <AuthorizationCardComponent Authorization="@bigGameHuntingLicence.SpecialGuideLicence" />
+                            </MudItem>
+                        </MudItem>
+                    }
+                    @if (childAuthorizations.OfType<HuntingSeal>().Any() == true)
+                    {
+                        <MudItem>
+                            <MudText Typo="Typo.h6">Seals</MudText>
+                            <MudGrid>
+                                @foreach (var authorization in childAuthorizations.OfType<HuntingSeal>().OrderBy(x => x.Type.GetDisplayName()))
+                                {
+                                    <MudItem xs="12" md="6" xxl="4">
+                                        <AuthorizationCardComponent Authorization="@authorization" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudItem>
+                    }
+                    @if (childAuthorizations.OfType<HuntingPermit>().Any() == true)
+                    {
+                        <MudItem Class="mt-2">
+                            <MudText Typo="Typo.h6">Permits</MudText>
+                            <MudGrid>
+                                @foreach (var authorization in childAuthorizations.OfType<HuntingPermit>().OrderBy(x => x.Type.GetDisplayName()))
+                                {
+                                    <MudItem xs="12" md="6" xxl="4">
+                                        <AuthorizationCardComponent Authorization="@authorization" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudItem>
+                    }
+                    @if (childAuthorizations.OfType<PhaHuntingPermit>().Any() == true)
+                    {
+                        <MudItem Class="mt-2">
+                            <MudText Typo="Typo.h6">Permit hunt authorizations</MudText>
+                            <MudGrid>
+                                @foreach (var authorization in childAuthorizations.OfType<PhaHuntingPermit>().OrderBy(x => x.Type.GetDisplayName()))
+                                {
+                                    <MudItem xs="12" md="6" xxl="4">
+                                        <AuthorizationCardComponent Authorization="@authorization" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudItem>
                         }
-
-                    </MudStack>
-
-                </MudExpansionPanel>
+            </MudExpansionPanel>
             </MudExpansionPanels>
         }
 
@@ -62,16 +91,16 @@
 
     private string GetTypeShortName() => Authorization switch
     {
-        BigGameHuntingLicence => "big game hunting licence",
-        CustomWildlifeActPermit => "wildlife act permit",
-        HuntingPermit => "hunting permit",
-        HuntingSeal s => s.Type.GetDisplayName() + " seal",
-        OutfitterAssistantGuideLicence => "assistant guide licence",
-        OutfitterChiefGuideLicence => "chief guide licence",
-        PhaHuntingPermit => "permit hunt authorization",
-        SmallGameHuntingLicence => "small game hunting licence",
-        SpecialGuideLicence => "special guide licence",
-        TrappingLicence => "trapping licence",
+        BigGameHuntingLicence => "Big game hunting licence",
+        CustomWildlifeActPermit => "Wildlife act permit",
+        HuntingPermit p => p.Type.GetDisplayName(),
+        HuntingSeal s => s.Type.GetDisplayName(),
+        OutfitterAssistantGuideLicence => "Assistant guide licence",
+        OutfitterChiefGuideLicence => "Chief guide licence",
+        PhaHuntingPermit p => p.Type.GetDisplayName(),
+        SmallGameHuntingLicence => "Small game hunting licence",
+        SpecialGuideLicence => "Special guide licence",
+        TrappingLicence => "Trapping licence",
         _ => String.Empty,
     };
 

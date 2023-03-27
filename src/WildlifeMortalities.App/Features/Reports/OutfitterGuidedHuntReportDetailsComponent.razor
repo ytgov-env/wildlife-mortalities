@@ -1,5 +1,6 @@
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
+@using WildlifeMortalities.Shared.Extensions;
 <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
 <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
 <MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>

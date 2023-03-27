@@ -2,6 +2,7 @@
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
+@using WildlifeMortalities.Shared.Extensions;
 
 <MudSelect T="GrizzlyBearSkullCondition?" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="() => BioSubmission.SkullCondition" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<GrizzlyBearSkullCondition>())
