@@ -2,8 +2,12 @@
 @using WildlifeMortalities.Data.Entities.Reports
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
+@using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services
-<MudTable ServerData="ServerReload" T="Report" OnRowClick="GotoDetails" @key="@EnvClientId" RowClass="cursor-pointer" Hover="true">
+@using WildlifeMortalities.Shared.Services.Reports;
+@inherits DbContextAwareComponent
+
+<MudTable ServerData="ServerReload" T="ReportDto" OnRowClick="GotoDetails" @key="@EnvClientId" RowClass="cursor-pointer" Hover="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Reports</MudText>
         @if (EnvClientId != null)
@@ -14,85 +18,44 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
-        <MudTh>Type</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="type_field" T="ReportDto">Type</MudTableSortLabel></MudTh>
         <MudTh>Species</MudTh>
-        <MudTh>Date Submitted</MudTh>
+        <MudTh>Season</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="date_submitted_field" T="ReportDto">Date Submitted</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.HumanReadableId</MudTd>
         <MudTd DataLabel="Type">
-            @switch (context)
+            @switch (context.Type)
             {
-                case OutfitterGuidedHuntReport e:
-                    <span>Outfitted hunt - @e.Result.GetDisplayName().ToLower()</span>
+                case nameof(OutfitterGuidedHuntReport):
+                    <span>Outfitted hunt - @context.OutfitterGuidedHuntResult?.ToLower()</span>
                     break;
-                case SpecialGuidedHuntReport e:
-                    <span>Special guided hunt - @e.Result.GetDisplayName().ToLower()</span>
-                    break;
-                case IndividualHuntedMortalityReport e:
+                case nameof(SpecialGuidedHuntReport):
+                    <span>Special guided hunt - @context.SpecialGuidedHuntResult?.ToLower()</span>
+                break;
+                case nameof(IndividualHuntedMortalityReport):
                     <span>Individual hunt</span>
-                    break;
-                case TrappedMortalitiesReport e:
+                break;
+                case nameof(TrappedMortalitiesReport):
                     <span>Trapped</span>
-                    break;
+                break;
             }
-
         </MudTd>
         <MudTd DataLabel="Species">
-            @switch (context)
-            {
-                case OutfitterGuidedHuntReport e:
-                    <span>@string.Join(", ", e.HuntedActivities.Select(x => x.Mortality.Species.GetDisplayName()))</span>
-                    break;
-                case SpecialGuidedHuntReport e:
-                    <span>@string.Join(", ", e.HuntedActivities.Select(x => x.Mortality.Species.GetDisplayName()))</span>
-                    break;
-                case IndividualHuntedMortalityReport e:
-                    <span>@e.GetMortality().Species.GetDisplayName()</span>
-                    break;
-                case TrappedMortalitiesReport e:
-                    <span>@string.Join(", ", e.TrappedActivities.Select(x => x.Mortality.Species.GetDisplayName()))</span>
-                    break;
-            }
         </MudTd>
+        <MudTd DataLabel="Season">@context.Season</MudTd>
         <MudTd DataLabel="Date Submitted">@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
     </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
     <PagerContent>
         <MudTablePager/>
     </PagerContent>
 </MudTable>
 
-@code {
 
-    [Parameter]
-    public string? EnvClientId { get; set; }
-
-
-    [Inject]
-    private IMortalityService MortalityService { get; set; } = default!;
-
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
-
-
-    private async Task<TableData<Report>> ServerReload(TableState state)
-    {
-        var start = state.Page * state.PageSize;
-        var totalItems = EnvClientId == null ? await MortalityService.CountAllReports() : await MortalityService.CountReportsByEnvClientId(EnvClientId);
-        var data = EnvClientId == null ? await MortalityService.GetAllReports(start, state.PageSize) : await MortalityService.GetReportsByEnvClientId(EnvClientId, start, state.PageSize);
-
-        return new TableData<Report> { TotalItems = totalItems, Items = data };
-    }
-
-
-    private void CreateMortalityReport()
-    {
-        NavigationManager.NavigateTo($"mortality-reports/new/{EnvClientId}");
-    }
-
-    public void GotoDetails(TableRowClickEventArgs<Report> args)
-    {
-        NavigationManager.NavigateTo($"mortality-reports/{args.Item.Id}");
-    }
-
-}

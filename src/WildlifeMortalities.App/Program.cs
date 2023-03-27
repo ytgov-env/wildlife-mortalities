@@ -6,6 +6,7 @@ using Serilog.Events;
 using WildlifeMortalities.App.HostedServices;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Shared.Services.Reports;
 
 Log.Logger = new LoggerConfiguration().MinimumLevel
     .Override("Microsoft", LogEventLevel.Information)
@@ -48,6 +49,7 @@ try
     builder.Services.AddScoped<ConservationOfficerService>();
     builder.Services.AddScoped<IMortalityService, MortalityService>();
     builder.Services.AddScoped<PdfService>();
+    builder.Services.AddScoped<ReportService>();
 
     // Add authentication services
     builder.Services

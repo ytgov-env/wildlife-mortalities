@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
 
@@ -8,14 +9,31 @@ public class HuntingPermit : Authorization, IHasBigGameHuntingLicence
 {
     public enum PermitType
     {
+        [Display(Name = "Fortymile caribou summer")]
         CaribouFortymileSummer = 10,
+
+        [Display(Name = "Fortymile caribou winter")]
         CaribouFortymileWinter = 20,
+
+        [Display(Name = "Hart river caribou")]
         CaribouHartRiver = 30,
+
+        [Display(Name = "Nelchina caribou")]
         CaribouNelchina = 40,
+
+        [Display(Name = "Elk adaptive")]
         ElkAdaptive = 50,
+
+        [Display(Name = "Elk adaptive first nations")]
         ElkAdaptiveFirstNations = 60,
+
+        [Display(Name = "Elk exclusion")]
         ElkExclusion = 70,
+
+        [Display(Name = "Moose threshold")]
         MooseThreshold = 80,
+
+        [Display(Name = "Bison threshold")]
         WoodBisonThreshold = 90
     }
 
