@@ -47,8 +47,6 @@
 @if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
     <MudGrid Class="my-3">
-        <ValidationMessage For="@(() => ViewModel.HuntedActivityViewModels)" Style="font-size: 12px; color: var(--mud-palette-error);" />
-
         @foreach (var item in ViewModel.HuntedActivityViewModels)
         {
             <MudItem md="2" xs="6">
