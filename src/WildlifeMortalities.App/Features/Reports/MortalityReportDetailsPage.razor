@@ -17,22 +17,22 @@
 @switch (_reportDetail.report)
 {
     case HumanWildlifeConflictMortalityReport report:
-        <MudText Typo="Typo.h3" Class="mb-8">Human-wildlife conflict report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">Human-wildlife conflict report</MudText>
         break;
     case IndividualHuntedMortalityReport report:
-        <MudText Typo="Typo.h3" Class="mb-8">Individual hunt report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">Individual hunt report</MudText>
         <IndividualHuntedMortalityReportDetailsComponent Report="@report"/>
         break;
     case OutfitterGuidedHuntReport report:
-        <MudText Typo="Typo.h3" Class="mb-8">Outfitter guided hunt report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">Outfitter guided hunt report</MudText>
         <OutfitterGuidedHuntReportDetailsComponent Report="@report"/>
         break;
     case SpecialGuidedHuntReport report:
-        <MudText Typo="Typo.h3" Class="mb-8">Special guided hunt report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">Special guided hunt report</MudText>
         <SpecialGuidedHuntReportDetailsComponent Report="@report"/>
         break;
     case TrappedMortalitiesReport report:
-        <MudText Typo="Typo.h3" Class="mb-8">Trapped report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">Trapped report</MudText>
         <TrappedReportDetailsComponent Report="@report"/>
         break;
 }
