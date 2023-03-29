@@ -12,7 +12,7 @@
     return;
 }
 
-<MudTabs Color="Color.Secondary" Rounded="true">
+<MudTabs Color="Color.Info" Rounded="true" @bind-ActivePanelIndex="_panelIndex">
     @{
         List<string> seasons = new();
     }
@@ -37,6 +37,8 @@
 </MudTabs>
 
 @code {
+    private int _panelIndex = 0;
+    private int? _queuedPanelIndex;
 
     [Parameter]
     [EditorRequired]
@@ -45,7 +47,8 @@
     private AuthorizationsViewModel _authorizationsViewModel = new();
     private bool _isLoading = true;
 
-    protected override async Task OnInitializedAsync()
+
+    protected override async Task OnParametersSetAsync()
     {
         var authorizations = await Context.Authorizations.AsNoTracking().Where(a => a.ClientId == ClientId)
             .Include(x => ((BigGameHuntingLicence)x).OutfitterAreas)
@@ -58,6 +61,19 @@
         _authorizationsViewModel.Authorizations = authorizations;
 
         _isLoading = false;
+
+        _queuedPanelIndex = _authorizationsViewModel.Authorizations.Select(x => x.Season).Distinct().Count() - 1;
+
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (_queuedPanelIndex.HasValue == true)
+        {
+            _panelIndex = _queuedPanelIndex.Value;
+            _queuedPanelIndex = null;
+            StateHasChanged();
+        }
     }
 
 }
