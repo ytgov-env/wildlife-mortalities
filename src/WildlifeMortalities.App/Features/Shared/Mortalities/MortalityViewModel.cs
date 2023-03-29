@@ -56,7 +56,7 @@ public class MortalityViewModel
 
     public MortalityViewModel(Species species) => Species = species;
 
-    public BioSubmission? ExistingBioSubmission { get; }
+    public BioSubmission? ExistingBioSubmission { get; set; }
 
     public int? Id { get; }
     public Species? Species { get; init; }

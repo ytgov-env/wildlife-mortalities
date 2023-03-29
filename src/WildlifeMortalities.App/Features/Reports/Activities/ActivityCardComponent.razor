@@ -22,7 +22,7 @@
         <CardHeaderActions>
             @if (EnableBioSubmission && MortalityViewModel.GetMortality() is IHasBioSubmission)
             {
-                <MudButton Color="Color.Default" OnClick="() => OpenBioSubmissionDialog()" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
+                <MudButton Color="Color.Default" OnClick="OpenBioSubmissionDialog" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
             }
         </CardHeaderActions>
     </MudCardHeader>
@@ -115,7 +115,7 @@
         }
         else
         {
-    // The id is set to zero when a biosubmission is created on a draft report
+            // The id is set to zero when a biosubmission is created on a draft report
             var mortalityId = MortalityViewModel.Id ?? 0;
             bioSubmission = MortalityViewModel.Species switch
             {
@@ -129,7 +129,7 @@
                 Species.WhiteTailedDeer => new WhiteTailedDeerBioSubmission(mortalityId),
                 Species.WoodBison => new WoodBisonBioSubmission(mortalityId),
                 _ => throw new InvalidOperationException($"{nameof(MortalityViewModel.Species)} is not a registered bio submission species.")
-                };
+            };
         }
 
         var parameters = new DialogParameters();
@@ -142,6 +142,7 @@
         {
             if (isNewSubmission)
             {
+                MortalityViewModel.ExistingBioSubmission = bioSubmission;
                 await Service.CreateBioSubmission(bioSubmission);
             }
             else
