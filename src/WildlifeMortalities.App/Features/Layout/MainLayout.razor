@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.Data.Entities.Users;
+@using WildlifeMortalities.Data;
+@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="_currentTheme"/>
 <MudDialogProvider/>
@@ -10,7 +13,7 @@
         <MudSpacer/>
         <LoginDisplay/>
         <MudTooltip Text="Toggle light/dark theme">
-            <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@(_ => DarkMode())"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Brightness4" Color="Color.Inherit" OnClick="@(_ => ToggleDarkMode())"/>
         </MudTooltip>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
@@ -27,6 +30,13 @@
 </MudLayout>
 
 @code {
+    [CascadingParameter]
+    public AppParameters AppParameters { get; set; } = null!;
+
+    private UserSettings UserSettings => AppParameters.UserSettings;
+
+
+
     bool _drawerOpen = true;
 
     void DrawerToggle()
@@ -36,12 +46,14 @@
 
     protected override void OnInitialized()
     {
-        _currentTheme = _defaultTheme;
+        _currentTheme = UserSettings.IsLightMode ? _defaultTheme : _darkTheme;
     }
 
-    void DarkMode()
+    async Task ToggleDarkMode()
     {
         _currentTheme = _currentTheme == _defaultTheme ? _darkTheme : _defaultTheme;
+        UserSettings.IsLightMode = !UserSettings.IsLightMode;
+        await AppParameters.UpdateSettings();
     }
 
     MudTheme _currentTheme = new();

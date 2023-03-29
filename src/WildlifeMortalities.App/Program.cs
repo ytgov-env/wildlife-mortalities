@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Serilog.Events;
+using WildlifeMortalities.App.Features.Auth;
 using WildlifeMortalities.App.HostedServices;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services;
@@ -187,7 +188,9 @@ try
     app.UseAuthorization();
 
     app.MapBlazorHub();
-    app.MapFallbackToPage("/_Host");
+    app.MapAuthenticationEndpoints();
+
+    app.MapFallbackToPage("/Host");
 
     Log.Logger = new LoggerConfiguration().MinimumLevel
         .Override("Default", LogEventLevel.Information)

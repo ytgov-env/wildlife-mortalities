@@ -5,6 +5,7 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Users;
 
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
@@ -17,6 +18,7 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
 
+    public DbSet<User> Users => Set<User>();
     public DbSet<Person> People => Set<Person>();
 
     public DbSet<Authorization> Authorizations => Set<Authorization>();

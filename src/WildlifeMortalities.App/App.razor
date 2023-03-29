@@ -1,14 +1,31 @@
-﻿<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
-        </Found>
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
+﻿@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.Data.Entities.Users;
+@using WildlifeMortalities.Data;
+<CascadingAuthenticationState>
+    <CascadingValue Value="AppParameters" IsFixed="true">
+        <Router AppAssembly="@typeof(App).Assembly">
+            <Found Context="routeData">
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <PageTitle>Not found</PageTitle>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p role="alert">Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingValue>
 </CascadingAuthenticationState>
+
+@code {
+    [Parameter] public AppParameters AppParameters { get; set; } = null!;
+    [Inject] private IDbContextFactory<AppDbContext> ContextFactory { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        AppParameters.ContextFactory = ContextFactory;
+    }
+
+
+}
