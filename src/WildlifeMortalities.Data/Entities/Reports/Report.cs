@@ -32,19 +32,14 @@ public abstract class Report
             _ => throw new NotImplementedException()
         };
 
-    public abstract string GetHumanReadableIdPrefix();
-
-    public string GenerateHumanReadableId()
+    public void GenerateHumanReadableId()
     {
         var rand = new Random();
         // Excludes O and 0 to avoid users mixing them up
         const string Chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
-        var newHumanReadableIdSuffix = new string(
+        HumanReadableId = new string(
             Enumerable.Repeat(Chars, 4).Select(s => s[rand.Next(s.Length)]).ToArray()
         );
-        HumanReadableId = $"{GetHumanReadableIdPrefix()}-{newHumanReadableIdSuffix}";
-
-        return HumanReadableId;
     }
 
     public abstract bool HasHuntingActivity();

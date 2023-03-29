@@ -43,11 +43,65 @@ public class MortalityService : IMortalityService
         return await GetReports(envClientId, start, length);
     }
 
+    private static string GetSeason(Report report)
+    {
+        if (report is HumanWildlifeConflictMortalityReport)
+        {
+            return report.DateSubmitted.Year.ToString();
+        }
+
+        // Hunting April-March, Trapping July-June
+        var seasonEndMonth = report is TrappedMortalitiesReport ? 6 : 3;
+
+        var mortalities = report.GetMortalities().OrderBy(x => x.DateOfDeath);
+
+        var firstDateOfDeath = mortalities.FirstOrDefault()?.DateOfDeath;
+        var startDate =
+            firstDateOfDeath
+            ?? throw new ArgumentException(
+                $"{nameof(report)} does not have a season set by the user, and it doesn't contain a mortality."
+            );
+
+        int startYear;
+        if (startDate.Month <= seasonEndMonth)
+        {
+            startYear = startDate.Year - 1;
+        }
+        else
+        {
+            startYear = startDate.Year;
+        }
+
+        var lastDateOfDeath = mortalities.LastOrDefault()?.DateOfDeath;
+        var endDate =
+            lastDateOfDeath
+            ?? throw new ArgumentException(
+                $"{nameof(report)} does not have a season set by the user, and it doesn't contain a mortality."
+            );
+
+        int endYear;
+        if (endDate.Month <= seasonEndMonth)
+        {
+            endYear = endDate.Year;
+        }
+        else
+        {
+            endYear = endDate.Year + 1;
+        }
+
+        return endYear - startYear != 1
+            ? throw new Exception(
+                $"The report cannot contain mortalities that span more than one season. It spans from {startDate} to {endDate}."
+            )
+            : $"{startYear % 100:00}/{endYear % 100:00}";
+    }
+
     public async Task CreateReport(IndividualHuntedMortalityReport report)
     {
         SetReportNavigationPropertyForMortalities(report);
 
         report.DateSubmitted = DateTimeOffset.Now;
+        report.Season = GetSeason(report);
 
         using var context = _dbContextFactory.CreateDbContext();
         do
@@ -85,6 +139,10 @@ public class MortalityService : IMortalityService
 
         report.AssistantGuides = assistantGuides;
         report.DateSubmitted = DateTimeOffset.Now;
+        if (string.IsNullOrWhiteSpace(report.Season))
+        {
+            report.Season = GetSeason(report);
+        }
 
         do
         {
@@ -99,6 +157,10 @@ public class MortalityService : IMortalityService
     {
         SetReportNavigationPropertyForMortalities(report);
         report.DateSubmitted = DateTimeOffset.Now;
+        if (string.IsNullOrWhiteSpace(report.Season))
+        {
+            report.Season = GetSeason(report);
+        }
 
         using var context = _dbContextFactory.CreateDbContext();
         do
@@ -113,6 +175,10 @@ public class MortalityService : IMortalityService
     public async Task CreateReport(HumanWildlifeConflictMortalityReport report)
     {
         SetReportNavigationPropertyForMortalities(report);
+        if (string.IsNullOrWhiteSpace(report.Season))
+        {
+            report.Season = GetSeason(report);
+        }
 
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(report);
@@ -123,6 +189,10 @@ public class MortalityService : IMortalityService
     {
         SetReportNavigationPropertyForMortalities(report);
         report.DateSubmitted = DateTimeOffset.Now;
+        if (string.IsNullOrWhiteSpace(report.Season))
+        {
+            report.Season = GetSeason(report);
+        }
 
         using var context = _dbContextFactory.CreateDbContext();
 

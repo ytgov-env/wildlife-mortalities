@@ -17,8 +17,6 @@ public class IndividualHuntedMortalityReport : Report, ISingleMortalityReport, I
 
     public Activity GetActivity() => HuntedActivity;
 
-    public override string GetHumanReadableIdPrefix() => "HHR";
-
     public override bool HasHuntingActivity() => true;
 }
 

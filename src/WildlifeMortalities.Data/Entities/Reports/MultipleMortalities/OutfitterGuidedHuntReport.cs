@@ -39,8 +39,6 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHa
         return HuntedActivities.ToArray();
     }
 
-    public override string GetHumanReadableIdPrefix() => "OGH";
-
     public override bool HasHuntingActivity() => true;
 
     public string GuidesToString()

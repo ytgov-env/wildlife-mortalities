@@ -22,8 +22,6 @@ public class HumanWildlifeConflictMortalityReport
 
     public Activity GetActivity() => throw new NotImplementedException();
 
-    public override string GetHumanReadableIdPrefix() => "HWC";
-
     public override bool HasHuntingActivity() => false;
 }
 

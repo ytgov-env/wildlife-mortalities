@@ -22,8 +22,6 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport, IHasC
 
     IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() => HuntedActivities.ToArray();
 
-    public override string GetHumanReadableIdPrefix() => "SGH";
-
     public override bool HasHuntingActivity() => true;
 }
 

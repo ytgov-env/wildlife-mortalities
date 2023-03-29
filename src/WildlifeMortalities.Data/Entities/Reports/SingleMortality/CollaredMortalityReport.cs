@@ -16,8 +16,6 @@ public class CollaredMortalityReport : Report, ISingleMortalityReport
 
     public Activity GetActivity() => throw new NotImplementedException();
 
-    public override string GetHumanReadableIdPrefix() => "CMR";
-
     public override bool HasHuntingActivity() => false;
 }
 

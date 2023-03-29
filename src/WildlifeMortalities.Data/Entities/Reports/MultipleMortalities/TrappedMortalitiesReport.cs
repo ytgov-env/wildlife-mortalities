@@ -19,8 +19,6 @@ public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport, IHas
 
     IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() => TrappedActivities.ToArray();
 
-    public override string GetHumanReadableIdPrefix() => "THR";
-
     public override bool HasHuntingActivity() => false;
 }
 
