@@ -24,6 +24,8 @@ public class SortFilterPageOptions
 
     public string PrevCheckState { get; set; }
 
+    public bool OrderByAscending { get; set; } = true;
+
     public void SetupRestOfDto<T>(IQueryable<T> query)
     {
         TotalItems = query.Count();

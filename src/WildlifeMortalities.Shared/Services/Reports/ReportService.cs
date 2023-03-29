@@ -13,7 +13,7 @@ public class ReportService
     {
         var query = context.Reports
             .MapReportToDto()
-            .OrderReportsBy(options.OrderByOptions)
+            .OrderReportsBy(options.OrderByOptions, options.OrderByAscending)
             .FilterReportsBy(options.FilterBy, options.FilterValue);
 
         options.SetupRestOfDto(query);

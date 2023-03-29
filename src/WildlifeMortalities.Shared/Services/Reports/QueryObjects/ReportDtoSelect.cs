@@ -1,6 +1,7 @@
 ﻿using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Extensions;
 
 namespace WildlifeMortalities.Shared.Services.Reports.QueryObjects;
@@ -38,25 +39,30 @@ public static class ReportDtoSelect
                                 .ConservationOfficer
                                 .BadgeNumber
                             : null,
+                    Species =
+                        report is IndividualHuntedMortalityReport
+                            ? new Species[]
+                            {
+                                ((IndividualHuntedMortalityReport)report)
+                                    .HuntedActivity
+                                    .Mortality
+                                    .Species
+                            }
+                            : report is SpecialGuidedHuntReport
+                                ? ((SpecialGuidedHuntReport)report).HuntedActivities.Select(
+                                    x => x.Mortality.Species
+                                )
+                                : report is OutfitterGuidedHuntReport
+                                    ? ((OutfitterGuidedHuntReport)report).HuntedActivities.Select(
+                                        x => x.Mortality.Species
+                                    )
+                                    : report is TrappedMortalitiesReport
+                                        ? (
+                                            (TrappedMortalitiesReport)report
+                                        ).TrappedActivities.Select(x => x.Mortality.Species)
+                                        : new Species[] { },
                     Season = report.Season,
                     DateSubmitted = report.DateSubmitted
-                }
-        );
-    }
-
-    public static IQueryable<ReportDto> MapReportToDto(
-        this IQueryable<OutfitterGuidedHuntReport> reports
-    )
-    {
-        return reports.Select(
-            report =>
-                new ReportDto
-                {
-                    Id = report.Id,
-                    HumanReadableId = report.HumanReadableId,
-                    EnvClientId = report.Client.EnvClientId,
-                    Type = report.Discriminator,
-                    OutfitterGuidedHuntResult = report.Result.GetDisplayName()
                 }
         );
     }

@@ -1,30 +1,34 @@
-﻿namespace WildlifeMortalities.Shared.Services.Reports.QueryObjects;
+﻿using System.Linq.Expressions;
+
+namespace WildlifeMortalities.Shared.Services.Reports.QueryObjects;
 
 public enum OrderByOptions
 {
     SimpleOrder = 0,
-    ByDateSubmittedAscending,
-    ByDateSubmittedDescending,
-    ByTypeAscending,
-    ByTypeDescending
+    ByType,
+    BySpecies,
+    BySeason,
+    ByDateSubmitted,
 }
 
 public static class ReportDtoSort
 {
     public static IQueryable<ReportDto> OrderReportsBy(
         this IQueryable<ReportDto> reports,
-        OrderByOptions orderByOptions
+        OrderByOptions orderByOptions,
+        bool ascending
     )
     {
-        return orderByOptions switch
+        Expression<Func<ReportDto, object>> method = orderByOptions switch
         {
-            OrderByOptions.SimpleOrder => reports.OrderByDescending(x => x.Id),
-            OrderByOptions.ByDateSubmittedAscending => reports.OrderBy(x => x.DateSubmitted),
-            OrderByOptions.ByDateSubmittedDescending
-                => reports.OrderByDescending(x => x.DateSubmitted),
-            OrderByOptions.ByTypeAscending => reports.OrderBy(x => x.Type),
-            OrderByOptions.ByTypeDescending => reports.OrderByDescending(x => x.Type),
+            OrderByOptions.SimpleOrder => x => x.Id,
+            OrderByOptions.ByType => x => x.Type,
+            OrderByOptions.BySpecies => x => x.Species,
+            OrderByOptions.BySeason => x => x.Season,
+            OrderByOptions.ByDateSubmitted => x => x.DateSubmitted,
             _ => throw new ArgumentOutOfRangeException(nameof(orderByOptions), orderByOptions, null)
         };
+
+        return ascending ? reports.OrderBy(method) : reports.OrderByDescending(method);
     }
 }

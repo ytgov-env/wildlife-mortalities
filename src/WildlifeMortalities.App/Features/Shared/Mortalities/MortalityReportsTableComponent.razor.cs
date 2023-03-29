@@ -9,6 +9,12 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public partial class MortalityReportsTableComponent : DbContextAwareComponent
 {
+    private const string Id = "Id";
+    private const string Type = "Type";
+    private const string Species = "Species";
+    private const string Season = "Season";
+    private const string DateSubmitted = "Date Submitted";
+    private const string Status = "Status";
     public SortFilterPageOptions Options { get; set; } = new();
 
     [Parameter]
@@ -25,46 +31,18 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
 
     private async Task<TableData<ReportDto>> ServerReload(TableState state)
     {
-        var sortDirection = state.SortDirection;
-        switch (state.SortLabel)
+        Options.OrderByAscending = state.SortDirection == SortDirection.Ascending;
+        Options.OrderByOptions = state.SortLabel switch
         {
-            case "type_field":
-                if (sortDirection == SortDirection.Ascending)
-                {
-                    Options.OrderByOptions = OrderByOptions.ByTypeAscending;
-                    break;
-                }
-                else if (sortDirection == SortDirection.Descending)
-                {
-                    Options.OrderByOptions = OrderByOptions.ByTypeDescending;
-                    break;
-                }
-                else
-                {
-                    Options.OrderByOptions = OrderByOptions.SimpleOrder;
-                    break;
-                }
-            case "date_submitted_field":
-                if (sortDirection == SortDirection.Ascending)
-                {
-                    Options.OrderByOptions = OrderByOptions.ByDateSubmittedAscending;
-                    break;
-                }
-                else if (sortDirection == SortDirection.Descending)
-                {
-                    Options.OrderByOptions = OrderByOptions.ByDateSubmittedDescending;
-                    break;
-                }
-                else
-                {
-                    Options.OrderByOptions = OrderByOptions.SimpleOrder;
-                    break;
-                }
-        }
+            Type => OrderByOptions.ByType,
+            DateSubmitted => OrderByOptions.ByDateSubmitted,
+            _ => OrderByOptions.SimpleOrder,
+        };
+
         var (reportDtos, totalItems) =
             EnvClientId == null
-                ? await GetAllReports(state.Page, state.PageSize)
-                : await GetReportsByEnvClientId(EnvClientId, state.Page, state.PageSize);
+                ? await GetAllReports(state.Page + 1, state.PageSize)
+                : await GetReportsByEnvClientId(EnvClientId, state.Page + 1, state.PageSize);
         return new TableData<ReportDto> { Items = reportDtos, TotalItems = totalItems };
     }
 

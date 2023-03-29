@@ -17,15 +17,16 @@
         }
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Id</MudTh>
-        <MudTh><MudTableSortLabel SortLabel="type_field" T="ReportDto">Type</MudTableSortLabel></MudTh>
-        <MudTh>Species</MudTh>
-        <MudTh>Season</MudTh>
-        <MudTh><MudTableSortLabel SortLabel="date_submitted_field" T="ReportDto">Date Submitted</MudTableSortLabel></MudTh>
+        <MudTh>@Id</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@Type" T="ReportDto">@Type</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@Species" T="ReportDto">@Species</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@Season" T="ReportDto">@Season</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@DateSubmitted" T="ReportDto">@DateSubmitted</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@Status" T="ReportDto">@Status</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.HumanReadableId</MudTd>
-        <MudTd DataLabel="Type">
+        <MudTd DataLabel="@Id">@context.HumanReadableId</MudTd>
+        <MudTd DataLabel="@Type">
             @switch (context.Type)
             {
                 case nameof(OutfitterGuidedHuntReport):
@@ -42,10 +43,11 @@
                 break;
             }
         </MudTd>
-        <MudTd DataLabel="Species">
+        <MudTd DataLabel="@Species">@string.Join(", ", context.Species.Select(x => x.GetDisplayName()).ToArray())
         </MudTd>
-        <MudTd DataLabel="Season">@context.Season</MudTd>
-        <MudTd DataLabel="Date Submitted">@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
+        <MudTd DataLabel="@Season">@context.Season</MudTd>
+        <MudTd DataLabel="@DateSubmitted">@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
+        <MudTd DataLabel="@Status"></MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>
