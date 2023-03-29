@@ -50,7 +50,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var authorizations = await Context.Authorizations.AsNoTracking().Where(a => a.ClientId == ClientId)
+        var authorizations = await Context.Authorizations.Where(a => a.ClientId == ClientId)
             .Include(x => ((BigGameHuntingLicence)x).OutfitterAreas)
             .Include(x => ((BigGameHuntingLicence)x).HuntingSeals)
             .Include(x => ((BigGameHuntingLicence)x).HuntingPermits)

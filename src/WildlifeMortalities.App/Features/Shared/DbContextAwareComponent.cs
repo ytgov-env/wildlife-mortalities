@@ -4,7 +4,7 @@ using WildlifeMortalities.Data;
 
 namespace WildlifeMortalities.App.Features.Shared;
 
-public class DbContextAwareComponent : ComponentBase
+public class DbContextAwareComponent : ComponentBase, IDisposable
 {
     private bool _disposedValue;
 
