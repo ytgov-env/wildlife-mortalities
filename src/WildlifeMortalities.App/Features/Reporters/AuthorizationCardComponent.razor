@@ -10,6 +10,10 @@
         </CardHeaderAvatar>
     </MudCardHeader>
     <MudCardContent Class="ml-3 mt-n6">
+        @if (Authorization is BigGameHuntingLicence licence)
+        {
+            <MudField Label="Type" DisableUnderLine="true">@licence.Type.GetDisplayName()</MudField>
+        }
         <MudField Label="Number" DisableUnderLine="true">
             @(Regex.Replace(Authorization.Number, "[A-Za-z-]", ""))
         </MudField>
@@ -18,12 +22,12 @@
         </MudField>
         @if (Authorization is BigGameHuntingLicence bigGameHuntingLicence)
         {
+            var childAuthorizations = bigGameHuntingLicence.HuntingSeals.ValueOrEmpty().OfType<Authorization>()
+            .Union(bigGameHuntingLicence.HuntingPermits.ValueOrEmpty()).Union(bigGameHuntingLicence.PhaHuntingPermits.ValueOrEmpty());
+            if (childAuthorizations.Any())
+            {
             <MudExpansionPanels>
                 <MudExpansionPanel Text="Child authorizations" IsInitiallyExpanded="true">
-                    @{
-                        var childAuthorizations = bigGameHuntingLicence.HuntingSeals.ValueOrEmpty().OfType<Authorization>()
-                        .Union(bigGameHuntingLicence.HuntingPermits.ValueOrEmpty()).Union(bigGameHuntingLicence.PhaHuntingPermits.ValueOrEmpty());
-                    }
                     @if (bigGameHuntingLicence.SpecialGuideLicence != null)
                     {
                         <MudItem Class="my-2">
@@ -76,6 +80,7 @@
                         }
             </MudExpansionPanel>
             </MudExpansionPanels>
+            }
         }
 
     </MudCardContent>
@@ -106,7 +111,7 @@
 
     private string GetColourByType() => Authorization switch
     {
-        BigGameHuntingLicence => "purple darken-2 shades-text text-white",
+        BigGameHuntingLicence => "blue-grey darken-2 shades-text text-white",
         CustomWildlifeActPermit => "red darken-2 shades-text text-white",
         HuntingPermit => "pink darken-2 shades-text text-white",
         HuntingSeal => "deep-purple darken-2 shades-text text-white",
@@ -114,7 +119,7 @@
         OutfitterChiefGuideLicence => "cyan darken-2 shades-text text-white",
         PhaHuntingPermit => "teal darken-2 shades-text text-white",
         SmallGameHuntingLicence => "lime darken-2 shades-text text-white",
-        SpecialGuideLicence => "blue-grey darken-2 shades-text text-white",
+        SpecialGuideLicence => "grey darken-2 shades-text text-white",
         TrappingLicence => "brown darken-2 shades-text text-white",
         _ => String.Empty,
     };
