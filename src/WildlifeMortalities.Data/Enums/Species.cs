@@ -22,194 +22,209 @@ public enum Species
 {
     [IsTrappable]
     [Display(Name = SpeciesConstants.AmericanBeaver)]
-    AmericanBeaver = 10,
+    AmericanBeaver = 100,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.AmericanBlackBear)]
-    AmericanBlackBear = 20,
+    AmericanBlackBear = 200,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.AmericanMartin)]
-    AmericanMartin = 30,
+    AmericanMartin = 300,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.AmericanMink)]
-    AmericanMink = 40,
+    AmericanMink = 400,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.ArcticFox)]
-    ArcticFox = 50,
+    ArcticFox = 500,
 
     [Display(Name = SpeciesConstants.ArcticGroundSquirrel)]
-    ArcticGroundSquirrel = 60,
+    ArcticGroundSquirrel = 600,
 
     [Display(Name = SpeciesConstants.BushyTailedWoodrat)]
-    BushyTailedWoodrat = 70,
+    BushyTailedWoodrat = 700,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.CanadaLynx)]
-    CanadaLynx = 80,
+    CanadaLynx = 800,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.Caribou)]
-    Caribou = 90,
+    Caribou = 900,
 
     [Display(Name = SpeciesConstants.CollaredPika)]
-    CollaredPika = 100,
+    CollaredPika = 1000,
 
     [Display(Name = SpeciesConstants.Cougar)]
-    Cougar = 110,
+    Cougar = 1100,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [IsTrappable]
     [Display(Name = SpeciesConstants.Coyote)]
-    Coyote = 120,
+    Coyote = 1200,
+
+    [Display(Name = SpeciesConstants.DuskyGrouse)]
+    DuskyGrouse = 1201,
 
     [IsIndividualHuntable]
     [Display(Name = SpeciesConstants.Elk)]
-    Elk = 130,
+    Elk = 1300,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.Ermine)]
-    Ermine = 140,
+    Ermine = 1400,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.Fisher)]
-    Fisher = 150,
+    Fisher = 1500,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [IsTrappable]
     [Display(Name = SpeciesConstants.GreyWolf)]
-    GreyWolf = 160,
-
-    [Display(Name = SpeciesConstants.Grouse)]
-    Grouse = 161,
+    GreyWolf = 1600,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.GrizzlyBear)]
-    GrizzlyBear = 170,
+    GrizzlyBear = 1700,
 
     [Display(Name = SpeciesConstants.HoaryMarmot)]
-    HoaryMarmot = 180,
+    HoaryMarmot = 1800,
 
     [Display(Name = SpeciesConstants.LeastChipmunk)]
-    LeastChipmunk = 190,
+    LeastChipmunk = 1900,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.LeastWeasel)]
-    LeastWeasel = 200,
+    LeastWeasel = 2000,
 
     [Display(Name = SpeciesConstants.Lemming)]
-    Lemming = 210,
+    Lemming = 2100,
 
     [Display(Name = SpeciesConstants.LittleBrownBat)]
-    LittleBrownBat = 220,
+    LittleBrownBat = 2200,
 
     [Display(Name = SpeciesConstants.MeadowJumpingMouse)]
-    MeadowJumpingMouse = 230,
+    MeadowJumpingMouse = 2300,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.Moose)]
-    Moose = 240,
+    Moose = 2400,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.MountainGoat)]
-    MountainGoat = 250,
+    MountainGoat = 2500,
 
     [IsIndividualHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.MuleDeer)]
-    MuleDeer = 260,
+    MuleDeer = 2600,
 
     [Display(Name = SpeciesConstants.Muskox)]
-    Muskox = 270,
+    Muskox = 2700,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.Muskrat)]
-    Muskrat = 280,
+    Muskrat = 2800,
 
     [Display(Name = SpeciesConstants.NorthAmericanDeermouse)]
-    NorthAmericanDeermouse = 290,
+    NorthAmericanDeermouse = 2900,
 
     [Display(Name = SpeciesConstants.NorthAmericanPorcupine)]
-    NorthAmericanPorcupine = 300,
+    NorthAmericanPorcupine = 3000,
 
     [Display(Name = SpeciesConstants.NorthernFlyingSquirrel)]
-    NorthernFlyingSquirrel = 310,
+    NorthernFlyingSquirrel = 3100,
 
     [Display(Name = SpeciesConstants.NorthernLongEaredBat)]
-    NorthernLongEaredBat = 320,
+    NorthernLongEaredBat = 3200,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.NorthernRiverOtter)]
-    NorthernRiverOtter = 330,
+    NorthernRiverOtter = 3300,
 
     [Display(Name = SpeciesConstants.PolarBear)]
-    PolarBear = 340,
-
-    [Display(Name = SpeciesConstants.Ptarmigan)]
-    Ptarmigan = 341,
+    PolarBear = 3400,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.RedFox)]
-    RedFox = 350,
+    RedFox = 3500,
 
     [IsTrappable]
     [Display(Name = SpeciesConstants.RedSquirrel)]
-    RedSquirrel = 360,
+    RedSquirrel = 3600,
+
+    [Display(Name = SpeciesConstants.RockPtarmigan)]
+    RockPtarmigan = 3601,
+
+    [Display(Name = SpeciesConstants.RuffedGrouse)]
+    RuffedGrouse = 3602,
+
+    [Display(Name = SpeciesConstants.SharpTailedGrouse)]
+    SharpTailedGrouse = 3603,
 
     [Display(Name = SpeciesConstants.Shrew)]
-    Shrew = 370,
+    Shrew = 3700,
 
     [Display(Name = SpeciesConstants.SnowshoeHare)]
-    SnowshoeHare = 380,
+    SnowshoeHare = 3800,
+
+    [Display(Name = SpeciesConstants.SpruceGrouse)]
+    SpruceGrouse = 3801,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.ThinhornSheep)]
-    ThinhornSheep = 390,
+    ThinhornSheep = 3900,
 
     [Display(Name = SpeciesConstants.Vole)]
-    Vole = 400,
+    Vole = 4000,
 
     [IsIndividualHuntable]
     [Display(Name = SpeciesConstants.WhiteTailedDeer)]
-    WhiteTailedDeer = 410,
+    WhiteTailedDeer = 4100,
+
+    [Display(Name = SpeciesConstants.WhiteTailedPtarmigan)]
+    WhiteTailedPtarmigan = 4101,
+
+    [Display(Name = SpeciesConstants.WillowPtarmigan)]
+    WillowPtarmigan = 4102,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsTrappable]
     [Display(Name = SpeciesConstants.Wolverine)]
-    Wolverine = 420,
+    Wolverine = 4200,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
     [Display(Name = SpeciesConstants.WoodBison)]
-    WoodBison = 430,
+    WoodBison = 4300,
 
     [Display(Name = SpeciesConstants.Woodchuck)]
-    Woodchuck = 440,
+    Woodchuck = 4400,
 
     [Display(Name = SpeciesConstants.BirdOther)]
-    BirdOther = 450
+    BirdOther = 4500
 }

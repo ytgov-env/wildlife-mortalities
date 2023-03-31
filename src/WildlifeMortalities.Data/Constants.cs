@@ -28,6 +28,8 @@ public static class Constants
 
         public const string Coyote = "Coyote";
 
+        public const string DuskyGrouse = "Dusky grouse";
+
         public const string Elk = "Elk";
 
         public const string Ermine = "Ermine";
@@ -35,8 +37,6 @@ public static class Constants
         public const string Fisher = "Fisher";
 
         public const string GreyWolf = "Wolf";
-
-        public const string Grouse = "Grouse";
 
         public const string GrizzlyBear = "Grizzly bear";
 
@@ -74,21 +74,31 @@ public static class Constants
 
         public const string PolarBear = "Polar bear";
 
-        public const string Ptarmigan = "Ptarmigan";
-
         public const string RedFox = "Red fox";
 
         public const string RedSquirrel = "Red squirrel";
 
+        public const string RockPtarmigan = "Rock ptarmigan";
+
+        public const string RuffedGrouse = "Ruffed grouse";
+
+        public const string SharpTailedGrouse = "Sharp-tailed grouse";
+
         public const string Shrew = "Shrew";
 
         public const string SnowshoeHare = "Snowshoe hare";
+
+        public const string SpruceGrouse = "Spruce grouse";
 
         public const string ThinhornSheep = "Sheep";
 
         public const string Vole = "Vole";
 
         public const string WhiteTailedDeer = "White-tailed deer";
+
+        public const string WhiteTailedPtarmigan = "White-tailed ptarmigan";
+
+        public const string WillowPtarmigan = "Willow ptarmigan";
 
         public const string Wolverine = "Wolverine";
 
