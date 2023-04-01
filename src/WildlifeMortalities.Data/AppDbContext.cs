@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Person> People => Set<Person>();
+    public DbSet<Season> Seasons => Set<Season>();
 
     public DbSet<Authorization> Authorizations => Set<Authorization>();
     public DbSet<Mortality> Mortalities => Set<Mortality>();
