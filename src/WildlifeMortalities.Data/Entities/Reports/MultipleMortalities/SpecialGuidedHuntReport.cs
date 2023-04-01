@@ -17,8 +17,15 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport, IHasC
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
-    IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities() =>
-        HuntedActivities.Select(x => x.Mortality).ToArray();
+    IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities()
+    {
+        if (HuntedActivities == null)
+        {
+            return Enumerable.Empty<Mortality>();
+        }
+
+        return HuntedActivities.Select(x => x.Mortality).ToArray();
+    }
 
     IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() => HuntedActivities.ToArray();
 
