@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using WildlifeMortalities.Data.Entities.Authorizations;
 
 namespace WildlifeMortalities.Data.Entities.Users;
 

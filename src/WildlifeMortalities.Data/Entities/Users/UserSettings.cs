@@ -1,9 +1,8 @@
-﻿namespace WildlifeMortalities.Data.Entities.Users
-{
-    public class UserSettings
-    {
-        public static UserSettings Default => new() { IsLightMode = false };
+﻿namespace WildlifeMortalities.Data.Entities.Users;
 
-        public bool IsLightMode { get; set; }
-    }
+public class UserSettings
+{
+    public static UserSettings Default => new() { IsLightMode = false };
+
+    public bool IsLightMode { get; set; }
 }

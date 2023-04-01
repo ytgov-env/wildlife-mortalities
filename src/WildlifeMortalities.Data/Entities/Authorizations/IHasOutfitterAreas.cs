@@ -1,7 +1,6 @@
-﻿namespace WildlifeMortalities.Data.Entities.Authorizations
+﻿namespace WildlifeMortalities.Data.Entities.Authorizations;
+
+public interface IHasOutfitterAreas
 {
-    public interface IHasOutfitterAreas
-    {
-        public List<OutfitterArea> OutfitterAreas { get; set; }
-    }
+    public List<OutfitterArea> OutfitterAreas { get; set; }
 }
