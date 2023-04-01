@@ -35,8 +35,8 @@ public abstract class Report
     public void GenerateHumanReadableId()
     {
         var rand = new Random();
-        // Excludes O and 0 to avoid users mixing them up
-        const string Chars = "ABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+        // Excludes O, 0, and I to avoid users mixing them up
+        const string Chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
         HumanReadableId = new string(
             Enumerable.Repeat(Chars, 4).Select(s => s[rand.Next(s.Length)]).ToArray()
         );
