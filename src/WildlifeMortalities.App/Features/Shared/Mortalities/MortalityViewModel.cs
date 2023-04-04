@@ -41,7 +41,7 @@ public class MortalityViewModel
 
     public MortalityViewModel(Mortality mortality, ReportDetail? reportDetail = null)
     {
-        DateOfDeath = mortality.DateOfDeath;
+        DateOfDeath = mortality.DateOfDeath?.DateTime;
         Latitude = mortality.Latitude;
         Longitude = mortality.Longitude;
         Sex = mortality.Sex;
@@ -107,7 +107,10 @@ public class MortalityViewModel
 
     protected void SetBaseValues(Mortality derivatingMortality)
     {
-        derivatingMortality.DateOfDeath = DateOfDeath;
+        derivatingMortality.DateOfDeath =
+            DateOfDeath == null
+                ? null
+                : new DateTimeOffset((DateTime)DateOfDeath, TimeSpan.FromHours(-7));
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitude;
         derivatingMortality.Sex = Sex;
