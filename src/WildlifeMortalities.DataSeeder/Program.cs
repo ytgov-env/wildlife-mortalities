@@ -2,11 +2,13 @@
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Seasons;
 
 Console.WriteLine("Starting data seeding...");
 Console.WriteLine("-----------------------");
 using (var context = new AppDbContext())
 {
+    AddAllSeasons(context);
     AddAllGameManagementAreas(context);
     AddAllOutfitterAreas(context);
     // AddAllGameManagementAreaSpecies(context);
@@ -16,6 +18,25 @@ using (var context = new AppDbContext())
 
 Console.WriteLine("---------------------");
 Console.WriteLine("Data seeding complete");
+
+void AddAllSeasons(AppDbContext context)
+{
+    if (!context.Seasons.Any())
+    {
+        for (var i = 2000; i < 2100; i++)
+        {
+            context.Seasons.Add(new HuntingSeason(i));
+            context.Seasons.Add(new TrappingSeason(i));
+            context.Seasons.Add(new CalendarSeason(i));
+        }
+        context.SaveChanges();
+        Console.WriteLine("Added Seasons");
+    }
+    else
+    {
+        Console.WriteLine("Seasons already exist");
+    }
+}
 
 void AddAllGameManagementAreas(AppDbContext context)
 {

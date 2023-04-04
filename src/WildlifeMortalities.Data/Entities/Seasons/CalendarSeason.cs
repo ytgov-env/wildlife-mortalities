@@ -12,9 +12,9 @@ public class CalendarSeason : Season
         EndDate = new DateTimeOffset(startYear, 12, 31, 23, 59, 59, TimeSpan.FromHours(-7));
     }
 
-    public override CalendarSeason GetSeason(Report report)
+    public static async Task<CalendarSeason> GetSeason(Report report, AppDbContext context)
     {
-        throw new NotImplementedException();
+        return await GetSeason<CalendarSeason>(report, context);
     }
 
     public override string ToString()

@@ -9,7 +9,7 @@ public abstract class Report
     public int Id { get; set; }
     public string Discriminator { get; set; } = null!;
     public string HumanReadableId { get; set; } = string.Empty;
-    public string Season { get; set; } = string.Empty;
+    public Season Season { get; set; } = null!;
     public DateTimeOffset DateSubmitted { get; set; }
 
     //public User CreatedBy { get; set; } = null!;
@@ -31,6 +31,11 @@ public abstract class Report
             IMultipleMortalitiesReport multiple => multiple.GetActivities(),
             _ => throw new NotImplementedException()
         };
+
+    public virtual DateTimeOffset GetRelevantDateForSeason()
+    {
+        return GetMortalities().FirstOrDefault()?.DateOfDeath ?? DateSubmitted;
+    }
 
     public void GenerateHumanReadableId()
     {

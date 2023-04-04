@@ -6,17 +6,17 @@ namespace WildlifeMortalities.Shared.Services.Reports;
 
 public class ReportService
 {
-    public static IQueryable<ReportDto> SortFilterPage(
+    public static async Task<IQueryable<ReportDto>> SortFilterPage(
         SortFilterPageOptions options,
         AppDbContext context
     )
     {
-        var query = context.Reports
+        var query = await context.Reports
             .MapReportToDto()
             .OrderReportsBy(options.OrderByOptions, options.OrderByAscending)
             .FilterReportsBy(options.FilterBy, options.FilterValue);
 
-        options.SetupRestOfDto(query);
+        await options.SetupRestOfDto(query);
         return query.Page(options.PageNumber - 1, options.PageSize);
     }
 }

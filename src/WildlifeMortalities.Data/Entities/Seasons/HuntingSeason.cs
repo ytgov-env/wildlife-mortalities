@@ -12,9 +12,9 @@ public class HuntingSeason : Season
         EndDate = new DateTimeOffset(startYear + 1, 3, 31, 23, 59, 59, TimeSpan.FromHours(-7));
     }
 
-    public override HuntingSeason GetSeason(Report report)
+    public static async Task<HuntingSeason> GetSeason(Report report, AppDbContext context)
     {
-        throw new NotImplementedException();
+        return await GetSeason<HuntingSeason>(report, context);
     }
 
     public override string ToString()

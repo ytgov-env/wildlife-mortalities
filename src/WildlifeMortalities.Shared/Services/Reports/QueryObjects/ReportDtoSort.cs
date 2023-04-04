@@ -6,7 +6,8 @@ public enum OrderByOptions
 {
     SimpleOrder = 0,
     ByType,
-    BySpecies,
+
+    //BySpecies,
     BySeason,
     ByDateSubmitted,
 }
@@ -23,8 +24,7 @@ public static class ReportDtoSort
         {
             OrderByOptions.SimpleOrder => x => x.Id,
             OrderByOptions.ByType => x => x.Type,
-            OrderByOptions.BySpecies => x => x.Species,
-            OrderByOptions.BySeason => x => x.Season,
+            OrderByOptions.BySeason => x => x.Season.StartDate,
             OrderByOptions.ByDateSubmitted => x => x.DateSubmitted,
             _ => throw new ArgumentOutOfRangeException(nameof(orderByOptions), orderByOptions, null)
         };

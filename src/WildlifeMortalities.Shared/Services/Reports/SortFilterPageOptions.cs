@@ -1,4 +1,6 @@
-﻿using WildlifeMortalities.Shared.Services.Reports.QueryObjects;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using WildlifeMortalities.Shared.Services.Reports.QueryObjects;
 
 namespace WildlifeMortalities.Shared.Services.Reports;
 
@@ -26,9 +28,9 @@ public class SortFilterPageOptions
 
     public bool OrderByAscending { get; set; } = true;
 
-    public void SetupRestOfDto<T>(IQueryable<T> query)
+    public async Task SetupRestOfDto<T>(IQueryable<T> query)
     {
-        TotalItems = query.Count();
+        TotalItems = query is IAsyncQueryProvider ? await query.CountAsync() : query.Count();
         NumberOfPages = (int)Math.Ceiling((double)TotalItems / PageSize);
         PageNumber = Math.Min(Math.Max(1, PageNumber), NumberOfPages);
 

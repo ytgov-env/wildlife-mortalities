@@ -2,6 +2,7 @@
 @using WildlifeMortalities.Data.Entities.Reports
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
+@using WildlifeMortalities.Data.Entities.Seasons;
 @using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services
 @using WildlifeMortalities.Shared.Services.Reports;
@@ -19,10 +20,13 @@
     <HeaderContent>
         <MudTh>@Id</MudTh>
         <MudTh><MudTableSortLabel SortLabel="@Type" T="ReportDto">@Type</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="@Species" T="ReportDto">@Species</MudTableSortLabel></MudTh>
+        @*<MudTh><MudTableSortLabel SortLabel="@Species" T="ReportDto">@Species</MudTableSortLabel></MudTh>*@
+        <MudTh>@Species</MudTh>
         <MudTh><MudTableSortLabel SortLabel="@Season" T="ReportDto">@Season</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="@DateSubmitted" T="ReportDto">@DateSubmitted</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="@Status" T="ReportDto">@Status</MudTableSortLabel></MudTh>
+        @*<MudTh><MudTableSortLabel SortLabel="@Status" T="ReportDto">@Status</MudTableSortLabel></MudTh>*@
+        <MudTh>@Status</MudTh>
+
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="@Id">@context.HumanReadableId</MudTd>
@@ -43,9 +47,27 @@
                 break;
             }
         </MudTd>
-        <MudTd DataLabel="@Species">@string.Join(", ", context.Species.Select(x => x.GetDisplayName()).ToArray())
+        <MudTd DataLabel="@Species">@string.Join(", ", context.SpeciesCollection.Select(x => x.GetDisplayName()).ToArray())
         </MudTd>
-        <MudTd DataLabel="@Season">@context.Season</MudTd>
+        <MudTd DataLabel="@Season">
+            @switch (context.Season)
+            {
+                case TrappingSeason trappingSeason:
+                    <span>@trappingSeason.ToString()</span>
+                    break;
+                case HuntingSeason huntingSeason:
+                    <span>@huntingSeason.ToString()</span>
+                    break;
+                case CalendarSeason calendarSeason:
+                @*const string calendarIcon = @"<svg xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke-width=""1.5"" stroke=""currentColor"" class=""w-6 h-6"">
+                                              <path stroke-linecap=""round"" stroke-linejoin=""round"" d=""M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"" />
+                                            </svg>
+                                            ";
+                <MudIcon Icon="@calendarIcon"/>*@
+                    <span>@calendarSeason.ToString()</span>
+                    break;
+            }
+        </MudTd>
         <MudTd DataLabel="@DateSubmitted">@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
         <MudTd DataLabel="@Status"></MudTd>
     </RowTemplate>

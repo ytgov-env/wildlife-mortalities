@@ -39,7 +39,7 @@ public static class ReportDtoSelect
                                 .ConservationOfficer
                                 .BadgeNumber
                             : null,
-                    Species =
+                    SpeciesCollection =
                         report is IndividualHuntedMortalityReport
                             ? new Species[]
                             {
@@ -65,5 +65,6 @@ public static class ReportDtoSelect
                     DateSubmitted = report.DateSubmitted
                 }
         );
+        ;
     }
 }

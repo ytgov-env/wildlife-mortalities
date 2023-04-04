@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using MudBlazor;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services.Reports;
@@ -35,8 +36,9 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
         Options.OrderByOptions = state.SortLabel switch
         {
             Type => OrderByOptions.ByType,
+            Season => OrderByOptions.BySeason,
             DateSubmitted => OrderByOptions.ByDateSubmitted,
-            _ => OrderByOptions.SimpleOrder,
+            _ => OrderByOptions.SimpleOrder
         };
 
         var (reportDtos, totalItems) =
@@ -73,7 +75,13 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
         var context = DbContextFactory.CreateDbContext();
         var query = ReportService.SortFilterPage(Options, context);
 
-        return (await query.AsSplitQuery().ToArrayAsync(), Options.TotalItems);
+        var preResult = await query;
+        IEnumerable<ReportDto> result =
+            preResult is IAsyncQueryProvider
+                ? await preResult.AsSplitQuery().ToArrayAsync()
+                : preResult.ToArray();
+
+        return (result, Options.TotalItems);
     }
 
     public async Task<(IEnumerable<ReportDto>, int totalItems)> GetAllReports(
