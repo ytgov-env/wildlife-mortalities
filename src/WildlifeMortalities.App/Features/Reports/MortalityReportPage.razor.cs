@@ -105,7 +105,7 @@ public partial class MortalityReportPage
 
     private async Task CreateReport()
     {
-        _ = await _signaturePad.GetSignature();
+        //_ = await _signaturePad.GetSignature();
 
         var personId = _personId!.Value;
 
