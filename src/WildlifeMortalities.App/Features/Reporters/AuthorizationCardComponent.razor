@@ -27,7 +27,7 @@
             if (childAuthorizations.Any())
             {
             <MudExpansionPanels>
-                <MudExpansionPanel Text="Child authorizations" IsInitiallyExpanded="true">
+                <MudExpansionPanel Text="Associated authorizations" IsInitiallyExpanded="true">
                     @if (bigGameHuntingLicence.SpecialGuideLicence != null)
                     {
                         <MudItem Class="my-2">
@@ -50,6 +50,20 @@
                             </MudGrid>
                         </MudItem>
                     }
+                    @if (childAuthorizations.OfType<PhaHuntingPermit>().Any() == true)
+                    {
+                        <MudItem Class="mt-2">
+                            <MudText Typo="Typo.h6">Permit hunt authorizations</MudText>
+                            <MudGrid>
+                                @foreach (var authorization in childAuthorizations.OfType<PhaHuntingPermit>().OrderBy(x => x.Type.GetDisplayName()))
+                                {
+                                    <MudItem xs="12" md="6" xxl="4">
+                                        <AuthorizationCardComponent Authorization="@authorization" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudItem>
+                    }
                     @if (childAuthorizations.OfType<HuntingPermit>().Any() == true)
                     {
                         <MudItem Class="mt-2">
@@ -64,20 +78,6 @@
                             </MudGrid>
                         </MudItem>
                     }
-                    @if (childAuthorizations.OfType<PhaHuntingPermit>().Any() == true)
-                    {
-                        <MudItem Class="mt-2">
-                            <MudText Typo="Typo.h6">Permit hunt authorizations</MudText>
-                            <MudGrid>
-                                @foreach (var authorization in childAuthorizations.OfType<PhaHuntingPermit>().OrderBy(x => x.Type.GetDisplayName()))
-                                {
-                                    <MudItem xs="12" md="6" xxl="4">
-                                        <AuthorizationCardComponent Authorization="@authorization" />
-                                    </MudItem>
-                                }
-                            </MudGrid>
-                        </MudItem>
-                        }
             </MudExpansionPanel>
             </MudExpansionPanels>
             }
@@ -117,7 +117,7 @@
         HuntingSeal => "deep-purple darken-2 shades-text text-white",
         OutfitterAssistantGuideLicence => "indigo darken-2 shades-text text-white",
         OutfitterChiefGuideLicence => "cyan darken-2 shades-text text-white",
-        PhaHuntingPermit => "teal darken-2 shades-text text-white",
+        PhaHuntingPermit => "orange darken-2 shades-text text-white",
         SmallGameHuntingLicence => "lime darken-2 shades-text text-white",
         SpecialGuideLicence => "grey darken-2 shades-text text-white",
         TrappingLicence => "brown darken-2 shades-text text-white",

@@ -8,7 +8,7 @@
 <MudText Typo="Typo.h3" Class="mb-8">Client overview</MudText>
 
 <MudGrid>
-    <MudItem xs="12" sm="6">
+    <MudItem sm="12" md="6">
         <EditForm EditContext="_editContext">
             <FluentValidationValidator Validator="new SelectClientViewModelValidator()"/>
             <MudItem>
@@ -33,7 +33,7 @@
     </MudItem>
     @if (_selectedClientViewModel.SelectedClient is not null)
     {
-        <MudItem xs="12" sm="6">
+        <MudItem sm="12" md="6">
             <AuthorizationsComponent ClientId="@_selectedClientViewModel.SelectedClient.Id"/>
         </MudItem>
         <MudItem xs="12">
