@@ -5,7 +5,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class PhaHuntingPermit : Authorization, IHasBigGameHuntingLicence
+public class PhaHuntingPermit : Authorization
 {
     public enum PermitType
     {
@@ -38,9 +38,6 @@ public class PhaHuntingPermit : Authorization, IHasBigGameHuntingLicence
     public PermitType Type { get; set; }
     public string HuntCode { get; set; } = null!;
 
-    public int BigGameHuntingLicenceId { get; set; }
-    public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
-
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
 }
@@ -48,10 +45,5 @@ public class PhaHuntingPermit : Authorization, IHasBigGameHuntingLicence
 public class PhaHuntingPermitConfig : IEntityTypeConfiguration<PhaHuntingPermit>
 {
     public void Configure(EntityTypeBuilder<PhaHuntingPermit> builder) =>
-        builder
-            .ToTable("Authorizations")
-            .HasOne(p => p.BigGameHuntingLicence)
-            .WithMany(h => h.PhaHuntingPermits)
-            .HasForeignKey(p => p.BigGameHuntingLicenceId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.ToTable("Authorizations");
 }

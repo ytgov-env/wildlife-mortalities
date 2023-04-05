@@ -10,9 +10,16 @@
         </CardHeaderAvatar>
     </MudCardHeader>
     <MudCardContent Class="ml-3 mt-n6">
-        @if (Authorization is BigGameHuntingLicence licence)
+        @if (Authorization is BigGameHuntingLicence bigGameHuntingLicence)
         {
-            <MudField Label="Type" DisableUnderLine="true">@licence.Type.GetDisplayName()</MudField>
+            <MudField Label="Type" DisableUnderLine="true">@bigGameHuntingLicence.Type.GetDisplayName()</MudField>
+        } else if (Authorization is SmallGameHuntingLicence smallGameHuntingLicence)
+        {
+            <MudField Label="Type" DisableUnderLine="true">@smallGameHuntingLicence.Type.GetDisplayName()</MudField>
+        }
+        @if(Authorization is IHasOutfitterAreas auth && auth.OutfitterAreas.Any())
+        {
+            <MudField Label="Outfitter areas" DisableUnderLine="true">@string.Join(", ", auth.OutfitterAreas.Select(x => x.Area))</MudField>
         }
         <MudField Label="Number" DisableUnderLine="true">
             @(Regex.Replace(Authorization.Number, "[A-Za-z-]", ""))
@@ -20,69 +27,6 @@
         <MudField Label="Validity" DisableUnderLine="true">
             @Authorization.ValidFromDateTime.ToString("M") - @Authorization.ValidToDateTime.ToString("M")
         </MudField>
-        @if (Authorization is BigGameHuntingLicence bigGameHuntingLicence)
-        {
-            var childAuthorizations = bigGameHuntingLicence.HuntingSeals.ValueOrEmpty().OfType<Authorization>()
-            .Union(bigGameHuntingLicence.HuntingPermits.ValueOrEmpty()).Union(bigGameHuntingLicence.PhaHuntingPermits.ValueOrEmpty());
-            if (childAuthorizations.Any())
-            {
-            <MudExpansionPanels>
-                <MudExpansionPanel Text="Associated authorizations" IsInitiallyExpanded="true">
-                    @if (bigGameHuntingLicence.SpecialGuideLicence != null)
-                    {
-                        <MudItem Class="my-2">
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@bigGameHuntingLicence.SpecialGuideLicence" />
-                            </MudItem>
-                        </MudItem>
-                    }
-                    @if (childAuthorizations.OfType<HuntingSeal>().Any() == true)
-                    {
-                        <MudItem>
-                            <MudText Typo="Typo.h6">Seals</MudText>
-                            <MudGrid>
-                                @foreach (var authorization in childAuthorizations.OfType<HuntingSeal>().OrderBy(x => x.Type.GetDisplayName()))
-                                {
-                                    <MudItem xs="12" md="6" xxl="4">
-                                        <AuthorizationCardComponent Authorization="@authorization" />
-                                    </MudItem>
-                                }
-                            </MudGrid>
-                        </MudItem>
-                    }
-                    @if (childAuthorizations.OfType<PhaHuntingPermit>().Any() == true)
-                    {
-                        <MudItem Class="mt-2">
-                            <MudText Typo="Typo.h6">Permit hunt authorizations</MudText>
-                            <MudGrid>
-                                @foreach (var authorization in childAuthorizations.OfType<PhaHuntingPermit>().OrderBy(x => x.Type.GetDisplayName()))
-                                {
-                                    <MudItem xs="12" md="6" xxl="4">
-                                        <AuthorizationCardComponent Authorization="@authorization" />
-                                    </MudItem>
-                                }
-                            </MudGrid>
-                        </MudItem>
-                    }
-                    @if (childAuthorizations.OfType<HuntingPermit>().Any() == true)
-                    {
-                        <MudItem Class="mt-2">
-                            <MudText Typo="Typo.h6">Permits</MudText>
-                            <MudGrid>
-                                @foreach (var authorization in childAuthorizations.OfType<HuntingPermit>().OrderBy(x => x.Type.GetDisplayName()))
-                                {
-                                    <MudItem xs="12" md="6" xxl="4">
-                                        <AuthorizationCardComponent Authorization="@authorization" />
-                                    </MudItem>
-                                }
-                            </MudGrid>
-                        </MudItem>
-                    }
-            </MudExpansionPanel>
-            </MudExpansionPanels>
-            }
-        }
-
     </MudCardContent>
 </MudCard>
 
@@ -105,7 +49,7 @@
         PhaHuntingPermit p => p.Type.GetDisplayName(),
         SmallGameHuntingLicence => "Small game hunting licence",
         SpecialGuideLicence => "Special guide licence",
-        TrappingLicence => "Trapping licence",
+        TrappingLicence t => t.Type.GetDisplayName(),
         _ => String.Empty,
     };
 

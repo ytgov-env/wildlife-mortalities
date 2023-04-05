@@ -5,7 +5,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class HuntingPermit : Authorization, IHasBigGameHuntingLicence
+public class HuntingPermit : Authorization
 {
     public enum PermitType
     {
@@ -42,9 +42,6 @@ public class HuntingPermit : Authorization, IHasBigGameHuntingLicence
     public HuntingPermit(PermitType type) => Type = type;
 
     public PermitType Type { get; set; }
-
-    public int BigGameHuntingLicenceId { get; set; }
-    public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = default!;
 
     public bool IsCaribouRelated() =>
         Type
@@ -96,10 +93,5 @@ public class HuntingPermit : Authorization, IHasBigGameHuntingLicence
 public class HuntingPermitConfig : IEntityTypeConfiguration<HuntingPermit>
 {
     public void Configure(EntityTypeBuilder<HuntingPermit> builder) =>
-        builder
-            .ToTable("Authorizations")
-            .HasOne(s => s.BigGameHuntingLicence)
-            .WithMany(h => h.HuntingPermits)
-            .HasForeignKey(h => h.BigGameHuntingLicenceId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.ToTable("Authorizations");
 }

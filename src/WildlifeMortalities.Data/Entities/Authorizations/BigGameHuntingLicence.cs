@@ -21,7 +21,7 @@ public class BigGameHuntingLicence : Authorization, IHasOutfitterAreas
         [Display(Name = "Yukon resident")]
         YukonResident = 40,
 
-        [Display(Name = "Yukon resident senior")]
+        [Display(Name = "Yukon resident 65+")]
         YukonResidentSenior = 50,
 
         [Display(Name = "Yukon resident - First Nations or Inuit")]
@@ -41,10 +41,10 @@ public class BigGameHuntingLicence : Authorization, IHasOutfitterAreas
     public LicenceType Type { get; set; }
     public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 
-    public List<HuntingSeal> HuntingSeals { get; set; } = null!;
-    public List<HuntingPermit> HuntingPermits { get; set; } = null!;
-    public List<PhaHuntingPermit> PhaHuntingPermits { get; set; } = null!;
-    public SpecialGuideLicence? SpecialGuideLicence { get; set; }
+    //public List<HuntingSeal> HuntingSeals { get; set; } = null!;
+    //public List<HuntingPermit> HuntingPermits { get; set; } = null!;
+    //public List<PhaHuntingPermit> PhaHuntingPermits { get; set; } = null!;
+    //public SpecialGuideLicence? SpecialGuideLicence { get; set; }
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();

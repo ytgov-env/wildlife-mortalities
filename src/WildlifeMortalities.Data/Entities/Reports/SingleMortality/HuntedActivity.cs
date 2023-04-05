@@ -23,9 +23,3 @@ public class HuntedActivityConfig : IEntityTypeConfiguration<HuntedActivity>
     public void Configure(EntityTypeBuilder<HuntedActivity> builder) =>
         builder.ToTable("Activities");
 }
-
-public enum HuntedMortalityReportStatus
-{
-    Complete = 10,
-    WaitingOnClient = 20
-}

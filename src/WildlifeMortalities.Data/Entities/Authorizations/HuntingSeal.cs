@@ -7,7 +7,7 @@ using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
-public class HuntingSeal : Authorization, IHasBigGameHuntingLicence
+public class HuntingSeal : Authorization
 {
     public enum SealType
     {
@@ -44,9 +44,10 @@ public class HuntingSeal : Authorization, IHasBigGameHuntingLicence
     public HuntingSeal(SealType type) => Type = type;
 
     public SealType Type { get; set; }
-    public int BigGameHuntingLicenceId { get; set; }
-    public BigGameHuntingLicence BigGameHuntingLicence { get; set; } = null!;
-    public HuntedActivity? HuntedMortalityReport { get; set; }
+
+    // Todo: Rename to "HuntedActivityId", and fix System.InvalidOperationException: The property 'HuntedActivityId' cannot be added to entity type 'Authorization' because it is declared on the CLR type 'HuntingSeal'.
+    public int? HuntedActivityyId { get; set; }
+    public HuntedActivity? HuntedActivityy { get; set; }
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
@@ -55,10 +56,5 @@ public class HuntingSeal : Authorization, IHasBigGameHuntingLicence
 public class SealConfig : IEntityTypeConfiguration<HuntingSeal>
 {
     public void Configure(EntityTypeBuilder<HuntingSeal> builder) =>
-        builder
-            .ToTable("Authorizations")
-            .HasOne(s => s.BigGameHuntingLicence)
-            .WithMany(h => h.HuntingSeals)
-            .HasForeignKey(s => s.BigGameHuntingLicenceId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.ToTable("Authorizations");
 }

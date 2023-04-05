@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
 
@@ -8,13 +9,28 @@ public class SmallGameHuntingLicence : Authorization, IHasOutfitterAreas
 {
     public enum LicenceType
     {
+        [Display(Name = "Canadian resident")]
         CanadianResident = 10,
+
+        [Display(Name = "Canadian resident - First Nations or Inuit")]
         CanadianResidentFirstNationsOrInuit = 20,
+
+        [Display(Name = "Non-resident")]
         NonResident = 30,
+
+        [Display(Name = "Non-resident - First Nations or Inuit")]
         NonResidentFirstNationsOrInuit = 40,
+
+        [Display(Name = "Yukon resident")]
         YukonResident = 50,
+
+        [Display(Name = "Yukon resident 65+")]
         YukonResidentSenior = 60,
+
+        [Display(Name = "Yukon resident - First Nations or Inuit")]
         YukonResidentFirstNationsOrInuit = 70,
+
+        [Display(Name = "Yukon resident - First Nations or Inuit 65+")]
         YukonResidentFirstNationsOrInuitSenior = 80
     }
 

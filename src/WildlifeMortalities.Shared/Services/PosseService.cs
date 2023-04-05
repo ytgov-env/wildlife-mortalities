@@ -384,24 +384,9 @@ public class PosseService : IPosseService
         var registeredTrappingConcessions =
             await context.RegisteredTrappingConcessions.ToArrayAsync();
 
-        // Since we ignore (i.e. don't save) authorizations that are missing a parent big game hunting licence,
-        // we must request them again whenever a big game hunting licence is updated
-        List<AuthorizationDto> authorizationToBeProcessed = new();
-        foreach (var item in results.Authorizations.Where(IsBigGameHuntingLicence))
-        {
-            var childList = await GetAuthorizationsByEnvClientId(
-                item.EnvClientId,
-                item.ValidFromDateTime
-            );
-            authorizationToBeProcessed.AddRange(childList);
-        }
-
-        // Big game hunting licences must be processed first because it is a required parent of other authorization types
         foreach (
             var posseAuthorization in results.Authorizations
-                .Union(authorizationToBeProcessed)
-                .OrderBy(a => IsBigGameHuntingLicence(a) ? 0 : 1)
-                .ThenBy(a => a.Type)
+                .OrderBy(a => a.Type)
                 .ThenBy(a => a.ValidFromDateTime)
                 .DistinctBy(x => $"{x.EnvClientId}-{GetSeason(x)}-{x.Type}")
         )
@@ -621,7 +606,9 @@ public class PosseService : IPosseService
         List<(Authorization authorization, string envClientId)> authorizations
     )
     {
-        if (authorization is IHasBigGameHuntingLicence auth)
+        if (
+            authorization is HuntingPermit or PhaHuntingPermit or HuntingSeal or SpecialGuideLicence
+        )
         {
             var bigGameHuntingLicencesInSameSeason = authorizations
                 .Where(
@@ -687,7 +674,6 @@ public class PosseService : IPosseService
                 }
                 return true;
             }
-            auth.BigGameHuntingLicence = parent;
         }
         return false;
     }
