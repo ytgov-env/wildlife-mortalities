@@ -65,6 +65,5 @@ public static class ReportDtoSelect
                     DateSubmitted = report.DateSubmitted
                 }
         );
-        ;
     }
 }

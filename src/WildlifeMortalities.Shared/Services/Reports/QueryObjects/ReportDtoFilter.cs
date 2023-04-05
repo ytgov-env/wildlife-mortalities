@@ -30,8 +30,10 @@ public static class ReportDtoFilter
         {
             FilterByOptions.NoFilter => reports,
             FilterByOptions.ByEnvClientId => reports.Where(x => x.EnvClientId == filterValue),
+            // It's not possible for EF Core to translate the species filter to SQL, so we must perform the sequence filtering in memory,
+            // and then transform the sequence back into an IQueryable for subsequent operations
             FilterByOptions.BySpecies
-                => (await reports.ToListAsync())
+                => (await reports.ToArrayAsync())
                     .Where(x => x.SpeciesCollection.Contains(Enum.Parse<Species>(filterValue)))
                     .AsQueryable(),
             FilterByOptions.ByType => reports.Where(x => x.Type == filterValue),
