@@ -35,44 +35,65 @@ public class PosseSyncService : TimerBasedHostedService
             .Include(x => x.Authorizations)
             .ToDictionary(x => x.EnvClientId, x => x);
 
-        //var recentlyModifiedClients = await posseService.GetClients(
-        //    new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0))
-        //);
+        await SyncClients(clientMapper, context, posseService);
+        await SyncAuthorizations(clientMapper, context, posseService);
+        Log.Information("Finished posse sync");
+    }
 
-        //foreach (
-        //    var (client, previousEnvClientIds) in recentlyModifiedClients.OrderBy(
-        //        x => x.Item1.LastModifiedDateTime
-        //    )
-        //)
-        //{
-        //    // Determine which are existing clients, and update them
-        //    if (clientMapper.TryGetValue(client.EnvClientId, out var clientInDatabase))
-        //    {
-        //        //clientInDatabase.Update(client);
-        //        //await context.SaveChangesAsync();
-        //    }
-        //    // Or, add a new client
-        //    else
-        //    {
-        //        context.Add(client);
-        //        await context.SaveChangesAsync();
-        //        clientMapper.Add(client.EnvClientId, client);
-        //        clientInDatabase = client;
-        //    }
+    private static async Task SyncClients(
+        Dictionary<string, Client> clientMapper,
+        AppDbContext context,
+        IPosseService posseService
+    )
+    {
+        var recentlyModifiedClients = await posseService.GetClients(
+            new DateTimeOffset(new DateTime(2022, 02, 15), TimeSpan.FromHours(-7))
+        );
 
-        //    // Determine if client was merged in POSSE, and merge them
-        //    foreach (var envClientId in previousEnvClientIds)
-        //    {
-        //        if (!clientMapper.TryGetValue(envClientId, out var clientToBeMerged)) continue;
-        //        var wasMerged = clientInDatabase.Merge(clientToBeMerged);
-        //        if (!wasMerged) continue;
-        //        context.People.Remove(clientToBeMerged);
-        //        clientMapper.Remove(clientToBeMerged.EnvClientId);
-        //        await context.SaveChangesAsync();
-        //    }
-        //}
+        foreach (
+            var (client, previousEnvClientIds) in recentlyModifiedClients.OrderBy(
+                x => x.client.LastModifiedDateTime
+            )
+        )
+        {
+            // Determine which are existing clients, and update them
+            if (clientMapper.TryGetValue(client.EnvClientId, out var clientInDatabase))
+            {
+                clientInDatabase.Update(client);
+                await context.SaveChangesAsync();
+            }
+            // Or, add a new client
+            else
+            {
+                context.Add(client);
+                await context.SaveChangesAsync();
+                clientMapper.Add(client.EnvClientId, client);
+                clientInDatabase = client;
+            }
+
+            // Determine if client was merged in POSSE, and merge them
+            foreach (var envClientId in previousEnvClientIds)
+            {
+                if (!clientMapper.TryGetValue(envClientId, out var clientToBeMerged))
+                    continue;
+                var wasMerged = clientInDatabase.Merge(clientToBeMerged);
+                if (!wasMerged)
+                    continue;
+                context.People.Remove(clientToBeMerged);
+                clientMapper.Remove(clientToBeMerged.EnvClientId);
+                await context.SaveChangesAsync();
+            }
+        }
+    }
+
+    private static async Task SyncAuthorizations(
+        Dictionary<string, Client> clientMapper,
+        AppDbContext context,
+        IPosseService posseService
+    )
+    {
         var authorizations = await posseService.GetAuthorizations(
-            new DateTimeOffset(new DateTime(2022, 02, 15), new TimeSpan(-7, 0, 0)),
+            new DateTimeOffset(new DateTime(2022, 02, 15), TimeSpan.FromHours(-7)),
             clientMapper,
             context
         );
@@ -83,19 +104,18 @@ public class PosseSyncService : TimerBasedHostedService
             {
                 auth.Client = clientMapper[envClientId];
                 context.Authorizations.Add(auth);
-                await context.SaveChangesAsync();
+                //await context.SaveChangesAsync();
             }
             else
             {
                 Log.Error(
-                    "An authorization is associated with EnvClientId {EnvClientId}, which doesn't exist. The authorization was ignored: {@authorization}",
+                    "An authorization is associated with EnvClientId {EnvClientId}, which doesn't exist. The authorization was rejected: {@authorization}",
                     envClientId,
                     auth
                 );
             }
         }
 
-        //await context.SaveChangesAsync();
-        Log.Information("Finished posse sync");
+        await context.SaveChangesAsync();
     }
 }
