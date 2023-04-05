@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Authorizations;
 
 namespace WildlifeMortalities.Data.Entities;
 
@@ -9,21 +10,33 @@ public abstract class Season
     public int Id { get; set; }
     public DateTimeOffset StartDate { get; init; }
     public DateTimeOffset EndDate { get; init; }
-    public List<Report> Reports { get; set; } = null!;
 
-    public static async Task<TSeason> GetSeason<TSeason>(Report report, AppDbContext context)
+    public string FriendlyName { get; set; } = string.Empty;
+    public List<Report> Reports { get; set; } = null!;
+    public List<Authorization> Authorizations { get; set; } = null!;
+
+    public static async Task<TSeason?> GetSeason<TSeason>(Report report, AppDbContext context)
         where TSeason : Season
     {
         var date = report.GetRelevantDateForSeason();
 
-        var season = await context.Seasons
+        return await context.Seasons
             .OfType<TSeason>()
             .SingleOrDefaultAsync(x => date >= x.StartDate && date <= x.EndDate);
+    }
 
-        return season
-            ?? throw new ArgumentException(
-                $"Unable to resolve season for date {date}",
-                nameof(report)
+    public static async Task<TSeason?> GetSeason<TSeason>(
+        Authorization authorization,
+        AppDbContext context
+    )
+        where TSeason : Season
+    {
+        return await context.Seasons
+            .OfType<TSeason>()
+            .SingleOrDefaultAsync(
+                x =>
+                    authorization.ValidFromDateTime >= x.StartDate
+                    && authorization.ValidToDateTime <= x.EndDate
             );
     }
 }

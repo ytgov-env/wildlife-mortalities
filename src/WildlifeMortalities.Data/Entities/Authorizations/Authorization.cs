@@ -52,8 +52,8 @@ public abstract class Authorization
     public DateTimeOffset ValidFromDateTime { get; set; }
     public DateTimeOffset ValidToDateTime { get; set; }
     public DateTimeOffset LastModifiedDateTime { get; set; }
-
-    public string? Season { get; set; }
+    public int SeasonId { get; set; }
+    public Season Season { get; set; } = null!;
 
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;

@@ -53,10 +53,10 @@
             @switch (context.Season)
             {
                 case TrappingSeason trappingSeason:
-                    <span>@trappingSeason.ToString()</span>
+                    <span>@trappingSeason.FriendlyName</span>
                     break;
                 case HuntingSeason huntingSeason:
-                    <span>@huntingSeason.ToString()</span>
+                    <span>@huntingSeason.FriendlyName</span>
                     break;
                 case CalendarSeason calendarSeason:
                 @*const string calendarIcon = @"<svg xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke-width=""1.5"" stroke=""currentColor"" class=""w-6 h-6"">
@@ -64,7 +64,7 @@
                                             </svg>
                                             ";
                 <MudIcon Icon="@calendarIcon"/>*@
-                    <span>@calendarSeason.ToString()</span>
+                    <span>@calendarSeason.FriendlyName</span>
                     break;
             }
         </MudTd>

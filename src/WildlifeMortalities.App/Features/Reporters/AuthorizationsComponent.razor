@@ -2,6 +2,7 @@
 @using WildlifeMortalities.App.Extensions;
 @using WildlifeMortalities.Data.Entities.Authorizations;
 @using WildlifeMortalities.Data;
+@using WildlifeMortalities.Data.Entities;
 @using WildlifeMortalities.Shared.Services;
 @inherits DbContextAwareComponent
 
@@ -18,7 +19,7 @@
     }
     @foreach (var authorization in _authorizationsViewModel.Authorizations.Where(x => x is IHasBigGameHuntingLicence == false))
     {
-        var season = authorization.Season;
+        var season = authorization.Season.FriendlyName;
         if (season != null)
         {
             seasons.Add(season);
@@ -28,7 +29,7 @@
     {
         <MudTabPanel Text="@season">
             @foreach (var authorization in _authorizationsViewModel.Authorizations.Where(x => x is IHasBigGameHuntingLicence == false
-           && x.Season == season))
+           && x.Season.FriendlyName == season))
             {
                 <AuthorizationCardComponent Authorization="@authorization" />
             }
@@ -56,14 +57,14 @@
             .Include(x => ((BigGameHuntingLicence)x).HuntingPermits)
             .Include(x => ((BigGameHuntingLicence)x).PhaHuntingPermits)
             .Include(x => ((BigGameHuntingLicence)x).SpecialGuideLicence)
+            .Include(x => x.Season)
             .ToArrayAsync();
 
         _authorizationsViewModel.Authorizations = authorizations;
 
         _isLoading = false;
 
-        _queuedPanelIndex = _authorizationsViewModel.Authorizations.Select(x => x.Season).Distinct().Count() - 1;
-
+        _queuedPanelIndex = _authorizationsViewModel.Authorizations.Select(x => x.Season.FriendlyName).Distinct().Count() - 1;
     }
 
     protected override void OnAfterRender(bool firstRender)

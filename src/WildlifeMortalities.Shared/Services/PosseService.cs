@@ -1,9 +1,10 @@
-﻿using System.Net.Http.Json;
+﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Seasons;
 
 // ReSharper disable InconsistentNaming
 
@@ -314,9 +315,15 @@ public class PosseService : IPosseService
     {
         var clients = new List<(Client, IEnumerable<string>)>();
 
-        var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
-            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+        //var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
+        //    $"clients?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+        //);
+
+        var jsonDoc = await File.ReadAllTextAsync(
+            "C:\\Users\\jhodgins\\SND_clients-1679420759677.json"
         );
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var results = JsonSerializer.Deserialize<GetClientsResponse>(jsonDoc, options);
 
         var rand = new Random();
         foreach (var recentlyModifiedClient in results.Clients)
@@ -324,8 +331,10 @@ public class PosseService : IPosseService
             var client = new Client
             {
                 EnvClientId = recentlyModifiedClient.EnvClientId,
-                FirstName = recentlyModifiedClient.FirstName,
-                LastName = recentlyModifiedClient.LastName,
+                //FirstName = recentlyModifiedClient.FirstName,
+                FirstName = FakeClients.FirstNames[rand.Next(FakeClients.FirstNames.Length)],
+                //LastName = recentlyModifiedClient.LastName,
+                LastName = FakeClients.LastNames[rand.Next(FakeClients.LastNames.Length)],
                 //BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
                 BirthDate = new DateTime(rand.Next(1930, 2010), rand.Next(1, 12), rand.Next(1, 28)),
                 LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
@@ -333,11 +342,6 @@ public class PosseService : IPosseService
 
             clients.Add((client, recentlyModifiedClient.PreviousEnvClientIds));
         }
-
-        //clients = new List<(Client, IEnumerable<string>)>
-        //{
-        //    (new Client { EnvClientId = "217956", }, new[] { "169422" })
-        //};
 
         return clients;
     }
@@ -361,15 +365,15 @@ public class PosseService : IPosseService
         AppDbContext context
     )
     {
-        //var jsonDoc = await File.ReadAllTextAsync(
-        //    "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations.json"
+        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
         //);
-        //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        //var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
 
-        var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-            $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+        var jsonDoc = await File.ReadAllTextAsync(
+            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations.json"
         );
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
 
         var authorizations = new List<(Authorization authorization, string envClientId)>();
         if (results == null)
@@ -408,22 +412,26 @@ public class PosseService : IPosseService
                 authorization.Number = posseAuthorization.Number;
                 authorization.ValidFromDateTime = posseAuthorization.ValidFromDateTime;
                 authorization.ValidToDateTime = posseAuthorization.ValidToDateTime;
-                authorization.Season = GetSeason(authorization);
                 authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
 
-                if (HasInvalidEnvClientId(posseAuthorization))
+                if (HasNullEnvClientId(posseAuthorization))
                     continue;
 
-                if (HasInvalidDateTimes(posseAuthorization))
+                if (HasValidFromDateTimeAfterValidToDateTime(posseAuthorization))
                     continue;
 
-                if (HasValidityPeriodOfLessThanOneDay(posseAuthorization))
-                    continue;
+                authorization.Season =
+                    authorization is TrappingLicence
+                        ? await TrappingSeason.GetSeason(authorization, context)
+                        : await HuntingSeason.GetSeason(authorization, context);
 
                 if (HasInvalidSeason(authorization, posseAuthorization))
                     continue;
 
                 if (HasSeasonBefore2020_2021(authorization))
+                    continue;
+
+                if (HasValidityPeriodOfLessThanOneDay(posseAuthorization))
                     continue;
 
                 if (
@@ -475,7 +483,7 @@ public class PosseService : IPosseService
                             if (client == null)
                             {
                                 Log.Error(
-                                    "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}, and was ignored: {@authorization}",
+                                    "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}, and was rejected: {@authorization}",
                                     posseAuthorization.Type,
                                     posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId,
                                     authorization
@@ -509,7 +517,7 @@ public class PosseService : IPosseService
                             if (item == null)
                             {
                                 Log.Error(
-                                    "An authorization of type {type} has an unrecognized {property} value of {unrecognizedValue}, and was ignored: {@authorization}",
+                                    "An authorization of type {type} has an unrecognized {property} value of {unrecognizedValue}, and was rejected: {@authorization}",
                                     posseAuthorization.Type,
                                     nameof(trappingLicence.RegisteredTrappingConcession),
                                     posseAuthorization.RegisteredTrappingConcession,
@@ -562,7 +570,7 @@ public class PosseService : IPosseService
             else
             {
                 Log.Warning(
-                    "The posse api returned an unrecognized type, which was ignored: {@authorization}",
+                    "The posse api returned an unrecognized type, which was rejected: {@authorization}",
                     posseAuthorization
                 );
             }
@@ -576,7 +584,7 @@ public class PosseService : IPosseService
         if (posseAuthorization.ValidFromDateTime.AddDays(1) > posseAuthorization.ValidToDateTime)
         {
             Log.Warning(
-                "An authorization of type {type} is valid for less than one day, and was ignored: {@authorization}",
+                "An authorization of type {type} is valid for less than one day, and was rejected: {@authorization}",
                 posseAuthorization.Type,
                 posseAuthorization
             );
@@ -587,11 +595,7 @@ public class PosseService : IPosseService
 
     private static bool HasSeasonBefore2020_2021(Authorization authorization)
     {
-        if (authorization.Season == null)
-        {
-            return true;
-        }
-        return int.Parse(authorization.Season.Substring(3, 2)) < 21;
+        return authorization.Season.StartDate.Year < 2020;
     }
 
     private static bool HasInvalidSeason(
@@ -602,7 +606,7 @@ public class PosseService : IPosseService
         if (authorization.Season == null)
         {
             Log.Error(
-                "An authorization of type {type} spans multiple harvest seasons, and was ignored: {@authorization}",
+                "An authorization of type {type} spans multiple harvest seasons, or does not have a season between 2000-2100, and was rejected: {@authorization}",
                 posseAuthorization.Type,
                 posseAuthorization
             );
@@ -648,11 +652,11 @@ public class PosseService : IPosseService
                 {
                     Log.Error(
                         "EnvClientId {envClientId} has at least one Big Game Hunting Licence for season {season}, but a dependant authorization of type {type}"
-                            + " in season {season} is outside the bounds of the parent's validity period, and was ignored: {@authorization}. Licences in season: {@licences}",
+                            + " in season {season} is outside the bounds of the parent's validity period, and was rejected: {@authorization}. Licences in season: {@licences}",
                         posseAuthorization.EnvClientId,
-                        authorization.Season,
+                        authorization.Season.ToString(),
                         posseAuthorization.Type,
-                        authorization.Season,
+                        authorization.Season.ToString(),
                         posseAuthorization,
                         bigGameHuntingLicencesInSameSeason
                             .Select(x => x.bigGameHuntingLicence)
@@ -673,11 +677,11 @@ public class PosseService : IPosseService
                 else
                 {
                     Log.Error(
-                        "EnvClientId {envClientId} does not have a Big Game Hunting Licence for season {season}, so a dependant authorization of type {type} in season {season} was ignored: {@authorization}",
+                        "EnvClientId {envClientId} does not have a Big Game Hunting Licence for season {season}, so a dependant authorization of type {type} in season {season} was rejected: {@authorization}",
                         posseAuthorization.EnvClientId,
-                        authorization.Season,
+                        authorization.Season.ToString(),
                         posseAuthorization.Type,
-                        authorization.Season,
+                        authorization.Season.ToString(),
                         posseAuthorization
                     );
                 }
@@ -691,12 +695,14 @@ public class PosseService : IPosseService
     private static bool IsBigGameHuntingLicence(AuthorizationDto x) =>
         x.Type.StartsWith(nameof(BigGameHuntingLicence));
 
-    private static bool HasInvalidDateTimes(AuthorizationDto posseAuthorization)
+    private static bool HasValidFromDateTimeAfterValidToDateTime(
+        AuthorizationDto posseAuthorization
+    )
     {
         if (posseAuthorization.ValidFromDateTime > posseAuthorization.ValidToDateTime)
         {
             Log.Error(
-                "An authorization of type {type} has a validFromDateTime that occurs after validToDateTime, and was ignored: {@authorization}",
+                "An authorization of type {type} has a validFromDateTime that occurs after validToDateTime, and was rejected: {@authorization}",
                 posseAuthorization.Type,
                 posseAuthorization
             );
@@ -705,7 +711,7 @@ public class PosseService : IPosseService
         return false;
     }
 
-    private static bool HasInvalidEnvClientId(AuthorizationDto posseAuthorization)
+    private static bool HasNullEnvClientId(AuthorizationDto posseAuthorization)
     {
         if (posseAuthorization.EnvClientId == null)
         {
@@ -869,7 +875,7 @@ public class PosseService : IPosseService
             );
         }
         Log.Error(
-            "An authorization of type {type} is missing required property {requiredPropertyForType}, and was ignored: {@authorization}",
+            "An authorization of type {type} is missing required property {requiredPropertyForType}, and was rejected: {@authorization}",
             authorization.Type,
             nameOfRequiredProperty,
             authorization

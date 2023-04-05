@@ -119,7 +119,9 @@ public class MortalityService : IMortalityService
         SetReportNavigationPropertyForMortalities(report);
 
         using var context = _dbContextFactory.CreateDbContext();
-        report.Season ??= await CalendarSeason.GetSeason(report, context);
+        report.Season ??=
+            await CalendarSeason.GetSeason(report, context)
+            ?? throw new ArgumentException("Unable to resolve season.", nameof(report));
 
         context.Add(report);
         await context.SaveChangesAsync();
