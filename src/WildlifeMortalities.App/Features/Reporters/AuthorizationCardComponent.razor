@@ -10,13 +10,6 @@
         </CardHeaderAvatar>
     </MudCardHeader>
     <MudCardContent Class="ml-3 mt-n6">
-        @if (Authorization is BigGameHuntingLicence bigGameHuntingLicence)
-        {
-            <MudField Label="Type" DisableUnderLine="true">@bigGameHuntingLicence.Type.GetDisplayName()</MudField>
-        } else if (Authorization is SmallGameHuntingLicence smallGameHuntingLicence)
-        {
-            <MudField Label="Type" DisableUnderLine="true">@smallGameHuntingLicence.Type.GetDisplayName()</MudField>
-        }
         @if(Authorization is IHasOutfitterAreas auth && auth.OutfitterAreas.Any())
         {
             <MudField Label="Outfitter areas" DisableUnderLine="true">@string.Join(", ", auth.OutfitterAreas.Select(x => x.Area))</MudField>
@@ -40,14 +33,14 @@
 
     private string GetTypeShortName() => Authorization switch
     {
-        BigGameHuntingLicence => "Big game hunting licence",
-        CustomWildlifeActPermit => "Wildlife act permit",
+        BigGameHuntingLicence b => $"Big game - {b.Type.GetDisplayName().ToLower()}",
+        CustomWildlifeActPermit => "Custom wildlife act permit",
         HuntingPermit p => p.Type.GetDisplayName(),
         HuntingSeal s => s.Type.GetDisplayName(),
         OutfitterAssistantGuideLicence => "Assistant guide licence",
         OutfitterChiefGuideLicence => "Chief guide licence",
         PhaHuntingPermit p => p.Type.GetDisplayName(),
-        SmallGameHuntingLicence => "Small game hunting licence",
+        SmallGameHuntingLicence s => $"Small game - {s.Type.GetDisplayName().ToLower()}",
         SpecialGuideLicence => "Special guide licence",
         TrappingLicence t => t.Type.GetDisplayName(),
         _ => String.Empty,

@@ -6,9 +6,7 @@ namespace WildlifeMortalities.Shared.Services.Reports.QueryObjects;
 public enum FilterByOptions
 {
     NoFilter = 0,
-    ByEnvClientId,
     BySpecies,
-
     ByType,
     BySeason
 }
@@ -18,9 +16,15 @@ public static class ReportDtoFilter
     public static async Task<IQueryable<ReportDto>> FilterReportsBy(
         this IQueryable<ReportDto> reports,
         FilterByOptions filterByOptions,
-        string filterValue
+        string filterValue,
+        string? envClientId
     )
     {
+        if (string.IsNullOrEmpty(envClientId) == false)
+        {
+            reports = reports.Where(x => x.EnvClientId == envClientId);
+        }
+
         if (string.IsNullOrEmpty(filterValue))
             return reports;
         //filterByOptions = FilterByOptions.BySpecies;
@@ -29,7 +33,6 @@ public static class ReportDtoFilter
         return filterByOptions switch
         {
             FilterByOptions.NoFilter => reports,
-            FilterByOptions.ByEnvClientId => reports.Where(x => x.EnvClientId == filterValue),
             // It's not possible for EF Core to translate the species filter to SQL, so we must perform the sequence filtering in memory,
             // and then transform the sequence back into an IQueryable for subsequent operations
             FilterByOptions.BySpecies

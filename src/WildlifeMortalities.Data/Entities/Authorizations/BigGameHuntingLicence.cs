@@ -41,11 +41,6 @@ public class BigGameHuntingLicence : Authorization, IHasOutfitterAreas
     public LicenceType Type { get; set; }
     public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 
-    //public List<HuntingSeal> HuntingSeals { get; set; } = null!;
-    //public List<HuntingPermit> HuntingPermits { get; set; } = null!;
-    //public List<PhaHuntingPermit> PhaHuntingPermits { get; set; } = null!;
-    //public SpecialGuideLicence? SpecialGuideLicence { get; set; }
-
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
 }

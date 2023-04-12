@@ -1,9 +1,16 @@
 ﻿@page "/mortality-reports/new/{envClientId}"
+@page "/mortality-reports/{envClientId}/{draftId:int}/editdraft"
+@inherits DbContextAwareComponent
+
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Shared.Extensions;
 
-<MudText Typo="Typo.h3" Class="mb-8">@_vm.MortalityReportType.GetDisplayName() report</MudText>
 
+@if(_vm == null)
+{
+   <MudProgressCircular Indeterminate="true" />
+   return;
+}
 
 @if (_personId == 0)
 {
@@ -12,31 +19,31 @@
     return;
 }
 
+<MudText Typo="Typo.h3" Class="mb-8">@_vm.ReportType.GetDisplayName() report</MudText>
+
 <EditForm OnValidSubmit="CreateReport" OnInvalidSubmit="@(() => _invalidSubmitDetected = true)" EditContext="_editContext" onkeypress="preventEnterFromSubmitting(event)">
     <ValidationSummary/>
     <FluentValidationValidator/>
-    <MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
-        @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
+    <MudSelect T="ReportType" Value="_vm.ReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.ReportType)" Label="Mortality report type">
+        @foreach (ReportType reportType in Enum.GetValues<ReportType>().Where(x => x.IsCreatable()))
         {
-            <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
+            <MudSelectItem Value="@reportType" T="ReportType">@reportType.GetDisplayName()</MudSelectItem>
         }
     </MudSelect>
     <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="false">
-        <CascadingValue Name="@Constants.CascadingValues.MortalityReportType" Value="_vm.MortalityReportType">
-            @switch (_vm.MortalityReportType)
+        <CascadingValue Name="@Constants.CascadingValues.ReportType" Value="_vm.ReportType">
+            @switch (_vm.ReportType)
             {
-                case MortalityReportType.Conflict:
-                    break;
-                case MortalityReportType.IndividualHunt:
+                case ReportType.IndividualHuntedMortalityReport:
                     <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel"/>
                     break;
-                case MortalityReportType.OutfitterGuidedHunt:
+                case ReportType.OutfitterGuidedHuntReport:
                     <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel"/>
                     break;
-                case MortalityReportType.SpecialGuidedHunt:
+                case ReportType.SpecialGuidedHuntReport:
                     <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel"/>
                     break;
-                case MortalityReportType.Trapped:
+                case ReportType.TrappedMortalitiesReport:
                     <TrappedReportComponent ViewModel="@_vm.TrappedReportViewModel"/>
                     break;
                 default:

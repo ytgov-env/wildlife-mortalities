@@ -14,7 +14,8 @@ public class SortFilterPageOptions
 
     public FilterByOptions FilterBy { get; set; }
 
-    public string FilterValue { get; set; }
+    public string FilterValue { get; set; } = string.Empty;
+    public string? EnvClientId { get; set; }
 
     public int PageNumber { get; set; } = 1;
 

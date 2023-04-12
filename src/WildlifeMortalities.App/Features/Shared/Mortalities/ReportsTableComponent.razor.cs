@@ -8,7 +8,7 @@ using WildlifeMortalities.Shared.Services.Reports.QueryObjects;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
-public partial class MortalityReportsTableComponent : DbContextAwareComponent
+public partial class ReportsTableComponent : DbContextAwareComponent
 {
     private const string Id = "Id";
     private const string Type = "Type";
@@ -23,9 +23,6 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
 
     [Inject]
     private ReportService ReportService { get; set; } = default!;
-
-    [Inject]
-    private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
 
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
@@ -66,13 +63,9 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
     {
         Options.PageNumber = pageNum;
         Options.PageSize = pageSize;
-        if (envClientId != null)
-        {
-            Options.FilterBy = FilterByOptions.ByEnvClientId;
-            Options.FilterValue = envClientId;
-        }
+        Options.EnvClientId = EnvClientId;
 
-        var context = DbContextFactory.CreateDbContext();
+        var context = Context;
         var query = ReportService.SortFilterPage(Options, context);
 
         var preResult = await query;

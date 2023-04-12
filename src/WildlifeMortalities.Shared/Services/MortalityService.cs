@@ -156,18 +156,37 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
-    public async Task CreateDraftReport(string report, int personId)
+    public async Task CreateDraftReport(string reportType, string report, int personId)
     {
-        var draftReport = new DraftReport
+        var now = DateTimeOffset.Now;
+        DraftReport? draftReport = new DraftReport
         {
-            LastModifiedDate = DateTimeOffset.Now,
+            DateLastModified = now,
+            DateSubmitted = now,
             SerializedData = report,
-            Type = report.GetType().Name,
+            Type = reportType,
             PersonId = personId
         };
 
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(draftReport);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task UpdateDraftReport(string report, int reportId)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        var reportFromDatabase = await context.DraftReports.FindAsync(reportId);
+
+        if (reportFromDatabase == null)
+        {
+            throw new ArgumentException($"Draft report {reportId} not found.", nameof(reportId));
+        }
+
+        reportFromDatabase.SerializedData = report;
+        reportFromDatabase.DateLastModified = DateTimeOffset.Now;
+
         await context.SaveChangesAsync();
     }
 

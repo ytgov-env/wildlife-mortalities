@@ -14,7 +14,7 @@ public class ReportService
         var query = await context.Reports
             .MapReportToDto()
             .OrderReportsBy(options.OrderByOptions, options.OrderByAscending)
-            .FilterReportsBy(options.FilterBy, options.FilterValue);
+            .FilterReportsBy(options.FilterBy, options.FilterValue, options.EnvClientId);
 
         await options.SetupRestOfDto(query);
         return query.Page(options.PageNumber - 1, options.PageSize);

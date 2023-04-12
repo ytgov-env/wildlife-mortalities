@@ -2,10 +2,9 @@
 
 namespace WildlifeMortalities.App.Features.Reports;
 
-public class MortalityReportPageViewModel
+public class CreateMortalityReportPageViewModel
 {
-    public MortalityReportType MortalityReportType { get; set; } =
-        MortalityReportType.IndividualHunt;
+    public ReportType ReportType { get; set; } = ReportType.IndividualHuntedMortalityReport;
 
     public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; } =
         new();
@@ -15,26 +14,27 @@ public class MortalityReportPageViewModel
     public TrappedReportViewModel? TrappedReportViewModel { get; set; }
 }
 
-public class MortalityReportPageViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
+public class CreateMortalityReportPageViewModelValidator
+    : AbstractValidator<CreateMortalityReportPageViewModel>
 {
-    public MortalityReportPageViewModelValidator()
+    public CreateMortalityReportPageViewModelValidator()
     {
-        RuleFor(x => x.MortalityReportType).NotEmpty();
+        RuleFor(x => x.ReportType).NotEmpty();
 
         RuleFor(x => x.IndividualHuntedMortalityReportViewModel)
             .SetValidator(new IndividualHuntedMortalityReportViewModelValidator())
-            .When(x => x.MortalityReportType == MortalityReportType.IndividualHunt);
+            .When(x => x.ReportType == ReportType.IndividualHuntedMortalityReport);
 
         RuleFor(x => x.OutfitterGuidedHuntReportViewModel)
             .SetValidator(new OutfitterGuidedHuntReportViewModelValidator())
-            .When(x => x.MortalityReportType == MortalityReportType.OutfitterGuidedHunt);
+            .When(x => x.ReportType == ReportType.OutfitterGuidedHuntReport);
 
         RuleFor(x => x.SpecialGuidedHuntReportViewModel)
             .SetValidator(new SpecialGuidedHuntReportViewModelValidator())
-            .When(x => x.MortalityReportType == MortalityReportType.SpecialGuidedHunt);
+            .When(x => x.ReportType == ReportType.SpecialGuidedHuntReport);
 
         RuleFor(x => x.TrappedReportViewModel)
             .SetValidator(new TrappedReportViewModelValidator())
-            .When(x => x.MortalityReportType == MortalityReportType.Trapped);
+            .When(x => x.ReportType == ReportType.TrappedMortalitiesReport);
     }
 }

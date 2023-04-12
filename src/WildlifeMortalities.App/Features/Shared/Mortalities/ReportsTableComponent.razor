@@ -31,19 +31,22 @@
     <RowTemplate>
         <MudTd DataLabel="@Id">@context.HumanReadableId</MudTd>
         <MudTd DataLabel="@Type">
+            @{
+                var type = context.Type.GetReportTypeDisplayName();
+            }
+
             @switch (context.Type)
             {
                 case nameof(OutfitterGuidedHuntReport):
-                    <span>Outfitted hunt - @context.OutfitterGuidedHuntResult?.ToLower()</span>
+                    <span>@type - @context.OutfitterGuidedHuntResult?.ToLower()</span>
                     break;
                 case nameof(SpecialGuidedHuntReport):
-                    <span>Special guided hunt - @context.SpecialGuidedHuntResult?.ToLower()</span>
+                    <span>@type - @context.SpecialGuidedHuntResult?.ToLower()</span>
                 break;
                 case nameof(IndividualHuntedMortalityReport):
-                    <span>Individual hunt</span>
-                break;
                 case nameof(TrappedMortalitiesReport):
-                    <span>Trapped</span>
+
+                    <span>@type</span>
                 break;
             }
         </MudTd>

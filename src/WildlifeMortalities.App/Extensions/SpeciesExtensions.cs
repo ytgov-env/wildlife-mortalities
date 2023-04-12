@@ -18,13 +18,13 @@ public static class SpeciesExtensions
     private static bool IsIndividualHuntableSpecies(this Species enumValue) =>
         enumValue.GetEnumValueCustomAttribute<IsIndividualHuntableAttribute>() != null;
 
-    public static bool IsSelectable(this Species enumValue, MortalityReportType type) =>
+    public static bool IsSelectable(this Species enumValue, ReportType type) =>
         type switch
         {
-            MortalityReportType.IndividualHunt => enumValue.IsIndividualHuntableSpecies(),
-            MortalityReportType.OutfitterGuidedHunt => enumValue.IsOutfitterHuntableSpecies(),
-            MortalityReportType.SpecialGuidedHunt => enumValue.IsSpecialGuideHuntableSpecies(),
-            MortalityReportType.Trapped => enumValue.IsTrappableSpecies(),
+            ReportType.IndividualHuntedMortalityReport => enumValue.IsIndividualHuntableSpecies(),
+            ReportType.OutfitterGuidedHuntReport => enumValue.IsOutfitterHuntableSpecies(),
+            ReportType.SpecialGuidedHuntReport => enumValue.IsSpecialGuideHuntableSpecies(),
+            ReportType.TrappedMortalitiesReport => enumValue.IsTrappableSpecies(),
             _ => false
         };
 }

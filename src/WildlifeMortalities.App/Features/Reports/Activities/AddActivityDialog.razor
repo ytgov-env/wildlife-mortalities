@@ -11,7 +11,7 @@
         <DialogContent>
             <FluentValidationValidator/>
             @*<ValidationSummary/>*@
-            <CascadingValue Value="MortalityReportType" Name="@Constants.CascadingValues.MortalityReportType">
+            <CascadingValue Value="ReportType" Name="@Constants.CascadingValues.ReportType">
                 <ActivityComponent ViewModel="_vm"/>
             </CascadingValue>
         </DialogContent>
@@ -37,14 +37,14 @@
 
     [Parameter]
     [EditorRequired]
-    public MortalityReportType MortalityReportType { get; set; }
+    public ReportType ReportType { get; set; }
 
     protected override void OnInitialized()
     {
-        _vm = MortalityReportType switch
+        _vm = ReportType switch
         {
-            MortalityReportType.Trapped => new TrappedActivityViewModel(),
-            MortalityReportType.IndividualHunt or MortalityReportType.SpecialGuidedHunt or MortalityReportType.OutfitterGuidedHunt => new HuntedActivityViewModel(),
+            ReportType.TrappedMortalitiesReport => new TrappedActivityViewModel(),
+            ReportType.IndividualHuntedMortalityReport or ReportType.SpecialGuidedHuntReport or ReportType.OutfitterGuidedHuntReport => new HuntedActivityViewModel(),
             _ => throw new NotImplementedException()
             };
         _context = new EditContext(_vm);

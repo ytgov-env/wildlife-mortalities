@@ -76,47 +76,6 @@
                     </MudGrid>
                 </MudItem>
             }
-            @*@{
-                var outfitterChiefGuideLicences = authorizationsWithinSeason.OfType<OutfitterChiefGuideLicence>();
-                var outfitterAssistantGuideLicences = authorizationsWithinSeason.OfType<OutfitterAssistantGuideLicence>();
-            }
-            @if (outfitterChiefGuideLicences.Any() == true || outfitterAssistantGuideLicences.Any() == true)
-            {
-                <MudItem Class="mt-2">
-                    <MudText Typo="Typo.h6">Outfitter guide licences</MudText>
-                    <MudGrid>
-                        @foreach (var authorization in outfitterChiefGuideLicences)
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                        @foreach (var authorization in outfitterAssistantGuideLicences)
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                    </MudGrid>
-                </MudItem>
-            }
-            @{
-                var specialGuideLicences = authorizationsWithinSeason.OfType<SpecialGuideLicence>();
-            }
-            @if (specialGuideLicences.Any() == true)
-            {
-                <MudItem Class="mt-2">
-                    <MudText Typo="Typo.h6">Special guide licences</MudText>
-                    <MudGrid>
-                        @foreach (var authorization in specialGuideLicences)
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                    </MudGrid>
-                </MudItem>
-            }*@
             @{
                 var huntingSeals = authorizationsWithinSeason.OfType<HuntingSeal>();
             }
@@ -127,7 +86,7 @@
                     <MudGrid>
                         @foreach (var authorization in huntingSeals.OrderBy(x => x.Type.GetDisplayName()))
                         {
-                            <MudItem xs="12" md="6" xxl="4">
+                            <MudItem xs="12" md="6" lg="4" xxl="4">
                                 <AuthorizationCardComponent Authorization="@authorization" />
                             </MudItem>
                         }
