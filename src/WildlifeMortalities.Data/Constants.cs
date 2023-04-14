@@ -40,6 +40,8 @@ public static class Constants
 
         public const string GrizzlyBear = "Grizzly bear";
 
+        public const string Grouse = "Grouse";
+
         public const string HoaryMarmot = "Marmot";
 
         public const string LeastChipmunk = "Chipmunk";
