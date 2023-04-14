@@ -6,13 +6,13 @@ using WildlifeMortalities.Shared.Extensions;
 
 namespace WildlifeMortalities.Shared.Services.Reports.QueryObjects;
 
-public static class ReportDtoSelect
+public static class ReportListDtoSelect
 {
-    public static IQueryable<ReportDto> MapReportToDto(this IQueryable<Report> reports)
+    public static IQueryable<ReportListDto> MapReportToDto(this IQueryable<Report> reports)
     {
         return reports.Select(
             report =>
-                new ReportDto
+                new ReportListDto
                 {
                     Id = report.Id,
                     HumanReadableId = report.HumanReadableId,

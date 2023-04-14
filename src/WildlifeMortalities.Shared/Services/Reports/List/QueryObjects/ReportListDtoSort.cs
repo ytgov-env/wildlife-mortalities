@@ -12,15 +12,15 @@ public enum OrderByOptions
     ByDateSubmitted,
 }
 
-public static class ReportDtoSort
+public static class ReportListDtoSort
 {
-    public static IQueryable<ReportDto> OrderReportsBy(
-        this IQueryable<ReportDto> reports,
+    public static IQueryable<ReportListDto> OrderReportsBy(
+        this IQueryable<ReportListDto> reports,
         OrderByOptions orderByOptions,
         bool ascending
     )
     {
-        Expression<Func<ReportDto, object>> method = orderByOptions switch
+        Expression<Func<ReportListDto, object>> method = orderByOptions switch
         {
             OrderByOptions.SimpleOrder => x => x.Id,
             OrderByOptions.ByType => x => x.Type,

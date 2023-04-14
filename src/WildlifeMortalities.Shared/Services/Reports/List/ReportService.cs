@@ -6,7 +6,7 @@ namespace WildlifeMortalities.Shared.Services.Reports;
 
 public class ReportService
 {
-    public static async Task<IQueryable<ReportDto>> SortFilterPage(
+    public static async Task<IQueryable<ReportListDto>> SortFilterPage(
         SortFilterPageOptions options,
         AppDbContext context
     )

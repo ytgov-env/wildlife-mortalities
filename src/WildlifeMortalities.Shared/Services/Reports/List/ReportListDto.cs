@@ -3,7 +3,7 @@ using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Shared.Services.Reports;
 
-public class ReportDto
+public class ReportListDto
 {
     public int Id { get; set; }
     public string HumanReadableId { get; set; } = string.Empty;

@@ -11,10 +11,10 @@ public enum FilterByOptions
     BySeason
 }
 
-public static class ReportDtoFilter
+public static class ReportListDtoFilter
 {
-    public static async Task<IQueryable<ReportDto>> FilterReportsBy(
-        this IQueryable<ReportDto> reports,
+    public static async Task<IQueryable<ReportListDto>> FilterReportsBy(
+        this IQueryable<ReportListDto> reports,
         FilterByOptions filterByOptions,
         string filterValue,
         string? envClientId
