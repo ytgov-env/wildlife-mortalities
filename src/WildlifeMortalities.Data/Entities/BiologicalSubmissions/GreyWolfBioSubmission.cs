@@ -12,6 +12,9 @@ public class GreyWolfBioSubmission : BioSubmission<GreyWolfMortality>
     public GreyWolfBioSubmission(int mortalityId)
         : base(mortalityId) { }
 
+    public GreyWolfBioSubmission(GreyWolfMortality mortality)
+        : base(mortality) { }
+
     public PeltColour? PeltColour { get; set; }
 }
 

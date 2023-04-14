@@ -11,6 +11,7 @@ public static class Constants
 
     public static class Routes
     {
+        #region Report Routes
         public const string ReportDetailsPage =
             "/mortality-reports/{humanReadablePersonId}/{reportId:int}";
 
@@ -35,10 +36,17 @@ public static class Constants
             string humanReadablePersonId,
             int reportId
         ) => $"/mortality-reports/{humanReadablePersonId}/editdraft/{reportId}";
+        #endregion
 
+        #region Client Routes
         public const string ClientOverviewPage = "/clients/{envClientId}";
 
         public static string GetClientOverviewPageLink(string envClientId) =>
             $"reporters/clients/{envClientId}";
+
+        public const string ClientLookupPage = "reporters/clients";
+
+        public static string GetClientLookupPageLink() => ClientLookupPage;
+        #endregion
     }
 }

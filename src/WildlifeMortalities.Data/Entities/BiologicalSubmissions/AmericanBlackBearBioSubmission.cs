@@ -12,6 +12,9 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
     public AmericanBlackBearBioSubmission(int mortalityId)
         : base(mortalityId) { }
 
+    public AmericanBlackBearBioSubmission(AmericanBlackBearMortality mortality)
+        : base(mortality) { }
+
     public AmericanBlackBearSkullCondition? SkullCondition { get; set; }
     public int? SkullLengthMillimetres { get; set; }
     public int? SkullWidthMillimetres { get; set; }

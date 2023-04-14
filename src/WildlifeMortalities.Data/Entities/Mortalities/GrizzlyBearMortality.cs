@@ -11,6 +11,8 @@ public class GrizzlyBearMortality : Mortality<GrizzlyBearMortality>, IHasBioSubm
 
     public override Species Species => Species.GrizzlyBear;
 
+    public BioSubmission CreateDefaultBioSubmission() => new GrizzlyBearBioSubmission(this);
+
     public override IEntityTypeConfiguration<GrizzlyBearMortality> GetConfig() =>
         new GrizzlyBearMortalityConfig();
 }

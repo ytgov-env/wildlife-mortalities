@@ -11,6 +11,8 @@ public class AmericanBlackBearMortality : Mortality<AmericanBlackBearMortality>,
 
     public override Species Species => Species.AmericanBlackBear;
 
+    public BioSubmission CreateDefaultBioSubmission() => new AmericanBlackBearBioSubmission(this);
+
     public override IEntityTypeConfiguration<AmericanBlackBearMortality> GetConfig() =>
         new AmericanBlackBearMortalityConfig();
 }

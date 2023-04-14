@@ -13,6 +13,9 @@ public class MountainGoatBioSubmission
     public MountainGoatBioSubmission(int mortalityId)
         : base(mortalityId) { }
 
+    public MountainGoatBioSubmission(MountainGoatMortality mortality)
+        : base(mortality) { }
+
     public bool IsHornIncluded { get; set; }
     public bool IsHeadIncluded { get; set; }
 

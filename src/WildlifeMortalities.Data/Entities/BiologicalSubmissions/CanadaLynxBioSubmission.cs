@@ -11,6 +11,9 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>
     public CanadaLynxBioSubmission(int mortalityId)
         : base(mortalityId) { }
 
+    public CanadaLynxBioSubmission(CanadaLynxMortality mortality)
+        : base(mortality) { }
+
     public int PeltLengthMillimetres { get; set; }
     public int PeltWidthMillimetres { get; set; }
 }

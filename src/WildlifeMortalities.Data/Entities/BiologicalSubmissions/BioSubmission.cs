@@ -5,9 +5,24 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
+public enum BioSubmissionStatus
+{
+    [Display(Name = "Not submitted")]
+    NotSubmitted = 10,
+
+    [Display(Name = "Submitted")]
+    Submitted = 20,
+
+    [Display(Name = "Analysis complete")]
+    AnalysisComplete = 30,
+}
+
 public abstract class BioSubmission
 {
     public int Id { get; set; }
+    public BioSubmissionStatus Status { get; set; }
+    public DateTimeOffset? DateSubmitted { get; set; }
+    public DateTimeOffset? DateModified { get; set; }
     public string Comment { get; set; } = string.Empty;
     public Age? Age { get; set; }
     public List<UploadFileInfo> UploadFileInfo { get; set; } = null!;
@@ -21,6 +36,12 @@ public abstract class BioSubmission<T> : BioSubmission
     protected BioSubmission() { }
 
     protected BioSubmission(int mortalityId) => MortalityId = mortalityId;
+
+    protected BioSubmission(T mortality)
+    {
+        Status = BioSubmissionStatus.NotSubmitted;
+        Mortality = mortality;
+    }
 
     public int MortalityId { get; set; }
 

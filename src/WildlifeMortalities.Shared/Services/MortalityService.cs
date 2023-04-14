@@ -18,29 +18,53 @@ public class MortalityService : IMortalityService
     public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) =>
         _dbContextFactory = dbContextFactory;
 
-    public async Task CreateReport(IndividualHuntedMortalityReport report)
+    public async Task CreateReport(Report report)
     {
         SetReportNavigationPropertyForMortalities(report);
-
         report.DateSubmitted = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
-        report.Season ??= await HuntingSeason.GetSeason(report, context);
+        switch (report)
+        {
+            case IndividualHuntedMortalityReport individualHuntedMortalityReport:
+                await CreateReport(context, individualHuntedMortalityReport);
+                break;
+            case SpecialGuidedHuntReport specialGuidedHuntReport:
+                await CreateReport(context, specialGuidedHuntReport);
+                break;
+            case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
+                await CreateReport(context, outfitterGuidedHuntReport);
+                break;
+            case HumanWildlifeConflictMortalityReport humanWildlifeConflictMortalityReport:
+                await CreateReport(context, humanWildlifeConflictMortalityReport);
+                break;
+            case TrappedMortalitiesReport trappedMortalitiesReport:
+                await CreateReport(context, trappedMortalitiesReport);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+
         do
         {
             report.GenerateHumanReadableId();
         } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
 
         context.Add(report);
+        AddDefaultBioSubmissions(context, report);
         await context.SaveChangesAsync();
     }
 
-    public async Task CreateReport(OutfitterGuidedHuntReport report)
+    private static async Task CreateReport(
+        AppDbContext context,
+        IndividualHuntedMortalityReport report
+    )
     {
-        SetReportNavigationPropertyForMortalities(report);
+        report.Season ??= await HuntingSeason.GetSeason(report, context);
+    }
 
-        using var context = _dbContextFactory.CreateDbContext();
-
+    private static async Task CreateReport(AppDbContext context, OutfitterGuidedHuntReport report)
+    {
         var assistantGuideIds = report.AssistantGuides.Select(x => x.Id).ToList();
         var assistantGuides = await context.People
             .OfType<Client>()
@@ -60,53 +84,27 @@ public class MortalityService : IMortalityService
         }
 
         report.AssistantGuides = assistantGuides;
-        report.DateSubmitted = DateTimeOffset.Now;
 
         report.Season ??= await HuntingSeason.GetSeason(report, context);
-        do
-        {
-            report.GenerateHumanReadableId();
-        } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
-
-        context.Add(report);
-        await context.SaveChangesAsync();
     }
 
-    public async Task CreateReport(SpecialGuidedHuntReport report)
+    private static async Task CreateReport(AppDbContext context, SpecialGuidedHuntReport report)
     {
-        SetReportNavigationPropertyForMortalities(report);
-        report.DateSubmitted = DateTimeOffset.Now;
-
-        using var context = _dbContextFactory.CreateDbContext();
         report.Season ??= await HuntingSeason.GetSeason(report, context);
-        do
-        {
-            report.GenerateHumanReadableId();
-        } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
-
-        context.Add(report);
-        await context.SaveChangesAsync();
     }
 
-    public async Task CreateReport(HumanWildlifeConflictMortalityReport report)
+    private static async Task CreateReport(
+        AppDbContext context,
+        HumanWildlifeConflictMortalityReport report
+    )
     {
-        SetReportNavigationPropertyForMortalities(report);
-
-        using var context = _dbContextFactory.CreateDbContext();
         report.Season ??=
             await CalendarSeason.GetSeason(report, context)
             ?? throw new ArgumentException("Unable to resolve season.", nameof(report));
-
-        context.Add(report);
-        await context.SaveChangesAsync();
     }
 
-    public async Task CreateReport(TrappedMortalitiesReport report)
+    private static async Task CreateReport(AppDbContext context, TrappedMortalitiesReport report)
     {
-        SetReportNavigationPropertyForMortalities(report);
-        report.DateSubmitted = DateTimeOffset.Now;
-
-        using var context = _dbContextFactory.CreateDbContext();
         report.Season ??= await TrappingSeason.GetSeason(report, context);
 
         var concession = await context.RegisteredTrappingConcessions.FirstOrDefaultAsync(
@@ -120,14 +118,15 @@ public class MortalityService : IMortalityService
         {
             throw new ArgumentException(nameof(report.RegisteredTrappingConcession));
         }
+    }
 
-        do
+    private static void AddDefaultBioSubmissions(AppDbContext context, Report report)
+    {
+        foreach (var item in report.GetMortalities().OfType<IHasBioSubmission>())
         {
-            report.GenerateHumanReadableId();
-        } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
-
-        context.Add(report);
-        await context.SaveChangesAsync();
+            var bioSubmission = item.CreateDefaultBioSubmission();
+            context.BioSubmissions.Add(bioSubmission);
+        }
     }
 
     public async Task CreateDraftReport(string reportType, string report, int personId)

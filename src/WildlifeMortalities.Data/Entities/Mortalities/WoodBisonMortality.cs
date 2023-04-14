@@ -10,6 +10,8 @@ public class WoodBisonMortality : Mortality, IHasBioSubmission
     public WoodBisonBioSubmission? BioSubmission { get; set; }
 
     public override Species Species => Species.WoodBison;
+
+    public BioSubmission CreateDefaultBioSubmission() => new WoodBisonBioSubmission(this);
 }
 
 public enum PregnancyStatus

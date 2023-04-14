@@ -11,6 +11,9 @@ public class WoodBisonBioSubmission : BioSubmission<WoodBisonMortality>
     public WoodBisonBioSubmission(int mortalityId)
         : base(mortalityId) { }
 
+    public WoodBisonBioSubmission(WoodBisonMortality mortality)
+        : base(mortality) { }
+
     public bool IsIncisorBarIncluded { get; set; }
 }
 

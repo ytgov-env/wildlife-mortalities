@@ -10,6 +10,8 @@ public class ThinhornSheepMortality : Mortality<ThinhornSheepMortality>, IHasBio
     public ThinhornSheepBioSubmission? BioSubmission { get; set; }
 
     public override Species Species => Species.ThinhornSheep;
+
+    public BioSubmission CreateDefaultBioSubmission() => new ThinhornSheepBioSubmission(this);
 }
 
 public enum ThinhornSheepBodyColour
