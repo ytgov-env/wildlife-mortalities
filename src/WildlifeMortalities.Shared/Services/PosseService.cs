@@ -386,9 +386,10 @@ public class PosseService : IPosseService
 
         foreach (
             var posseAuthorization in results.Authorizations
+                .OrderBy(a => IsBigGameHuntingLicence(a) ? 0 : 1)
                 .OrderBy(a => a.Type)
                 .ThenBy(a => a.ValidFromDateTime)
-                .DistinctBy(x => $"{x.EnvClientId}-{GetSeason(x)}-{x.Type}")
+        //.DistinctBy(x => $"{x.EnvClientId}-{GetSeason(x)}-{x.Type}")
         )
         {
             if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
