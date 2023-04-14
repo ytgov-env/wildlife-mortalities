@@ -408,7 +408,7 @@ public class PosseService : IPosseService
 
                 authorization.Season =
                     authorization is TrappingLicence
-                        ? await TrappingSeason.GetSeason(authorization, context)
+                        ? await TrappingSeason.TryGetSeason(authorization, context)
                         : await HuntingSeason.GetSeason(authorization, context);
 
                 if (HasInvalidSeason(authorization, posseAuthorization))

@@ -14,18 +14,13 @@ public class HuntingSeason : Season
         FriendlyName = ToString();
     }
 
-    public static async Task<HuntingSeason?> GetSeason(Report report, AppDbContext context)
-    {
-        return await GetSeason<HuntingSeason>(report, context);
-    }
+    public static async Task<HuntingSeason> GetSeason(Report report, AppDbContext context) =>
+        await GetSeason<HuntingSeason>(report, context);
 
     public static async Task<HuntingSeason?> GetSeason(
         Authorization authorization,
         AppDbContext context
-    )
-    {
-        return await GetSeason<HuntingSeason>(authorization, context);
-    }
+    ) => await TryGetSeason<HuntingSeason>(authorization, context);
 
     public override string ToString()
     {

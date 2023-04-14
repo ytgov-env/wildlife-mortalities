@@ -15,17 +15,17 @@ public abstract class Season
     public List<Report> Reports { get; set; } = null!;
     public List<Authorization> Authorizations { get; set; } = null!;
 
-    public static async Task<TSeason?> GetSeason<TSeason>(Report report, AppDbContext context)
+    public static async Task<TSeason> GetSeason<TSeason>(Report report, AppDbContext context)
         where TSeason : Season
     {
         var date = report.GetRelevantDateForSeason();
 
         return await context.Seasons
             .OfType<TSeason>()
-            .SingleOrDefaultAsync(x => date >= x.StartDate && date <= x.EndDate);
+            .SingleAsync(x => date >= x.StartDate && date <= x.EndDate);
     }
 
-    public static async Task<TSeason?> GetSeason<TSeason>(
+    public static async Task<TSeason?> TryGetSeason<TSeason>(
         Authorization authorization,
         AppDbContext context
     )
