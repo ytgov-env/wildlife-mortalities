@@ -1,7 +1,9 @@
-﻿@page "/mortality-reports/{id:int}"
+﻿@attribute [Route(Constants.Routes.ReportDetailsPage)]
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.App.Features.Reports.Activities
+@inherits DbContextAwareComponent
+
 
 @if (_reportDetail is null)
 {
@@ -49,3 +51,5 @@
         </MudItem>
     }
 </MudGrid>
+
+<MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="@Constants.Routes.GetEditReportPageLink(HumanReadablePersonId, ReportId)">Edit</MudButton>

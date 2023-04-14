@@ -25,4 +25,14 @@ public class ConservationOfficerService : IDisposable
 
     public async Task<IEnumerable<ConservationOfficer>> SearchByBadgeNumber(string input) =>
         _dbContext.People.OfType<ConservationOfficer>().Where(c => c.BadgeNumber.StartsWith(input));
+
+    public async Task<int> GetPersonIdByBadgeNumber(string badgeNumber)
+    {
+        var context = await _dbContextFactory.CreateDbContextAsync();
+        return await context.People
+            .OfType<ConservationOfficer>()
+            .Where(c => c.BadgeNumber == badgeNumber)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync();
+    }
 }

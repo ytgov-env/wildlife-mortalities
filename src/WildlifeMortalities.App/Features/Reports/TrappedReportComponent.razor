@@ -29,8 +29,8 @@
     [EditorRequired]
     public TrappedReportViewModel ViewModel { get; set; } = null!;
 
-    [CascadingParameter(Name = Constants.CascadingValues.MortalityReportType)]
-    public MortalityReportType MortalityReportType { get; set; }
+    [CascadingParameter(Name = Constants.CascadingValues.ReportType)]
+    public ReportType ReportType { get; set; }
 
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
@@ -51,7 +51,7 @@
     {
         var parameters = new DialogParameters
         {
-            [nameof(AddActivityDialog.MortalityReportType)] = MortalityReportType
+            [nameof(AddActivityDialog.ReportType)] = ReportType
         };
 
         var dialog = DialogService.Show<AddActivityDialog>("", parameters);
@@ -67,7 +67,7 @@
         var parameters = new DialogParameters
         {
             [nameof(EditActivityDialog.ViewModel)] = viewModel,
-            [nameof(EditActivityDialog.MortalityReportType)] = MortalityReportType
+            [nameof(EditActivityDialog.ReportType)] = ReportType
         };
 
         var dialog = DialogService.Show<EditActivityDialog>("", parameters);

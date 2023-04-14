@@ -1,8 +1,8 @@
 ﻿using WildlifeMortalities.Data.Entities.People;
 
-namespace WildlifeMortalities.Data.Entities.Reports;
+namespace WildlifeMortalities.App.Features.Reporters;
 
-public class DraftReport
+public class DraftReportDto
 {
     public int Id { get; set; }
     public string Type { get; set; } = string.Empty;
@@ -10,5 +10,4 @@ public class DraftReport
     public Person Person { get; set; } = null!;
     public DateTimeOffset DateLastModified { get; set; }
     public DateTimeOffset DateSubmitted { get; set; }
-    public string SerializedData { get; set; } = string.Empty;
 }

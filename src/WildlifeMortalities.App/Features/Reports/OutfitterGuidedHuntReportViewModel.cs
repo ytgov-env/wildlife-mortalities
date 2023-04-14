@@ -9,6 +9,21 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class OutfitterGuidedHuntReportViewModel
 {
+    public OutfitterGuidedHuntReportViewModel() { }
+
+    public OutfitterGuidedHuntReportViewModel(OutfitterGuidedHuntReport report)
+    {
+        HuntingDateRange.Start = report.HuntStartDate;
+        HuntingDateRange.End = report.HuntEndDate;
+        ChiefGuide = report.ChiefGuide;
+        AssistantGuides = report.AssistantGuides;
+        OutfitterArea = report.OutfitterArea;
+        Result = report.Result;
+        HuntedActivityViewModels = report.HuntedActivities
+            .Select(x => new HuntedActivityViewModel(x, report))
+            .ToList();
+    }
+
     public DateRange HuntingDateRange { get; set; } = new();
     public Client? SelectedAssistantGuide { get; set; }
     public Client? ChiefGuide { get; set; }

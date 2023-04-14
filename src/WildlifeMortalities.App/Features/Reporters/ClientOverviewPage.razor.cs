@@ -53,7 +53,7 @@ public partial class ClientOverviewPage : IDisposable
     {
         _selectedClientViewModel.SelectedClient = client;
         EnvClientId = _selectedClientViewModel.SelectedClient.EnvClientId;
-        NavigationManager.NavigateTo($"/reporters/clients/{EnvClientId}");
+        NavigationManager.NavigateTo(Constants.Routes.GetClientOverviewPageLink(EnvClientId));
     }
 
     private void EditContextOnFieldChanged(object? sender, FieldChangedEventArgs e)

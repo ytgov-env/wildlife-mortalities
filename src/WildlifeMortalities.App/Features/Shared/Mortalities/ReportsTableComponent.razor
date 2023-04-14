@@ -8,42 +8,43 @@
 @using WildlifeMortalities.Shared.Services.Reports;
 @inherits DbContextAwareComponent
 
-<MudTable ServerData="ServerReload" T="ReportDto" OnRowClick="GotoDetails" @key="@EnvClientId" RowClass="cursor-pointer" Hover="true">
+<MudTable ServerData="ServerReload" T="ReportListDto" OnRowClick="GotoDetails" @key="@EnvClientId" RowClass="cursor-pointer" Hover="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Reports</MudText>
         @if (EnvClientId != null)
         {
             <MudSpacer/>
-            <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" OnClick="CreateMortalityReport" Class="flex-shrink-0">Report a mortality</MudButton>
+            <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" Href="@Constants.Routes.GetCreateReportPageLink(EnvClientId)" Class="flex-shrink-0">Report a mortality</MudButton>
         }
     </ToolBarContent>
     <HeaderContent>
         <MudTh>@Id</MudTh>
-        <MudTh><MudTableSortLabel SortLabel="@Type" T="ReportDto">@Type</MudTableSortLabel></MudTh>
-        @*<MudTh><MudTableSortLabel SortLabel="@Species" T="ReportDto">@Species</MudTableSortLabel></MudTh>*@
+        <MudTh><MudTableSortLabel SortLabel="@Type" T="ReportListDto">@Type</MudTableSortLabel></MudTh>
         <MudTh>@Species</MudTh>
-        <MudTh><MudTableSortLabel SortLabel="@Season" T="ReportDto">@Season</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="@DateSubmitted" T="ReportDto">@DateSubmitted</MudTableSortLabel></MudTh>
-        @*<MudTh><MudTableSortLabel SortLabel="@Status" T="ReportDto">@Status</MudTableSortLabel></MudTh>*@
+        <MudTh><MudTableSortLabel SortLabel="@Season" T="ReportListDto">@Season</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@DateSubmitted" T="ReportListDto">@DateSubmitted</MudTableSortLabel></MudTh>
         <MudTh>@Status</MudTh>
 
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="@Id">@context.HumanReadableId</MudTd>
         <MudTd DataLabel="@Type">
+            @{
+                var type = context.Type.GetReportTypeDisplayName();
+            }
+
             @switch (context.Type)
             {
                 case nameof(OutfitterGuidedHuntReport):
-                    <span>Outfitted hunt - @context.OutfitterGuidedHuntResult?.ToLower()</span>
+                    <span>@type - @context.OutfitterGuidedHuntResult?.ToLower()</span>
                     break;
                 case nameof(SpecialGuidedHuntReport):
-                    <span>Special guided hunt - @context.SpecialGuidedHuntResult?.ToLower()</span>
+                    <span>@type - @context.SpecialGuidedHuntResult?.ToLower()</span>
                 break;
                 case nameof(IndividualHuntedMortalityReport):
-                    <span>Individual hunt</span>
-                break;
                 case nameof(TrappedMortalitiesReport):
-                    <span>Trapped</span>
+
+                    <span>@type</span>
                 break;
             }
         </MudTd>

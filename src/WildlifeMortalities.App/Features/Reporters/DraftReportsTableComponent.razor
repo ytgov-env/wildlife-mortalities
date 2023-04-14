@@ -1,0 +1,33 @@
+@namespace WildlifeMortalities.App.Features.Reporters
+@using WildlifeMortalities.App.Extensions;
+@inherits DbContextAwareComponent
+@*OnRowClick="GotoEdit"*@
+
+<MudTable Items="DraftReports" RowClass="cursor-pointer" Hover="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Reports</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Date Submitted</MudTh>
+        <MudTh>Last Modified</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Id</MudTd>
+        <MudTd>@context.Type.GetReportTypeDisplayName()</MudTd>
+        <MudTd>@context.DateSubmitted</MudTd>
+        <MudTd>@context.DateLastModified</MudTd>
+        @*<MudTd><MudButton Href="@Constants.Routes.GetEditDraftReportPageLink(EnvClientId, context.Id)">Edit</MudButton></MudTd>*@
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

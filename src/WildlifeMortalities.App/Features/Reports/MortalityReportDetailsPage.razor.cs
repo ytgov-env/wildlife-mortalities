@@ -1,25 +1,27 @@
 ﻿using Microsoft.AspNetCore.Components;
+using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Shared.Services.Reports.Single;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
-public partial class MortalityReportDetailsPage
+public partial class MortalityReportDetailsPage : DbContextAwareComponent
 {
     private ReportDetail? _reportDetail;
-
-    [Inject]
-    private IMortalityService MortalityService { get; set; } = null!;
 
     [Inject]
     private PdfService PdfService { get; set; } = null!;
 
     [Parameter]
-    public int Id { get; set; }
+    public int ReportId { get; set; }
+
+    [Parameter]
+    public string HumanReadablePersonId { get; set; }
 
     protected override async Task OnInitializedAsync() =>
-        _reportDetail = await MortalityService.GetReport(Id);
+        _reportDetail = await Context.Reports.GetDetails(ReportId, Context);
 
     private ActivityViewModel GetActivityVm(Activity item) =>
         item switch

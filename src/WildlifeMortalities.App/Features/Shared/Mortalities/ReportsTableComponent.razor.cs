@@ -2,13 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using MudBlazor;
-using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services.Reports;
 using WildlifeMortalities.Shared.Services.Reports.QueryObjects;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
-public partial class MortalityReportsTableComponent : DbContextAwareComponent
+public partial class ReportsTableComponent : DbContextAwareComponent
 {
     private const string Id = "Id";
     private const string Type = "Type";
@@ -25,12 +24,9 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
     private ReportService ReportService { get; set; } = default!;
 
     [Inject]
-    private IDbContextFactory<AppDbContext> DbContextFactory { get; set; }
-
-    [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
 
-    private async Task<TableData<ReportDto>> ServerReload(TableState state)
+    private async Task<TableData<ReportListDto>> ServerReload(TableState state)
     {
         Options.OrderByAscending = state.SortDirection == SortDirection.Ascending;
         Options.OrderByOptions = state.SortLabel switch
@@ -45,20 +41,20 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
             EnvClientId == null
                 ? await GetAllReports(state.Page + 1, state.PageSize)
                 : await GetReportsByEnvClientId(EnvClientId, state.Page + 1, state.PageSize);
-        return new TableData<ReportDto> { Items = reportDtos, TotalItems = totalItems };
+        return new TableData<ReportListDto> { Items = reportDtos, TotalItems = totalItems };
     }
 
-    private void CreateMortalityReport()
+    public void GotoDetails(TableRowClickEventArgs<ReportListDto> args)
     {
-        NavigationManager.NavigateTo($"mortality-reports/new/{EnvClientId}");
+        NavigationManager.NavigateTo(
+            Constants.Routes.GetReportDetailsPageLink(
+                (args.Item.BadgeNumber ?? args.Item.EnvClientId)!,
+                args.Item.Id
+            )
+        );
     }
 
-    public void GotoDetails(TableRowClickEventArgs<ReportDto> args)
-    {
-        NavigationManager.NavigateTo($"mortality-reports/{args.Item.Id}");
-    }
-
-    public async Task<(IEnumerable<ReportDto>, int totalItems)> GetReports(
+    public async Task<(IEnumerable<ReportListDto>, int totalItems)> GetReports(
         string? envClientId,
         int pageNum = 0,
         int pageSize = 10
@@ -66,17 +62,13 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
     {
         Options.PageNumber = pageNum;
         Options.PageSize = pageSize;
-        if (envClientId != null)
-        {
-            Options.FilterBy = FilterByOptions.ByEnvClientId;
-            Options.FilterValue = envClientId;
-        }
+        Options.EnvClientId = envClientId;
 
-        var context = DbContextFactory.CreateDbContext();
+        var context = Context;
         var query = ReportService.SortFilterPage(Options, context);
 
         var preResult = await query;
-        IEnumerable<ReportDto> result =
+        IEnumerable<ReportListDto> result =
             preResult is IAsyncQueryProvider
                 ? await preResult.AsSplitQuery().ToArrayAsync()
                 : preResult.ToArray();
@@ -84,7 +76,7 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
         return (result, Options.TotalItems);
     }
 
-    public async Task<(IEnumerable<ReportDto>, int totalItems)> GetAllReports(
+    public async Task<(IEnumerable<ReportListDto>, int totalItems)> GetAllReports(
         int pageNum = 0,
         int pageSize = 10
     )
@@ -92,7 +84,7 @@ public partial class MortalityReportsTableComponent : DbContextAwareComponent
         return await GetReports(null, pageNum, pageSize);
     }
 
-    public async Task<(IEnumerable<ReportDto>, int totalItems)> GetReportsByEnvClientId(
+    public async Task<(IEnumerable<ReportListDto>, int totalItems)> GetReportsByEnvClientId(
         string envClientId,
         int pageNum = 0,
         int pageSize = 10

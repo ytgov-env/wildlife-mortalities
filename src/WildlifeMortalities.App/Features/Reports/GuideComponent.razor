@@ -4,7 +4,7 @@
     @if(Guide is not null)
     {
         <MudTooltip Text="View client">
-            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" OnClick="NavigateToClientOverview" />
+            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" Href="@Constants.Routes.GetClientOverviewPageLink(Guide.EnvClientId)" />
         </MudTooltip>
     }
 </MudStack>
@@ -17,15 +17,4 @@
     [Parameter]
     [EditorRequired]
     public Client? Guide { get; set; }
-
-    [Inject]
-    public NavigationManager Navigation { get; set; } = null!;
-
-    private void NavigateToClientOverview()
-    {
-        if (Guide is not null)
-        {
-            Navigation.NavigateTo($"reporters/clients/{Guide.EnvClientId}");
-        }
-    }
 }

@@ -1,43 +1,53 @@
-﻿@page "/mortality-reports/new/{envClientId}"
+﻿@attribute [Route(Constants.Routes.CreateReportPage)]
+@attribute [Route(Constants.Routes.EditDraftReportPage)]
+@attribute [Route(Constants.Routes.EditReportPage)]
+
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Shared.Extensions;
+@inherits DbContextAwareComponent
 
-<MudText Typo="Typo.h3" Class="mb-8">@_vm.MortalityReportType.GetDisplayName() report</MudText>
-
+@if (_vm == null)
+{
+    <MudProgressCircular Indeterminate="true" />
+    return;
+}
 
 @if (_personId == 0)
 {
-    <MudAlert Severity="Severity.Error">No client with that EnvClientId was found.</MudAlert>
+    <MudAlert Severity="Severity.Error">No person with that Id was found.</MudAlert>
 
     return;
 }
 
+<MudText Typo="Typo.h3" Class="mb-8">@_vm.ReportType.GetDisplayName() report</MudText>
+
 <EditForm OnValidSubmit="CreateReport" OnInvalidSubmit="@(() => _invalidSubmitDetected = true)" EditContext="_editContext" onkeypress="preventEnterFromSubmitting(event)">
-    <ValidationSummary/>
-    <FluentValidationValidator/>
-    <MudSelect T="MortalityReportType" Value="_vm.MortalityReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.MortalityReportType)" Label="Mortality report type">
-        @foreach (MortalityReportType mortalityReportType in Enum.GetValues(typeof(MortalityReportType)))
-        {
-            <MudSelectItem Value="@mortalityReportType" T="MortalityReportType">@mortalityReportType.GetDisplayName()</MudSelectItem>
-        }
-    </MudSelect>
-    <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="false">
-        <CascadingValue Name="@Constants.CascadingValues.MortalityReportType" Value="_vm.MortalityReportType">
-            @switch (_vm.MortalityReportType)
+    <ValidationSummary />
+    <FluentValidationValidator />
+    @if (_vm.IsUpdate == false)
+    {
+        <MudSelect T="ReportType" Value="_vm.ReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.ReportType)" Label="Mortality report type">
+            @foreach (ReportType reportType in Enum.GetValues<ReportType>().Where(x => x.IsCreatable()))
             {
-                case MortalityReportType.Conflict:
+                <MudSelectItem Value="@reportType" T="ReportType">@reportType.GetDisplayName()</MudSelectItem>
+            }
+        </MudSelect>
+    }
+    <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="@_vm.IsUpdate" IsFixed="true">
+        <CascadingValue Name="@Constants.CascadingValues.ReportType" Value="_vm.ReportType">
+            @switch (_vm.ReportType)
+            {
+                case ReportType.IndividualHuntedMortalityReport:
+                    <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel" />
                     break;
-                case MortalityReportType.IndividualHunt:
-                    <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel"/>
+                case ReportType.OutfitterGuidedHuntReport:
+                    <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel" />
                     break;
-                case MortalityReportType.OutfitterGuidedHunt:
-                    <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel"/>
+                case ReportType.SpecialGuidedHuntReport:
+                    <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel" />
                     break;
-                case MortalityReportType.SpecialGuidedHunt:
-                    <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel"/>
-                    break;
-                case MortalityReportType.Trapped:
-                    <TrappedReportComponent ViewModel="@_vm.TrappedReportViewModel"/>
+                case ReportType.TrappedMortalitiesReport:
+                    <TrappedReportComponent ViewModel="@_vm.TrappedReportViewModel" />
                     break;
                 default:
                     throw new NotImplementedException();
@@ -46,36 +56,36 @@
     </CascadingValue>
 
     @*<MudPaper Elevation="0" Class="mt-4">
-        <MudText Typo="Typo.h6">Signature</MudText>
-        <SignaturePadComponent @ref="_signaturePad"/>
+    <MudText Typo="Typo.h6">Signature</MudText>
+    <SignaturePadComponent @ref="_signaturePad"/>
     </MudPaper>
 
     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple/>
 
     <MudButton HtmlTag="label"
-               Variant="Variant.Filled"
-               Color="Color.Info"
-               StartIcon="@Icons.Material.Filled.CloudUpload"
-               for="fileInput"
-               Class="mt-4">
-        Attach Files
+    Variant="Variant.Filled"
+    Color="Color.Info"
+    StartIcon="@Icons.Material.Filled.CloudUpload"
+    for="fileInput"
+    Class="mt-4">
+    Attach Files
     </MudButton>
 
     @if (_files.Count != 0)
     {
-        <MudText Typo="@Typo.h6">@_files.Count() File@(_files.Count() == 1 ? "" : "s"):</MudText>
-        <MudList>
-            @foreach (var file in _files)
-            {
-                <MudListItem Icon="@Icons.Material.Filled.AttachFile" @key="@file">
-                    @file.Name <code>@file.Size bytes</code>
-                </MudListItem>
-            }
-        </MudList>
+    <MudText Typo="@Typo.h6">@_files.Count() File@(_files.Count() == 1 ? "" : "s"):</MudText>
+    <MudList>
+    @foreach (var file in _files)
+    {
+    <MudListItem Icon="@Icons.Material.Filled.AttachFile" @key="@file">
+    @file.Name <code>@file.Size bytes</code>
+    </MudListItem>
+    }
+    </MudList>
     }*@
 
     <MudStack Row="true" Class="mt-4">
-        <MudSpacer/>
+        <MudSpacer />
         @if (_editContext.GetValidationMessages().Any())
         {
             <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="CreateDraftReport" Color="Color.Primary">Save as draft</MudButton>

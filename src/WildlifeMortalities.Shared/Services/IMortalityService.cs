@@ -17,22 +17,12 @@ public interface IMortalityService
     Task CreateReport(IndividualHuntedMortalityReport report);
     Task CreateReport(OutfitterGuidedHuntReport report);
     Task CreateReport(SpecialGuidedHuntReport report);
-    Task CreateDraftReport(string report, int personId);
-    Task<IEnumerable<Report>> GetAllReports(int start = 0, int length = 10);
-
-    Task<IEnumerable<Report>> GetReportsByEnvClientId(
-        string envClientId,
-        int start = 0,
-        int length = 10
-    );
-
-    Task<int> CountAllReports();
-    Task<int> CountReportsByEnvClientId(string envClientId);
-    Task<ReportDetail?> GetReport(int id);
+    Task CreateDraftReport(string reportType, string reportContent, int personId);
     Task CreateBioSubmission(BioSubmission bioSubmission);
     Task UpdateBioSubmission(BioSubmission bioSubmission);
     Task<IEnumerable<GameManagementArea>> GetGameManagementAreas();
     Task<IEnumerable<OutfitterArea>> GetOutfitterAreas();
     Task<IEnumerable<RegisteredTrappingConcession>> GetRegisteredTrappingConcessions();
     Task CreateReport(TrappedMortalitiesReport report);
+    Task UpdateDraftReport(string report, int reportId);
 }

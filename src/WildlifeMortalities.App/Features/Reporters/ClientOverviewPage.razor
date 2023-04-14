@@ -1,5 +1,6 @@
 ﻿@page "/reporters/clients"
 @page "/reporters/clients/{envClientId}"
+@*@attribute [Route(Constants.Routes.ClientOverviewPage)]*@
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 
@@ -8,7 +9,7 @@
 <MudText Typo="Typo.h3" Class="mb-8">Client overview</MudText>
 
 <MudGrid>
-    <MudItem sm="12" md="6">
+    <MudItem sm="12" md="3">
         <EditForm EditContext="_editContext">
             <FluentValidationValidator Validator="new SelectClientViewModelValidator()"/>
             <MudItem>
@@ -33,11 +34,18 @@
     </MudItem>
     @if (_selectedClientViewModel.SelectedClient is not null)
     {
-        <MudItem sm="12" md="6">
+        <MudItem sm="12" md="9">
             <AuthorizationsComponent ClientId="@_selectedClientViewModel.SelectedClient.Id"/>
         </MudItem>
         <MudItem xs="12">
-            <MortalityReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvClientId"/>
+            <MudTabs Color="Color.Info">
+                <MudTabPanel Text="Submitted">
+                    <ReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvClientId"/>
+                </MudTabPanel>
+                <MudTabPanel Text="Drafts">
+                    <DraftReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvClientId" />
+                </MudTabPanel>
+            </MudTabs>
         </MudItem>
     }
 </MudGrid>

@@ -10,7 +10,7 @@
             </MudText>
         </TitleContent>
         <DialogContent>
-            <CascadingValue Name="@Constants.CascadingValues.MortalityReportType" Value="MortalityReportType">
+            <CascadingValue Name="@Constants.CascadingValues.ReportType" Value="ReportType">
                 <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="true">
                     <ActivityComponent ViewModel="ViewModel"/>
                 </CascadingValue>
@@ -38,7 +38,7 @@
 
     [Parameter]
     [EditorRequired]
-    public MortalityReportType MortalityReportType { get; set; }
+    public ReportType ReportType { get; set; }
 
     private bool _canGoIntoDraftState;
     private bool _invalidSubmissionDetected;
