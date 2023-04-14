@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.App.Features.Shared.Mortalities;
 using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
 
@@ -18,6 +20,9 @@ public class HuntedActivityViewModel : ActivityViewModel
         IsCompleted = true;
         GameManagementArea = activity.GameManagementArea;
     }
+
+    public HuntedActivityViewModel(HuntedActivity activity, Report report)
+        : this(activity, new ReportDetail(report, Array.Empty<(int, BioSubmission)>())) { }
 
     public string Landmark { get; set; } = string.Empty;
     public GameManagementArea? GameManagementArea { get; set; }

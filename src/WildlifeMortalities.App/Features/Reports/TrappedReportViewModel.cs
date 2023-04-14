@@ -6,6 +6,16 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class TrappedReportViewModel
 {
+    public TrappedReportViewModel() { }
+
+    public TrappedReportViewModel(TrappedMortalitiesReport report)
+    {
+        TrappedActivityViewModels = report.TrappedActivities
+            .Select(x => new TrappedActivityViewModel(x, report))
+            .ToList();
+        RegisteredTrappingConcession = report.RegisteredTrappingConcession;
+    }
+
     public List<TrappedActivityViewModel> TrappedActivityViewModels { get; set; } = new();
     public RegisteredTrappingConcession? RegisteredTrappingConcession { get; set; }
 

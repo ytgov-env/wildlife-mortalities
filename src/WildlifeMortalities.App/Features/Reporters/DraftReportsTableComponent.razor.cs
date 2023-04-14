@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities.People;
 
@@ -12,7 +13,10 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
 
     public IEnumerable<DraftReportDto> DraftReports { get; set; } = null!;
 
-    protected override async Task OnInitializedAsync()
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = null!;
+
+    protected override async Task OnParametersSetAsync()
     {
         var client = await Context.People
             .OfType<Client>()
@@ -36,5 +40,12 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
                     }
             )
             .ToArrayAsync();
+    }
+
+    public void GotoEdit(TableRowClickEventArgs<DraftReportDto> args)
+    {
+        NavigationManager.NavigateTo(
+            Constants.Routes.GetEditDraftReportPageLink(EnvClientId!, args.Item.Id)
+        );
     }
 }

@@ -5,6 +5,13 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class IndividualHuntedMortalityReportViewModel
 {
+    public IndividualHuntedMortalityReportViewModel() { }
+
+    public IndividualHuntedMortalityReportViewModel(IndividualHuntedMortalityReport report)
+    {
+        HuntedActivityViewModel = new HuntedActivityViewModel(report.HuntedActivity, report);
+    }
+
     public HuntedActivityViewModel HuntedActivityViewModel { get; set; } = new();
 
     public IndividualHuntedMortalityReport GetReport(int personId) =>
