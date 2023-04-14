@@ -13,95 +13,65 @@
 {
     return;
 }
-
-<MudTabs Color="Color.Info" Rounded="true" @bind-ActivePanelIndex="_panelIndex">
-    @{
-        List<string> seasons = new();
-    }
-    @foreach (var authorization in _authorizationsViewModel.Authorizations)
-    {
-        var season = authorization.Season.FriendlyName;
-        if (season != null)
-        {
-            seasons.Add(season);
+<MudPaper>
+    <MudTabs Color="Color.Info" Rounded="true" @bind-ActivePanelIndex="_panelIndex">
+        @{
+            List<string> seasons = new();
         }
-    }
-    @foreach (var season in seasons.Distinct().OrderBy(x => x))
-    {
-        <MudTabPanel Text="@season">
-            @{
-                var authorizationsWithinSeason = _authorizationsViewModel.Authorizations.Where(x => x.Season.FriendlyName == season).ToList();
-                var bigGameHuntingLicences = authorizationsWithinSeason.OfType<BigGameHuntingLicence>();
-                var smallGameHuntingLicences = authorizationsWithinSeason.OfType<SmallGameHuntingLicence>();
-                var outfitterChiefGuideLicences = authorizationsWithinSeason.OfType<OutfitterChiefGuideLicence>();
-                var outfitterAssistantGuideLicences = authorizationsWithinSeason.OfType<OutfitterAssistantGuideLicence>();
-                var specialGuideLicences = authorizationsWithinSeason.OfType<SpecialGuideLicence>();
-            }
-            @if (bigGameHuntingLicences.Any() == true || smallGameHuntingLicences.Any() == true || outfitterChiefGuideLicences.Any() == true
-                || outfitterAssistantGuideLicences.Any() == true || specialGuideLicences.Any() ==true)
+        @if(_authorizationsViewModel.Authorizations.Any() == false){
+            <MudTabPanel Text="None"/>
+        }
+        @foreach (var authorization in _authorizationsViewModel.Authorizations)
+        {
+            var season = authorization.Season.FriendlyName;
+            if (season != null)
             {
-                <MudItem>
-                    <MudText Typo="Typo.h6">Hunting licences</MudText>
-                    <MudGrid>
-                        @foreach (var authorization in bigGameHuntingLicences.OrderBy(x => x.Type.GetDisplayName()))
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                        @foreach (var authorization in smallGameHuntingLicences.OrderBy(x => x.Type.GetDisplayName()))
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                        @foreach (var authorization in outfitterChiefGuideLicences)
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                        @foreach (var authorization in outfitterAssistantGuideLicences)
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                        @foreach (var authorization in specialGuideLicences)
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                    </MudGrid>
-                </MudItem>
+                seasons.Add(season);
             }
-            @{
-                var huntingSeals = authorizationsWithinSeason.OfType<HuntingSeal>();
-            }
-            @if (huntingSeals.Any() == true)
-            {
-                <MudItem Class="mt-2">
-                    <MudText Typo="Typo.h6">Hunting seals</MudText>
-                    <MudGrid>
-                        @foreach (var authorization in huntingSeals.OrderBy(x => x.Type.GetDisplayName()))
-                        {
-                            <MudItem xs="12" md="6" lg="4" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                    </MudGrid>
-                </MudItem>
-            }
-            @{
-                var phaHuntingPermits = authorizationsWithinSeason.OfType<PhaHuntingPermit>();
-            }
-            @if (phaHuntingPermits.Any() == true)
+        }
+        @foreach (var season in seasons.Distinct().OrderBy(x => x))
+        {
+            <MudTabPanel Text="@season">
+                @{
+                    var authorizationsWithinSeason = _authorizationsViewModel.Authorizations.Where(x => x.Season.FriendlyName == season).ToList();
+                    var bigGameHuntingLicences = authorizationsWithinSeason.OfType<BigGameHuntingLicence>();
+                    var smallGameHuntingLicences = authorizationsWithinSeason.OfType<SmallGameHuntingLicence>();
+                    var outfitterChiefGuideLicences = authorizationsWithinSeason.OfType<OutfitterChiefGuideLicence>();
+                    var outfitterAssistantGuideLicences = authorizationsWithinSeason.OfType<OutfitterAssistantGuideLicence>();
+                    var specialGuideLicences = authorizationsWithinSeason.OfType<SpecialGuideLicence>();
+                }
+                <MudItem Class="mx-2 my-2">
+                @if (bigGameHuntingLicences.Any() == true || smallGameHuntingLicences.Any() == true || outfitterChiefGuideLicences.Any() == true
+                    || outfitterAssistantGuideLicences.Any() == true || specialGuideLicences.Any() ==true)
                 {
-                    <MudItem Class="mt-2">
-                        <MudText Typo="Typo.h6">Permit hunt authorizations</MudText>
+                    <MudItem>
+                        <MudText Typo="Typo.h6">Hunting licences</MudText>
                         <MudGrid>
-                        @foreach (var authorization in phaHuntingPermits.OrderBy(x => x.Type.GetDisplayName()))
+                            @foreach (var authorization in bigGameHuntingLicences.OrderBy(x => x.Type.GetDisplayName()))
+                            {
+                                <MudItem xs="12" md="6" xxl="4">
+                                    <AuthorizationCardComponent Authorization="@authorization" />
+                                </MudItem>
+                            }
+                            @foreach (var authorization in smallGameHuntingLicences.OrderBy(x => x.Type.GetDisplayName()))
+                            {
+                                <MudItem xs="12" md="6" xxl="4">
+                                    <AuthorizationCardComponent Authorization="@authorization" />
+                                </MudItem>
+                            }
+                            @foreach (var authorization in outfitterChiefGuideLicences)
+                            {
+                                <MudItem xs="12" md="6" xxl="4">
+                                    <AuthorizationCardComponent Authorization="@authorization" />
+                                </MudItem>
+                            }
+                            @foreach (var authorization in outfitterAssistantGuideLicences)
+                            {
+                                <MudItem xs="12" md="6" xxl="4">
+                                    <AuthorizationCardComponent Authorization="@authorization" />
+                                </MudItem>
+                            }
+                            @foreach (var authorization in specialGuideLicences)
                             {
                                 <MudItem xs="12" md="6" xxl="4">
                                     <AuthorizationCardComponent Authorization="@authorization" />
@@ -110,15 +80,66 @@
                         </MudGrid>
                     </MudItem>
                 }
-            @{
-                var huntingPermits = authorizationsWithinSeason.OfType<HuntingPermit>();
-            }
-            @if (huntingPermits.Any() == true)
+                @{
+                    var huntingSeals = authorizationsWithinSeason.OfType<HuntingSeal>();
+                }
+                @if (huntingSeals.Any() == true)
                 {
                     <MudItem Class="mt-2">
-                        <MudText Typo="Typo.h6">Hunting permits</MudText>
+                        <MudText Typo="Typo.h6">Hunting seals</MudText>
                         <MudGrid>
-                        @foreach (var authorization in huntingPermits.OrderBy(x => x.Type.GetDisplayName()))
+                            @foreach (var authorization in huntingSeals.OrderBy(x => x.Type.GetDisplayName()))
+                            {
+                                <MudItem xs="12" md="6" lg="4" xxl="4">
+                                    <AuthorizationCardComponent Authorization="@authorization" />
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </MudItem>
+                }
+                @{
+                    var phaHuntingPermits = authorizationsWithinSeason.OfType<PhaHuntingPermit>();
+                }
+                @if (phaHuntingPermits.Any() == true)
+                    {
+                        <MudItem Class="mt-2">
+                            <MudText Typo="Typo.h6">Permit hunt authorizations</MudText>
+                            <MudGrid>
+                            @foreach (var authorization in phaHuntingPermits.OrderBy(x => x.Type.GetDisplayName()))
+                                {
+                                    <MudItem xs="12" md="6" xxl="4">
+                                        <AuthorizationCardComponent Authorization="@authorization" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudItem>
+                    }
+                @{
+                    var huntingPermits = authorizationsWithinSeason.OfType<HuntingPermit>();
+                }
+                @if (huntingPermits.Any() == true)
+                    {
+                        <MudItem Class="mt-2">
+                            <MudText Typo="Typo.h6">Hunting permits</MudText>
+                            <MudGrid>
+                            @foreach (var authorization in huntingPermits.OrderBy(x => x.Type.GetDisplayName()))
+                                {
+                                    <MudItem xs="12" md="6" xxl="4">
+                                        <AuthorizationCardComponent Authorization="@authorization" />
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </MudItem>
+                    }
+                @{
+                    var trappingLicences = authorizationsWithinSeason.OfType<TrappingLicence>();
+                }
+                @if (trappingLicences.Any() == true)
+                {
+                    <MudItem Class="mt-2">
+                        <MudText Typo="Typo.h6">Trapping licences</MudText>
+                        <MudGrid>
+                        @foreach (var authorization in trappingLicences.OrderBy(x => x.Type.GetDisplayName()))
                             {
                                 <MudItem xs="12" md="6" xxl="4">
                                     <AuthorizationCardComponent Authorization="@authorization" />
@@ -127,44 +148,28 @@
                         </MudGrid>
                     </MudItem>
                 }
-            @{
-                var trappingLicences = authorizationsWithinSeason.OfType<TrappingLicence>();
-            }
-            @if (trappingLicences.Any() == true)
-            {
-                <MudItem Class="mt-2">
-                    <MudText Typo="Typo.h6">Trapping licences</MudText>
-                    <MudGrid>
-                    @foreach (var authorization in trappingLicences.OrderBy(x => x.Type.GetDisplayName()))
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                    </MudGrid>
+                @{
+                    var customWildlifeActPermits = authorizationsWithinSeason.OfType<CustomWildlifeActPermit>();
+                }
+                @if (customWildlifeActPermits.Any() == true)
+                {
+                    <MudItem Class="mt-2">
+                        <MudText Typo="Typo.h6">Custom wildlife act permits</MudText>
+                        <MudGrid>
+                            @foreach (var authorization in customWildlifeActPermits)
+                            {
+                                <MudItem xs="12" md="6" xxl="4">
+                                    <AuthorizationCardComponent Authorization="@authorization" />
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </MudItem>
+                }
                 </MudItem>
-            }
-            @{
-                var customWildlifeActPermits = authorizationsWithinSeason.OfType<CustomWildlifeActPermit>();
-            }
-            @if (customWildlifeActPermits.Any() == true)
-            {
-                <MudItem Class="mt-2">
-                    <MudText Typo="Typo.h6">Custom wildlife act permits</MudText>
-                    <MudGrid>
-                        @foreach (var authorization in customWildlifeActPermits)
-                        {
-                            <MudItem xs="12" md="6" xxl="4">
-                                <AuthorizationCardComponent Authorization="@authorization" />
-                            </MudItem>
-                        }
-                    </MudGrid>
-                </MudItem>
-            }
-        </MudTabPanel>
-    }
-</MudTabs>
-
+            </MudTabPanel>
+        }
+    </MudTabs>
+</MudPaper>
 @code {
     private int _panelIndex = 0;
     private int? _queuedPanelIndex;
