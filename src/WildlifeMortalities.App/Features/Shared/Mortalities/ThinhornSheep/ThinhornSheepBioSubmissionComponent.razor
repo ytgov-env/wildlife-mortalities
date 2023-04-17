@@ -15,7 +15,7 @@
 {
     <MudNumericField Label="Total length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.HornTotalLengthMillimetres" For="() => BioSubmission.HornTotalLengthMillimetres" Disabled="IsReadOnly" />
-    <MudCheckBox Label="Full curl?" @bind-Checked="BioSubmission.IsFullCurl" For="() => BioSubmission.IsFullCurl"/>
+    <MudCheckBox Label="Full curl?" @bind-Checked="BioSubmission.IsFullCurl" For="() => BioSubmission.IsFullCurl" />
     <MudNumericField Label="Base circumference" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.HornBaseCircumferenceMillimetres" For="() => BioSubmission.HornBaseCircumferenceMillimetres" Disabled="IsReadOnly" />
     <MudNumericField Label="Tip spread" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
@@ -26,9 +26,22 @@
             <MudSelectItem T="BroomedStatus?" Value="item">@item.GetDisplayName()</MudSelectItem>
         }
     </MudSelect>
+
+    @if (BioSubmission.HornMeasured.HasValue)
+    {
+       
+        <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years" @bind-Value:after="AdjustAnnuliList" />
+        <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+            @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+            {
+                <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+            }
+        </MudSelect>
+    }
+
     <MudText Typo="Typo.h6">Annuli measurements</MudText>
-    <MudSpacer/>
-    <ValidationMessage For="@(() => BioSubmission.HornMeasurementEntries)" Style="font-size: 12px; color: var(--mud-palette-error);"/>
+    <MudSpacer />
+    <ValidationMessage For="@(() => BioSubmission.HornMeasurementEntries)" Style="font-size: 12px; color: var(--mud-palette-error);" />
 
     if (IsReadOnly)
     {
@@ -41,9 +54,9 @@
             <RowTemplate>
                 <MudTd DataLabel="Annulus">@context.Annulus</MudTd>
                 <MudTd DataLabel="Length">@(context.LengthMillimetres == 0 ? string.Empty : $"{context.LengthMillimetres}mm")</MudTd>
-                <MudTd DataLabel="Circumference">@(context.CircumferenceMillimetres == 0 ? string.Empty : $"{context.CircumferenceMillimetres}mm")</MudTd>
-            </RowTemplate>
-        </MudTable>
+                    <MudTd DataLabel="Circumference">@(context.CircumferenceMillimetres == 0 ? string.Empty : $"{context.CircumferenceMillimetres}mm")</MudTd>
+                </RowTemplate>
+            </MudTable>
     }
     else
     {
@@ -52,9 +65,9 @@
             {
                 <MudListItem>
                     <MudStack Row="true">
-                        <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true"/>
-                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0"/>
-                        <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@(() => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0"/>
+                        <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true" />
+                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0" />
+                        <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@(() => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0" />
                         @if (ShowAnnuliBroomedCheckbox(item))
                         {
                             @if (BioSubmission.HornMeasurementEntries.First().Equals(item))
@@ -62,30 +75,20 @@
                                 item.IsBroomed = true;
                             }
                             <MudCheckBox Label="Broomed" @bind-Checked="@item.IsBroomed" @bind-Checked:after="(() => ResetHornMeasurementEntryValues(item))"
-                                         Disabled="IsAnnuliBroomedCheckboxDisabled(item)"/>
-                        }
-                        @if (item == BioSubmission.HornMeasurementEntries.Last())
-                        {
-                            <MudSpacer/>
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="RemoveLastHornMeasurementEntry"/>
+                         Disabled="IsAnnuliBroomedCheckboxDisabled(item)" />
                         }
                     </MudStack>
                 </MudListItem>
             }
         </MudList>
-        <MudStack Row="true">
-            <MudSpacer/>
-            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="AddHornMeasurementEntry" Size="Size.Medium" Color="Color.Tertiary">Annulus</MudButton>
-            <MudSpacer/>
-        </MudStack>
     }
 
     @if (BioSubmission.HornMeasurementEntries.Count >= 3)
     {
         <MudNumericField Label="Length to third annulus (short side)" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
-                         @bind-Value="BioSubmission.HornLengthToThirdAnnulusMillimetres" For="() => BioSubmission.HornLengthToThirdAnnulusMillimetres" Disabled="IsReadOnly"/>
+                 @bind-Value="BioSubmission.HornLengthToThirdAnnulusMillimetres" For="() => BioSubmission.HornLengthToThirdAnnulusMillimetres" Disabled="IsReadOnly" />
     }
-    
+
     <MudTextField Label="Plug number" @bind-Value="BioSubmission.PlugNumber" For="() => BioSubmission.PlugNumber" Disabled="IsReadOnly"
               Mask="@(new PatternMask("B0000"))" Placeholder="B" />
 }
@@ -108,6 +111,7 @@
     protected override void OnInitialized()
     {
         BioSubmission.HornMeasurementEntries ??= new List<HornMeasurementEntry>();
+        BioSubmission.Age ??= new Age();
     }
 
     private bool AnnuliCanBeBroomed(HornMeasurementEntry entry)
@@ -115,6 +119,20 @@
         return BioSubmission.BroomedStatus is BroomedStatus.BothHornsBroomed
                || (BioSubmission.BroomedStatus is BroomedStatus.LeftHornBroomed && BioSubmission.HornMeasured is HornMeasured.LeftHorn)
                || (BioSubmission.BroomedStatus is BroomedStatus.RightHornBroomed && BioSubmission.HornMeasured is HornMeasured.RightHorn);
+    }
+
+    private void AdjustAnnuliList()
+    {
+        while (BioSubmission.HornMeasurementEntries.Count > BioSubmission.Age!.Years)
+        {
+            BioSubmission.HornMeasurementEntries.RemoveAt(BioSubmission.HornMeasurementEntries.Count - 1);
+        }
+
+        while (BioSubmission.HornMeasurementEntries.Count < BioSubmission.Age.Years)
+        {
+            var HornMeasurementEntry = new HornMeasurementEntry { Annulus = BioSubmission.HornMeasurementEntries.Count + 1 };
+            BioSubmission.HornMeasurementEntries.Add(HornMeasurementEntry);
+        }
     }
 
     private bool ShowAnnuliBroomedCheckbox(HornMeasurementEntry entry)
@@ -125,7 +143,7 @@
         }
 
         var entries = BioSubmission.HornMeasurementEntries;
-    // Show checkbox if this is the first annulus
+        // Show checkbox if this is the first annulus
         if (entries.IndexOf(entry) == 0)
         {
             return true;
@@ -135,7 +153,7 @@
         {
             return false;
         }
-    // Show checkbox if the previous annulus was missing AND (this is the last annulus OR the annulus was marked as missing)
+        // Show checkbox if the previous annulus was missing AND (this is the last annulus OR the annulus was marked as missing)
         if (entries[BioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed)
         {
             return true;
@@ -179,21 +197,6 @@
         {
             Context.Validate();
         }
-    }
-
-    private void AddHornMeasurementEntry()
-    {
-        var HornMeasurementEntry = new HornMeasurementEntry { Annulus = BioSubmission.HornMeasurementEntries.Count + 1 };
-        BioSubmission.HornMeasurementEntries.Add(HornMeasurementEntry);
-    }
-
-    private void RemoveLastHornMeasurementEntry()
-    {
-        if (BioSubmission.HornMeasurementEntries.Count == 3)
-        {
-            BioSubmission.HornLengthToThirdAnnulusMillimetres = null;
-        }
-        BioSubmission.HornMeasurementEntries.RemoveAt(BioSubmission.HornMeasurementEntries.Count - 1);
     }
 
     public class ThinhornSheepBioSubmissionValidator : BioSubmissionValidator<ThinhornSheepBioSubmission>

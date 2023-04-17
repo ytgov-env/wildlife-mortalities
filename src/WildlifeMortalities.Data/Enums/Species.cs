@@ -101,6 +101,9 @@ public enum Species
     [Display(Name = SpeciesConstants.GrizzlyBear)]
     GrizzlyBear = 1700,
 
+    [Display(Name = SpeciesConstants.Grouse)]
+    Grouse = 1701,
+
     [Display(Name = SpeciesConstants.HoaryMarmot)]
     HoaryMarmot = 1800,
 

@@ -56,26 +56,7 @@
                             throw new ArgumentException(nameof(BioSubmission));
                     }
                 </CascadingValue>
-                @*Age is always visible for sheep and goat, as long as a horn was provided*@
-                @if (BioSubmission is IHasHornMeasurementEntries bioSubmission)
-                {
-                    @if (bioSubmission.HornMeasured.HasValue)
-                    {
-                        @if (BioSubmission.Age == null)
-                        {
-                            BioSubmission.Age = new Age();
-                        }
-                        <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years"/>
-                        <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
-                            @foreach (var item in Enum.GetValues<ConfidenceInAge>())
-                            {
-                                <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
-                            }
-                        </MudSelect>
-                    }
-                }
-                else
-            @*Age is optional for other species*@
+                @if (BioSubmission is not IHasHornMeasurementEntries)
                 {
                     @if (BioSubmission.Age == null)
                     {
