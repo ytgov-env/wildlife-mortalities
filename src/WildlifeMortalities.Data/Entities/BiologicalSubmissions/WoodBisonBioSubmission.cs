@@ -8,13 +8,13 @@ public class WoodBisonBioSubmission : BioSubmission<WoodBisonMortality>
 {
     public WoodBisonBioSubmission() { }
 
-    public WoodBisonBioSubmission(int mortalityId)
-        : base(mortalityId) { }
-
     public WoodBisonBioSubmission(WoodBisonMortality mortality)
         : base(mortality) { }
 
-    public bool IsIncisorBarIncluded { get; set; }
+    [IsRequiredOrganicMaterialForBioSubmission("Incisor bar")]
+    public bool? IsIncisorBarProvided { get; set; }
+
+    public override bool HasSubmittedAllRequiredOrganicMaterial() => IsIncisorBarProvided == true;
 }
 
 public class WoodBisonBioSubmissionConfig : IEntityTypeConfiguration<WoodBisonBioSubmission>

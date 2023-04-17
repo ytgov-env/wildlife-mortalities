@@ -20,9 +20,16 @@
             }
         </CardHeaderContent>
         <CardHeaderActions>
-            @if (EnableBioSubmission && MortalityViewModel.GetMortality() is IHasBioSubmission)
+            @if (EnableBioSubmission && MortalityViewModel.GetMortality() is IHasBioSubmission biosubmission)
             {
-                <MudButton Color="Color.Default" OnClick="OpenBioSubmissionDialog" StartIcon="@Icons.Material.Filled.Edit">Bio submission</MudButton>
+                if(MortalityViewModel.BioSubmission!.Status == BioSubmissionStatus.Submitted)
+                {
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="OpenBioSubmissionAnalysisDialog" StartIcon="@Icons.Material.Filled.Science">Bio submission</MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="OpenOrganicMaterialForBioSubmissionDialog" StartIcon="@Icons.Material.Filled.Science">Bio submission</MudButton>
+                }
             }
         </CardHeaderActions>
     </MudCardHeader>
@@ -58,7 +65,7 @@
         <MudSpacer/>
         @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
         {
-            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.ExistingBioSubmission"/>
+            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission"/>
         }
     </MudCardContent>
     <MudCardActions>
@@ -104,51 +111,37 @@
     [Inject]
     IMortalityService Service { get; set; } = null!;
 
-    private async Task OpenBioSubmissionDialog()
+
+    private async Task OpenBioSubmissionAnalysisDialog()
     {
-        BioSubmission bioSubmission;
-        var isNewSubmission = true;
-        if (MortalityViewModel.ExistingBioSubmission != null)
-        {
-            bioSubmission = MortalityViewModel.ExistingBioSubmission;
-            isNewSubmission = false;
-        }
-        else
-        {
-            // The id is set to zero when a biosubmission is created on a draft report
-            var mortalityId = MortalityViewModel.Id ?? 0;
-            bioSubmission = MortalityViewModel.Species switch
-            {
-                Species.AmericanBlackBear => new AmericanBlackBearBioSubmission(mortalityId),
-                Species.CanadaLynx => new CanadaLynxBioSubmission(mortalityId),
-                Species.GreyWolf => new GreyWolfBioSubmission(mortalityId),
-                Species.GrizzlyBear => new GrizzlyBearBioSubmission(mortalityId),
-                Species.MountainGoat => new MountainGoatBioSubmission(mortalityId),
-                Species.MuleDeer => new MuleDeerBioSubmission(mortalityId),
-                Species.ThinhornSheep => new ThinhornSheepBioSubmission(mortalityId),
-                Species.WhiteTailedDeer => new WhiteTailedDeerBioSubmission(mortalityId),
-                Species.WoodBison => new WoodBisonBioSubmission(mortalityId),
-                _ => throw new InvalidOperationException($"{nameof(MortalityViewModel.Species)} is not a registered bio submission species.")
-            };
-        }
+        var bioSubmission = MortalityViewModel.BioSubmission!;
 
         var parameters = new DialogParameters();
-        parameters.Add(nameof(BioSubmissionDialog.BioSubmission), bioSubmission);
+        parameters.Add(nameof(BioSubmissionAnalysisDialog.BioSubmission), bioSubmission);
 
-        var dialog = await DialogService.ShowAsync<BioSubmissionDialog>("", parameters);
+        var dialog = await DialogService.ShowAsync<BioSubmissionAnalysisDialog>("", parameters);
         var result = await dialog.Result;
 
         if (result.Canceled == false)
         {
-            if (isNewSubmission)
-            {
-                MortalityViewModel.ExistingBioSubmission = bioSubmission;
-                await Service.CreateBioSubmission(bioSubmission);
-            }
-            else
-            {
-                await Service.UpdateBioSubmission(bioSubmission);
-            }
+            await Service.UpdateBioSubmissionAnalysis(bioSubmission);
+        }
+    }
+    
+
+    private async Task OpenOrganicMaterialForBioSubmissionDialog()
+    {
+        var bioSubmission = MortalityViewModel.BioSubmission!;
+
+        var parameters = new DialogParameters();
+        parameters.Add(nameof(OrganicMaterialForBioSubmissionDialog.BioSubmission), bioSubmission);
+
+        var dialog = await DialogService.ShowAsync<OrganicMaterialForBioSubmissionDialog>("", parameters);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            await Service.UpdateOrganicMaterialForBioSubmission(bioSubmission);
         }
     }
 

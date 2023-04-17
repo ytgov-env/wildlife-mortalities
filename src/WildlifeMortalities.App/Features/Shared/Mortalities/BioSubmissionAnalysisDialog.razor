@@ -17,7 +17,7 @@
     <MudDialog>
         <TitleContent>
             <MudText Typo="Typo.h6">
-                Biological submission
+                Analysis of biological submission
             </MudText>
         </TitleContent>
         <DialogContent>
@@ -59,7 +59,7 @@
                 @*Age is always visible for sheep and goat, as long as a horn was provided*@
                 @if (BioSubmission is IHasHornMeasurementEntries bioSubmission)
                 {
-                    @if (bioSubmission.HornMeasured is not HornMeasured.NoHornProvided)
+                    @if (bioSubmission.HornMeasured.HasValue)
                     {
                         @if (BioSubmission.Age == null)
                         {

@@ -49,14 +49,14 @@ public class MortalityViewModel
 
         _existingMortality = mortality;
         Id = mortality.Id;
-        ExistingBioSubmission = reportDetail.bioSubmissions
+        BioSubmission = reportDetail.bioSubmissions
             .FirstOrDefault(x => x.mortalityId == mortality.Id)
             .submission;
     }
 
     public MortalityViewModel(Species species) => Species = species;
 
-    public BioSubmission? ExistingBioSubmission { get; set; }
+    public BioSubmission? BioSubmission { get; set; }
 
     public int? Id { get; }
     public Species? Species { get; init; }

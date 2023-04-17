@@ -1,8 +1,8 @@
-@using static BioSubmissionDialog;
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @using WildlifeMortalities.Shared.Extensions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
 @*<ValidationSummary/>*@
 <MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">
@@ -11,7 +11,7 @@
         <MudSelectItem T="HornMeasured?" Value="item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-@if (BioSubmission.HornMeasured is not null && BioSubmission.HornMeasured is not HornMeasured.NoHornProvided)
+@if (BioSubmission.HornMeasured is not null)
 {
     <MudNumericField Label="Total length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.HornTotalLengthMillimetres" For="() => BioSubmission.HornTotalLengthMillimetres" Disabled="IsReadOnly" />
@@ -201,7 +201,7 @@
         public ThinhornSheepBioSubmissionValidator()
         {
             RuleFor(x => x.HornMeasured).NotEmpty().IsInEnum();
-            When(x => x.HornMeasured != HornMeasured.NoHornProvided, () =>
+            When(x => x.HornMeasured != null, () =>
             {
                 RuleFor(x => x.Age).NotNull();
                 RuleFor(x => x.BroomedStatus).NotEmpty().IsInEnum();

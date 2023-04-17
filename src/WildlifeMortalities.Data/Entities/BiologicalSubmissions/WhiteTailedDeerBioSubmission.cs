@@ -8,14 +8,17 @@ public class WhiteTailedDeerBioSubmission : BioSubmission<WhiteTailedDeerMortali
 {
     public WhiteTailedDeerBioSubmission() { }
 
-    public WhiteTailedDeerBioSubmission(int mortalityId)
-        : base(mortalityId) { }
-
     public WhiteTailedDeerBioSubmission(WhiteTailedDeerMortality mortality)
         : base(mortality) { }
 
-    public bool IsHornIncluded { get; set; }
-    public bool IsHeadIncluded { get; set; }
+    [IsRequiredOrganicMaterialForBioSubmission("Horn")]
+    public bool? IsHornProvided { get; set; }
+
+    [IsRequiredOrganicMaterialForBioSubmission("Head")]
+    public bool? IsHeadProvided { get; set; }
+
+    public override bool HasSubmittedAllRequiredOrganicMaterial() =>
+        IsHornProvided == true && IsHeadProvided == true;
 }
 
 public class WhiteTailedDeerBioSubmissionConfig

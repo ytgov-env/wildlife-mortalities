@@ -8,14 +8,17 @@ public class MuleDeerBioSubmission : BioSubmission<MuleDeerMortality>
 {
     public MuleDeerBioSubmission() { }
 
-    public MuleDeerBioSubmission(int mortalityId)
-        : base(mortalityId) { }
-
     public MuleDeerBioSubmission(MuleDeerMortality mortality)
         : base(mortality) { }
 
-    public bool IsHornIncluded { get; set; }
-    public bool IsHeadIncluded { get; set; }
+    [IsRequiredOrganicMaterialForBioSubmission("Horn")]
+    public bool? IsHornProvided { get; set; }
+
+    [IsRequiredOrganicMaterialForBioSubmission("Head")]
+    public bool? IsHeadProvided { get; set; }
+
+    public override bool HasSubmittedAllRequiredOrganicMaterial() =>
+        IsHornProvided == true && IsHeadProvided == true;
 }
 
 public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioSubmission>

@@ -1,0 +1,87 @@
+﻿@using System.Reflection;
+@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear
+@using WildlifeMortalities.App.Features.Shared.Mortalities.CanadaLynx
+@using WildlifeMortalities.App.Features.Shared.Mortalities.GreyWolf
+@using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear
+@using WildlifeMortalities.App.Features.Shared.Mortalities.MountainGoat
+@using WildlifeMortalities.App.Features.Shared.Mortalities.MuleDeer
+@using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
+@using WildlifeMortalities.App.Features.Shared.Mortalities.WhiteTailedDeer
+@using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using FluentValidation
+@using WildlifeMortalities.Shared.Extensions;
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            Submit organic material for biological submission
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @foreach (var item in _requiredBioSubmissions)
+        {
+            <MudCheckBox @bind-Checked="@item.IsChecked" Label="@item.Label" />
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" ButtonType="ButtonType.Submit">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    public class SimpleCheckbox
+    {
+
+        public string Label { get; }
+        public bool IsChecked
+        {
+            get => (bool)PropertyInfo.GetValue(BioSubmission);
+            set => PropertyInfo.SetValue(BioSubmission, value);
+        }
+
+        public PropertyInfo PropertyInfo { get; }
+        public BioSubmission BioSubmission { get; }
+
+        public SimpleCheckbox(string label, PropertyInfo propertyInfo, BioSubmission bioSubmission)
+        {
+            Label = label;
+            PropertyInfo = propertyInfo;
+            BioSubmission = bioSubmission;
+        }
+    }
+
+    private IEnumerable<SimpleCheckbox> _requiredBioSubmissions = Array.Empty<SimpleCheckbox>();
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter]
+    public BioSubmission BioSubmission { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var type = BioSubmission.GetType();
+
+        _requiredBioSubmissions = type.GetProperties()
+        .Select(x => new { info = x, attribute = x.GetCustomAttributes(false).OfType<IsRequiredOrganicMaterialForBioSubmissionAttribute>().FirstOrDefault()})
+        .Where(x => x.attribute != null)
+        .Select(x => new SimpleCheckbox(x.attribute!.DisplayName, x.info, BioSubmission))
+        .ToArray();
+
+        base.OnInitialized();
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void Create()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

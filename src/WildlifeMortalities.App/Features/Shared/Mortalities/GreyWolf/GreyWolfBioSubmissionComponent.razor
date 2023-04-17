@@ -1,8 +1,10 @@
-@using static BioSubmissionDialog;
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @using WildlifeMortalities.Shared.Extensions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
+
+<MudCheckBox @bind-Checked="BioSubmission.IsPeltProvided" Label="Pelt included?" For="() => BioSubmission.IsPeltProvided" Disabled="IsReadOnly" />
 
 <MudSelect T="PeltColour?" @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="() => BioSubmission.PeltColour" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<PeltColour>())
@@ -12,7 +14,6 @@
 </MudSelect>
 
 @code {
-
     [Parameter]
     public bool IsReadOnly { get; set; } = false;
 

@@ -9,33 +9,32 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
 {
     public AmericanBlackBearBioSubmission() { }
 
-    public AmericanBlackBearBioSubmission(int mortalityId)
-        : base(mortalityId) { }
-
     public AmericanBlackBearBioSubmission(AmericanBlackBearMortality mortality)
         : base(mortality) { }
 
     public AmericanBlackBearSkullCondition? SkullCondition { get; set; }
     public int? SkullLengthMillimetres { get; set; }
     public int? SkullWidthMillimetres { get; set; }
+
+    [IsRequiredOrganicMaterialForBioSubmission("Skull")]
+    public bool? IsSkullProvided { get; set; }
+
+    public override bool HasSubmittedAllRequiredOrganicMaterial() => IsSkullProvided == true;
 }
 
 public enum AmericanBlackBearSkullCondition
 {
     [Display(Name = "Destroyed")]
-    Destroyed,
-
-    [Display(Name = "No skull submitted")]
-    NoSkullSubmitted,
+    Destroyed = 10,
 
     [Display(Name = "Flesh off")]
-    FleshOff,
+    FleshOff = 20,
 
     [Display(Name = "Flesh on")]
-    FleshOn,
+    FleshOn = 30,
 
     [Display(Name = "Skin on")]
-    SkinOn
+    SkinOn = 40
 }
 
 public class AmericanBlackBearBioSubmissionConfig
@@ -48,7 +47,6 @@ public class AmericanBlackBearBioSubmissionConfig
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Property(a => a.SkullCondition).IsRequired();
         // AmericanBlackBearBioSubmission is the first entity in the BioSubmission hierarchy that EF Core looks at
         // when generating a migration (alphabetically),so it gets the column "MortalityId" (sans prefix) for the foreign key
         // to Mortality. The other entities in this hierarchy are assigned to a column that contains their name as the prefix.

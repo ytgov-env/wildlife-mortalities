@@ -1,6 +1,6 @@
-@using static BioSubmissionDialog;
 @using FluentValidation
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
 <MudNumericField Label="Pelt length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.PeltLengthMillimetres" For="() => BioSubmission.PeltLengthMillimetres" Disabled="IsReadOnly"/>

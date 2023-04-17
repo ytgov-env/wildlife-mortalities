@@ -10,15 +10,18 @@ public class ThinhornSheepBioSubmission
 {
     public ThinhornSheepBioSubmission() { }
 
-    public ThinhornSheepBioSubmission(int mortalityId)
-        : base(mortalityId) { }
-
     public ThinhornSheepBioSubmission(ThinhornSheepMortality mortality)
         : base(mortality) { }
 
+    [IsRequiredOrganicMaterialForBioSubmission("Horn")]
+    public bool? IsHornProvided { get; set; }
+
+    [IsRequiredOrganicMaterialForBioSubmission("Head")]
+    public bool? IsHeadProvided { get; set; }
+
     public int? HornLengthToThirdAnnulusMillimetres { get; set; }
     public bool? IsFullCurl { get; set; }
-    public string PlugNumber { get; set; } = string.Empty;
+    public string? PlugNumber { get; set; }
 
     public HornMeasured? HornMeasured { get; set; }
     public BroomedStatus? BroomedStatus { get; set; }
@@ -28,6 +31,9 @@ public class ThinhornSheepBioSubmission
     public int? HornTipSpreadMillimetres { get; set; }
 
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
+
+    public override bool HasSubmittedAllRequiredOrganicMaterial() =>
+        IsHornProvided == true && IsHeadProvided == true;
 }
 
 public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<ThinhornSheepBioSubmission>
@@ -47,8 +53,6 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
                 ownedNavigationBuilder.ToJson("ThinhornSheepBioSubmission_HornMeasurementEntries");
             }
         );
-        builder.Property(t => t.HornMeasured).IsRequired();
-        builder.Property(t => t.BroomedStatus).IsRequired();
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter("[ThinhornSheepBioSubmission_MortalityId] IS NOT NULL");

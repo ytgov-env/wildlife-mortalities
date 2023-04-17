@@ -163,61 +163,44 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
-    public async Task CreateBioSubmission(BioSubmission bioSubmission)
-    {
-        if (bioSubmission is IHasHornMeasurementEntries submission)
-        {
-            if (submission.HornMeasured is HornMeasured.NoHornProvided)
+    public async Task UpdateBioSubmissionAnalysis(BioSubmission bioSubmission) =>
+        await UpdateBioSubmission(
+            bioSubmission,
+            () =>
             {
-                submission.BroomedStatus = null;
-                submission.HornTipSpreadMillimetres = null;
-                submission.HornTotalLengthMillimetres = null;
-                submission.HornBaseCircumferenceMillimetres = null;
-                submission.HornMeasurementEntries.Clear();
+                var biosubmissionId = bioSubmission.Id;
+                bioSubmission.Id = 0;
 
-                if (submission is ThinhornSheepBioSubmission sub)
+                if (bioSubmission is IHasHornMeasurementEntries submission)
                 {
-                    sub.PlugNumber = string.Empty;
-                    sub.HornLengthToThirdAnnulusMillimetres = null;
+                    if (submission.HornMeasured.HasValue)
+                    {
+                        submission.BroomedStatus = null;
+                        submission.HornTipSpreadMillimetres = null;
+                        submission.HornTotalLengthMillimetres = null;
+                        submission.HornBaseCircumferenceMillimetres = null;
+                        submission.HornMeasurementEntries.Clear();
+
+                        if (submission is ThinhornSheepBioSubmission sub)
+                        {
+                            sub.PlugNumber = string.Empty;
+                            sub.HornLengthToThirdAnnulusMillimetres = null;
+                        }
+                    }
+
+                    submission.HornMeasurementEntries.RemoveAll(x => x.IsBroomed);
                 }
             }
+        );
 
-            submission.HornMeasurementEntries.RemoveAll(x => x.IsBroomed);
-        }
-
-        using var context = _dbContextFactory.CreateDbContext();
-
-        context.BioSubmissions.Add(bioSubmission);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task UpdateBioSubmission(BioSubmission bioSubmission)
+    private async Task UpdateBioSubmission(BioSubmission bioSubmission, Action updater)
     {
+        updater();
+
+        var context = _dbContextFactory.CreateDbContext();
+
         var biosubmissionId = bioSubmission.Id;
         bioSubmission.Id = 0;
-
-        if (bioSubmission is IHasHornMeasurementEntries submission)
-        {
-            if (submission.HornMeasured is HornMeasured.NoHornProvided)
-            {
-                submission.BroomedStatus = null;
-                submission.HornTipSpreadMillimetres = null;
-                submission.HornTotalLengthMillimetres = null;
-                submission.HornBaseCircumferenceMillimetres = null;
-                submission.HornMeasurementEntries.Clear();
-
-                if (submission is ThinhornSheepBioSubmission sub)
-                {
-                    sub.PlugNumber = string.Empty;
-                    sub.HornLengthToThirdAnnulusMillimetres = null;
-                }
-            }
-
-            submission.HornMeasurementEntries.RemoveAll(x => x.IsBroomed);
-        }
-
-        using var context = _dbContextFactory.CreateDbContext();
-
         var submissionFromDb = await context.BioSubmissions.FirstOrDefaultAsync(
             x => x.Id == biosubmissionId
         );
@@ -239,6 +222,27 @@ public class MortalityService : IMortalityService
             await transaction.CommitAsync();
         });
     }
+
+    public async Task UpdateOrganicMaterialForBioSubmission(BioSubmission bioSubmission) =>
+        await UpdateBioSubmission(
+            bioSubmission,
+            () =>
+            {
+                var isSubmitted = bioSubmission.HasSubmittedAllRequiredOrganicMaterial();
+
+                if (isSubmitted)
+                {
+                    bioSubmission.Status = BioSubmissionStatus.Submitted;
+                    bioSubmission.DateSubmitted ??= DateTimeOffset.Now;
+                }
+                else
+                {
+                    bioSubmission.Status = BioSubmissionStatus.PartiallySubmitted;
+                    //Todo: raise violation
+                }
+                bioSubmission.DateModified = DateTimeOffset.Now;
+            }
+        );
 
     public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
     {

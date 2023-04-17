@@ -9,13 +9,15 @@ public class GreyWolfBioSubmission : BioSubmission<GreyWolfMortality>
 {
     public GreyWolfBioSubmission() { }
 
-    public GreyWolfBioSubmission(int mortalityId)
-        : base(mortalityId) { }
-
     public GreyWolfBioSubmission(GreyWolfMortality mortality)
         : base(mortality) { }
 
     public PeltColour? PeltColour { get; set; }
+
+    [IsRequiredOrganicMaterialForBioSubmission("Pelt")]
+    public bool? IsPeltProvided { get; set; }
+
+    public override bool HasSubmittedAllRequiredOrganicMaterial() => IsPeltProvided == true;
 }
 
 public enum PeltColour
@@ -42,7 +44,6 @@ public class GreyWolfBioSubmissionConfig : IEntityTypeConfiguration<GreyWolfBioS
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
-        builder.Property(g => g.PeltColour).IsRequired();
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter("[GreyWolfBioSubmission_MortalityId] IS NOT NULL");

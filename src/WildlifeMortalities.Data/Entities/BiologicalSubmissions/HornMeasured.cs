@@ -8,8 +8,5 @@ public enum HornMeasured
     LeftHorn = 10,
 
     [Display(Name = "Right horn")]
-    RightHorn = 20,
-
-    [Display(Name = "No horn provided")]
-    NoHornProvided = 30
+    RightHorn = 20
 }

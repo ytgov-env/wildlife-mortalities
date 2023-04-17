@@ -1,8 +1,11 @@
-@using static BioSubmissionDialog;
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @using WildlifeMortalities.Shared.Extensions;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
+
+<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached" Disabled="IsReadOnly"/>
+<MudCheckBox @bind-Checked="BioSubmission.IsSkullProvided" Label="Skull included?" For="() => BioSubmission.IsSkullProvided" Disabled="IsReadOnly" />
 
 <MudSelect T="GrizzlyBearSkullCondition?" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="() => BioSubmission.SkullCondition" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<GrizzlyBearSkullCondition>())
@@ -10,12 +13,11 @@
         <MudSelectItem T="GrizzlyBearSkullCondition?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
-@if (BioSubmission.SkullCondition is not GrizzlyBearSkullCondition.NoSkullSubmitted && BioSubmission.SkullCondition is not GrizzlyBearSkullCondition.Destroyed)
+@if (BioSubmission.SkullCondition.HasValue && BioSubmission.SkullCondition is not GrizzlyBearSkullCondition.Destroyed)
 {
     <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly"/>
     <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly"/>
 }
-<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached" Disabled="IsReadOnly"/>
 
 @code {
 
@@ -31,7 +33,7 @@
         public GrizzlyBearBioSubmissionValidator()
         {
             RuleFor(x => x.SkullCondition).NotEmpty().IsInEnum();
-            When(x => x.SkullCondition != GrizzlyBearSkullCondition.NoSkullSubmitted && x.SkullCondition != GrizzlyBearSkullCondition.Destroyed, () =>
+            When(x => x.SkullCondition != null && x.SkullCondition != GrizzlyBearSkullCondition.Destroyed, () =>
             {
                 RuleFor(x => x.SkullLengthMillimetres)
                     .NotNull()

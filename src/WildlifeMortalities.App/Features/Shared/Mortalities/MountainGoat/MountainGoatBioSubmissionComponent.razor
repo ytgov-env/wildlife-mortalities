@@ -1,8 +1,8 @@
-@using static BioSubmissionDialog;
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
-<MudCheckBox @bind-Checked="BioSubmission.IsHornIncluded" Label="Horn included?" For="() => BioSubmission.IsHornIncluded" Disabled="IsReadOnly"/>
-<MudCheckBox @bind-Checked="BioSubmission.IsHeadIncluded" Label="Head included?" For="() => BioSubmission.IsHeadIncluded" Disabled="IsReadOnly"/>
+<MudCheckBox @bind-Checked="BioSubmission.IsHornProvided" Label="Horn included?" For="() => BioSubmission.IsHornProvided" Disabled="IsReadOnly"/>
+<MudCheckBox @bind-Checked="BioSubmission.IsHeadProvided" Label="Head included?" For="() => BioSubmission.IsHeadProvided" Disabled="IsReadOnly"/>
 
 @code {
 

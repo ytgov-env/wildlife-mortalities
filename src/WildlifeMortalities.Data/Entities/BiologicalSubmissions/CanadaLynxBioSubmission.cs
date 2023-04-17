@@ -8,14 +8,16 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>
 {
     public CanadaLynxBioSubmission() { }
 
-    public CanadaLynxBioSubmission(int mortalityId)
-        : base(mortalityId) { }
-
     public CanadaLynxBioSubmission(CanadaLynxMortality mortality)
         : base(mortality) { }
 
-    public int PeltLengthMillimetres { get; set; }
-    public int PeltWidthMillimetres { get; set; }
+    [IsRequiredOrganicMaterialForBioSubmission("Pelt")]
+    public bool? IsPeltProvided { get; set; }
+
+    public int? PeltLengthMillimetres { get; set; }
+    public int? PeltWidthMillimetres { get; set; }
+
+    public override bool HasSubmittedAllRequiredOrganicMaterial() => IsPeltProvided == true;
 }
 
 public class CanadaLynxBioSubmissionConfig : IEntityTypeConfiguration<CanadaLynxBioSubmission>

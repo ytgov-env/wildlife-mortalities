@@ -37,6 +37,9 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
             .GetMortalities()
             .OfType<IHasBioSubmission>()
             .Count();
-        return mortalitiesThatRequireABioSubmission != _reportDetail.bioSubmissions.Count();
+        return mortalitiesThatRequireABioSubmission
+            != _reportDetail.bioSubmissions.Count(
+                x => x.submission.Status == BioSubmissionStatus.AnalysisComplete
+            );
     }
 }

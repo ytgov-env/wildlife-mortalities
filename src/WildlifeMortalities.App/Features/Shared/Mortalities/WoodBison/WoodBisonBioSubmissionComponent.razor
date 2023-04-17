@@ -1,7 +1,7 @@
-@using static BioSubmissionDialog;
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
-<MudCheckBox @bind-Checked="BioSubmission.IsIncisorBarIncluded" Label="Incisor bar included?" For="() => BioSubmission.IsIncisorBarIncluded" Disabled="IsReadOnly"/>
+<MudCheckBox @bind-Checked="BioSubmission.IsIncisorBarProvided" Label="Incisor bar included?" For="() => BioSubmission.IsIncisorBarProvided" Disabled="IsReadOnly"/>
 
 @code {
 

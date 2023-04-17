@@ -5,18 +5,6 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
-public enum BioSubmissionStatus
-{
-    [Display(Name = "Not submitted")]
-    NotSubmitted = 10,
-
-    [Display(Name = "Submitted")]
-    Submitted = 20,
-
-    [Display(Name = "Analysis complete")]
-    AnalysisComplete = 30,
-}
-
 public abstract class BioSubmission
 {
     public int Id { get; set; }
@@ -25,17 +13,15 @@ public abstract class BioSubmission
     public DateTimeOffset? DateModified { get; set; }
     public string Comment { get; set; } = string.Empty;
     public Age? Age { get; set; }
-    public List<UploadFileInfo> UploadFileInfo { get; set; } = null!;
 
     public abstract void ClearDependencies();
+    public abstract bool HasSubmittedAllRequiredOrganicMaterial();
 }
 
 public abstract class BioSubmission<T> : BioSubmission
     where T : Mortality
 {
     protected BioSubmission() { }
-
-    protected BioSubmission(int mortalityId) => MortalityId = mortalityId;
 
     protected BioSubmission(T mortality)
     {
@@ -62,10 +48,6 @@ public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
                 a.WithOwner();
             }
         );
-        builder.OwnsMany(
-            b => b.UploadFileInfo,
-            ownedNavigationBuilder => ownedNavigationBuilder.ToJson()
-        );
     }
 }
 
@@ -73,12 +55,6 @@ public class Age
 {
     public int Years { get; set; }
     public ConfidenceInAge? Confidence { get; set; }
-}
-
-public class UploadFileInfo
-{
-    public string PathToFile { get; set; } = string.Empty;
-    public string MimeType { get; set; } = string.Empty;
 }
 
 public enum ConfidenceInAge
@@ -91,4 +67,19 @@ public enum ConfidenceInAge
 
     [Display(Name = "Poor")]
     Poor = 30
+}
+
+public enum BioSubmissionStatus
+{
+    [Display(Name = "Not submitted")]
+    NotSubmitted = 10,
+
+    [Display(Name = "Partially submitted")]
+    PartiallySubmitted = 20,
+
+    [Display(Name = "Submitted")]
+    Submitted = 30,
+
+    [Display(Name = "Analysis complete")]
+    AnalysisComplete = 40,
 }
