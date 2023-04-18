@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -11,14 +12,17 @@ public class MuleDeerBioSubmission : BioSubmission<MuleDeerMortality>
     public MuleDeerBioSubmission(MuleDeerMortality mortality)
         : base(mortality) { }
 
-    [IsRequiredOrganicMaterialForBioSubmission("Horn")]
-    public bool? IsHornProvided { get; set; }
+    [IsRequiredOrganicMaterialForBioSubmission("Hide")]
+    public bool? IsHideProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
     public bool? IsHeadProvided { get; set; }
 
+    [IsRequiredOrganicMaterialForBioSubmission("Antlers")]
+    public bool? IsAntlersProvided { get; set; }
+
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
-        IsHornProvided == true && IsHeadProvided == true;
+        IsHideProvided == true && IsHeadProvided == true && IsAntlersProvided == true;
 }
 
 public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioSubmission>
@@ -32,6 +36,6 @@ public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioS
             .OnDelete(DeleteBehavior.NoAction);
         builder
             .HasIndex(x => x.MortalityId)
-            .HasFilter("[MuleDeerBioSubmission_MortalityId] IS NOT NULL");
+            .HasFilter($"[{nameof(MuleDeerBioSubmission)}_MortalityId] IS NOT NULL");
     }
 }

@@ -17,6 +17,10 @@ public class GameManagementArea
 
 public class GameManagementAreaConfig : IEntityTypeConfiguration<GameManagementArea>
 {
-    public void Configure(EntityTypeBuilder<GameManagementArea> builder) =>
+    public void Configure(EntityTypeBuilder<GameManagementArea> builder)
+    {
+        builder.Property(g => g.Zone).HasMaxLength(3);
+        builder.Property(g => g.Subzone).HasMaxLength(3);
         builder.Property(a => a.Area).HasComputedColumnSql("[Zone] + '-' + [Subzone]", true);
+    }
 }

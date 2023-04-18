@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
 using WildlifeMortalities.Shared.Services.Reports.Single;

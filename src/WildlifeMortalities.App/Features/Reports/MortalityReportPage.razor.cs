@@ -41,6 +41,9 @@ public partial class MortalityReportPage : DbContextAwareComponent
     [Inject]
     public ConservationOfficerService ConservationOfficerService { get; set; } = default!;
 
+    [Inject]
+    public ISnackbar SnackbarService { get; set; } = default!;
+
     private void CreateNewEditContext()
     {
         if (_editContext != null)
@@ -145,6 +148,12 @@ public partial class MortalityReportPage : DbContextAwareComponent
         {
             var personId = _personId!.Value;
             var content = JsonSerializer.Serialize(_vm);
+
+            if (content.Length > 4000)
+            {
+                SnackbarService.Add("Draft report is too large to save.", Severity.Error);
+                return;
+            }
 
             if (DraftId != null)
             {

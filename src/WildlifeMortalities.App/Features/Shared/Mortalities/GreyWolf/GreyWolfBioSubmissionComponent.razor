@@ -3,13 +3,15 @@
 @using FluentValidation
 @using WildlifeMortalities.Shared.Extensions;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
+@using static WildlifeMortalities.Data.Entities.BiologicalSubmissions.GreyWolfBioSubmission;
+
 
 <MudCheckBox @bind-Checked="BioSubmission.IsPeltProvided" Label="Pelt included?" For="() => BioSubmission.IsPeltProvided" Disabled="IsReadOnly" />
 
-<MudSelect T="PeltColour?" @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="() => BioSubmission.PeltColour" Disabled="IsReadOnly">
-    @foreach (var item in Enum.GetValues<PeltColour>())
+<MudSelect T="GreyWolfPeltColour?" @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="() => BioSubmission.PeltColour" Disabled="IsReadOnly">
+    @foreach (var item in Enum.GetValues<GreyWolfPeltColour>())
     {
-        <MudSelectItem T="PeltColour?" Value="item">@item.GetDisplayName()</MudSelectItem>
+        <MudSelectItem T="GreyWolfPeltColour?" Value="item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
 

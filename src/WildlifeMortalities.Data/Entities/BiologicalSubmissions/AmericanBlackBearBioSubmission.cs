@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -20,21 +21,21 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
     public bool? IsSkullProvided { get; set; }
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() => IsSkullProvided == true;
-}
 
-public enum AmericanBlackBearSkullCondition
-{
-    [Display(Name = "Destroyed")]
-    Destroyed = 10,
+    public enum AmericanBlackBearSkullCondition
+    {
+        [Display(Name = "Destroyed")]
+        Destroyed = 10,
 
-    [Display(Name = "Flesh off")]
-    FleshOff = 20,
+        [Display(Name = "Flesh off")]
+        FleshOff = 20,
 
-    [Display(Name = "Flesh on")]
-    FleshOn = 30,
+        [Display(Name = "Flesh on")]
+        FleshOn = 30,
 
-    [Display(Name = "Skin on")]
-    SkinOn = 40
+        [Display(Name = "Skin on")]
+        SkinOn = 40
+    }
 }
 
 public class AmericanBlackBearBioSubmissionConfig

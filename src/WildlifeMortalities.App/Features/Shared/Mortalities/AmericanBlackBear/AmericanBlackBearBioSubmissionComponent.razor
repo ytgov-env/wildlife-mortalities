@@ -2,6 +2,7 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @using WildlifeMortalities.Shared.Extensions;
+@using static WildlifeMortalities.Data.Entities.BiologicalSubmissions.AmericanBlackBearBioSubmission;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
 <MudCheckBox @bind-Checked="BioSubmission.IsSkullProvided" Label="Skull included?" For="() => BioSubmission.IsSkullProvided" Disabled="IsReadOnly" />

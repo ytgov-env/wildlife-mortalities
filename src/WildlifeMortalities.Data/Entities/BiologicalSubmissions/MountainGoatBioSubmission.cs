@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -13,8 +14,8 @@ public class MountainGoatBioSubmission
     public MountainGoatBioSubmission(MountainGoatMortality mortality)
         : base(mortality) { }
 
-    [IsRequiredOrganicMaterialForBioSubmission("Horn")]
-    public bool? IsHornProvided { get; set; }
+    [IsRequiredOrganicMaterialForBioSubmission("Horns")]
+    public bool? IsHornsProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
     public bool? IsHeadProvided { get; set; }
@@ -28,7 +29,7 @@ public class MountainGoatBioSubmission
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
-        IsHornProvided == true && IsHeadProvided == true;
+        IsHornsProvided == true && IsHeadProvided == true;
 }
 
 public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<MountainGoatBioSubmission>
@@ -50,6 +51,6 @@ public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<Mountain
         );
         builder
             .HasIndex(x => x.MortalityId)
-            .HasFilter("[MountainGoatBioSubmission_MortalityId] IS NOT NULL");
+            .HasFilter($"[{nameof(MountainGoatBioSubmission)}_MortalityId] IS NOT NULL");
     }
 }

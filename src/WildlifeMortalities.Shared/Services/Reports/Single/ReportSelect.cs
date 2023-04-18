@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
@@ -60,6 +61,14 @@ public static class ReportSelect
                     => await context.BioSubmissions
                         .OfType<CanadaLynxBioSubmission>()
                         .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                CaribouMortality
+                    => await context.BioSubmissions
+                        .OfType<CaribouBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                ElkMortality
+                    => await context.BioSubmissions
+                        .OfType<ElkBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
                 GreyWolfMortality
                     => await context.BioSubmissions
                         .OfType<GreyWolfBioSubmission>()
@@ -67,6 +76,10 @@ public static class ReportSelect
                 GrizzlyBearMortality
                     => await context.BioSubmissions
                         .OfType<GrizzlyBearBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                MooseMortality
+                    => await context.BioSubmissions
+                        .OfType<MooseBioSubmission>()
                         .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
                 MountainGoatMortality
                     => await context.BioSubmissions
@@ -83,6 +96,10 @@ public static class ReportSelect
                 WhiteTailedDeerMortality
                     => await context.BioSubmissions
                         .OfType<WhiteTailedDeerBioSubmission>()
+                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+                WolverineMortality
+                    => await context.BioSubmissions
+                        .OfType<WolverineBioSubmission>()
                         .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
                 WoodBisonMortality
                     => await context.BioSubmissions

@@ -1,4 +1,4 @@
-﻿namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+﻿namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 
 public interface IHasHornMeasurementEntries
 {

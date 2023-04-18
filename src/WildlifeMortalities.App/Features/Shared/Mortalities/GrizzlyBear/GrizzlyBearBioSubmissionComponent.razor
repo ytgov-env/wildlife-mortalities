@@ -2,6 +2,7 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @using WildlifeMortalities.Shared.Extensions;
+@using static WildlifeMortalities.Data.Entities.BiologicalSubmissions.GrizzlyBearBioSubmission;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
 <MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached" Disabled="IsReadOnly"/>

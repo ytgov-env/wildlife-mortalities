@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
-public class CaribouMortality : Mortality
+public class CaribouMortality : Mortality, IHasBioSubmission
 {
     public enum CaribouHerd
     {
@@ -43,6 +45,9 @@ public class CaribouMortality : Mortality
     public CaribouHerd Herd { get; set; }
 
     public override Species Species => Species.Caribou;
+    public CaribouBioSubmission? BioSubmission { get; set; }
+
+    public BioSubmission CreateDefaultBioSubmission() => new CaribouBioSubmission(this);
 }
 
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>

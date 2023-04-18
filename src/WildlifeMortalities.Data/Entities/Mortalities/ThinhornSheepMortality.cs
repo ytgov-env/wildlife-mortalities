@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 

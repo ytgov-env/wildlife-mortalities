@@ -1,5 +1,7 @@
 ﻿using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class MuleDeerMortality : Mortality, IHasBioSubmission

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 
 public enum BroomedStatus
 {

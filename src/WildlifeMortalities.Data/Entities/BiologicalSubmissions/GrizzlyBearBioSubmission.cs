@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -24,21 +25,21 @@ public class GrizzlyBearBioSubmission : BioSubmission<GrizzlyBearMortality>
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
         IsSkullProvided == true && IsEvidenceOfSexAttached == true;
-}
 
-public enum GrizzlyBearSkullCondition
-{
-    [Display(Name = "Destroyed")]
-    Destroyed = 10,
+    public enum GrizzlyBearSkullCondition
+    {
+        [Display(Name = "Destroyed")]
+        Destroyed = 10,
 
-    [Display(Name = "Flesh off")]
-    FleshOff = 20,
+        [Display(Name = "Flesh off")]
+        FleshOff = 20,
 
-    [Display(Name = "Flesh on")]
-    FleshOn = 30,
+        [Display(Name = "Flesh on")]
+        FleshOn = 30,
 
-    [Display(Name = "Skin on")]
-    SkinOn = 40
+        [Display(Name = "Skin on")]
+        SkinOn = 40
+    }
 }
 
 public class GrizzlyBearBioSubmissionConfig : IEntityTypeConfiguration<GrizzlyBearBioSubmission>
@@ -52,6 +53,6 @@ public class GrizzlyBearBioSubmissionConfig : IEntityTypeConfiguration<GrizzlyBe
             .OnDelete(DeleteBehavior.NoAction);
         builder
             .HasIndex(x => x.MortalityId)
-            .HasFilter("[GrizzlyBearBioSubmission_MortalityId] IS NOT NULL");
+            .HasFilter($"[{nameof(GrizzlyBearBioSubmission)}_MortalityId] IS NOT NULL");
     }
 }

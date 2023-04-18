@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -13,8 +14,8 @@ public class ThinhornSheepBioSubmission
     public ThinhornSheepBioSubmission(ThinhornSheepMortality mortality)
         : base(mortality) { }
 
-    [IsRequiredOrganicMaterialForBioSubmission("Horn")]
-    public bool? IsHornProvided { get; set; }
+    [IsRequiredOrganicMaterialForBioSubmission("Horns")]
+    public bool? IsHornsProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
     public bool? IsHeadProvided { get; set; }
@@ -33,7 +34,7 @@ public class ThinhornSheepBioSubmission
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
-        IsHornProvided == true && IsHeadProvided == true;
+        IsHornsProvided == true && IsHeadProvided == true;
 }
 
 public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<ThinhornSheepBioSubmission>
@@ -55,6 +56,6 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
         );
         builder
             .HasIndex(x => x.MortalityId)
-            .HasFilter("[ThinhornSheepBioSubmission_MortalityId] IS NOT NULL");
+            .HasFilter($"[{nameof(ThinhornSheepBioSubmission)}_MortalityId] IS NOT NULL");
     }
 }

@@ -15,29 +15,29 @@ public class PosseSyncService : TimerBasedHostedService
 
     protected override async Task DoWork(object? state)
     {
-        Log.Information("Starting posse sync");
-        using var scope = _serviceProvider.CreateScope();
-        var posseService = scope.ServiceProvider.GetRequiredService<IPosseService>();
-        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        //Log.Information("Starting posse sync");
+        //using var scope = _serviceProvider.CreateScope();
+        //var posseService = scope.ServiceProvider.GetRequiredService<IPosseService>();
+        //var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var clientMapper = context.People
-            .AsSplitQuery()
-            .OfType<Client>()
-            .Include(x => x.DraftReports)
-            .Include(x => x.SpecialGuideLicencesAsClient)
-            .Include(x => x.IndividualHuntedMortalityReports)
-            .Include(x => x.OutfitterGuidedHuntReportsAsChiefGuide)
-            .Include(x => x.OutfitterGuidedHuntReportsAsAssistantGuide)
-            .Include(x => x.OutfitterGuidedHuntReportsAsClient)
-            .Include(x => x.SpecialGuidedHuntReportsAsGuide)
-            .Include(x => x.SpecialGuidedHuntReportsAsClient)
-            .Include(x => x.TrappedMortalitiesReports)
-            .Include(x => x.Authorizations)
-            .ToDictionary(x => x.EnvClientId, x => x);
+        //var clientMapper = context.People
+        //    .AsSplitQuery()
+        //    .OfType<Client>()
+        //    .Include(x => x.DraftReports)
+        //    .Include(x => x.SpecialGuideLicencesAsClient)
+        //    .Include(x => x.IndividualHuntedMortalityReports)
+        //    .Include(x => x.OutfitterGuidedHuntReportsAsChiefGuide)
+        //    .Include(x => x.OutfitterGuidedHuntReportsAsAssistantGuide)
+        //    .Include(x => x.OutfitterGuidedHuntReportsAsClient)
+        //    .Include(x => x.SpecialGuidedHuntReportsAsGuide)
+        //    .Include(x => x.SpecialGuidedHuntReportsAsClient)
+        //    .Include(x => x.TrappedMortalitiesReports)
+        //    .Include(x => x.Authorizations)
+        //    .ToDictionary(x => x.EnvClientId, x => x);
 
-        await SyncClients(clientMapper, context, posseService);
-        await SyncAuthorizations(clientMapper, context, posseService);
-        Log.Information("Finished posse sync");
+        //await SyncClients(clientMapper, context, posseService);
+        //await SyncAuthorizations(clientMapper, context, posseService);
+        //Log.Information("Finished posse sync");
     }
 
     private static async Task SyncClients(
