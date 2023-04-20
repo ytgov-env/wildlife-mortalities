@@ -69,12 +69,9 @@ public partial class MortalityReportPage : DbContextAwareComponent
     protected override async Task OnInitializedAsync()
     {
         _personId = await ClientService.GetPersonIdByEnvClientId(HumanReadablePersonId);
-        if (_personId == null)
-        {
-            _personId = await ConservationOfficerService.GetPersonIdByBadgeNumber(
-                HumanReadablePersonId
-            );
-        }
+        _personId ??= await ConservationOfficerService.GetPersonIdByBadgeNumber(
+            HumanReadablePersonId
+        );
 
         if (DraftId != null)
         {

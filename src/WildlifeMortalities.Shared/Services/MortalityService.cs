@@ -290,7 +290,7 @@ public class MortalityService : IMortalityService
 
         foreach (var item in report.GetMortalities().OfType<IHasBioSubmission>())
         {
-            if (reportDetails.bioSubmissions.Any(x => x.mortalityId == item.Id) == false)
+            if (reportDetails.BioSubmissions.Any(x => x.mortalityId == item.Id) == false)
             {
                 var bioSubmission = item.CreateDefaultBioSubmission();
                 if (bioSubmission == null)

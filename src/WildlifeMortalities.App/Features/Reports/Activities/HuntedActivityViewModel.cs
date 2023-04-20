@@ -46,7 +46,7 @@ public class HuntedActivityViewModel : ActivityViewModel
 
         if (_reportDetail != null)
         {
-            switch (_reportDetail.report)
+            switch (_reportDetail.Report)
             {
                 case OutfitterGuidedHuntReport report:
                     activity.OutfitterGuidedHuntReportId = report.Id;

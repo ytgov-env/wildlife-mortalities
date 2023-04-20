@@ -34,12 +34,12 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
 
     private bool HasIncompleteBioSubmissions()
     {
-        var mortalitiesThatRequireABioSubmission = _reportDetail.report
+        var mortalitiesThatRequireABioSubmission = _reportDetail.Report
             .GetMortalities()
             .OfType<IHasBioSubmission>()
             .Count();
         return mortalitiesThatRequireABioSubmission
-            != _reportDetail.bioSubmissions.Count(
+            != _reportDetail.BioSubmissions.Count(
                 x => x.submission.Status == BioSubmissionStatus.AnalysisComplete
             );
     }

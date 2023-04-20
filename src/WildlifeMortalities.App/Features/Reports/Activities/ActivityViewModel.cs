@@ -70,7 +70,7 @@ public static class FluentValidationExtensions
             var relevantAssembly = mortalityViewModelType.Assembly;
             var allTypes = relevantAssembly.GetTypes();
 
-            List<(Type, Type)> _mortalityViewModelTypes = new();
+            List<(Type, Type)> mortalityViewModelTypes = new();
             foreach (var item in allTypes)
             {
                 if (!item.IsSubclassOf(mortalityViewModelType))
@@ -80,12 +80,12 @@ public static class FluentValidationExtensions
 
                 var validatorType = typeof(AbstractValidator<>).MakeGenericType(item);
 
-                _mortalityViewModelTypes.Add((item, validatorType));
+                mortalityViewModelTypes.Add((item, validatorType));
             }
 
             foreach (var item in allTypes)
             {
-                foreach (var (vmType, validatorType) in _mortalityViewModelTypes)
+                foreach (var (vmType, validatorType) in mortalityViewModelTypes)
                 {
                     if (!item.IsSubclassOf(validatorType))
                     {

@@ -13,9 +13,9 @@
 
     private async Task DownloadFileFromStream()
     {
-        var file = PdfService.GetReportPdf(ReportDetail.report.Id);
+        var file = PdfService.GetReportPdf(ReportDetail.Report.Id);
         var fileStream = new MemoryStream(file);
-        var fileName = $"{ReportDetail.report.HumanReadableId}_{DateTimeOffset.Now.ToString("yyyy-MM-dd")}.pdf";
+        var fileName = $"{ReportDetail.Report.HumanReadableId}_{DateTimeOffset.Now.ToString("yyyy-MM-dd")}.pdf";
         using var streamRef = new DotNetStreamReference(fileStream);
 
         await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
@@ -23,7 +23,7 @@
 
     private async Task PrintFileFromStream()
     {
-        var file = PdfService.GetReportPdf(ReportDetail.report.Id);
+        var file = PdfService.GetReportPdf(ReportDetail.Report.Id);
         var fileStream = new MemoryStream(file);
         using var streamRef = new DotNetStreamReference(fileStream);
 

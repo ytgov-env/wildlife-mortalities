@@ -16,7 +16,7 @@
 {
     <MudChip Color="Color.Warning">Missing bio</MudChip>
 }
-@switch (_reportDetail.report)
+@switch (_reportDetail.Report)
 {
     case HumanWildlifeConflictMortalityReport report:
         <MudText Typo="Typo.h3" Class="mb-4">Human-wildlife conflict report</MudText>
@@ -39,12 +39,15 @@
         break;
 }
 
-@if (_reportDetail.report is not IndividualHuntedMortalityReport)
+<MudField Label="Date submitted" DisableUnderLine="true">@_reportDetail.Report.DateSubmitted.ToString("D")</MudField>
+
+
+@if (_reportDetail.Report is not IndividualHuntedMortalityReport)
 {
     <MudText Typo="Typo.h5" Class="my-2">Mortalities</MudText>
 }
 <MudGrid>
-    @foreach (var item in _reportDetail.report.GetActivities())
+    @foreach (var item in _reportDetail.Report.GetActivities())
     {
         <MudItem sm="3" xs="6">
             <ActivityCardComponent ActivityViewModel="@GetActivityVm(item)"/>
