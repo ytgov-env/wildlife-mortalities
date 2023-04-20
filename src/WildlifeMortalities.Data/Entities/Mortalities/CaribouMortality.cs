@@ -47,7 +47,10 @@ public class CaribouMortality : Mortality, IHasBioSubmission
     public override Species Species => Species.Caribou;
     public CaribouBioSubmission? BioSubmission { get; set; }
 
-    public BioSubmission CreateDefaultBioSubmission() => new CaribouBioSubmission(this);
+    public BioSubmission? CreateDefaultBioSubmission() =>
+        Herd == CaribouHerd.Fortymile || Herd == CaribouHerd.Nelchina
+            ? new CaribouBioSubmission(this)
+            : null;
 }
 
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>

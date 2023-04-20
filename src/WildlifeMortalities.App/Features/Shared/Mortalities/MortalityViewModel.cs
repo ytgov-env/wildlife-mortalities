@@ -91,13 +91,13 @@ public class MortalityViewModel
 
     private Mortality GetMortality(Species species)
     {
-        if (_existingMortality != null)
+        var mortality = _existingMortality;
+        if (mortality == null)
         {
-            return _existingMortality;
+            var mortalityFactory = s_mortalityFactory[species];
+            mortality = mortalityFactory.Invoke();
         }
 
-        var mortalityFactory = s_mortalityFactory[species];
-        var mortality = mortalityFactory.Invoke();
         SetBaseValues(mortality);
 
         return mortality;

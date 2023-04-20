@@ -24,6 +24,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Authorization> Authorizations => Set<Authorization>();
     public DbSet<Mortality> Mortalities => Set<Mortality>();
+    public DbSet<Entities.Reports.SingleMortality.Activity> Activities =>
+        Set<Entities.Reports.SingleMortality.Activity>();
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<DraftReport> DraftReports => Set<DraftReport>();
     public DbSet<Violation> Violations => Set<Violation>();

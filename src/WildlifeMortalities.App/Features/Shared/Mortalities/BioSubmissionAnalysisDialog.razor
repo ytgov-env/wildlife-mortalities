@@ -83,6 +83,7 @@
                         </MudSelect>
                     }
                 }
+                <MudTextField @bind-Value="BioSubmission.Comment" For="@(() => BioSubmission.Comment)" Label="Comment" Lines="4" />
             </div>
         </DialogContent>
         <DialogActions>
@@ -115,17 +116,4 @@
     {
         MudDialog.Close(DialogResult.Ok(true));
     }
-
-    public class BioSubmissionValidator<T> : AbstractValidator<T> where T : BioSubmission
-    {
-        public BioSubmissionValidator()
-        {
-            When(x => x.Age != null, () =>
-            {
-                RuleFor(x => x.Age!.Years).InclusiveBetween(1, 80);
-                RuleFor(x => x.Age!.Confidence).NotNull().IsInEnum();
-            });
-        }
-    }
-
 }

@@ -21,7 +21,7 @@
 
 <MudText Typo="Typo.h3" Class="mb-8">@_vm.ReportType.GetDisplayName() report</MudText>
 
-<EditForm OnValidSubmit="CreateReport" OnInvalidSubmit="@(() => _invalidSubmitDetected = true)" EditContext="_editContext" onkeypress="preventEnterFromSubmitting(event)">
+<EditForm OnValidSubmit="SubmitReport" OnInvalidSubmit="@(() => _invalidSubmitDetected = true)" EditContext="_editContext" onkeypress="preventEnterFromSubmitting(event)">
     <ValidationSummary />
     <FluentValidationValidator />
     @if (_vm.IsUpdate == false)
@@ -50,7 +50,7 @@
                     <TrappedReportComponent ViewModel="@_vm.TrappedReportViewModel" />
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException("Report type not recognized.");
             }
         </CascadingValue>
     </CascadingValue>
@@ -86,10 +86,13 @@
 
     <MudStack Row="true" Class="mt-4">
         <MudSpacer />
-        @if (_editContext.GetValidationMessages().Any())
+        @if (_editContext.GetValidationMessages().Any() && ReportId == null)
         {
             <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="CreateDraftReport" Color="Color.Primary">Save as draft</MudButton>
         }
-        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Disabled="@(_editContext.GetValidationMessages().Any())">Create Report</MudButton>
+
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Disabled="@(_editContext.GetValidationMessages().Any())">
+            @((ReportId == null ? "Create report" : "Update report"))
+        </MudButton>
     </MudStack>
 </EditForm>

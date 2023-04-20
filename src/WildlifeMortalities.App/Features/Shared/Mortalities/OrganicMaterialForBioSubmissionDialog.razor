@@ -17,6 +17,7 @@
         {
             <MudCheckBox @bind-Checked="@item.IsChecked" Label="@item.Label" />
         }
+        <MudTextField @bind-Value="BioSubmission.Comment" For="@(() => BioSubmission.Comment)" Label="Comment" Lines="4" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>

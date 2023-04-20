@@ -8,6 +8,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Seasons;
+using WildlifeMortalities.Shared.Services.Reports.Single;
 
 namespace WildlifeMortalities.Shared.Services;
 
@@ -27,19 +28,19 @@ public class MortalityService : IMortalityService
         switch (report)
         {
             case IndividualHuntedMortalityReport individualHuntedMortalityReport:
-                await CreateReport(context, individualHuntedMortalityReport);
+                await CreateOrUpdateReport(context, individualHuntedMortalityReport);
                 break;
             case SpecialGuidedHuntReport specialGuidedHuntReport:
-                await CreateReport(context, specialGuidedHuntReport);
+                await CreateOrUpdateReport(context, specialGuidedHuntReport);
                 break;
             case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
-                await CreateReport(context, outfitterGuidedHuntReport);
+                await CreateOrUpdateReport(context, outfitterGuidedHuntReport, null);
                 break;
             case HumanWildlifeConflictMortalityReport humanWildlifeConflictMortalityReport:
-                await CreateReport(context, humanWildlifeConflictMortalityReport);
+                await CreateOrUpdateReport(context, humanWildlifeConflictMortalityReport);
                 break;
             case TrappedMortalitiesReport trappedMortalitiesReport:
-                await CreateReport(context, trappedMortalitiesReport);
+                await CreateOrUpdateReport(context, trappedMortalitiesReport);
                 break;
             default:
                 throw new NotImplementedException();
@@ -51,11 +52,11 @@ public class MortalityService : IMortalityService
         } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
 
         context.Add(report);
-        AddDefaultBioSubmissions(context, report);
+        await AddDefaultBioSubmissions(context, report);
         await context.SaveChangesAsync();
     }
 
-    private static async Task CreateReport(
+    private static async Task CreateOrUpdateReport(
         AppDbContext context,
         IndividualHuntedMortalityReport report
     )
@@ -63,13 +64,46 @@ public class MortalityService : IMortalityService
         report.Season ??= await HuntingSeason.GetSeason(report, context);
     }
 
-    private static async Task CreateReport(AppDbContext context, OutfitterGuidedHuntReport report)
+    private static async Task CreateOrUpdateReport(
+        AppDbContext context,
+        OutfitterGuidedHuntReport report,
+        OutfitterGuidedHuntReport? existingReport
+    )
     {
-        var assistantGuideIds = report.AssistantGuides.Select(x => x.Id).ToList();
+        var newAssistantGuideIds = report.AssistantGuides.ConvertAll(x => x.Id);
+
         var assistantGuides = await context.People
             .OfType<Client>()
-            .Where(x => assistantGuideIds.Contains(x.Id) == true)
+            .Where(x => newAssistantGuideIds.Contains(x.Id))
             .ToListAsync();
+
+        if (existingReport != null)
+        {
+            var existingAssistantGuideIds =
+                existingReport.AssistantGuides.Select(y => y.Id) ?? new List<int>();
+
+            var idsToAdd = newAssistantGuideIds
+                .Except(newAssistantGuideIds.Intersect(existingAssistantGuideIds))
+                .ToArray();
+
+            existingReport.AssistantGuides.AddRange(
+                assistantGuides.Where(x => idsToAdd.Contains(x.Id)).ToArray()
+            );
+
+            var idsToRemove = existingAssistantGuideIds
+                .Except(existingAssistantGuideIds.Intersect(newAssistantGuideIds))
+                .ToArray();
+
+            foreach (var item in idsToRemove)
+            {
+                var existingGuide = existingReport.AssistantGuides.First(x => x.Id == item);
+                existingReport.AssistantGuides.Remove(existingGuide);
+            }
+        }
+        else
+        {
+            report.AssistantGuides = assistantGuides;
+        }
 
         var area = await context.OutfitterAreas.FirstOrDefaultAsync(
             x => x.Area == report.OutfitterArea.Area
@@ -83,17 +117,18 @@ public class MortalityService : IMortalityService
             throw new ArgumentException(nameof(report.OutfitterArea));
         }
 
-        report.AssistantGuides = assistantGuides;
-
         report.Season ??= await HuntingSeason.GetSeason(report, context);
     }
 
-    private static async Task CreateReport(AppDbContext context, SpecialGuidedHuntReport report)
+    private static async Task CreateOrUpdateReport(
+        AppDbContext context,
+        SpecialGuidedHuntReport report
+    )
     {
         report.Season ??= await HuntingSeason.GetSeason(report, context);
     }
 
-    private static async Task CreateReport(
+    private static async Task CreateOrUpdateReport(
         AppDbContext context,
         HumanWildlifeConflictMortalityReport report
     )
@@ -103,7 +138,10 @@ public class MortalityService : IMortalityService
             ?? throw new ArgumentException("Unable to resolve season.", nameof(report));
     }
 
-    private static async Task CreateReport(AppDbContext context, TrappedMortalitiesReport report)
+    private static async Task CreateOrUpdateReport(
+        AppDbContext context,
+        TrappedMortalitiesReport report
+    )
     {
         report.Season ??= await TrappingSeason.GetSeason(report, context);
 
@@ -120,12 +158,96 @@ public class MortalityService : IMortalityService
         }
     }
 
-    private static void AddDefaultBioSubmissions(AppDbContext context, Report report)
+    public async Task UpdateReport(Report report)
     {
-        foreach (var item in report.GetMortalities().OfType<IHasBioSubmission>())
+        using var context = _dbContextFactory.CreateDbContext();
+        var existingReport = await context.Reports
+            .WithEntireGraph()
+            .FirstAsync(x => x.Id == report.Id);
+
+        SetReportNavigationPropertyForMortalities(report);
+
+        switch (report)
         {
-            var bioSubmission = item.CreateDefaultBioSubmission();
-            context.BioSubmissions.Add(bioSubmission);
+            case IndividualHuntedMortalityReport individualHuntedMortalityReport:
+                await CreateOrUpdateReport(context, individualHuntedMortalityReport);
+                break;
+            case SpecialGuidedHuntReport specialGuidedHuntReport:
+                await CreateOrUpdateReport(context, specialGuidedHuntReport);
+                break;
+            case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
+                await CreateOrUpdateReport(
+                    context,
+                    outfitterGuidedHuntReport,
+                    (OutfitterGuidedHuntReport)existingReport
+                );
+                break;
+            case HumanWildlifeConflictMortalityReport humanWildlifeConflictMortalityReport:
+                await CreateOrUpdateReport(context, humanWildlifeConflictMortalityReport);
+                break;
+            case TrappedMortalitiesReport trappedMortalitiesReport:
+                await CreateOrUpdateReport(context, trappedMortalitiesReport);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+        report.Discriminator = existingReport.Discriminator;
+        report.HumanReadableId = existingReport.HumanReadableId;
+        report.DateSubmitted = existingReport.DateSubmitted;
+        report.DateModified = DateTimeOffset.Now;
+
+        context.Entry(existingReport).CurrentValues.SetValues(report);
+
+        await AddDefaultBioSubmissions(context, report);
+        UpdateActivities(context, report, existingReport);
+
+        await context.SaveChangesAsync();
+
+        static void UpdateActivities(AppDbContext context, Report report, Report existingReport)
+        {
+            foreach (var mortality in report.GetMortalities())
+            {
+                if (mortality.Id > 0)
+                {
+                    var existingMortality = existingReport
+                        .GetMortalities()
+                        .First(x => x.Id == mortality.Id);
+                    context.Entry(existingMortality).CurrentValues.SetValues(mortality);
+                }
+                else
+                {
+                    context.Add(mortality);
+                }
+            }
+
+            var activityIdsToDelete = existingReport.GetActivities().Select(x => x.Id).ToList();
+
+            foreach (var activity in report.GetActivities())
+            {
+                if (activity.Id > 0)
+                {
+                    var existingActivity = existingReport
+                        .GetActivities()
+                        .First(x => x.Id == activity.Id);
+
+                    context.Entry(existingActivity).CurrentValues.SetValues(activity);
+
+                    activityIdsToDelete.Remove(activity.Id);
+                }
+                else
+                {
+                    context.Add(activity);
+                }
+            }
+
+            foreach (var activityId in activityIdsToDelete)
+            {
+                var existingActivity = existingReport
+                    .GetActivities()
+                    .First(x => x.Id == activityId);
+                context.Mortalities.Remove(existingActivity.Mortality);
+                context.Activities.Remove(existingActivity);
+            }
         }
     }
 
@@ -150,17 +272,34 @@ public class MortalityService : IMortalityService
     {
         using var context = _dbContextFactory.CreateDbContext();
 
-        var reportFromDatabase = await context.DraftReports.FindAsync(reportId);
-
-        if (reportFromDatabase == null)
-        {
-            throw new ArgumentException($"Draft report {reportId} not found.", nameof(reportId));
-        }
-
+        var reportFromDatabase =
+            await context.DraftReports.FindAsync(reportId)
+            ?? throw new ArgumentException($"Draft report {reportId} not found.", nameof(reportId));
         reportFromDatabase.SerializedData = report;
         reportFromDatabase.DateLastModified = DateTimeOffset.Now;
 
         await context.SaveChangesAsync();
+    }
+
+    private static async Task AddDefaultBioSubmissions(AppDbContext context, Report report)
+    {
+        var reportDetails =
+            report.Id > 0 ? await context.Reports.GetDetails(report.Id, context) : null;
+
+        reportDetails ??= new ReportDetail(null!, Array.Empty<(int, BioSubmission)>());
+
+        foreach (var item in report.GetMortalities().OfType<IHasBioSubmission>())
+        {
+            if (reportDetails.bioSubmissions.Any(x => x.mortalityId == item.Id) == false)
+            {
+                var bioSubmission = item.CreateDefaultBioSubmission();
+                if (bioSubmission == null)
+                {
+                    continue;
+                }
+                context.BioSubmissions.Add(bioSubmission);
+            }
+        }
     }
 
     public async Task UpdateBioSubmissionAnalysis(BioSubmission bioSubmission) =>

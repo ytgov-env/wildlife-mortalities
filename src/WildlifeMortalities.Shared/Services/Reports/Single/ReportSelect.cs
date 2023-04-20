@@ -11,7 +11,7 @@ namespace WildlifeMortalities.Shared.Services.Reports.Single;
 
 public static class ReportSelect
 {
-    public static IQueryable<Report> WithMortalities(this IQueryable<Report> reports)
+    public static IQueryable<Report> WithEntireGraph(this IQueryable<Report> reports)
     {
         return reports
             .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Mortality)
@@ -39,7 +39,10 @@ public static class ReportSelect
         AppDbContext context
     )
     {
-        var result = await report.WithMortalities().FirstOrDefaultAsync(x => x.Id == reportId);
+        var result = await report
+            .WithEntireGraph()
+            .AsNoTrackingWithIdentityResolution()
+            .FirstOrDefaultAsync(x => x.Id == reportId);
 
         if (result == null)
         {

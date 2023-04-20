@@ -4,5 +4,5 @@ public interface IHasBioSubmission
 {
     int Id { get; }
 
-    BioSubmission CreateDefaultBioSubmission();
+    BioSubmission? CreateDefaultBioSubmission();
 }

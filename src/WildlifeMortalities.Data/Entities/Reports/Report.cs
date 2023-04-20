@@ -16,9 +16,13 @@ public enum ReportStatus
 public abstract class Report
 {
     public ReportStatus Status { get; set; }
+
     public bool IsDone() => HasStatusFlag(ReportStatus.Done);
+
     public bool HasStatusFlag(ReportStatus flag) => (Status & flag) == flag;
+
     public void RemoveStatusFlag(ReportStatus flag) => Status &= ~flag;
+
     public void AddStatusFlag(ReportStatus flag) => Status |= flag;
 
     public int Id { get; set; }
@@ -26,6 +30,7 @@ public abstract class Report
     public string HumanReadableId { get; set; } = string.Empty;
     public Season Season { get; set; } = null!;
     public DateTimeOffset DateSubmitted { get; set; }
+    public DateTimeOffset DateModified { get; set; }
 
     //public User CreatedBy { get; set; } = null!;
     //public User LastModifiedBy { get; set; } = null!;

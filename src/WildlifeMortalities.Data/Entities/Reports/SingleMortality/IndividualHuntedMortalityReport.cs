@@ -7,8 +7,6 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 public class IndividualHuntedMortalityReport : Report, ISingleMortalityReport, IHasClientReporter
 {
-    public DateTimeOffset DateStarted { get; set; }
-    public DateTimeOffset DateCompleted { get; set; }
     public HuntedActivity HuntedActivity { get; set; } = null!;
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
