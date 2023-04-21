@@ -32,6 +32,9 @@
                 <MudSelectItem Value="@reportType" T="ReportType">@reportType.GetDisplayName()</MudSelectItem>
             }
         </MudSelect>
+    } else
+    {
+        <MudDatePicker @bind-Date="_vm.DateSubmitted" Label="Date submitted"/>
     }
     <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="@_vm.IsUpdate" IsFixed="true">
         <CascadingValue Name="@Constants.CascadingValues.ReportType" Value="_vm.ReportType">

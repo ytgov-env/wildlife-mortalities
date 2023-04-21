@@ -16,20 +16,36 @@ public class IndividualHuntedMortalityReportViewModel
     }
 
     public HuntedActivityViewModel HuntedActivityViewModel { get; set; } = new();
+    public DateTimeOffset? DateSubmitted { get; set; }
 
     public IndividualHuntedMortalityReport GetReport(int personId) =>
         new()
         {
             Id = _reportId,
             ClientId = personId,
-            HuntedActivity = HuntedActivityViewModel.GetActivity()
+            HuntedActivity = HuntedActivityViewModel.GetActivity(),
+            DateSubmitted = DateSubmitted ?? DateTimeOffset.Now
         };
 }
 
 public class IndividualHuntedMortalityReportViewModelValidator
     : AbstractValidator<IndividualHuntedMortalityReportViewModel>
 {
-    public IndividualHuntedMortalityReportViewModelValidator() =>
+    public IndividualHuntedMortalityReportViewModelValidator()
+    {
         RuleFor(x => x.HuntedActivityViewModel)
             .SetValidator(new HuntedActivityViewModelValidator());
+        // Todo: attach validation message
+        RuleFor(x => x.DateSubmitted)
+            .Must(
+                (model, dateSubmitted) =>
+                    (dateSubmitted ?? DateTimeOffset.Now)
+                    >= model
+                        .HuntedActivityViewModel
+                        .MortalityWithSpeciesSelectionViewModel
+                        .MortalityViewModel
+                        .DateOfDeath
+            )
+            .WithMessage("Date submitted cannot occur before date of death.");
+    }
 }

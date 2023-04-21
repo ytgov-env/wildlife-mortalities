@@ -27,6 +27,7 @@ public class SpecialGuidedHuntReportViewModel
     public DateRange HuntingDateRange { get; set; } = new();
     public Client? Guide { get; set; }
     public GuidedHuntResult? Result { get; set; }
+    public DateTimeOffset? DateSubmitted { get; set; }
 
     public List<HuntedActivityViewModel> HuntedActivityViewModels { get; set; } = new();
 
@@ -41,19 +42,22 @@ public class SpecialGuidedHuntReportViewModel
         return Result is not GuidedHuntResult.DidNotHunt
             ? new SpecialGuidedHuntReport
             {
+                Id = _reportId,
+                ClientId = personId,
                 HuntStartDate = (DateTime)HuntingDateRange!.Start!,
                 HuntEndDate = (DateTime)HuntingDateRange.End!,
                 GuideId = Guide!.Id,
                 Result = Result!.Value,
-                ClientId = personId,
                 HuntedActivities = HuntedActivityViewModels.Select(x => x.GetActivity()).ToList(),
-                Id = _reportId,
+                DateSubmitted = DateSubmitted ?? DateTimeOffset.Now
             }
             : new SpecialGuidedHuntReport
             {
+                Id = _reportId,
+                ClientId = personId,
                 GuideId = Guide!.Id,
                 Result = Result!.Value,
-                ClientId = personId,
+                DateSubmitted = DateSubmitted ?? DateTimeOffset.Now
             };
     }
 }
@@ -71,9 +75,15 @@ public class SpecialGuidedHuntReportViewModelValidator
             .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
             .WithMessage("Please enter the hunting dates.");
         RuleFor(x => x.HuntingDateRange)
-            .Must(x => x.End <= DateTimeOffset.Now)
+            .Must(
+                (model, dateRange) => dateRange.End <= (model.DateSubmitted ?? DateTimeOffset.Now)
+            )
             .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
             .WithMessage("The hunting dates cannot be in the future.");
+        RuleFor(x => x.HuntingDateRange)
+            .Must(IsHuntingDateRangeWithinSameSeason)
+            .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
+            .WithMessage("The hunting dates must occur within the same season.");
         RuleFor(x => x.HuntingDateRange)
             .Must(
                 (model, _) =>
@@ -97,5 +107,22 @@ public class SpecialGuidedHuntReportViewModelValidator
                 x =>
                     $"Please add at least one mortality, or change the {nameof(x.Result).ToLower()}."
             );
+    }
+
+    private bool IsHuntingDateRangeWithinSameSeason(DateRange dateRange)
+    {
+        if (dateRange.Start == null || dateRange.End == null)
+        {
+            return false;
+        }
+
+        var start = dateRange.Start.Value;
+        var end = dateRange.End.Value;
+
+        var seasonStart =
+            start.Month < 4 ? new DateTime(start.Year - 1, 4, 1) : new DateTime(start.Year, 4, 1);
+        var seasonEnd = seasonStart.AddYears(1).AddDays(-1);
+
+        return start >= seasonStart && end <= seasonEnd;
     }
 }

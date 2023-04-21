@@ -25,6 +25,7 @@ public class OutfitterGuidedHuntReportViewModel
             .Select(x => new HuntedActivityViewModel(x, report))
             .ToList();
         _reportId = report.Id;
+        DateSubmitted = report.DateSubmitted;
     }
 
     public DateRange HuntingDateRange { get; set; } = new();
@@ -33,6 +34,7 @@ public class OutfitterGuidedHuntReportViewModel
     public List<Client> AssistantGuides { get; set; } = new();
     public OutfitterArea? OutfitterArea { get; set; }
     public GuidedHuntResult? Result { get; set; }
+    public DateTimeOffset? DateSubmitted { get; set; }
 
     public List<HuntedActivityViewModel> HuntedActivityViewModels { get; set; } = new();
 
@@ -56,6 +58,7 @@ public class OutfitterGuidedHuntReportViewModel
                 ClientId = personId,
                 HuntedActivities = HuntedActivityViewModels.Select(x => x.GetActivity()).ToList(),
                 Id = _reportId,
+                DateSubmitted = DateSubmitted ?? DateTimeOffset.Now
             }
             : new OutfitterGuidedHuntReport
             {
@@ -64,6 +67,8 @@ public class OutfitterGuidedHuntReportViewModel
                 OutfitterArea = OutfitterArea!,
                 Result = Result!.Value,
                 ClientId = personId,
+                Id = _reportId,
+                DateSubmitted = DateSubmitted ?? DateTimeOffset.Now
             };
     }
 }
@@ -82,7 +87,9 @@ public class OutfitterGuidedHuntReportViewModelValidator
             .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
             .WithMessage("Please enter the hunting dates.");
         RuleFor(x => x.HuntingDateRange)
-            .Must(x => x.End <= DateTimeOffset.Now)
+            .Must(
+                (model, dateRange) => dateRange.End <= (model.DateSubmitted ?? DateTimeOffset.Now)
+            )
             .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
             .WithMessage("The hunting dates cannot be in the future.");
         RuleFor(x => x.HuntingDateRange)

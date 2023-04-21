@@ -7,6 +7,8 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class MortalityReportPageViewModel
 {
+    private DateTime? _dateSubmitted;
+
     public bool IsUpdate { get; }
 
     public MortalityReportPageViewModel()
@@ -41,9 +43,40 @@ public class MortalityReportPageViewModel
                 TrappedReportViewModel = new TrappedReportViewModel(trappedMortalitiesReport);
                 break;
         }
+        DateSubmitted = report.DateSubmitted.DateTime;
     }
 
     public ReportType ReportType { get; set; } = ReportType.IndividualHuntedMortalityReport;
+
+    // Todo: refactor
+    public DateTime? DateSubmitted
+    {
+        get { return _dateSubmitted; }
+        set
+        {
+            _dateSubmitted = value;
+            if (IndividualHuntedMortalityReportViewModel != null)
+            {
+                IndividualHuntedMortalityReportViewModel.DateSubmitted = value;
+            }
+            else if (OutfitterGuidedHuntReportViewModel != null)
+            {
+                OutfitterGuidedHuntReportViewModel.DateSubmitted = value;
+            }
+            else if (SpecialGuidedHuntReportViewModel != null)
+            {
+                SpecialGuidedHuntReportViewModel.DateSubmitted = value;
+            }
+            else if (TrappedReportViewModel != null)
+            {
+                TrappedReportViewModel.DateSubmitted = value;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
 
     public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; } =
         new();

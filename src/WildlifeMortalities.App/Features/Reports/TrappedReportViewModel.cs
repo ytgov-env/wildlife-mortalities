@@ -19,6 +19,7 @@ public class TrappedReportViewModel
         _reportId = report.Id;
     }
 
+    public DateTimeOffset? DateSubmitted { get; set; }
     public List<TrappedActivityViewModel> TrappedActivityViewModels { get; set; } = new();
     public RegisteredTrappingConcession? RegisteredTrappingConcession { get; set; }
 
@@ -30,6 +31,7 @@ public class TrappedReportViewModel
             TrappedActivities = TrappedActivityViewModels.ConvertAll(x => x.GetActivity()),
             RegisteredTrappingConcession = RegisteredTrappingConcession!,
             Id = _reportId,
+            DateSubmitted = DateSubmitted ?? DateTimeOffset.Now
         };
     }
 }
