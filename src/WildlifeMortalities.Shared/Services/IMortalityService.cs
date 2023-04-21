@@ -1,14 +1,12 @@
 ﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports;
-using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Shared.Services;
 
 public record ReportDetail(
-    Report report,
-    IEnumerable<(int mortalityId, BioSubmission submission)> bioSubmissions
+    Report Report,
+    IEnumerable<(int mortalityId, BioSubmission submission)> BioSubmissions
 );
 
 public interface IMortalityService
