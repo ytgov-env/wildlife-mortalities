@@ -1,0 +1,12 @@
+﻿@attribute [Route(Constants.Routes.ReportsOverviewPage)]
+@using WildlifeMortalities.App.Features.Reporters
+@using WildlifeMortalities.App.Features.Shared.Mortalities
+
+<MudTabs Color="Color.Info">
+    <MudTabPanel Text="Submitted">
+        <ReportsTableComponent />
+    </MudTabPanel>
+    <MudTabPanel Text="Drafts">
+        <DraftReportsTableComponent />
+    </MudTabPanel>
+</MudTabs>
