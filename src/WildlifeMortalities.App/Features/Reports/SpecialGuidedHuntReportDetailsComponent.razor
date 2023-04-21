@@ -2,7 +2,10 @@
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.Shared.Extensions;
 <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
-<MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
+@if (Report.Result != Data.Enums.GuidedHuntResult.DidNotHunt)
+{
+    <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
+}
 <GuideComponent Guide="@Report.Guide" Label="Guide"/>
 <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
 
