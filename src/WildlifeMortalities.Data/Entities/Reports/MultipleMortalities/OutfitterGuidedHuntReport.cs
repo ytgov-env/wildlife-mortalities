@@ -29,15 +29,8 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHa
         return HuntedActivities.Select(x => x.Mortality).ToArray();
     }
 
-    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities()
-    {
-        if (HuntedActivities == null)
-        {
-            return Enumerable.Empty<HuntedActivity>();
-        }
-
-        return HuntedActivities.ToArray();
-    }
+    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() =>
+        HuntedActivities?.ToArray() ?? Array.Empty<HuntedActivity>();
 
     public override bool HasHuntingActivity() => true;
 

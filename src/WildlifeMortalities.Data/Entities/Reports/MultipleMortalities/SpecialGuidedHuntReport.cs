@@ -27,7 +27,8 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport, IHasC
         return HuntedActivities.Select(x => x.Mortality).ToArray();
     }
 
-    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() => HuntedActivities.ToArray();
+    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() =>
+        HuntedActivities?.ToArray() ?? Array.Empty<HuntedActivity>();
 
     public override bool HasHuntingActivity() => true;
 }
