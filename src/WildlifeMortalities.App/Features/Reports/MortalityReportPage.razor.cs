@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.App.Features.Shared;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Shared.Services;
 using WildlifeMortalities.Shared.Services.Reports.Single;
@@ -36,12 +37,6 @@ public partial class MortalityReportPage : DbContextAwareComponent
     public IMortalityService MortalityService { get; set; } = default!;
 
     [Inject]
-    public ClientService ClientService { get; set; } = default!;
-
-    [Inject]
-    public ConservationOfficerService ConservationOfficerService { get; set; } = default!;
-
-    [Inject]
     public ISnackbar SnackbarService { get; set; } = default!;
 
     private void CreateNewEditContext()
@@ -68,10 +63,17 @@ public partial class MortalityReportPage : DbContextAwareComponent
 
     protected override async Task OnInitializedAsync()
     {
-        _personId = await ClientService.GetPersonIdByEnvClientId(HumanReadablePersonId);
-        _personId ??= await ConservationOfficerService.GetPersonIdByBadgeNumber(
-            HumanReadablePersonId
-        );
+        _personId = await Context.People
+            .OfType<Client>()
+            .Where(c => c.EnvClientId == HumanReadablePersonId)
+            .Select(x => x.Id)
+            .SingleOrDefaultAsync();
+
+        _personId ??= await Context.People
+            .OfType<ConservationOfficer>()
+            .Where(c => c.BadgeNumber == HumanReadablePersonId)
+            .Select(x => x.Id)
+            .SingleOrDefaultAsync();
 
         if (DraftId != null)
         {

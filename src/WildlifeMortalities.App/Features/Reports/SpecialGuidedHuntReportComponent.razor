@@ -2,8 +2,11 @@
 @using WildlifeMortalities.App.Features.Reports.Activities
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.Data.Enums
-@using WildlifeMortalities.Shared.Extensions;
+@using WildlifeMortalities.Shared.Extensions
 @using WildlifeMortalities.Shared.Services
+@inherits DbContextAwareComponent
+
+
 <DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
 <MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="Client" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
@@ -42,61 +45,4 @@
 }
 
 
-@code {
 
-    [Parameter]
-    [EditorRequired]
-    public SpecialGuidedHuntReportViewModel ViewModel { get; set; } = null!;
-
-    [CascadingParameter(Name = Constants.CascadingValues.ReportType)]
-    public ReportType ReportType { get; set; }
-
-    [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
-    public bool EditMode { get; set; } = false;
-
-    [Inject]
-    private IDialogService DialogService { get; set; } = null!;
-
-    [Inject]
-    private ClientService ClientService { get; set; } = null!;
-
-    private async Task Add()
-    {
-        var parameters = new DialogParameters
-        {
-            [nameof(AddActivityDialog.ReportType)] = ReportType
-        };
-
-        var dialog = DialogService.Show<AddActivityDialog>("", parameters);
-        var result = await dialog.Result;
-        if (!result.Canceled)
-        {
-            ViewModel.HuntedActivityViewModels.Add(result.Data as HuntedActivityViewModel);
-        }
-    }
-
-    private async Task Edit(HuntedActivityViewModel viewModel)
-    {
-        var parameters = new DialogParameters
-        {
-            [nameof(EditActivityDialog.ViewModel)] = viewModel,
-            [nameof(EditActivityDialog.ReportType)] = ReportType
-        };
-
-        var dialog = DialogService.Show<EditActivityDialog>("", parameters);
-        var result = await dialog.Result;
-    }
-
-    private void Delete(HuntedActivityViewModel viewModel)
-    {
-        ViewModel.HuntedActivityViewModels.Remove(viewModel);
-    }
-
-    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input)
-    {
-        return (await ClientService.SearchByEnvClientId(input))
-            .Union(await ClientService.SearchByLastName(input))
-            .OrderBy(x => x.LastName);
-    }
-
-}

@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.App.Extensions;
+using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reporters;
 
-public partial class ConservationOfficerOverviewPage : IDisposable
+public partial class ConservationOfficerOverviewPage : DbContextAwareComponent
 {
-    private EditContext _context = null!;
+    private EditContext _context = default!;
 
     private SelectConservationOfficerViewModel _selectedConservationOfficerViewModel = null!;
 
@@ -15,27 +17,43 @@ public partial class ConservationOfficerOverviewPage : IDisposable
     public EventCallback<bool> ValidationChanged { get; set; }
 
     [Parameter]
-    public int Id { get; set; }
+    public string? BadgeNumber { get; set; }
 
     [Inject]
-    private ConservationOfficerService ConservationOfficerService { get; set; } = default!;
+    private NavigationManager NavigationManager { get; set; } = default!;
 
-    public void Dispose()
+    protected override async Task OnParametersSetAsync()
     {
-        if (_context is not null)
+        if (BadgeNumber != null)
         {
-            _context.OnFieldChanged -= _context_OnFieldChanged;
+            _selectedConservationOfficerViewModel.SelectedConservationOfficer ??=
+                await Context.People
+                    .OfType<ConservationOfficer>()
+                    .Where(c => c.BadgeNumber.StartsWith(BadgeNumber))
+                    .FirstOrDefaultAsync();
         }
+        await base.OnParametersSetAsync();
     }
 
     protected override void OnInitialized()
     {
         _selectedConservationOfficerViewModel = new SelectConservationOfficerViewModel();
         _context = new EditContext(_selectedConservationOfficerViewModel);
-        _context.OnFieldChanged += _context_OnFieldChanged;
+        _context.OnFieldChanged += Context_OnFieldChanged;
+
+        base.OnInitialized();
     }
 
-    private void _context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
+    private void ConservationOfficerSelected(ConservationOfficer? conservationOfficer)
+    {
+        _selectedConservationOfficerViewModel.SelectedConservationOfficer = conservationOfficer;
+        BadgeNumber = _selectedConservationOfficerViewModel.SelectedConservationOfficer.BadgeNumber;
+        NavigationManager.NavigateTo(
+            Constants.Routes.GetConservationOfficerOverviewPageLink(BadgeNumber)
+        );
+    }
+
+    private void Context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         _context.Validate();
         ValidationChanged.InvokeAsync(!_context.GetValidationMessages().Any());
@@ -43,8 +61,18 @@ public partial class ConservationOfficerOverviewPage : IDisposable
 
     private async Task<
         IEnumerable<ConservationOfficer>
-    > SearchConservationOfficerByBadgeNumberOrLastName(string input) =>
-        (await ConservationOfficerService.SearchByBadgeNumber(input))
-            .Union(await ConservationOfficerService.SearchByLastName(input))
-            .OrderBy(x => x.LastName);
+    > SearchConservationOfficerByBadgeNumberOrLastName(string searchTerm) =>
+        await Context.People
+            .OfType<ConservationOfficer>()
+            .SearchByBadgeNumberOrLastName(searchTerm)
+            .ToArrayAsync();
+
+    protected override void Dispose(bool disposing)
+    {
+        if (_context is not null)
+        {
+            _context.OnFieldChanged -= Context_OnFieldChanged;
+        }
+        base.Dispose(disposing);
+    }
 }

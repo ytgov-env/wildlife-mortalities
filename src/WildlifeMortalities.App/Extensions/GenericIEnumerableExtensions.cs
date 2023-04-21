@@ -1,6 +1,6 @@
 ﻿namespace WildlifeMortalities.App.Extensions;
 
-public static class IEnumerableExtensions
+public static class GenericIEnumerableExtensions
 {
     public static IEnumerable<T> ValueOrEmpty<T>(this IEnumerable<T>? sequence)
     {

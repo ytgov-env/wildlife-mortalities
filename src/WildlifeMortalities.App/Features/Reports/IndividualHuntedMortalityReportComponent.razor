@@ -1,4 +1,5 @@
 @using WildlifeMortalities.App.Features.Reports.Activities
+
 <ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel"/>
 
 @code {
@@ -9,5 +10,4 @@
 
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
-
 }

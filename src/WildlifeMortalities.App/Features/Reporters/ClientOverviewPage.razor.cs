@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.App.Extensions;
+using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reporters;
 
-public partial class ClientOverviewPage : IDisposable
+public partial class ClientOverviewPage : DbContextAwareComponent
 {
     private EditContext _editContext = default!;
 
     private SelectClientViewModel _selectedClientViewModel = default!;
-
-    [Inject]
-    private ClientService ClientService { get; set; } = default!;
 
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
@@ -21,22 +20,16 @@ public partial class ClientOverviewPage : IDisposable
     public EventCallback<bool> ValidationChanged { get; set; }
 
     [Parameter]
-    public string EnvClientId { get; set; } = string.Empty;
-
-    public void Dispose()
-    {
-        if (_editContext is not null)
-        {
-            _editContext.OnFieldChanged -= EditContextOnFieldChanged;
-        }
-    }
+    public string? EnvClientId { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        if (_selectedClientViewModel.SelectedClient == null)
+        if (EnvClientId != null)
         {
-            var result = await ClientService.SearchByEnvClientId(EnvClientId);
-            _selectedClientViewModel.SelectedClient = result.FirstOrDefault();
+            _selectedClientViewModel.SelectedClient ??= await Context.People
+                .OfType<Client>()
+                .Where(c => c.EnvClientId.StartsWith(EnvClientId))
+                .FirstOrDefaultAsync();
         }
 
         await base.OnParametersSetAsync();
@@ -46,7 +39,9 @@ public partial class ClientOverviewPage : IDisposable
     {
         _selectedClientViewModel = new SelectClientViewModel();
         _editContext = new EditContext(_selectedClientViewModel);
-        _editContext.OnFieldChanged += EditContextOnFieldChanged;
+        _editContext.OnFieldChanged += Context_OnFieldChanged;
+
+        base.OnInitialized();
     }
 
     private void ClientSelected(Client? client)
@@ -56,15 +51,27 @@ public partial class ClientOverviewPage : IDisposable
         NavigationManager.NavigateTo(Constants.Routes.GetClientOverviewPageLink(EnvClientId));
     }
 
-    private void EditContextOnFieldChanged(object? sender, FieldChangedEventArgs e)
+    private void Context_OnFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         _editContext.Validate();
         ValidationChanged.InvokeAsync(!_editContext.GetValidationMessages().Any());
         EnvClientId = _selectedClientViewModel.SelectedClient.EnvClientId;
     }
 
-    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string input) =>
-        (await ClientService.SearchByEnvClientId(input))
-            .Union(await ClientService.SearchByLastName(input))
-            .OrderBy(x => x.LastName);
+    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(
+        string searchTerm
+    ) =>
+        await Context.People
+            .OfType<Client>()
+            .SearchByEnvClientIdOrLastName(searchTerm)
+            .ToArrayAsync();
+
+    protected override void Dispose(bool disposing)
+    {
+        if (_editContext is not null)
+        {
+            _editContext.OnFieldChanged -= Context_OnFieldChanged;
+        }
+        base.Dispose(disposing);
+    }
 }

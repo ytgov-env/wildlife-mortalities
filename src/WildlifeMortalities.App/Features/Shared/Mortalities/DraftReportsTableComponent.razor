@@ -1,5 +1,6 @@
-@namespace WildlifeMortalities.App.Features.Reporters
 @using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.App.Features.Reports;
+@using WildlifeMortalities.Data.Entities.People;
 @inherits DbContextAwareComponent
 
 <MudTable T="DraftReportDto" Items="DraftReports" OnRowClick="GotoEdit" RowClass="cursor-pointer" Hover="true">
@@ -7,17 +8,23 @@
         <MudText Typo="Typo.h6">Reports</MudText>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Id</MudTh>
+        @if(EnvClientId == null)
+        {
+            <MudTh>Client Id</MudTh>
+        }
         <MudTh>Type</MudTh>
         <MudTh>Date Submitted</MudTh>
         <MudTh>Last Modified</MudTh>
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd>@context.Id</MudTd>
+        @if (EnvClientId == null)
+        {
+            <MudTd>@((context.Person as Client)!.EnvClientId)</MudTd>
+        }
         <MudTd>@context.Type.GetReportTypeDisplayName()</MudTd>
-        <MudTd>@context.DateSubmitted</MudTd>
-        <MudTd>@context.DateLastModified</MudTd>
+        <MudTd>@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
+        <MudTd>@context.DateLastModified.ToString("MMM dd, yyyy")</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

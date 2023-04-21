@@ -1,6 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities.People;
 
-namespace WildlifeMortalities.App.Features.Reporters;
+namespace WildlifeMortalities.App.Features.Reports;
 
 public class DraftReportDto
 {
