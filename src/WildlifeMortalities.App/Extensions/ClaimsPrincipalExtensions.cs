@@ -4,6 +4,11 @@ namespace WildlifeMortalities.App.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
-    public static string GetFormattedName(this ClaimsPrincipal claimsPrincipal) =>
-        claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value.Replace('.', ' ') ?? string.Empty;
+    public static string GetFormattedName(this ClaimsPrincipal claimsPrincipal)
+    {
+        var email = claimsPrincipal.FindFirst(ClaimTypes.Email);
+        return email == null
+            ? string.Empty
+            : email.Value[..email.Value.IndexOf('@')].Replace('.', ' ');
+    }
 }
