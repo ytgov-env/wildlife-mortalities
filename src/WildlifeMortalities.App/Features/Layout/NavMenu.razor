@@ -1,6 +1,44 @@
-﻿<MudNavMenu>
+﻿@inject IConfiguration Configuration;
+@inject IJSRuntime JsRuntime
+
+<MudNavMenu>
     <MudNavLink Href="@Constants.Routes.GetHomePageLink()" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="@Constants.Routes.GetClientLookupPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Client overview</MudNavLink>
     <MudNavLink Href="@Constants.Routes.GetConservationOfficerLookupPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.LocalPolice">Conservation officer overview</MudNavLink>
     <MudNavLink Href="@Constants.Routes.GetReportsOverviewPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CrueltyFree">All reports</MudNavLink>
+    <MudNavGroup Icon="@Icons.Material.Filled.Help" Title="Help" Expanded="true">
+        <MudNavLink OnClick="OpenTeamsHelpChannel">Help channel</MudNavLink>
+        <MudNavLink OnClick="OpenTeamsIssueTracker">Issue tracker</MudNavLink>
+    </MudNavGroup>
+    <MudDivider/>
+    @*<MudNavGroup Icon="@Icons.Material.Filled.Settings" Title="Administration">
+    </MudNavGroup>*@
+    <MudNavGroup Icon="@Icons.Material.Filled.DeviceHub" Title="Related apps">
+        <MudNavLink OnClick="OpenPosseWebUiInNewTab">POSSE WebUI</MudNavLink>
+        <MudNavLink OnClick="OpenPosseStaffUiInNewTab">POSSE StaffUI</MudNavLink>
+        <MudNavLink OnClick="OpenHumanWildlifeConflictInNewTab">Human-wildlife conflict</MudNavLink>
+    </MudNavGroup>
 </MudNavMenu>
+
+@code {
+    private async Task OpenTeamsIssueTracker()
+    {
+        await JsRuntime.InvokeVoidAsync("openTeamsUri", Configuration["MicrosoftTeams:IssueTrackerRoute"]);
+    }
+    private async Task OpenTeamsHelpChannel()
+    {
+        await JsRuntime.InvokeVoidAsync("openTeamsUri", Configuration["MicrosoftTeams:HelpChannelRoute"]);
+    }
+    private async Task OpenPosseWebUiInNewTab()
+    {
+        await JsRuntime.InvokeVoidAsync("open", CancellationToken.None, Configuration["Posse:WebUiUri"], "_blank");
+    }
+    private async Task OpenPosseStaffUiInNewTab()
+    {
+        await JsRuntime.InvokeVoidAsync("open", CancellationToken.None, Configuration["Posse:StaffUiUri"], "_blank");
+    }
+    private async Task OpenHumanWildlifeConflictInNewTab()
+    {
+        await Task.CompletedTask;
+    }
+}

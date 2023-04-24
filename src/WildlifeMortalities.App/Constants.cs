@@ -30,7 +30,7 @@ public static class Constants
         public static string GetReportDetailsPageLink(string humanReadablePersonId, int reportId) =>
             $"reports/{humanReadablePersonId}/{reportId}";
 
-        public const string CreateReportPage = "/mortality-reports/{humanReadablePersonId}/new";
+        public const string CreateReportPage = "/reports/{humanReadablePersonId}/new";
 
         public static string GetCreateReportPageLink(string humanReadablePersonId) =>
             $"reports/{humanReadablePersonId}/new";
