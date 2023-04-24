@@ -80,10 +80,6 @@ public static class ReportSelect
                     => await context.BioSubmissions
                         .OfType<GrizzlyBearBioSubmission>()
                         .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
-                MooseMortality
-                    => await context.BioSubmissions
-                        .OfType<MooseBioSubmission>()
-                        .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
                 MountainGoatMortality
                     => await context.BioSubmissions
                         .OfType<MountainGoatBioSubmission>()
