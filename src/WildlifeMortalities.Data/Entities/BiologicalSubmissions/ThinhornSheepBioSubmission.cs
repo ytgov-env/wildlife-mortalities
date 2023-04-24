@@ -33,6 +33,8 @@ public class ThinhornSheepBioSubmission
 
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
 
+    public override bool CanBeAnalysed => true;
+
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
         IsHornsProvided == true && IsHeadProvided == true;
 }

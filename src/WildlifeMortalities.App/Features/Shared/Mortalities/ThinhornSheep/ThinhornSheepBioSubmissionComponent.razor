@@ -5,7 +5,6 @@
 @using WildlifeMortalities.Shared.Extensions;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
-@*<ValidationSummary/>*@
 <MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<HornMeasured>())
     {

@@ -6,8 +6,6 @@
 @using static WildlifeMortalities.Data.Entities.BiologicalSubmissions.GreyWolfBioSubmission;
 
 
-<MudCheckBox @bind-Checked="BioSubmission.IsPeltProvided" Label="Pelt included?" For="() => BioSubmission.IsPeltProvided" Disabled="IsReadOnly" />
-
 <MudSelect T="GreyWolfPeltColour?" @bind-Value="BioSubmission.PeltColour" Label="Pelt colour" For="() => BioSubmission.PeltColour" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<GreyWolfPeltColour>())
     {

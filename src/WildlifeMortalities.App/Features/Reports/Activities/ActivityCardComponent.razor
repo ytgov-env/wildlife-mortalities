@@ -23,14 +23,18 @@
         <CardHeaderActions>
             @if (EnableBioSubmission && MortalityViewModel.GetMortality() is IHasBioSubmission biosubmission)
             {
-                if(MortalityViewModel.BioSubmission!.Status == BioSubmissionStatus.Submitted)
-                {
-                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="OpenBioSubmissionAnalysisDialog" StartIcon="@Icons.Material.Filled.Science">Bio submission</MudButton>
-                }
-                else
-                {
-                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="OpenOrganicMaterialForBioSubmissionDialog" StartIcon="@Icons.Material.Filled.Science">Bio submission</MudButton>
-                }
+                if (MortalityViewModel.BioSubmission!.CanBeAnalysed == true && ( MortalityViewModel.BioSubmission!.Status == BioSubmissionStatus.Submitted ||
+                    MortalityViewModel.BioSubmission!.Status == BioSubmissionStatus.PartiallySubmitted))
+                    {
+                        <MudMenu StartIcon="@Icons.Material.Filled.Science" Label="Bio submission">
+                            <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>
+                            <MudMenuItem   OnClick="OpenBioSubmissionAnalysisDialog">Analysis</MudMenuItem>
+                        </MudMenu>
+                    } else
+                    {
+                        <MudButton OnClick="OpenOrganicMaterialForBioSubmissionDialog" StartIcon="@Icons.Material.Filled.Science">Bio submission</MudButton>
+                    }
+                <MudText>Status: @MortalityViewModel.BioSubmission?.Status.GetDisplayName().ToLower()</MudText>
             }
         </CardHeaderActions>
     </MudCardHeader>
@@ -57,7 +61,7 @@
             {
                 case HuntedActivityViewModel vm:
                     <MudField DisableUnderLine="true" Label="Landmark">@vm.Landmark</MudField>
-                    <MudField DisableUnderLine="true" Label="Game management area">@vm.GameManagementArea.Area</MudField>
+                    <MudField DisableUnderLine="true" Label="Game management area">@vm.GameManagementArea?.Area</MudField>
                     break;
                 case TrappedActivityViewModel vm:
                     break;
@@ -128,7 +132,7 @@
             await Service.UpdateBioSubmissionAnalysis(bioSubmission);
         }
     }
-    
+
 
     private async Task OpenOrganicMaterialForBioSubmissionDialog()
     {
@@ -140,10 +144,21 @@
         var dialog = await DialogService.ShowAsync<OrganicMaterialForBioSubmissionDialog>("", parameters);
         var result = await dialog.Result;
 
-        if (result.Canceled == false)
+        if (result.Data is BioSubmissionDialogResult dialogResult)
         {
+            if (dialogResult == BioSubmissionDialogResult.Cancel)
+            {
+                return;
+            }
+
             await Service.UpdateOrganicMaterialForBioSubmission(bioSubmission);
+
+            if(dialogResult == BioSubmissionDialogResult.SubmitAndProceedToAnalysis)
+            {
+                await OpenBioSubmissionAnalysisDialog();
+            }
         }
     }
+
 
 }

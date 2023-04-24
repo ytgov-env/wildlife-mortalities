@@ -18,6 +18,7 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>, IHasF
     public int? PeltLengthMillimetres { get; set; }
     public int? PeltWidthMillimetres { get; set; }
     public string? FurbearerSealNumber { get; set; }
+    public override bool CanBeAnalysed => true;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() => IsPeltProvided == true;
 }

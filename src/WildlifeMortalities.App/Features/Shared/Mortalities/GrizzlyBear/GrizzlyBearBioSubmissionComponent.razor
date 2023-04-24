@@ -5,9 +5,6 @@
 @using static WildlifeMortalities.Data.Entities.BiologicalSubmissions.GrizzlyBearBioSubmission;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
-<MudCheckBox @bind-Checked="BioSubmission.IsEvidenceOfSexAttached" Label="Evidence of sex attached?" For="() => BioSubmission.IsEvidenceOfSexAttached" Disabled="IsReadOnly"/>
-<MudCheckBox @bind-Checked="BioSubmission.IsSkullProvided" Label="Skull included?" For="() => BioSubmission.IsSkullProvided" Disabled="IsReadOnly" />
-
 <MudSelect T="GrizzlyBearSkullCondition?" @bind-Value="@BioSubmission.SkullCondition" Label="Skull condition" Placeholder="Select a condition" For="() => BioSubmission.SkullCondition" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<GrizzlyBearSkullCondition>())
     {

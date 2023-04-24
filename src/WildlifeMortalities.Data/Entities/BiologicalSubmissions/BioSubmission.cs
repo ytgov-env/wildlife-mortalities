@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -14,6 +15,7 @@ public abstract class BioSubmission
     public string Comment { get; set; } = string.Empty;
     public Age? Age { get; set; }
 
+    public virtual bool CanBeAnalysed { get; }
     public abstract void ClearDependencies();
     public abstract bool HasSubmittedAllRequiredOrganicMaterial();
 }
@@ -48,6 +50,7 @@ public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
                 a.WithOwner();
             }
         );
+        builder.Ignore(b => b.CanBeAnalysed);
     }
 }
 

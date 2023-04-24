@@ -17,11 +17,13 @@ public class GrizzlyBearBioSubmission : BioSubmission<GrizzlyBearMortality>
     public int? SkullLengthMillimetres { get; set; }
     public int? SkullWidthMillimetres { get; set; }
 
-    [IsRequiredOrganicMaterialForBioSubmission("Evidence of sex")]
+    [IsRequiredOrganicMaterialForBioSubmission("Evidence of sex is attached")]
     public bool? IsEvidenceOfSexAttached { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Skull")]
     public bool? IsSkullProvided { get; set; }
+
+    public override bool CanBeAnalysed => true;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
         IsSkullProvided == true && IsEvidenceOfSexAttached == true;
