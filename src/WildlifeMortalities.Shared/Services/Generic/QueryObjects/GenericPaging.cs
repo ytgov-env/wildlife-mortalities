@@ -12,7 +12,7 @@ public static class GenericPaging
         {
             throw new ArgumentOutOfRangeException(nameof(pageSize), "pageSize cannot be zero.");
         }
-        if (pageNumberZeroStart != 0)
+        if (pageNumberZeroStart > 0)
         {
             query = query.Skip(pageNumberZeroStart * pageSize);
         }
