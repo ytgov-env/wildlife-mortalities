@@ -2,14 +2,17 @@
 
 public class ReadOnlyAppDbContext : AppDbContext
 {
+    private const string ExceptionMessage =
+        $"This dbContext is read-only. All mutations should be performed using {nameof(AppDbContext)}.";
+
     public override int SaveChanges()
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException(ExceptionMessage);
     }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException(ExceptionMessage);
     }
 
     public override Task<int> SaveChangesAsync(
@@ -17,11 +20,11 @@ public class ReadOnlyAppDbContext : AppDbContext
         CancellationToken cancellationToken = default
     )
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException(ExceptionMessage);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException(ExceptionMessage);
     }
 }
