@@ -22,8 +22,6 @@ public abstract class Mortality
     public string Discriminator { get; set; } = null!;
     public Family? Family { get; protected set; }
     public abstract Species Species { get; }
-    public int? FurbearerSealingCertificateId { get; set; }
-    public FurbearerSealingCertificate? FurbearerSealingCertificate { get; set; }
 }
 
 public class MortalityConfig<T> : IEntityTypeConfiguration<T>
