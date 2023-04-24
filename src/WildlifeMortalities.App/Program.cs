@@ -43,8 +43,8 @@ try
     builder.Services.AddHttpClient<IPosseService, PosseService>(client =>
     {
         client.Timeout = TimeSpan.FromMinutes(20);
-        client.BaseAddress = new Uri(configuration["PosseClientService:BaseAddress"]!);
-        client.DefaultRequestHeaders.Add("api_key", configuration["PosseClientService:ApiKey"]);
+        client.BaseAddress = new Uri(configuration["Posse:ClientService:BaseAddress"]!);
+        client.DefaultRequestHeaders.Add("api_key", configuration["Posse:ClientService:ApiKey"]);
     });
     builder.Services.AddScoped<IMortalityService, MortalityService>();
     builder.Services.AddScoped<PdfService>();
