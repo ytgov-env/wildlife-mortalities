@@ -43,7 +43,7 @@ public class MostConcreteClassJsonConverter<T> : JsonConverter<T>
 
         if (type == null)
         {
-            throw new InvalidOperationException("unable to find CheckinPropertyDescription type");
+            throw new InvalidOperationException("Unable to find type");
         }
 
         var result = JsonSerializer.Deserialize(
@@ -53,7 +53,7 @@ public class MostConcreteClassJsonConverter<T> : JsonConverter<T>
         );
         if (result is not T description)
         {
-            throw new InvalidOperationException("unable to find CheckinPropertyDescription type");
+            throw new InvalidOperationException("Unexpected type found during deserialization");
         }
 
         return description;
