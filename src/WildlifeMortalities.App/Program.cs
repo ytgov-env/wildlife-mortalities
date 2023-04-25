@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using MudBlazor.Services;
 using Serilog.Events;
 using WildlifeMortalities.App.Features.Auth;
@@ -134,6 +135,9 @@ try
                 )
                 .UseEnumCheckConstraints()
                 .EnableSensitiveDataLogging()
+                .ConfigureWarnings(
+                    warnings => warnings.Throw(RelationalEventId.MultipleCollectionIncludeWarning)
+                )
     );
     builder.Services.AddDbContextFactory<ReadOnlyAppDbContext>(
         options =>
@@ -144,6 +148,9 @@ try
                 )
                 .UseEnumCheckConstraints()
                 .EnableSensitiveDataLogging()
+                .ConfigureWarnings(
+                    warnings => warnings.Throw(RelationalEventId.MultipleCollectionIncludeWarning)
+                )
     );
 #else
     builder.Services.AddDbContextFactory<AppDbContext>(
