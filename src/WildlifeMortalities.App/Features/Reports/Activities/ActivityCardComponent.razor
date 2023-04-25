@@ -5,7 +5,7 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services
-<MudCard Elevation="3" Class="flex-column d-flex" Style="height: 100%">
+<MudCard Elevation="3" Class="flex-column d-flex" Style="height: 100%; min-width: 250px; width: 350px;">
     <MudCardHeader>
         <CardHeaderContent>
             @{
@@ -20,23 +20,6 @@
                 <MudText Typo="Typo.h6">@mortalityName</MudText>
             }
         </CardHeaderContent>
-        <CardHeaderActions>
-            @if (EnableBioSubmission && MortalityViewModel.GetMortality() is IHasBioSubmission biosubmission)
-            {
-                if (MortalityViewModel.BioSubmission!.CanBeAnalysed == true && ( MortalityViewModel.BioSubmission!.Status == BioSubmissionStatus.Submitted ||
-                    MortalityViewModel.BioSubmission!.Status == BioSubmissionStatus.PartiallySubmitted))
-                    {
-                        <MudMenu StartIcon="@Icons.Material.Filled.Science" Label="Bio submission">
-                            <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>
-                            <MudMenuItem   OnClick="OpenBioSubmissionAnalysisDialog">Analysis</MudMenuItem>
-                        </MudMenu>
-                    } else
-                    {
-                        <MudButton OnClick="OpenOrganicMaterialForBioSubmissionDialog" StartIcon="@Icons.Material.Filled.Science">Bio submission</MudButton>
-                    }
-                <MudText>Status: @MortalityViewModel.BioSubmission?.Status.GetDisplayName().ToLower()</MudText>
-            }
-        </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent Class="flex-column d-flex" Style="height: 100%">
         <MudStack Row="false">
@@ -56,15 +39,21 @@
                     <MudField DisableUnderLine="true" Label="@property.Key">@property.Value</MudField>
                 }
             }
-            <MudField DisableUnderLine="true" Label="Comment">@ActivityViewModel.Comment</MudField>
             @switch (ActivityViewModel)
             {
                 case HuntedActivityViewModel vm:
-                    <MudField DisableUnderLine="true" Label="Landmark">@vm.Landmark</MudField>
+                    @if (!string.IsNullOrWhiteSpace(vm.Landmark))
+                    {
+                        <MudField DisableUnderLine="true" Label="Landmark">@vm.Landmark</MudField>
+                    }
                     <MudField DisableUnderLine="true" Label="Game management area">@vm.GameManagementArea?.Area</MudField>
                     break;
                 case TrappedActivityViewModel vm:
                     break;
+            }
+            @if (!string.IsNullOrWhiteSpace(ActivityViewModel.Comment))
+            {
+                <MudField DisableUnderLine="true" Label="Comment">@ActivityViewModel.Comment</MudField>
             }
         </MudStack>
         <MudSpacer/>
@@ -109,56 +98,4 @@
 
     [Parameter]
     public EventCallback OnDeleteClicked { get; set; }
-
-    [Inject]
-    IDialogService DialogService { get; set; } = null!;
-
-    [Inject]
-    IMortalityService Service { get; set; } = null!;
-
-
-    private async Task OpenBioSubmissionAnalysisDialog()
-    {
-        var bioSubmission = MortalityViewModel.BioSubmission!;
-
-        var parameters = new DialogParameters();
-        parameters.Add(nameof(BioSubmissionAnalysisDialog.BioSubmission), bioSubmission);
-
-        var dialog = await DialogService.ShowAsync<BioSubmissionAnalysisDialog>("", parameters);
-        var result = await dialog.Result;
-
-        if (result.Canceled == false)
-        {
-            await Service.UpdateBioSubmissionAnalysis(bioSubmission);
-        }
-    }
-
-
-    private async Task OpenOrganicMaterialForBioSubmissionDialog()
-    {
-        var bioSubmission = MortalityViewModel.BioSubmission!;
-
-        var parameters = new DialogParameters();
-        parameters.Add(nameof(OrganicMaterialForBioSubmissionDialog.BioSubmission), bioSubmission);
-
-        var dialog = await DialogService.ShowAsync<OrganicMaterialForBioSubmissionDialog>("", parameters);
-        var result = await dialog.Result;
-
-        if (result.Data is BioSubmissionDialogResult dialogResult)
-        {
-            if (dialogResult == BioSubmissionDialogResult.Cancel)
-            {
-                return;
-            }
-
-            await Service.UpdateOrganicMaterialForBioSubmission(bioSubmission);
-
-            if(dialogResult == BioSubmissionDialogResult.SubmitAndProceedToAnalysis)
-            {
-                await OpenBioSubmissionAnalysisDialog();
-            }
-        }
-    }
-
-
 }

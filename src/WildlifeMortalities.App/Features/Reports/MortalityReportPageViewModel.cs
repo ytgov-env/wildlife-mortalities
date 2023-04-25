@@ -1,4 +1,7 @@
-﻿using FluentValidation;
+﻿using System.Text.Json.Serialization;
+using FluentValidation;
+using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
@@ -14,6 +17,10 @@ public class MortalityReportPageViewModel
     public MortalityReportPageViewModel()
     {
         IsUpdate = false;
+
+        // Most reports are individual hunt, so we set it as the default
+        ReportViewModel = new IndividualHuntedMortalityReportViewModel();
+        ReportType = ReportType.IndividualHuntedMortalityReport;
     }
 
     public MortalityReportPageViewModel(Report report)
@@ -23,67 +30,42 @@ public class MortalityReportPageViewModel
         {
             case IndividualHuntedMortalityReport individualHuntedMortalityReport:
                 ReportType = ReportType.IndividualHuntedMortalityReport;
-                IndividualHuntedMortalityReportViewModel =
-                    new IndividualHuntedMortalityReportViewModel(individualHuntedMortalityReport);
+                ReportViewModel = new IndividualHuntedMortalityReportViewModel(
+                    individualHuntedMortalityReport
+                );
                 break;
             case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
                 ReportType = ReportType.OutfitterGuidedHuntReport;
-                OutfitterGuidedHuntReportViewModel = new OutfitterGuidedHuntReportViewModel(
-                    outfitterGuidedHuntReport
-                );
+                ReportViewModel = new OutfitterGuidedHuntReportViewModel(outfitterGuidedHuntReport);
                 break;
             case SpecialGuidedHuntReport specialGuidedHuntReport:
                 ReportType = ReportType.SpecialGuidedHuntReport;
-                SpecialGuidedHuntReportViewModel = new SpecialGuidedHuntReportViewModel(
-                    specialGuidedHuntReport
-                );
+                ReportViewModel = new SpecialGuidedHuntReportViewModel(specialGuidedHuntReport);
                 break;
             case TrappedMortalitiesReport trappedMortalitiesReport:
                 ReportType = ReportType.TrappedMortalitiesReport;
-                TrappedReportViewModel = new TrappedReportViewModel(trappedMortalitiesReport);
+                ReportViewModel = new TrappedReportViewModel(trappedMortalitiesReport);
                 break;
+            default:
+                throw new NotImplementedException();
         }
         DateSubmitted = report.DateSubmitted.DateTime;
     }
 
-    public ReportType ReportType { get; set; } = ReportType.IndividualHuntedMortalityReport;
+    public ReportType ReportType { get; set; }
 
-    // Todo: refactor
     public DateTime? DateSubmitted
     {
         get { return _dateSubmitted; }
         set
         {
             _dateSubmitted = value;
-            if (IndividualHuntedMortalityReportViewModel != null)
-            {
-                IndividualHuntedMortalityReportViewModel.DateSubmitted = value;
-            }
-            else if (OutfitterGuidedHuntReportViewModel != null)
-            {
-                OutfitterGuidedHuntReportViewModel.DateSubmitted = value;
-            }
-            else if (SpecialGuidedHuntReportViewModel != null)
-            {
-                SpecialGuidedHuntReportViewModel.DateSubmitted = value;
-            }
-            else if (TrappedReportViewModel != null)
-            {
-                TrappedReportViewModel.DateSubmitted = value;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            ReportViewModel.DateSubmitted = value;
         }
     }
 
-    public IndividualHuntedMortalityReportViewModel? IndividualHuntedMortalityReportViewModel { get; set; } =
-        new();
-
-    public OutfitterGuidedHuntReportViewModel? OutfitterGuidedHuntReportViewModel { get; set; }
-    public SpecialGuidedHuntReportViewModel? SpecialGuidedHuntReportViewModel { get; set; }
-    public TrappedReportViewModel? TrappedReportViewModel { get; set; }
+    [JsonConverter(typeof(MostConcreteClassJsonConverter<MortalityReportViewModel>))]
+    public MortalityReportViewModel ReportViewModel { get; set; }
 }
 
 public class MortalityReportPageViewModelValidator : AbstractValidator<MortalityReportPageViewModel>
@@ -92,19 +74,19 @@ public class MortalityReportPageViewModelValidator : AbstractValidator<Mortality
     {
         RuleFor(x => x.ReportType).NotEmpty();
 
-        RuleFor(x => x.IndividualHuntedMortalityReportViewModel)
+        RuleFor(x => x.ReportViewModel as IndividualHuntedMortalityReportViewModel)
             .SetValidator(new IndividualHuntedMortalityReportViewModelValidator())
             .When(x => x.ReportType == ReportType.IndividualHuntedMortalityReport);
 
-        RuleFor(x => x.OutfitterGuidedHuntReportViewModel)
+        RuleFor(x => x.ReportViewModel as OutfitterGuidedHuntReportViewModel)
             .SetValidator(new OutfitterGuidedHuntReportViewModelValidator())
             .When(x => x.ReportType == ReportType.OutfitterGuidedHuntReport);
 
-        RuleFor(x => x.SpecialGuidedHuntReportViewModel)
+        RuleFor(x => x.ReportViewModel as SpecialGuidedHuntReportViewModel)
             .SetValidator(new SpecialGuidedHuntReportViewModelValidator())
             .When(x => x.ReportType == ReportType.SpecialGuidedHuntReport);
 
-        RuleFor(x => x.TrappedReportViewModel)
+        RuleFor(x => x.ReportViewModel as TrappedReportViewModel)
             .SetValidator(new TrappedReportViewModelValidator())
             .When(x => x.ReportType == ReportType.TrappedMortalitiesReport);
     }

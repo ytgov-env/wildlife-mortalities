@@ -16,10 +16,15 @@ public class GreyWolfBioSubmission : BioSubmission<GreyWolfMortality>, IHasFurbe
     public GreyWolfPeltColour? PeltColour { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Pelt")]
+    [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
     public bool? IsPeltProvided { get; set; }
     public string? FurbearerSealNumber { get; set; }
+    public override bool CanBeAnalysed => true;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() => IsPeltProvided == true;
+
+    public override bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() =>
+        IsPeltProvided == true;
 
     public enum GreyWolfPeltColour
     {

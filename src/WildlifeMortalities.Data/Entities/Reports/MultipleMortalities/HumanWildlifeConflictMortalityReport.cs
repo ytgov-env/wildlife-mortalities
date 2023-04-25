@@ -3,24 +3,32 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 public class HumanWildlifeConflictMortalityReport
     : Report,
-        ISingleMortalityReport,
+        IMultipleMortalitiesReport,
         IHasConservationOfficerReporter
 {
-    [JsonConverter(typeof(MostConcreteClassJsonConverter<Mortality>))]
-    public Mortality Mortality { get; set; } = null!;
-
+    public List<HumanWildlifeConflictActivity> ConflictActivities { get; set; } = null!;
     public int ConservationOfficerId { get; set; }
     public ConservationOfficer ConservationOfficer { get; set; } = null!;
     public string HumanWildlifeConflictNumber { get; set; } = string.Empty;
 
-    public Mortality GetMortality() => Mortality;
+    IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities()
+    {
+        if (ConflictActivities == null)
+        {
+            return Enumerable.Empty<Mortality>();
+        }
 
-    public Activity GetActivity() => throw new NotImplementedException();
+        return ConflictActivities.Select(x => x.Mortality).ToArray();
+    }
+
+    IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() =>
+        ConflictActivities?.ToArray() ?? Array.Empty<HumanWildlifeConflictActivity>();
 
     public override bool HasHuntingActivity() => false;
 }
@@ -31,7 +39,7 @@ public class HumanWildlifeConflictMortalityReportConfig
     public void Configure(EntityTypeBuilder<HumanWildlifeConflictMortalityReport> builder) =>
         builder
             .ToTable("Reports")
-            .HasOne(c => c.ConservationOfficer)
+            .HasOne(h => h.ConservationOfficer)
             .WithMany(co => co.HumanWildlifeConflictReports)
             .OnDelete(DeleteBehavior.NoAction);
 }

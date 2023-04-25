@@ -15,19 +15,19 @@
             </MudText>
         </TitleContent>
         <DialogContent>
-            @foreach (var item in _viewModel.RequiredBioSubmissions)
+            @foreach (var item in _viewModel.RequiredOrganicMaterial)
             {
-                <MudCheckBox @bind-Checked="@item.IsChecked" For="@( () => item.IsChecked)" Label="@item.Label" />
+                <MudCheckBox @bind-Checked="@item.IsChecked" For="@( () => item.IsChecked)" Label="@item.Label" Disabled="@item.IsDisabled"/>
             }
             <MudTextField @bind-Value="_viewModel.Comment" For="@(() => _viewModel.Comment)" Label="Comment" Lines="4" />
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
             <MudSpacer/>
-            <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="@(() => _result = BioSubmissionDialogResult.SubmitAndClose  )">Submit and close</MudButton>
+            <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="@(() => _result = BioSubmissionDialogResult.SubmitAndClose)">Submit and close</MudButton>
             @if (_viewModel.CanBeAnalysed)
             {
-                <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="@(() => _result = BioSubmissionDialogResult.SubmitAndProceedToAnalysis  )">Proceed to analysis</MudButton>
+                <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="@(() => _result = BioSubmissionDialogResult.SubmitAndProceedToAnalysis)" Disabled="!_viewModel.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis">Proceed to analysis</MudButton>
             }
         </DialogActions>
     </MudDialog>

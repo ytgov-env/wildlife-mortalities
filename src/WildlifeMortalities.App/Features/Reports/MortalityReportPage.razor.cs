@@ -115,29 +115,25 @@ public partial class MortalityReportPage : DbContextAwareComponent
     private void ReportTypeChanged(ReportType type)
     {
         CreateNewEditContext();
-
         _vm.ReportType = type;
 
-        _vm.IndividualHuntedMortalityReportViewModel = null;
-        _vm.OutfitterGuidedHuntReportViewModel = null;
-        _vm.SpecialGuidedHuntReportViewModel = null;
-        _vm.TrappedReportViewModel = null;
-
-        switch (type)
+        switch (_vm.ReportType)
         {
             case ReportType.IndividualHuntedMortalityReport:
-                _vm.IndividualHuntedMortalityReportViewModel =
-                    new IndividualHuntedMortalityReportViewModel();
+                _vm.ReportViewModel = new IndividualHuntedMortalityReportViewModel();
+                ;
                 break;
             case ReportType.OutfitterGuidedHuntReport:
-                _vm.OutfitterGuidedHuntReportViewModel = new OutfitterGuidedHuntReportViewModel();
+                _vm.ReportViewModel = new OutfitterGuidedHuntReportViewModel();
                 break;
             case ReportType.SpecialGuidedHuntReport:
-                _vm.SpecialGuidedHuntReportViewModel = new SpecialGuidedHuntReportViewModel();
+                _vm.ReportViewModel = new SpecialGuidedHuntReportViewModel();
                 break;
             case ReportType.TrappedMortalitiesReport:
-                _vm.TrappedReportViewModel = new TrappedReportViewModel();
+                _vm.ReportViewModel = new TrappedReportViewModel();
                 break;
+            default:
+                throw new NotImplementedException();
         }
     }
 
@@ -187,35 +183,10 @@ public partial class MortalityReportPage : DbContextAwareComponent
     private async Task CreateReport()
     {
         var personId = _personId!.Value;
-        Report report;
-
-        switch (_vm.ReportType)
-        {
-            case ReportType.IndividualHuntedMortalityReport:
-            {
-                report = _vm.IndividualHuntedMortalityReportViewModel!.GetReport(personId);
-                break;
-            }
-            case ReportType.OutfitterGuidedHuntReport:
-            {
-                report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
-                break;
-            }
-            case ReportType.SpecialGuidedHuntReport:
-            {
-                report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
-                break;
-            }
-            case ReportType.TrappedMortalitiesReport:
-            {
-                report = _vm.TrappedReportViewModel!.GetReport(personId);
-                break;
-            }
-            default:
-                throw new NotImplementedException("Report type not recognized.");
-        }
-
+        var report = _vm.ReportViewModel.GetReport(personId);
+        Log.Information("Creating report {@Report}", report);
         await MortalityService.CreateReport(report);
+        Log.Information("Created report");
         NavigationManager.NavigateTo(
             Constants.Routes.GetReportDetailsPageLink(HumanReadablePersonId, report.Id)
         );
@@ -224,34 +195,10 @@ public partial class MortalityReportPage : DbContextAwareComponent
     private async Task UpdateReport()
     {
         var personId = _personId!.Value;
-        Report report;
-        switch (_vm.ReportType)
-        {
-            case ReportType.IndividualHuntedMortalityReport:
-            {
-                report = _vm.IndividualHuntedMortalityReportViewModel!.GetReport(personId);
-                break;
-            }
-            case ReportType.OutfitterGuidedHuntReport:
-            {
-                report = _vm.OutfitterGuidedHuntReportViewModel!.GetReport(personId);
-                break;
-            }
-            case ReportType.SpecialGuidedHuntReport:
-            {
-                report = _vm.SpecialGuidedHuntReportViewModel!.GetReport(personId);
-                break;
-            }
-            case ReportType.TrappedMortalitiesReport:
-            {
-                report = _vm.TrappedReportViewModel!.GetReport(personId);
-                break;
-            }
-            default:
-                throw new NotImplementedException("Report type not recongized.");
-        }
-
+        var report = _vm.ReportViewModel.GetReport(personId);
+        Log.Information("Updating report {@Report}", report);
         await MortalityService.UpdateReport(report);
+        Log.Information("Updated report");
         NavigationManager.NavigateTo(
             Constants.Routes.GetReportDetailsPageLink(HumanReadablePersonId, report.Id)
         );

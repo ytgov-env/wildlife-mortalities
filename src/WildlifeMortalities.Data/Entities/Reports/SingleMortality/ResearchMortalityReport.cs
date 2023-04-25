@@ -7,12 +7,11 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 public class ResearchMortalityReport : Report, ISingleMortalityReport
 {
-    [JsonConverter(typeof(MostConcreteClassJsonConverter<Mortality>))]
-    public Mortality Mortality { get; set; } = null!;
+    public ResearchActivity Activity { get; set; } = null!;
 
-    public Mortality GetMortality() => Mortality;
+    public Mortality GetMortality() => Activity.Mortality;
 
-    public Activity GetActivity() => throw new NotImplementedException();
+    public Activity GetActivity() => Activity;
 
     public override bool HasHuntingActivity() => false;
 }

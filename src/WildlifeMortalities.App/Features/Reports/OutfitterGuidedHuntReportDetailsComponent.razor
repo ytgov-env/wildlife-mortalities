@@ -1,25 +1,26 @@
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.Shared.Extensions;
-<MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
-@if(Report.Result != Data.Enums.GuidedHuntResult.DidNotHunt)
-{
-    <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
-}
-<MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>
-<MudList Dense="true" Class="ml-n4">
-    <MudListItem>
-        <GuideComponent Guide="@Report.ChiefGuide" Label="Chief guide"/>
-    </MudListItem>
-    @foreach (var item in Report.AssistantGuides)
+<MudItem xs="12" sm="4">
+    <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
+    @if(Report.Result != Data.Enums.GuidedHuntResult.DidNotHunt)
     {
-        <MudListItem>
-            <GuideComponent Guide="item" Label="Assistant guide"/>
-        </MudListItem>
+        <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") --> @Report.HuntEndDate?.ToString("D")</MudField>
     }
-</MudList>
-<MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
-
+    <MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>
+    <MudList Dense="true" Class="ml-n4">
+        <MudListItem>
+            <GuideComponent Guide="@Report.ChiefGuide" Label="Chief guide"/>
+        </MudListItem>
+        @foreach (var item in Report.AssistantGuides)
+        {
+            <MudListItem>
+                <GuideComponent Guide="item" Label="Assistant guide"/>
+            </MudListItem>
+        }
+    </MudList>
+    <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
+</MudItem>
 @code {
 
     [Parameter]

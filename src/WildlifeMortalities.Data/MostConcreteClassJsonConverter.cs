@@ -36,6 +36,7 @@ public class MostConcreteClassJsonConverter<T> : JsonConverter<T>
                     if (!string.IsNullOrEmpty(value))
                     {
                         type = Type.GetType(value);
+                        break;
                     }
                 }
             }
@@ -55,6 +56,8 @@ public class MostConcreteClassJsonConverter<T> : JsonConverter<T>
         {
             throw new InvalidOperationException("Unexpected type found during deserialization");
         }
+
+        reader = reader2;
 
         return description;
     }

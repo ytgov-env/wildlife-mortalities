@@ -1,0 +1,25 @@
+﻿@using FluentValidation
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using WildlifeMortalities.Data;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
+
+<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"/>
+
+@code {
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    [Parameter]
+    [EditorRequired]
+    public WolverineBioSubmission BioSubmission { get; set; } = null!;
+
+    public class WolverineBioSubmissionValidator : BioSubmissionValidator<WolverineBioSubmission>
+    {
+        public WolverineBioSubmissionValidator()
+        {
+            RuleFor(x => x.FurbearerSealNumber).NotEmpty();
+        }
+    }
+}

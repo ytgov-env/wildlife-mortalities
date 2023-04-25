@@ -41,16 +41,16 @@
             @switch (_vm.ReportType)
             {
                 case ReportType.IndividualHuntedMortalityReport:
-                    <IndividualHuntedMortalityReportComponent ViewModel="@_vm.IndividualHuntedMortalityReportViewModel" />
+                    <IndividualHuntedMortalityReportComponent ViewModel="@(_vm.ReportViewModel as IndividualHuntedMortalityReportViewModel)" />
                     break;
                 case ReportType.OutfitterGuidedHuntReport:
-                    <OutfitterGuidedHuntReportComponent ViewModel="@_vm.OutfitterGuidedHuntReportViewModel" />
+                    <OutfitterGuidedHuntReportComponent ViewModel="@(_vm.ReportViewModel as OutfitterGuidedHuntReportViewModel)" />
                     break;
                 case ReportType.SpecialGuidedHuntReport:
-                    <SpecialGuidedHuntReportComponent ViewModel="@_vm.SpecialGuidedHuntReportViewModel" />
+                    <SpecialGuidedHuntReportComponent ViewModel="@(_vm.ReportViewModel as SpecialGuidedHuntReportViewModel)" />
                     break;
                 case ReportType.TrappedMortalitiesReport:
-                    <TrappedReportComponent ViewModel="@_vm.TrappedReportViewModel" />
+                    <TrappedReportComponent ViewModel="@(_vm.ReportViewModel as TrappedReportViewModel)" />
                     break;
                 default:
                     throw new NotImplementedException("Report type not recognized.");

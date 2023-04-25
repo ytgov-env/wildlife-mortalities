@@ -5,6 +5,7 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear
 @using WildlifeMortalities.App.Features.Shared.Mortalities.MountainGoat
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
+@using WildlifeMortalities.App.Features.Shared.Mortalities.Wolverine
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
@@ -21,7 +22,7 @@
         <DialogContent>
             <div class="@(BioSubmission is IHasHornMeasurementEntries ? "scrollable-dialog" : "")">
                 <CascadingValue Name="@Constants.CascadingValues.HasAttemptedFormSubmission" Value="HasAttemptedFormSubmission">
-                    @foreach (var item in _viewModel.RequiredBioSubmissions)
+                    @foreach (var item in _viewModel.RequiredOrganicMaterial)
                     {
                         <MudCheckBox Checked="@item.IsChecked" Label="@item.Label" Disabled="true" />
                     }
@@ -43,20 +44,14 @@
                         case MountainGoatBioSubmission bioSubmission:
                             <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" />
                             break;
-                        case MuleDeerBioSubmission bioSubmission:
-                            <MuleDeerBioSubmissionComponent BioSubmission="bioSubmission" />
-                            break;
                         case ThinhornSheepBioSubmission bioSubmission:
                             <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" />
                             break;
-                        case WhiteTailedDeerBioSubmission bioSubmission:
-                            <WhiteTailedDeerBioSubmissionComponent BioSubmission="bioSubmission" />
-                            break;
-                        case WoodBisonBioSubmission bioSubmission:
-                            <WoodBisonBioSubmissionComponent BioSubmission="bioSubmission" />
+                        case WolverineBioSubmission bioSubmission:
+                            <WolverineBioSubmissionComponent BioSubmission="bioSubmission" />
                             break;
                         default:
-                            throw new ArgumentException(nameof(BioSubmission));
+                            throw new NotImplementedException();
                     }
                 </CascadingValue>
                 @if (BioSubmission is not IHasHornMeasurementEntries)

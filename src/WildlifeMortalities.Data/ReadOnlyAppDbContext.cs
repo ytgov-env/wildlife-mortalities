@@ -1,7 +1,12 @@
-﻿namespace WildlifeMortalities.Data;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace WildlifeMortalities.Data;
 
 public class ReadOnlyAppDbContext : AppDbContext
 {
+    public ReadOnlyAppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options) { }
+
     private const string ExceptionMessage =
         $"This dbContext is read-only. All mutations should be performed using {nameof(AppDbContext)}.";
 

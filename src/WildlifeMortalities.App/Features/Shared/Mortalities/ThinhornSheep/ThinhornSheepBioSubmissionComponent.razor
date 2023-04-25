@@ -15,7 +15,7 @@
 {
     <MudNumericField Label="Total length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.HornTotalLengthMillimetres" For="() => BioSubmission.HornTotalLengthMillimetres" Disabled="IsReadOnly" />
-    <MudCheckBox Label="Full curl?" @bind-Checked="BioSubmission.IsFullCurl" For="() => BioSubmission.IsFullCurl" />
+    <MudCheckBox Label="Full curl?" @bind-Checked="BioSubmission.IsFullCurl" For="() => BioSubmission.IsFullCurl" Disabled="IsReadOnly" />
     <MudNumericField Label="Base circumference" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.HornBaseCircumferenceMillimetres" For="() => BioSubmission.HornBaseCircumferenceMillimetres" Disabled="IsReadOnly" />
     <MudNumericField Label="Tip spread" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
@@ -27,10 +27,10 @@
         }
     </MudSelect>
 
-    @if (BioSubmission.HornMeasured.HasValue)
+    @if (BioSubmission.HornMeasured.HasValue && IsReadOnly == false)
     {
-       
-        <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years" @bind-Value:after="AdjustAnnuliList" />
+
+        <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years" @bind-Value:after="AdjustAnnuliList"/>
         <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
             @foreach (var item in Enum.GetValues<ConfidenceInAge>())
             {

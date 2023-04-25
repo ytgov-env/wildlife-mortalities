@@ -4,18 +4,19 @@
 @using WildlifeMortalities.App.Features.Reports.Activities
 @inherits DbContextAwareComponent
 
-
-@if (_reportDetail is null)
+@if (_isLoading)
+{
+    <MudProgressCircular Indeterminate="true" />
+    return;
+}
+else if (_reportDetail is null)
 {
     <MudAlert Severity="Severity.Error">Report not found.</MudAlert>
     return;
 }
-<PrintOrDownloadComponent ReportDetail="_reportDetail"/>
 
-@if (HasIncompleteBioSubmissions())
-{
-    <MudChip Color="Color.Warning">Missing bio</MudChip>
-}
+<PrintOrDownloadComponent ReportDetail="_reportDetail" />
+
 @switch (_reportDetail.Report)
 {
     case HumanWildlifeConflictMortalityReport report:
@@ -23,19 +24,19 @@
         break;
     case IndividualHuntedMortalityReport report:
         <MudText Typo="Typo.h3" Class="mb-4">Individual hunt report</MudText>
-        <IndividualHuntedMortalityReportDetailsComponent Report="@report"/>
+        <IndividualHuntedMortalityReportDetailsComponent Report="@report" />
         break;
     case OutfitterGuidedHuntReport report:
         <MudText Typo="Typo.h3" Class="mb-4">Outfitter guided hunt report</MudText>
-        <OutfitterGuidedHuntReportDetailsComponent Report="@report"/>
+        <OutfitterGuidedHuntReportDetailsComponent Report="@report" />
         break;
     case SpecialGuidedHuntReport report:
         <MudText Typo="Typo.h3" Class="mb-4">Special guided hunt report</MudText>
-        <SpecialGuidedHuntReportDetailsComponent Report="@report"/>
+        <SpecialGuidedHuntReportDetailsComponent Report="@report" />
         break;
     case TrappedMortalitiesReport report:
         <MudText Typo="Typo.h3" Class="mb-4">Trapped report</MudText>
-        <TrappedReportDetailsComponent Report="@report"/>
+        <TrappedReportDetailsComponent Report="@report" />
         break;
 }
 
@@ -47,12 +48,36 @@
     <MudText Typo="Typo.h5" Class="my-2">Mortalities</MudText>
 }
 <MudGrid>
-    @foreach (var item in _reportDetail.Report.GetActivities())
+    <MudItem xs="12" sm="8">
+        <MudStack Row="true" Class="flex-wrap">
+            @foreach (var item in _reportDetail.Report.GetActivities())
+            {
+                    <ActivityCardComponent ActivityViewModel="@GetActivityVm(item)" />
+            }
+        </MudStack>
+    </MudItem>
+
+    @if (Client != null)
     {
-        <MudItem sm="3" xs="6">
-            <ActivityCardComponent ActivityViewModel="@GetActivityVm(item)"/>
+        <MudItem xs="12" sm="4">
+            <MudStack Row="true">
+                <MudDivider FlexItem="true" Vertical="true" />
+                <MudPaper Class="pa-4 flex-auto">
+                    <MudText Typo="Typo.h6">Client</MudText>
+                    <MudField Label="ENV Client ID">@Client.EnvClientId</MudField>
+                    <MudField Label="First Name">@Client.FirstName</MudField>
+                    <MudField Label="Last Name">@Client.LastName</MudField>
+                    <MudField Label="Birth Date">@Client.BirthDate.ToString("yyyy-MM-dd")</MudField>
+                </MudPaper>
+            </MudStack>
         </MudItem>
     }
+    <MudItem xs="12">
+        <MudStack Row="true">
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="@Constants.Routes.GetEditReportPageLink(HumanReadablePersonId, ReportId)">Edit report</MudButton>
+        </MudStack>
+    </MudItem>
 </MudGrid>
 
-<MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="@Constants.Routes.GetEditReportPageLink(HumanReadablePersonId, ReportId)">Edit</MudButton>
+

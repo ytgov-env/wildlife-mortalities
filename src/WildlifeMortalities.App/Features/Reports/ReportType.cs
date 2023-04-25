@@ -48,7 +48,8 @@ public enum ReportType
     SpecialGuidedHuntReport,
 
     [Display(Name = "Trapping")]
-    [IsCreatable]
+    // Todo: re-enable trapping after it's complete
+    //[IsCreatable]
     [ReportType(typeof(TrappedMortalitiesReport))]
     TrappedMortalitiesReport,
 }

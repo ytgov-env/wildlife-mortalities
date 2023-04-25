@@ -1,6 +1,8 @@
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
+@using WildlifeMortalities.Data;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 @using WildlifeMortalities.Shared.Extensions;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 @using static WildlifeMortalities.Data.Entities.BiologicalSubmissions.GreyWolfBioSubmission;
@@ -13,6 +15,8 @@
     }
 </MudSelect>
 
+<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly" />
+
 @code {
     [Parameter]
     public bool IsReadOnly { get; set; } = false;
@@ -23,10 +27,21 @@
 
     public class GreyWolfBioSubmissionValidator : BioSubmissionValidator<GreyWolfBioSubmission>
     {
+        //private readonly ReadOnlyAppDbContext _context;
+
         public GreyWolfBioSubmissionValidator()
         {
             RuleFor(x => x.PeltColour).NotNull().IsInEnum();
+            RuleFor(x => x.FurbearerSealNumber).NotEmpty();
+            //RuleFor(x => x.FurbearerSealNumber).NotEmpty().MustAsync(BeUnique).WithMessage("This furbearer seal is already associated with a different mortality.");
         }
+
+        //private async Task<bool> BeUnique(string? value, CancellationToken cancellationToken)
+        //{
+        //    var result = await _context.BioSubmissions.OfType<GreyWolfBioSubmission>()
+        //        .AllAsync(x => x.FurbearerSealNumber != value);
+        //    return result;
+        //}
     }
 
 }

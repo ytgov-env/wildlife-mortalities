@@ -18,11 +18,15 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
     public int? SkullWidthMillimetres { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Skull")]
+    [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
     public bool? IsSkullProvided { get; set; }
 
     public override bool CanBeAnalysed => true;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() => IsSkullProvided == true;
+
+    public override bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() =>
+        IsSkullProvided == true;
 
     public enum AmericanBlackBearSkullCondition
     {

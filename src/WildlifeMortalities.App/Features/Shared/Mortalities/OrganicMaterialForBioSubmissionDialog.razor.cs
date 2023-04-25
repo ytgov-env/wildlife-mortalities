@@ -3,6 +3,7 @@ using MudBlazor;
 using System.Reflection;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using FluentValidation;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
@@ -16,6 +17,14 @@ public partial class OrganicMaterialForBioSubmissionDialog
         {
             get => (bool?)PropertyInfo.GetValue(BioSubmission);
             set => PropertyInfo.SetValue(BioSubmission, value);
+        }
+
+        public bool IsDisabled
+        {
+            get =>
+                PropertyInfo.GetCustomAttribute<IsPrerequisiteOrganicMaterialForBioSubmissionAnalysisAttribute>()
+                    != null
+                && BioSubmission.AnalysisStatus == BioSubmissionAnalysisStatus.Complete;
         }
 
         public PropertyInfo PropertyInfo { get; }

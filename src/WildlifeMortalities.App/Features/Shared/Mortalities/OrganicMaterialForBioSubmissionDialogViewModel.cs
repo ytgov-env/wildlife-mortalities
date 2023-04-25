@@ -16,7 +16,10 @@ public class OrganicMaterialForBioSubmissionDialogViewModel
 
     public bool CanBeAnalysed => _bioSubmission.CanBeAnalysed;
 
-    public IEnumerable<BioSubmissionMaterialCheckbox> RequiredBioSubmissions { get; set; } =
+    public bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis =>
+        _bioSubmission.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis();
+
+    public IEnumerable<BioSubmissionMaterialCheckbox> RequiredOrganicMaterial { get; set; } =
         Array.Empty<BioSubmissionMaterialCheckbox>();
 
     public OrganicMaterialForBioSubmissionDialogViewModel(BioSubmission bioSubmission)
@@ -24,7 +27,7 @@ public class OrganicMaterialForBioSubmissionDialogViewModel
         _bioSubmission = bioSubmission;
         Comment = bioSubmission.Comment;
         var type = bioSubmission.GetType();
-        RequiredBioSubmissions = type.GetProperties()
+        RequiredOrganicMaterial = type.GetProperties()
             .Select(
                 x =>
                     new
@@ -54,7 +57,7 @@ public class OrganicMaterialForBioSubmissionDialogViewModelValidator
     public OrganicMaterialForBioSubmissionDialogViewModelValidator()
     {
         RuleFor(x => x.Comment).MaximumLength(500);
-        RuleForEach(x => x.RequiredBioSubmissions)
+        RuleForEach(x => x.RequiredOrganicMaterial)
             .ChildRules(rules =>
             {
                 rules.RuleFor(x => x.IsChecked).NotNull().WithMessage("Required");

@@ -13,6 +13,7 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>, IHasF
         : base(mortality) { }
 
     [IsRequiredOrganicMaterialForBioSubmission("Pelt")]
+    [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
     public bool? IsPeltProvided { get; set; }
 
     public int? PeltLengthMillimetres { get; set; }
@@ -21,6 +22,9 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>, IHasF
     public override bool CanBeAnalysed => true;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() => IsPeltProvided == true;
+
+    public override bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() =>
+        IsPeltProvided == true;
 }
 
 public class CanadaLynxBioSubmissionConfig : IEntityTypeConfiguration<CanadaLynxBioSubmission>

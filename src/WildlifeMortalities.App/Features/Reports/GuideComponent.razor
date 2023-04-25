@@ -4,8 +4,9 @@
     @if(Guide is not null)
     {
         <MudTooltip Text="View client">
-            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" Href="@Constants.Routes.GetClientOverviewPageLink(Guide.EnvClientId)" />
+            <MudIconButton Class="mt-2" Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" Href="@Constants.Routes.GetClientOverviewPageLink(Guide.EnvClientId)" />
         </MudTooltip>
+        <MudSpacer/>
     }
 </MudStack>
 

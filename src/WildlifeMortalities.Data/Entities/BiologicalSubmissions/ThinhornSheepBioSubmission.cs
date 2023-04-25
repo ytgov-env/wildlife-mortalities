@@ -15,9 +15,11 @@ public class ThinhornSheepBioSubmission
         : base(mortality) { }
 
     [IsRequiredOrganicMaterialForBioSubmission("Horns")]
+    [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
     public bool? IsHornsProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
+    [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
     public bool? IsHeadProvided { get; set; }
 
     public int? HornLengthToThirdAnnulusMillimetres { get; set; }
@@ -36,6 +38,9 @@ public class ThinhornSheepBioSubmission
     public override bool CanBeAnalysed => true;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
+        IsHornsProvided == true && IsHeadProvided == true;
+
+    public override bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() =>
         IsHornsProvided == true && IsHeadProvided == true;
 }
 

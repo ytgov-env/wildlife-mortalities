@@ -5,49 +5,162 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear
 @using WildlifeMortalities.App.Features.Shared.Mortalities.MountainGoat
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
+@using WildlifeMortalities.App.Features.Shared.Mortalities.Wolverine
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using WildlifeMortalities.Shared.Extensions;
+@using WildlifeMortalities.Shared.Services;
+
 @if (BioSubmission is null)
 {
     return;
 }
 
-@if(BioSubmission.Status != BioSubmissionStatus.NotSubmitted)
-{
-    @*This component is read-only, but it requires an EditForm as the child components contain input components which have a dependancy on EditContext*@
-    <EditForm Model="BioSubmission">
-        @switch (BioSubmission)
-        {
-            case AmericanBlackBearBioSubmission bioSubmission:
-                <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-                break;
-            case CanadaLynxBioSubmission bioSubmission:
-                <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-                break;
-            case GreyWolfBioSubmission bioSubmission:
-                <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-                break;
-            case GrizzlyBearBioSubmission bioSubmission:
-                <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-                break;
-            case MountainGoatBioSubmission bioSubmission:
-                <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-                break;
-            case ThinhornSheepBioSubmission bioSubmission:
-                <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-                break;
-        }
-        @if (BioSubmission.Age is not null)
-        {
-            <MudField Label="Age (years)" DisableUnderLine="true">@BioSubmission.Age.Years</MudField>
-            <MudField Label="Confidence in age" DisableUnderLine="true">@BioSubmission.Age.Confidence?.GetDisplayName()</MudField>
-        }
-    </EditForm>
-}
+<MudDivider Class="mb-2"/>
+<MudStack Row="true" Class="mb-1">
+    <MudText Typo="Typo.h6">Biological submission</MudText>
+    <MudSpacer />
+    @if (BioSubmission.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() && (BioSubmission.RequiredOrganicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.Submitted ||
+                    BioSubmission.RequiredOrganicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.DidNotSubmit))
+    {
+        <MudMenu Label="Update" Color="Color.Secondary" Variant="Variant.Outlined">
+            <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>
+            <MudMenuItem OnClick="OpenBioSubmissionAnalysisDialog">Analysis</MudMenuItem>
+        </MudMenu>
+    } else
+    {
+        <MudButton OnClick="OpenOrganicMaterialForBioSubmissionDialog" Color="Color.Secondary" Variant="Variant.Outlined">Update</MudButton>
+    }
+</MudStack>
+<MudStack Row="true">
+    <MudText>Samples: <MudChip Color="GetOrganicMaterialsChipColor()">@BioSubmission.RequiredOrganicMaterialsStatus.GetDisplayName().ToLower()</MudChip></MudText>
+    @if (BioSubmission.CanBeAnalysed)
+    {
+        <MudText>Analysis: <MudChip Color="GetAnalysisChipColor()">@BioSubmission.AnalysisStatus.GetDisplayName().ToLower()</MudChip></MudText>
+    }
+</MudStack>
+@*This component is read-only, but it requires an EditForm as the child components contain input components which have a dependancy on EditContext*@
+<EditForm Model="BioSubmission">
+    @switch (BioSubmission)
+    {
+        case AmericanBlackBearBioSubmission bioSubmission:
+            <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+            break;
+        case CanadaLynxBioSubmission bioSubmission:
+            <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+            break;
+        case GreyWolfBioSubmission bioSubmission:
+            <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+            break;
+        case GrizzlyBearBioSubmission bioSubmission:
+            <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+            break;
+        case MountainGoatBioSubmission bioSubmission:
+            <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+            break;
+        case ThinhornSheepBioSubmission bioSubmission:
+            <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+            break;
+        case WolverineBioSubmission bioSubmission:
+            <WolverineBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+            break;
+    }
+    @if (BioSubmission.Age is not null)
+    {
+        <MudField Label="Age (years)" DisableUnderLine="true">@BioSubmission.Age.Years</MudField>
+        <MudField Label="Confidence in age" DisableUnderLine="true">@BioSubmission.Age.Confidence?.GetDisplayName()</MudField>
+    }
+    @if (!string.IsNullOrWhiteSpace(BioSubmission.Comment))
+    {
+        <MudField Label="Comment" DisableUnderLine="true">@BioSubmission.Comment</MudField>
+    }
+</EditForm>
+
 
 @code {
 
     [Parameter]
+    [EditorRequired]
     public BioSubmission BioSubmission { get; set; } = null!;
 
+    [Inject]
+    IDialogService DialogService { get; set; } = null!;
+
+    [Inject]
+    IMortalityService MortalityService { get; set; } = null!;
+
+    private Color GetOrganicMaterialsChipColor()
+    {
+        var organicMaterialsStatus = BioSubmission.RequiredOrganicMaterialsStatus;
+        if (organicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.Submitted)
+        {
+            return Color.Success;
+        }
+        else if (organicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.DidNotSubmit)
+        {
+            return Color.Error;
+        }
+        else
+        {
+            return Color.Warning;
+        }
+    }
+
+    private Color GetAnalysisChipColor()
+    {
+        var analysisStatus = BioSubmission.AnalysisStatus;
+        if (analysisStatus == BioSubmissionAnalysisStatus.Complete)
+        {
+            return Color.Success;
+        }
+        else
+        {
+            return Color.Warning;
+        }
+    }
+
+
+    private async Task OpenBioSubmissionAnalysisDialog()
+    {
+
+        var parameters = new DialogParameters();
+        parameters.Add(nameof(BioSubmissionAnalysisDialog.BioSubmission), BioSubmission);
+
+        var dialog = await DialogService.ShowAsync<BioSubmissionAnalysisDialog>("", parameters);
+        var result = await dialog.Result;
+
+        if (result.Canceled == false)
+        {
+            Log.Information("Updating bio submission analysis {@BioSubmission}", BioSubmission);
+            await MortalityService.UpdateBioSubmissionAnalysis(BioSubmission);
+            Log.Information("Updated bio submission analysis");
+        }
+    }
+
+
+    private async Task OpenOrganicMaterialForBioSubmissionDialog()
+    {
+
+        var parameters = new DialogParameters();
+        parameters.Add(nameof(OrganicMaterialForBioSubmissionDialog.BioSubmission), BioSubmission);
+
+        var dialog = await DialogService.ShowAsync<OrganicMaterialForBioSubmissionDialog>("", parameters);
+        var result = await dialog.Result;
+
+        if (result.Data is BioSubmissionDialogResult dialogResult)
+        {
+            if (dialogResult == BioSubmissionDialogResult.Cancel)
+            {
+                return;
+            }
+
+            Log.Information("Updating bio submission organic materials {@BioSubmission}", BioSubmission);
+            await MortalityService.UpdateOrganicMaterialForBioSubmission(BioSubmission);
+            Log.Information("Updated bio submission organic materials");
+
+            if (dialogResult == BioSubmissionDialogResult.SubmitAndProceedToAnalysis)
+            {
+                await OpenBioSubmissionAnalysisDialog();
+            }
+        }
+    }
 }

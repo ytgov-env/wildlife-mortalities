@@ -21,12 +21,16 @@ public class GrizzlyBearBioSubmission : BioSubmission<GrizzlyBearMortality>
     public bool? IsEvidenceOfSexAttached { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Skull")]
+    [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
     public bool? IsSkullProvided { get; set; }
 
     public override bool CanBeAnalysed => true;
 
     public override bool HasSubmittedAllRequiredOrganicMaterial() =>
         IsSkullProvided == true && IsEvidenceOfSexAttached == true;
+
+    public override bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() =>
+        IsSkullProvided == true;
 
     public enum GrizzlyBearSkullCondition
     {
