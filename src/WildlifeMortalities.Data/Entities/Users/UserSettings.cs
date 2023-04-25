@@ -2,7 +2,7 @@
 
 public class UserSettings
 {
-    public static UserSettings Default => new() { IsLightMode = false };
+    public static UserSettings Default => new() { IsDarkMode = false };
 
-    public bool IsLightMode { get; set; }
+    public bool IsDarkMode { get; set; }
 }
