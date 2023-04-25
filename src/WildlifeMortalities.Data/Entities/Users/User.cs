@@ -6,8 +6,9 @@ namespace WildlifeMortalities.Data.Entities.Users;
 public class User
 {
     public int Id { get; set; }
-    public string EmailAddress { get; set; }
-    public UserSettings Settings { get; set; }
+    public string Sid { get; set; } = string.Empty;
+    public string EmailAddress { get; set; } = string.Empty;
+    public UserSettings Settings { get; set; } = null!;
 }
 
 public class UserConfig : IEntityTypeConfiguration<User>
