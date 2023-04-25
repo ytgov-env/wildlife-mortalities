@@ -1,4 +1,6 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -68,4 +70,12 @@ public abstract class Report
     }
 
     public abstract bool HasHuntingActivity();
+}
+
+public class ReportConfig : IEntityTypeConfiguration<Report>
+{
+    public void Configure(EntityTypeBuilder<Report> builder)
+    {
+        builder.HasIndex(r => r.HumanReadableId).IsUnique();
+    }
 }
