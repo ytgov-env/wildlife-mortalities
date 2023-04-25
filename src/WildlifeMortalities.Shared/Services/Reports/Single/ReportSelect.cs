@@ -30,7 +30,8 @@ public static class ReportSelect
             .Include(x => ((OutfitterGuidedHuntReport)x).OutfitterArea)
             .Include(x => ((TrappedMortalitiesReport)x).RegisteredTrappingConcession)
             .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
-            .ThenInclude(x => x.Mortality);
+            .ThenInclude(x => x.Mortality)
+            .AsSplitQuery();
     }
 
     public static async Task<ReportDetail?> GetDetails(
@@ -91,6 +92,7 @@ public static class ReportSelect
                 ThinhornSheepMortality
                     => await context.BioSubmissions
                         .OfType<ThinhornSheepBioSubmission>()
+                        .Include(x => x.HornMeasurementEntries)
                         .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
                 WhiteTailedDeerMortality
                     => await context.BioSubmissions
@@ -111,6 +113,8 @@ public static class ReportSelect
             {
                 if (bioSubmission is IHasHornMeasurementEntries submission)
                 {
+                    submission.HornMeasurementEntries ??= new();
+
                     var firstAnnulusFound =
                         submission.HornMeasurementEntries.FirstOrDefault()?.Annulus ?? 1;
 
