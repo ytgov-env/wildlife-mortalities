@@ -42,7 +42,8 @@ public class CaribouMortality : Mortality, IHasBioSubmission
         WolfLake = 310
     }
 
-    public CaribouHerd Herd { get; set; }
+    // Todo: herd resolution logic
+    public CaribouHerd Herd { get; set; } = CaribouHerd.Porcupine;
 
     public override Species Species => Species.Caribou;
     public CaribouBioSubmission? BioSubmission { get; set; }
