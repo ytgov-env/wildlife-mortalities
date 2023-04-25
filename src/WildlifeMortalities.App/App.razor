@@ -1,12 +1,27 @@
 ﻿@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.App.Features.Auth
 @using WildlifeMortalities.Data.Entities.Users;
 @using WildlifeMortalities.Data;
 <CascadingAuthenticationState>
     <CascadingValue Value="AppParameters" IsFixed="true">
         <Router AppAssembly="@typeof(App).Assembly">
             <Found Context="routeData">
-                <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                    <Authorizing>
+                        <p>Determining session state, please wait...</p>
+                    </Authorizing>
+                    <NotAuthorized>
+                        @if (context.User.Identity is not null && context.User.Identity.IsAuthenticated)
+                        {
+                            <MudAlert Severity="Severity.Error">You are not authorized to view this page.</MudAlert>
+                        }
+                        else
+                        {
+                            <RedirectToLogin/>
+                        }
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
             </Found>
             <NotFound>
                 <PageTitle>Not found</PageTitle>
