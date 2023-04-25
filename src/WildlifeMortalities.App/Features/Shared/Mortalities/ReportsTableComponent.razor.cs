@@ -71,7 +71,7 @@ public partial class ReportsTableComponent : DbContextAwareComponent
         IEnumerable<ReportListDto> result =
             preResult is IAsyncQueryProvider
                 ? await preResult.AsSplitQuery().ToArrayAsync()
-                : preResult.ToArray();
+                : preResult.AsSplitQuery().ToArray();
 
         return (result, Options.TotalItems);
     }

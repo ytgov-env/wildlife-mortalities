@@ -48,7 +48,8 @@
                 break;
             }
         </MudTd>
-        <MudTd DataLabel="@Species">@string.Join(", ", context.SpeciesCollection.Select(x => x.GetDisplayName()).ToArray())
+        <MudTd DataLabel="@Species">@string.Join(", ", context.SpeciesCollection.Select(x => x.GetDisplayName())
+        .GroupBy(x => x).Select(x => x.Count() == 1 ? x.Key : $"{x.Key} ({x.Count()})").ToArray())
         </MudTd>
         <MudTd DataLabel="@Season">
             @switch (context.Season)
