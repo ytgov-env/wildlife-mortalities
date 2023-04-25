@@ -319,9 +319,7 @@ public class PosseService : IPosseService
         //    $"clients?modifiedSinceDateTime={modifiedSinceDateTime:O}"
         //);
 
-        var jsonDoc = await File.ReadAllTextAsync(
-            "C:\\Users\\jhodgins\\SND_clients-1679420759677.json"
-        );
+        var jsonDoc = await File.ReadAllTextAsync("C:\\Users\\jhodgins\\SND_clients.json");
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var results = JsonSerializer.Deserialize<GetClientsResponse>(jsonDoc, options);
 
@@ -711,53 +709,6 @@ public class PosseService : IPosseService
         return false;
     }
 
-    private static string? GetSeason(AuthorizationDto authorization) =>
-        GetSeason(
-            authorization.ValidFromDateTime,
-            authorization.ValidToDateTime,
-            Enum.TryParse(authorization.Type, out AuthorizationType typeValue)
-                && s_authorizationMapper[typeValue]() is TrappingLicence
-        );
-
-    private static string? GetSeason(Authorization authorization) =>
-        GetSeason(
-            authorization.ValidFromDateTime,
-            authorization.ValidToDateTime,
-            authorization is TrappingLicence
-        );
-
-    private static string? GetSeason(
-        DateTimeOffset startDate,
-        DateTimeOffset endDate,
-        bool isTrappingLicence
-    )
-    {
-        // Hunting April-March, Trapping July-June
-        var seasonEndMonth = isTrappingLicence ? 6 : 3;
-
-        int startYear;
-        if (startDate.Month <= seasonEndMonth)
-        {
-            startYear = startDate.Year - 1;
-        }
-        else
-        {
-            startYear = startDate.Year;
-        }
-
-        int endYear;
-        if (endDate.Month <= seasonEndMonth)
-        {
-            endYear = endDate.Year;
-        }
-        else
-        {
-            endYear = endDate.Year + 1;
-        }
-
-        return endYear - startYear != 1 ? null : $"{startYear % 100:00}/{endYear % 100:00}";
-    }
-
     private static ProcessResult TryProcessAuthorization<T>(
         Authorization authorization,
         AuthorizationDto posseAuthorization,
@@ -799,6 +750,10 @@ public class PosseService : IPosseService
                     or BigGameHuntingLicence.LicenceType.NonResident
             }
                 => (BigGameHuntingLicence)authorization,
+            // Todo: does small game hunting licence actually require outfitter areas?
+            SmallGameHuntingLicence
+            and { Type: SmallGameHuntingLicence.LicenceType.NonResident }
+                => (SmallGameHuntingLicence)authorization,
             OutfitterChiefGuideLicence licence => licence,
             OutfitterAssistantGuideLicence licence => licence,
             _ => null
