@@ -8,6 +8,7 @@ namespace WildlifeMortalities.App.HostedServices;
 public class PosseSyncService : TimerBasedHostedService
 {
     private readonly IServiceProvider _serviceProvider;
+    private const string LastSuccessfulSyncKey = "PosseSyncService.LastSuccessfulSync";
 
     public PosseSyncService(IServiceProvider serviceProvider)
         : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(2)) =>
@@ -15,40 +16,46 @@ public class PosseSyncService : TimerBasedHostedService
 
     protected override async Task DoWork(object? state)
     {
-        //Log.Information("Starting posse sync");
-        //using var scope = _serviceProvider.CreateScope();
-        //var posseService = scope.ServiceProvider.GetRequiredService<IPosseService>();
-        //var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        Log.Information("Starting posse sync");
+        using var scope = _serviceProvider.CreateScope();
+        var posseService = scope.ServiceProvider.GetRequiredService<IPosseService>();
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var appConfiguration = scope.ServiceProvider.GetRequiredService<IAppConfigurationService>();
+        var lastSuccessfulSync = await appConfiguration.TryGetValue(
+            LastSuccessfulSyncKey,
+            DateTimeOffset.MinValue
+        );
 
-        //var clientMapper = context.People
-        //    .AsSplitQuery()
-        //    .OfType<Client>()
-        //    .Include(x => x.DraftReports)
-        //    .Include(x => x.SpecialGuideLicencesAsClient)
-        //    .Include(x => x.IndividualHuntedMortalityReports)
-        //    .Include(x => x.OutfitterGuidedHuntReportsAsChiefGuide)
-        //    .Include(x => x.OutfitterGuidedHuntReportsAsAssistantGuide)
-        //    .Include(x => x.OutfitterGuidedHuntReportsAsClient)
-        //    .Include(x => x.SpecialGuidedHuntReportsAsGuide)
-        //    .Include(x => x.SpecialGuidedHuntReportsAsClient)
-        //    .Include(x => x.TrappedMortalitiesReports)
-        //    .Include(x => x.Authorizations)
-        //    .ToDictionary(x => x.EnvClientId, x => x);
+        var clientMapper = context.People
+            .AsSplitQuery()
+            .OfType<Client>()
+            .Include(x => x.DraftReports)
+            .Include(x => x.SpecialGuideLicencesAsClient)
+            .Include(x => x.IndividualHuntedMortalityReports)
+            .Include(x => x.OutfitterGuidedHuntReportsAsChiefGuide)
+            .Include(x => x.OutfitterGuidedHuntReportsAsAssistantGuide)
+            .Include(x => x.OutfitterGuidedHuntReportsAsClient)
+            .Include(x => x.SpecialGuidedHuntReportsAsGuide)
+            .Include(x => x.SpecialGuidedHuntReportsAsClient)
+            .Include(x => x.TrappedMortalitiesReports)
+            .Include(x => x.Authorizations)
+            .ToDictionary(x => x.EnvClientId, x => x);
 
-        //await SyncClients(clientMapper, context, posseService);
-        //await SyncAuthorizations(clientMapper, context, posseService);
-        //Log.Information("Finished posse sync");
+        await SyncClients(clientMapper, context, posseService, lastSuccessfulSync);
+        await SyncAuthorizations(clientMapper, context, posseService, lastSuccessfulSync);
+        await appConfiguration.SetValue(LastSuccessfulSyncKey, DateTimeOffset.Now);
+
+        Log.Information("Finished posse sync");
     }
 
     private static async Task SyncClients(
         Dictionary<string, Client> clientMapper,
         AppDbContext context,
-        IPosseService posseService
+        IPosseService posseService,
+        DateTimeOffset lastSuccessfulSync
     )
     {
-        var recentlyModifiedClients = await posseService.GetClients(
-            new DateTimeOffset(new DateTime(2022, 02, 15), TimeSpan.FromHours(-7))
-        );
+        var recentlyModifiedClients = await posseService.GetClients(lastSuccessfulSync);
 
         foreach (
             var (client, previousEnvClientIds) in recentlyModifiedClients.OrderBy(
@@ -89,11 +96,12 @@ public class PosseSyncService : TimerBasedHostedService
     private static async Task SyncAuthorizations(
         Dictionary<string, Client> clientMapper,
         AppDbContext context,
-        IPosseService posseService
+        IPosseService posseService,
+        DateTimeOffset lastSuccessfulSync
     )
     {
         var authorizations = await posseService.GetAuthorizations(
-            new DateTimeOffset(new DateTime(2022, 02, 15), TimeSpan.FromHours(-7)),
+            lastSuccessfulSync,
             clientMapper,
             context
         );
@@ -104,7 +112,6 @@ public class PosseSyncService : TimerBasedHostedService
             {
                 auth.Client = clientMapper[envClientId];
                 context.Authorizations.Add(auth);
-                //await context.SaveChangesAsync();
             }
             else
             {

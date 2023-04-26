@@ -39,6 +39,10 @@ public abstract class TimerBasedHostedService : IHostedService
             _isRunning = true;
             await DoWork(state);
         }
+        catch (Exception e)
+        {
+            Log.Error("Exception {e} in hosted service", e);
+        }
         finally
         {
             _isRunning = false;
