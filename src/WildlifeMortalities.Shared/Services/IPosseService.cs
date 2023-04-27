@@ -8,7 +8,7 @@ public interface IPosseService
 {
     Task<IEnumerable<(Authorization authorization, string envClientId)>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime,
-        Dictionary<string, Client> clientMapper,
+        Dictionary<string, PersonWithAuthorizations> personMapper,
         AppDbContext context
     );
     Task<IEnumerable<PosseService.AuthorizationDto>> GetAuthorizationsByEnvClientId(

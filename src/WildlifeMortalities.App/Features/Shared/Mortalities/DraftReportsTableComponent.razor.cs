@@ -22,7 +22,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
         {
             var client = await Context.People
                 .OfType<Client>()
-                .FirstOrDefaultAsync(x => x.EnvClientId == EnvClientId);
+                .FirstOrDefaultAsync(x => x.EnvPersonId == EnvClientId);
             if (client == null)
             {
                 throw new ArgumentException($"Client {EnvClientId} not found.", nameof(client));
@@ -70,7 +70,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
         }
         NavigationManager.NavigateTo(
             Constants.Routes.GetEditDraftReportPageLink(
-                EnvClientId ?? (args.Item.Person as Client)!.EnvClientId,
+                EnvClientId ?? (args.Item.Person as Client)!.EnvPersonId,
                 args.Item.Id
             )
         );

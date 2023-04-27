@@ -10,7 +10,7 @@ public static class PeopleExtensions
     )
     {
         return clients
-            .Where(c => c.LastName.StartsWith(searchTerm) || c.EnvClientId.StartsWith(searchTerm))
+            .Where(c => c.LastName.StartsWith(searchTerm) || c.EnvPersonId.StartsWith(searchTerm))
             .OrderBy(x => x.LastName);
     }
 

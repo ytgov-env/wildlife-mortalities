@@ -684,7 +684,7 @@ void AddFakeClients(AppDbContext context)
     if (!context.People.OfType<Client>().Any())
     {
         var fakerClients = new Faker<Client>()
-            .RuleFor(c => c.EnvClientId, f => f.Random.Replace("######"))
+            .RuleFor(c => c.EnvPersonId, f => f.Random.Replace("######"))
             .RuleFor(c => c.FirstName, f => f.Name.FirstName())
             .RuleFor(c => c.LastName, f => f.Name.LastName())
             .RuleFor(c => c.BirthDate, f => f.Date.Past(70, DateTime.Today));

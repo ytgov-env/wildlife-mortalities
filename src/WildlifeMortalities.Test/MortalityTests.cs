@@ -139,10 +139,10 @@ public class MortalityTests
     public static List<Client> CreateFourClients() =>
         new()
         {
-            new Client { EnvClientId = "51230" },
-            new Client { EnvClientId = "40123" },
-            new Client { EnvClientId = "60102" },
-            new Client { EnvClientId = "20345" }
+            new Client { EnvPersonId = "51230" },
+            new Client { EnvPersonId = "40123" },
+            new Client { EnvPersonId = "60102" },
+            new Client { EnvPersonId = "20345" }
         };
 
     public IDbContextFactory<AppDbContext> CreateTestDbContextFactory()

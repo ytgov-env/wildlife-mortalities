@@ -6,16 +6,13 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.People;
 
-public class Client : Person
+public class Client : PersonWithAuthorizations
 {
-    public string EnvClientId { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
 
-    public DateTimeOffset LastModifiedDateTime { get; set; }
-    public List<Authorization> Authorizations { get; set; } = null!;
     public List<SpecialGuideLicence> SpecialGuideLicencesAsClient { get; set; } = null!;
     public List<IndividualHuntedMortalityReport> IndividualHuntedMortalityReports { get; set; } =
         null!;
@@ -28,6 +25,14 @@ public class Client : Person
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
     public List<TrappedMortalitiesReport> TrappedMortalitiesReports { get; set; } = null!;
 
+    public override void Update(PersonWithAuthorizations person)
+    {
+        if (person is Client client)
+        {
+            Update(client);
+        }
+    }
+
     public void Update(Client client)
     {
         FirstName = client.FirstName;
@@ -36,13 +41,22 @@ public class Client : Person
         LastModifiedDateTime = client.LastModifiedDateTime;
     }
 
-    public override string ToString() => $"{FirstName} {LastName} ({EnvClientId})";
+    public override string ToString() => $"{FirstName} {LastName} ({EnvPersonId})";
+
+    public override bool Merge(PersonWithAuthorizations person)
+    {
+        if (person is Client client)
+        {
+            return Merge(client);
+        }
+        return false;
+    }
 
     public bool Merge(Client clientToBeMerged)
     {
         // This check was added because posse returned clients who had previousEnvClientIds that matched the EnvClientId of that client,
         // which is invalid and shouldn't result in a merge
-        if (EnvClientId == clientToBeMerged.EnvClientId)
+        if (EnvPersonId == clientToBeMerged.EnvPersonId)
         {
             return false;
         }
@@ -78,7 +92,7 @@ public class ClientConfig : IEntityTypeConfiguration<Client>
 {
     public void Configure(EntityTypeBuilder<Client> builder)
     {
-        builder.HasIndex(c => c.EnvClientId).IsUnique();
+        builder.HasIndex(c => c.EnvPersonId).IsUnique();
         builder.Property(c => c.FirstName).HasColumnName(nameof(Client.FirstName));
         builder.Property(c => c.LastName).HasColumnName(nameof(Client.LastName));
     }

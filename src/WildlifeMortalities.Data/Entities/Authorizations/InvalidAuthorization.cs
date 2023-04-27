@@ -14,7 +14,7 @@ public class InvalidAuthorization
         ValidToDateTime = authorization.ValidToDateTime;
         DateCreated = DateTimeOffset.Now;
         Season = authorization.Season;
-        Client = authorization.Client;
+        Person = authorization.Person;
     }
 
     public int Id { get; set; }
@@ -25,11 +25,8 @@ public class InvalidAuthorization
     public DateTimeOffset DateCreated { get; set; }
     public int? SeasonId { get; set; }
     public Season? Season { get; set; }
-    public int ClientId { get; set; }
-    public Client Client { get; set; } = null!;
+    public int PersonId { get; set; }
+    public Person Person { get; set; } = null!;
 
-    public string GetIdentifier() => GetIdentifier(this);
-
-    public static string GetIdentifier(InvalidAuthorization input) =>
-        $"{input.Type}-{input.Number}-{input.ClientId}";
+    public string GetIdentifier() => $"{Type}-{Number}-{PersonId}";
 }

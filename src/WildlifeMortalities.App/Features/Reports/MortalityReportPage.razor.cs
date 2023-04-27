@@ -65,7 +65,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
     {
         _personId = await Context.People
             .OfType<Client>()
-            .Where(c => c.EnvClientId == HumanReadablePersonId)
+            .Where(c => c.EnvPersonId == HumanReadablePersonId)
             .Select(x => x.Id)
             .SingleOrDefaultAsync();
 

@@ -25,13 +25,13 @@ public static class ReportListDtoSelect
                     ).Result.GetDisplayName(),
                     EnvClientId =
                         report is IndividualHuntedMortalityReport
-                            ? ((IndividualHuntedMortalityReport)report).Client.EnvClientId
+                            ? ((IndividualHuntedMortalityReport)report).Person.EnvPersonId
                             : report is SpecialGuidedHuntReport
-                                ? ((SpecialGuidedHuntReport)report).Client.EnvClientId
+                                ? ((SpecialGuidedHuntReport)report).Client.EnvPersonId
                                 : report is OutfitterGuidedHuntReport
-                                    ? ((OutfitterGuidedHuntReport)report).Client.EnvClientId
+                                    ? ((OutfitterGuidedHuntReport)report).Client.EnvPersonId
                                     : report is TrappedMortalitiesReport
-                                        ? ((TrappedMortalitiesReport)report).Client.EnvClientId
+                                        ? ((TrappedMortalitiesReport)report).Client.EnvPersonId
                                         : null,
                     BadgeNumber =
                         report is HumanWildlifeConflictMortalityReport

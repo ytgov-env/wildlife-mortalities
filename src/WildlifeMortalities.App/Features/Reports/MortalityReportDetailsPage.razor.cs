@@ -32,7 +32,7 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
         _isLoading = false;
         Client = await Context.People
             .OfType<Client>()
-            .SingleOrDefaultAsync(x => x.EnvClientId == HumanReadablePersonId);
+            .SingleOrDefaultAsync(x => x.EnvPersonId == HumanReadablePersonId);
     }
 
     private ActivityViewModel GetActivityVm(Activity item) =>

@@ -13,13 +13,13 @@
 
 <MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="Client" For="@(() => ViewModel.ChiefGuide)" Label="Chief guide" Placeholder="Search by client id or last name" MinCharacters="2"
-                     @bind-Value="ViewModel.ChiefGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                     @bind-Value="ViewModel.ChiefGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvPersonId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                      AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
     </MudAutocomplete>
     @if(ViewModel.AssistantGuides.Count < _maxAssistantGuides)
     {
         <MudAutocomplete T="Client" @key="ViewModel.AssistantGuides.Count" Label="Add assistant guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
-                         @bind-Value="ViewModel.SelectedAssistantGuide" @bind-Value:after="AddAssistantGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvClientId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
+                         @bind-Value="ViewModel.SelectedAssistantGuide" @bind-Value:after="AddAssistantGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvPersonId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
                          AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
         </MudAutocomplete>
     }

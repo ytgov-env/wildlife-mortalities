@@ -57,7 +57,7 @@ namespace WildlifeMortalities.App.Features.Reports
                     );
                     hasErrors = true;
                 }
-                else if (ViewModel.AssistantGuides.Any(x => x.EnvClientId == input.EnvClientId))
+                else if (ViewModel.AssistantGuides.Any(x => x.EnvPersonId == input.EnvPersonId))
                 {
                     hasErrors = true;
                     SnackBar.Add(

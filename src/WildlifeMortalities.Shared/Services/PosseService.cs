@@ -329,7 +329,7 @@ public class PosseService : IPosseService
         {
             var client = new Client
             {
-                EnvClientId = recentlyModifiedClient.EnvClientId,
+                EnvPersonId = recentlyModifiedClient.EnvClientId,
                 //FirstName = recentlyModifiedClient.FirstName,
                 FirstName = FakeClients.FirstNames[rand.Next(FakeClients.FirstNames.Length)],
                 //LastName = recentlyModifiedClient.LastName,
@@ -360,7 +360,7 @@ public class PosseService : IPosseService
 
     public async Task<IEnumerable<(Authorization, string)>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime,
-        Dictionary<string, Client> clientMapper,
+        Dictionary<string, PersonWithAuthorizations> personMapper,
         AppDbContext context
     )
     {
@@ -369,7 +369,7 @@ public class PosseService : IPosseService
         //);
 
         var jsonDoc = await File.ReadAllTextAsync(
-            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations.json"
+            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations-subset.json"
         );
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
@@ -383,12 +383,10 @@ public class PosseService : IPosseService
         var registeredTrappingConcessions =
             await context.RegisteredTrappingConcessions.ToArrayAsync();
 
-        var existingInvalidAuthorizations = (
-            await context.InvalidAuthorizations
-                .Select(x => InvalidAuthorization.GetIdentifier(x))
-                .ToArrayAsync()
-        ).ToHashSet();
-
+        var existingInvalidAuthorizations = await context.InvalidAuthorizations.ToDictionaryAsync(
+            x => x.GetIdentifier(),
+            x => x
+        );
         foreach (
             var posseAuthorization in results.Authorizations
                 .OrderBy(a => IsBigGameHuntingLicence(a) ? 0 : 1)
@@ -449,11 +447,11 @@ public class PosseService : IPosseService
                                 ),
                             (specialGuideLicence) =>
                             {
-                                clientMapper.TryGetValue(
+                                personMapper.TryGetValue(
                                     posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
-                                    out var client
+                                    out var person
                                 );
-                                if (client == null)
+                                if (person == null)
                                 {
                                     Log.Error(
                                         "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}, and was rejected: {@authorization}",
@@ -463,7 +461,7 @@ public class PosseService : IPosseService
                                     );
                                     return ProcessResult.Invalid;
                                 }
-                                specialGuideLicence.GuidedClient = client;
+                                specialGuideLicence.GuidedClient = (Client)person;
                                 return ProcessResult.Success;
                             },
                             nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
@@ -478,11 +476,11 @@ public class PosseService : IPosseService
                                 ),
                             (specialGuideLicence) =>
                             {
-                                clientMapper.TryGetValue(
+                                personMapper.TryGetValue(
                                     posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
-                                    out var client
+                                    out var person
                                 );
-                                if (client == null)
+                                if (person == null)
                                 {
                                     Log.Error(
                                         "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}, and was rejected: {@authorization}",
@@ -492,7 +490,7 @@ public class PosseService : IPosseService
                                     );
                                     return ProcessResult.Invalid;
                                 }
-                                specialGuideLicence.GuidedClient = client;
+                                specialGuideLicence.GuidedClient = (Client)person;
                                 return ProcessResult.Success;
                             },
                             nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
@@ -559,7 +557,7 @@ public class PosseService : IPosseService
                         isValid = false;
                         var invalidAuthorization = new InvalidAuthorization(authorization);
                         if (
-                            existingInvalidAuthorizations.Contains(
+                            existingInvalidAuthorizations.ContainsKey(
                                 invalidAuthorization.GetIdentifier()
                             ) == false
                         )
@@ -572,6 +570,16 @@ public class PosseService : IPosseService
                 }
                 if (isValid)
                 {
+                    if (
+                        existingInvalidAuthorizations.TryGetValue(
+                            new InvalidAuthorization(authorization).GetIdentifier(),
+                            out var invalidAuthorization
+                        )
+                    )
+                    {
+                        context.InvalidAuthorizations.Remove(invalidAuthorization);
+                    }
+
                     authorizations.Add((authorization, posseAuthorization.EnvClientId));
                 }
             }
@@ -929,4 +937,6 @@ public class PosseService : IPosseService
         DateTimeOffset LastModifiedDateTime,
         IEnumerable<string> PreviousEnvClientIds
     );
+
+    public record ValidationResult(bool IsValid, string? ErrorMessage = null);
 }

@@ -23,7 +23,7 @@ public class IndividualHuntedMortalityReportViewModel : MortalityReportViewModel
         var report = new IndividualHuntedMortalityReport()
         {
             Id = _reportId,
-            ClientId = personId,
+            PersonId = personId,
             HuntedActivity = HuntedActivityViewModel.GetActivity(),
         };
 

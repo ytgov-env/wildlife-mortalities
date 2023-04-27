@@ -6,7 +6,7 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
-public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport, IHasClientReporter
+public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport
 {
     public List<TrappedActivity> TrappedActivities { get; set; } = null!;
     public int RegisteredTrappingConcessionId { get; set; }

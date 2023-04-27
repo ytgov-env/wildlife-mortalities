@@ -8,6 +8,7 @@ public abstract class Person
 {
     public int Id { get; set; }
     public List<DraftReport> DraftReports { get; set; } = null!;
+    public DateTimeOffset LastModifiedDateTime { get; set; }
 }
 
 public class PersonConfig : IEntityTypeConfiguration<Person>

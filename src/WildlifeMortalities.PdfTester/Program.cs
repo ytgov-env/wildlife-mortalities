@@ -107,7 +107,7 @@ public class ClientComponent : IComponent
     {
         container.Column(column =>
         {
-            column.Item().Text($"Client Id: {_client.EnvClientId}");
+            column.Item().Text($"Client Id: {_client.EnvPersonId}");
             column.Item().Text($"Name: {_client.FirstName} {_client.LastName}");
             column.Item().Text($"Date of birth: {_client.BirthDate.ToShortDateString()}");
         });

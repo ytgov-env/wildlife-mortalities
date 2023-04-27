@@ -55,8 +55,8 @@ public abstract class Authorization
     public int SeasonId { get; set; }
     public Season Season { get; set; } = null!;
 
-    public int ClientId { get; set; }
-    public Client Client { get; set; } = null!;
+    public int PersonId { get; set; }
+    public Person Person { get; set; } = null!;
 
     public static AuthorizationsSummary GetSummary(
         IEnumerable<Authorization> authorizations,

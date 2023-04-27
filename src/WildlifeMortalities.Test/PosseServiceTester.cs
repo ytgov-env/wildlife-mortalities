@@ -66,11 +66,14 @@ public class PosseServiceTester
 
         var service = new PosseService(client);
 
-        Dictionary<string, Client> clientMapper = new Dictionary<string, Client>
+        Dictionary<string, PersonWithAuthorizations> clientMapper = new Dictionary<
+            string,
+            PersonWithAuthorizations
+        >
         {
             {
                 "523203",
-                new Client { EnvClientId = "523203" }
+                new Client { EnvPersonId = "523203" }
             }
         };
 

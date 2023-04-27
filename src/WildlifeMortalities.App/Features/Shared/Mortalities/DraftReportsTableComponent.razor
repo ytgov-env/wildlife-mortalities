@@ -20,7 +20,7 @@
     <RowTemplate>
         @if (EnvClientId == null)
         {
-            <MudTd>@((context.Person as Client)!.EnvClientId)</MudTd>
+            <MudTd>@((context.Person as Client)!.EnvPersonId)</MudTd>
         }
         <MudTd>@context.Type.GetReportTypeDisplayName()</MudTd>
         <MudTd>@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>

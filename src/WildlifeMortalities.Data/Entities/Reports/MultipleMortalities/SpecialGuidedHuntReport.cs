@@ -6,7 +6,7 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
-public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport, IHasClientReporter
+public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport
 {
     public DateTime? HuntStartDate { get; set; }
     public DateTime? HuntEndDate { get; set; }

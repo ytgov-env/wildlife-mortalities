@@ -28,7 +28,7 @@ public partial class ClientOverviewPage : DbContextAwareComponent
         {
             _selectedClientViewModel.SelectedClient ??= await Context.People
                 .OfType<Client>()
-                .Where(c => c.EnvClientId.StartsWith(EnvClientId))
+                .Where(c => c.EnvPersonId.StartsWith(EnvClientId))
                 .FirstOrDefaultAsync();
         }
 
@@ -47,7 +47,7 @@ public partial class ClientOverviewPage : DbContextAwareComponent
     private void ClientSelected(Client? client)
     {
         _selectedClientViewModel.SelectedClient = client;
-        EnvClientId = _selectedClientViewModel.SelectedClient.EnvClientId;
+        EnvClientId = _selectedClientViewModel.SelectedClient.EnvPersonId;
         NavigationManager.NavigateTo(Constants.Routes.GetClientOverviewPageLink(EnvClientId));
     }
 
@@ -55,7 +55,7 @@ public partial class ClientOverviewPage : DbContextAwareComponent
     {
         _editContext.Validate();
         ValidationChanged.InvokeAsync(!_editContext.GetValidationMessages().Any());
-        EnvClientId = _selectedClientViewModel.SelectedClient.EnvClientId;
+        EnvClientId = _selectedClientViewModel.SelectedClient.EnvPersonId;
     }
 
     private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(

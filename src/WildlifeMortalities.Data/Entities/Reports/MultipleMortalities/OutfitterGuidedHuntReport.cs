@@ -6,7 +6,7 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
-public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHasClientReporter
+public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
 {
     public DateTime? HuntStartDate { get; set; }
     public DateTime? HuntEndDate { get; set; }
@@ -39,7 +39,7 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport, IHa
         var guides = string.Empty;
         foreach (var guide in AssistantGuides)
         {
-            guides += $"{guide.FirstName} {guide.LastName} ({guide.EnvClientId}), ";
+            guides += $"{guide.FirstName} {guide.LastName} ({guide.EnvPersonId}), ";
         }
 
         return guides[..^2];
