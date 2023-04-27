@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Linq;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
@@ -382,12 +383,17 @@ public class PosseService : IPosseService
         var registeredTrappingConcessions =
             await context.RegisteredTrappingConcessions.ToArrayAsync();
 
+        var existingInvalidAuthorizations = (
+            await context.InvalidAuthorizations
+                .Select(x => InvalidAuthorization.GetIdentifier(x))
+                .ToArrayAsync()
+        ).ToHashSet();
+
         foreach (
             var posseAuthorization in results.Authorizations
                 .OrderBy(a => IsBigGameHuntingLicence(a) ? 0 : 1)
                 .OrderBy(a => a.Type)
                 .ThenBy(a => a.ValidFromDateTime)
-        //.DistinctBy(x => $"{x.EnvClientId}-{GetSeason(x)}-{x.Type}")
         )
         {
             if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
@@ -398,158 +404,176 @@ public class PosseService : IPosseService
                 authorization.ValidToDateTime = posseAuthorization.ValidToDateTime;
                 authorization.LastModifiedDateTime = posseAuthorization.LastModifiedDateTime;
 
-                if (HasNullEnvClientId(posseAuthorization))
-                    continue;
-
-                if (HasValidFromDateTimeAfterValidToDateTime(posseAuthorization))
-                    continue;
-
-                authorization.Season =
+                authorization.Season = (
                     authorization is TrappingLicence
                         ? await TrappingSeason.TryGetSeason(authorization, context)
-                        : await HuntingSeason.GetSeason(authorization, context);
+                        : await HuntingSeason.TryGetSeason(authorization, context)
+                )!;
 
-                if (HasInvalidSeason(authorization, posseAuthorization))
-                    continue;
-
-                if (HasSeasonBefore2020_2021(authorization))
-                    continue;
-
-                if (HasValidityPeriodOfLessThanOneDay(posseAuthorization))
-                    continue;
-
-                if (
-                    TryProcessAuthorizationWithOutfitterAreas(
-                        posseAuthorization,
-                        authorization,
-                        outfitterAreas
-                    ) == ProcessResult.Invalid
-                )
+                var checks = new Func<bool>[]
                 {
-                    continue;
-                }
-
-                if (
-                    TryProcessAuthorization<CustomWildlifeActPermit>(
-                        authorization,
-                        posseAuthorization,
-                        () =>
-                            string.IsNullOrWhiteSpace(
-                                posseAuthorization.CustomWildlifeActPermitConditions
-                            ),
-                        (customWildlifeActPermit) =>
-                        {
-                            customWildlifeActPermit.Conditions =
-                                posseAuthorization.CustomWildlifeActPermitConditions!;
-                            return ProcessResult.Success;
-                        },
-                        nameof(posseAuthorization.CustomWildlifeActPermitConditions)
-                    ) == ProcessResult.Invalid
-                )
-                {
-                    continue;
-                }
-
-                if (
-                    TryProcessAuthorization<SpecialGuideLicence>(
-                        authorization,
-                        posseAuthorization,
-                        () =>
-                            string.IsNullOrWhiteSpace(
-                                posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
-                            ),
-                        (specialGuideLicence) =>
-                        {
-                            clientMapper.TryGetValue(
-                                posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
-                                out var client
-                            );
-                            if (client == null)
+                    () => HasNullEnvClientId(posseAuthorization),
+                    () => HasValidFromDateTimeAfterValidToDateTime(posseAuthorization),
+                    () => HasInvalidSeason(authorization, posseAuthorization),
+                    () => HasSeasonBefore2020_2021(authorization),
+                    () => HasValidityPeriodOfLessThanOneDay(posseAuthorization),
+                    () =>
+                        TryProcessAuthorizationWithOutfitterAreas(
+                            posseAuthorization,
+                            authorization,
+                            outfitterAreas
+                        ) == ProcessResult.Invalid,
+                    () =>
+                        TryProcessAuthorization<CustomWildlifeActPermit>(
+                            authorization,
+                            posseAuthorization,
+                            () =>
+                                string.IsNullOrWhiteSpace(
+                                    posseAuthorization.CustomWildlifeActPermitConditions
+                                ),
+                            (customWildlifeActPermit) =>
                             {
-                                Log.Error(
-                                    "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}, and was rejected: {@authorization}",
-                                    posseAuthorization.Type,
-                                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId,
-                                    authorization
-                                );
-                                return ProcessResult.Invalid;
-                            }
-                            specialGuideLicence.GuidedClient = client;
-                            return ProcessResult.Success;
-                        },
-                        nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
-                    ) == ProcessResult.Invalid
-                )
-                {
-                    continue;
-                }
-
-                if (
-                    TryProcessAuthorization<TrappingLicence>(
-                        authorization,
-                        posseAuthorization,
-                        () =>
-                            string.IsNullOrWhiteSpace(
-                                posseAuthorization.RegisteredTrappingConcession
-                            ),
-                        (trappingLicence) =>
-                        {
-                            var item = Array.Find(
-                                registeredTrappingConcessions,
-                                r => r.Area == posseAuthorization.RegisteredTrappingConcession
-                            );
-                            if (item == null)
+                                customWildlifeActPermit.Conditions =
+                                    posseAuthorization.CustomWildlifeActPermitConditions!;
+                                return ProcessResult.Success;
+                            },
+                            nameof(posseAuthorization.CustomWildlifeActPermitConditions)
+                        ) == ProcessResult.Invalid,
+                    () =>
+                        TryProcessAuthorization<SpecialGuideLicence>(
+                            authorization,
+                            posseAuthorization,
+                            () =>
+                                string.IsNullOrWhiteSpace(
+                                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+                                ),
+                            (specialGuideLicence) =>
                             {
-                                Log.Error(
-                                    "An authorization of type {type} has an unrecognized {property} value of {unrecognizedValue}, and was rejected: {@authorization}",
-                                    posseAuthorization.Type,
-                                    nameof(trappingLicence.RegisteredTrappingConcession),
-                                    posseAuthorization.RegisteredTrappingConcession,
-                                    authorization
+                                clientMapper.TryGetValue(
+                                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
+                                    out var client
                                 );
-                                return ProcessResult.Invalid;
-                            }
-                            trappingLicence.RegisteredTrappingConcession = item;
-                            return ProcessResult.Success;
-                        },
-                        nameof(posseAuthorization.RegisteredTrappingConcession)
-                    ) == ProcessResult.Invalid
-                )
-                {
-                    continue;
-                }
+                                if (client == null)
+                                {
+                                    Log.Error(
+                                        "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}, and was rejected: {@authorization}",
+                                        posseAuthorization.Type,
+                                        posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId,
+                                        authorization
+                                    );
+                                    return ProcessResult.Invalid;
+                                }
+                                specialGuideLicence.GuidedClient = client;
+                                return ProcessResult.Success;
+                            },
+                            nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
+                        ) == ProcessResult.Invalid,
+                    () =>
+                        TryProcessAuthorization<SpecialGuideLicence>(
+                            authorization,
+                            posseAuthorization,
+                            () =>
+                                string.IsNullOrWhiteSpace(
+                                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId
+                                ),
+                            (specialGuideLicence) =>
+                            {
+                                clientMapper.TryGetValue(
+                                    posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId!,
+                                    out var client
+                                );
+                                if (client == null)
+                                {
+                                    Log.Error(
+                                        "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}, and was rejected: {@authorization}",
+                                        posseAuthorization.Type,
+                                        posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId,
+                                        authorization
+                                    );
+                                    return ProcessResult.Invalid;
+                                }
+                                specialGuideLicence.GuidedClient = client;
+                                return ProcessResult.Success;
+                            },
+                            nameof(posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId)
+                        ) == ProcessResult.Invalid,
+                    () =>
+                        TryProcessAuthorization<TrappingLicence>(
+                            authorization,
+                            posseAuthorization,
+                            () =>
+                                string.IsNullOrWhiteSpace(
+                                    posseAuthorization.RegisteredTrappingConcession
+                                ),
+                            (trappingLicence) =>
+                            {
+                                var item = Array.Find(
+                                    registeredTrappingConcessions,
+                                    r => r.Area == posseAuthorization.RegisteredTrappingConcession
+                                );
+                                if (item == null)
+                                {
+                                    Log.Error(
+                                        "An authorization of type {type} has an unrecognized {property} value of {unrecognizedValue}, and was rejected: {@authorization}",
+                                        posseAuthorization.Type,
+                                        nameof(trappingLicence.RegisteredTrappingConcession),
+                                        posseAuthorization.RegisteredTrappingConcession,
+                                        authorization
+                                    );
+                                    return ProcessResult.Invalid;
+                                }
+                                trappingLicence.RegisteredTrappingConcession = item;
+                                return ProcessResult.Success;
+                            },
+                            nameof(posseAuthorization.RegisteredTrappingConcession)
+                        ) == ProcessResult.Invalid,
+                    () =>
+                        TryProcessAuthorization<PhaHuntingPermit>(
+                            authorization,
+                            posseAuthorization,
+                            () =>
+                                string.IsNullOrWhiteSpace(
+                                    posseAuthorization.PhaHuntingPermitHuntCode
+                                ),
+                            (phaHuntingPermit) =>
+                            {
+                                phaHuntingPermit.HuntCode =
+                                    posseAuthorization.PhaHuntingPermitHuntCode!;
+                                return ProcessResult.Success;
+                            },
+                            nameof(posseAuthorization.PhaHuntingPermitHuntCode)
+                        ) == ProcessResult.Invalid,
+                    () =>
+                        HasInvalidBigGameHuntingLicenceForDependantAuthorization(
+                            posseAuthorization,
+                            authorization,
+                            authorizations
+                        )
+                };
 
-                if (
-                    TryProcessAuthorization<PhaHuntingPermit>(
-                        authorization,
-                        posseAuthorization,
-                        () =>
-                            string.IsNullOrWhiteSpace(posseAuthorization.PhaHuntingPermitHuntCode),
-                        (phaHuntingPermit) =>
+                var isValid = true;
+                foreach (var item in checks)
+                {
+                    if (item())
+                    {
+                        isValid = false;
+                        var invalidAuthorization = new InvalidAuthorization(authorization);
+                        if (
+                            existingInvalidAuthorizations.Contains(
+                                invalidAuthorization.GetIdentifier()
+                            ) == false
+                        )
                         {
-                            phaHuntingPermit.HuntCode =
-                                posseAuthorization.PhaHuntingPermitHuntCode!;
-                            return ProcessResult.Success;
-                        },
-                        nameof(posseAuthorization.PhaHuntingPermitHuntCode)
-                    ) == ProcessResult.Invalid
-                )
-                {
-                    continue;
-                }
+                            context.InvalidAuthorizations.Add(invalidAuthorization);
+                        }
 
-                if (
-                    HasInvalidBigGameHuntingLicenceForDependantAuthorization(
-                        posseAuthorization,
-                        authorization,
-                        authorizations
-                    )
-                )
-                {
-                    continue;
+                        break;
+                    }
                 }
-
-                authorizations.Add((authorization, posseAuthorization.EnvClientId));
+                if (isValid)
+                {
+                    authorizations.Add((authorization, posseAuthorization.EnvClientId));
+                }
             }
             else
             {

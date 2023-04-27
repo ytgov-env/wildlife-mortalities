@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -88,6 +89,9 @@ public class HuntingPermit : Authorization
         // }
         throw new NotImplementedException();
     }
+
+    public override string GetAuthorizationType() =>
+        $"Hunting permit - {Type.GetDisplayName().ToLower()}";
 }
 
 public class HuntingPermitConfig : IEntityTypeConfiguration<HuntingPermit>

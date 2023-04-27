@@ -4,6 +4,8 @@ namespace WildlifeMortalities.Data;
 
 public class ReadOnlyAppDbContext : AppDbContext
 {
+    //public ReadOnlyAppDbContext() { }
+
     public ReadOnlyAppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
 

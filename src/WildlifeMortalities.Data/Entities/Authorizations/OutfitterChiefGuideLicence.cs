@@ -10,6 +10,8 @@ public class OutfitterChiefGuideLicence : Authorization, IHasOutfitterAreas
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
+
+    public override string GetAuthorizationType() => "Outfitter chief guide licence";
 }
 
 public class OutfitterChiefGuideLicenceConfig : IEntityTypeConfiguration<OutfitterChiefGuideLicence>

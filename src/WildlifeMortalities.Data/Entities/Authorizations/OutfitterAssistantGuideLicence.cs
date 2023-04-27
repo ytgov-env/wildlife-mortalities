@@ -10,6 +10,8 @@ public class OutfitterAssistantGuideLicence : Authorization, IHasOutfitterAreas
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
+
+    public override string GetAuthorizationType() => "Outfitter assistant guide licence";
 }
 
 public class OutfitterAssistantGuideLicenceConfig

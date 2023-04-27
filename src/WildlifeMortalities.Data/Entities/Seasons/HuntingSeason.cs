@@ -17,7 +17,7 @@ public class HuntingSeason : Season
     public static async Task<HuntingSeason> GetSeason(Report report, AppDbContext context) =>
         await GetSeason<HuntingSeason>(report, context);
 
-    public static async Task<HuntingSeason?> GetSeason(
+    public static async Task<HuntingSeason?> TryGetSeason(
         Authorization authorization,
         AppDbContext context
     ) => await TryGetSeason<HuntingSeason>(authorization, context);

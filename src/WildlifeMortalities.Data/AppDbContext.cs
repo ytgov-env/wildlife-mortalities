@@ -23,6 +23,7 @@ public class AppDbContext : DbContext
     public DbSet<Season> Seasons => Set<Season>();
 
     public DbSet<Authorization> Authorizations => Set<Authorization>();
+    public DbSet<InvalidAuthorization> InvalidAuthorizations => Set<InvalidAuthorization>();
     public DbSet<Mortality> Mortalities => Set<Mortality>();
     public DbSet<Entities.Reports.SingleMortality.Activity> Activities =>
         Set<Entities.Reports.SingleMortality.Activity>();

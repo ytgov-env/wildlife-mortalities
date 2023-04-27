@@ -23,6 +23,7 @@ public class MortalityService : IMortalityService
     {
         SetReportNavigationPropertyForActivities(report, report);
         report.DateSubmitted = DateTimeOffset.Now;
+        report.DateModified = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
         switch (report)

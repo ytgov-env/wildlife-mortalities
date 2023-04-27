@@ -8,4 +8,6 @@ public class CustomWildlifeActPermit : Authorization
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
+
+    public override string GetAuthorizationType() => "Custom wildlife act permit";
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -38,6 +39,9 @@ public class TrappingLicence : Authorization
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
+
+    public override string GetAuthorizationType() =>
+        $"Trapping licence - {Type.GetDisplayName().ToLower()}";
 }
 
 public class TrappingLicenceConfig : IEntityTypeConfiguration<TrappingLicence>

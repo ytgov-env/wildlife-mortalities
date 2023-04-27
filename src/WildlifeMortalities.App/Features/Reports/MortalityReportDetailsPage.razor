@@ -60,18 +60,16 @@ else if (_reportDetail is null)
     @if (Client != null)
     {
         <MudItem xs="12" sm="4">
-            <MudStack Row="true">
-                <MudDivider FlexItem="true" Vertical="true" />
-                <MudPaper Class="pa-4 flex-auto">
-                    <MudText Typo="Typo.h6">Client</MudText>
-                    <MudField Label="ENV Client ID">@Client.EnvClientId</MudField>
-                    <MudField Label="First Name">@Client.FirstName</MudField>
-                    <MudField Label="Last Name">@Client.LastName</MudField>
-                    <MudField Label="Birth Date">@Client.BirthDate.ToString("yyyy-MM-dd")</MudField>
-                </MudPaper>
-            </MudStack>
+            <MudPaper Class="pa-4 flex-auto">
+                <MudText Typo="Typo.h6">Client</MudText>
+                <MudField Label="ENV Client ID">@Client.EnvClientId</MudField>
+                <MudField Label="First Name">@Client.FirstName</MudField>
+                <MudField Label="Last Name">@Client.LastName</MudField>
+                <MudField Label="Birth Date">@Client.BirthDate.ToString("yyyy-MM-dd")</MudField>
+            </MudPaper>
         </MudItem>
     }
+
     <MudItem xs="12">
         <MudStack Row="true">
             <MudSpacer />

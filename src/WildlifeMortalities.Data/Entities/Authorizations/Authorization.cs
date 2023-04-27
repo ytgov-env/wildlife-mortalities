@@ -81,6 +81,8 @@ public abstract class Authorization
     public record AuthorizationsSummary(
         IEnumerable<AuthorizationResult> ApplicableAuthorizationResults
     );
+
+    public abstract string GetAuthorizationType();
 }
 
 public class AuthorizationConfig : IEntityTypeConfiguration<Authorization>

@@ -12,6 +12,8 @@ public class SpecialGuideLicence : Authorization
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
+
+    public override string GetAuthorizationType() => "Special guide licence";
 }
 
 public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLicence>

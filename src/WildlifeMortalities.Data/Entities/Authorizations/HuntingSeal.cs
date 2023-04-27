@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Extensions;
 using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
@@ -51,6 +52,9 @@ public class HuntingSeal : Authorization
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
+
+    public override string GetAuthorizationType() =>
+        $"Hunting seal - {Type.GetDisplayName().ToLower()}";
 }
 
 public class SealConfig : IEntityTypeConfiguration<HuntingSeal>
