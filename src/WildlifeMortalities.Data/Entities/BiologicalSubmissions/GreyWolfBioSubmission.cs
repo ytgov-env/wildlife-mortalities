@@ -54,5 +54,8 @@ public class GreyWolfBioSubmissionConfig : IEntityTypeConfiguration<GreyWolfBioS
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(GreyWolfBioSubmission)}_MortalityId] IS NOT NULL");
+        builder
+            .Property(x => x.FurbearerSealNumber)
+            .HasColumnName(nameof(GreyWolfBioSubmission.FurbearerSealNumber));
     }
 }

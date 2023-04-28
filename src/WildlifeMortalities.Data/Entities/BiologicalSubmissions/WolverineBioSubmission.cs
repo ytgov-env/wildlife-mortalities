@@ -34,9 +34,11 @@ public class WolverineBioSubmissionConfig : IEntityTypeConfiguration<WolverineBi
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
-
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(WolverineBioSubmission)}_MortalityId] IS NOT NULL");
+        builder
+            .Property(x => x.FurbearerSealNumber)
+            .HasColumnName(nameof(WolverineBioSubmission.FurbearerSealNumber));
     }
 }

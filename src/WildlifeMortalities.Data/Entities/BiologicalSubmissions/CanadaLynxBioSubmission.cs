@@ -36,9 +36,12 @@ public class CanadaLynxBioSubmissionConfig : IEntityTypeConfiguration<CanadaLynx
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.NoAction);
-
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(CanadaLynxBioSubmission)}_MortalityId] IS NOT NULL");
+        builder
+            .Property(x => x.FurbearerSealNumber)
+            .HasColumnName(nameof(CanadaLynxBioSubmission.FurbearerSealNumber));
+        builder.HasIndex(x => x.FurbearerSealNumber).IsUnique();
     }
 }
