@@ -2,16 +2,16 @@
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 
-namespace WildlifeMortalities.Shared.Services;
+namespace WildlifeMortalities.Shared.Services.Posse;
 
 public interface IPosseService
 {
-    Task<IEnumerable<(Authorization authorization, string envClientId)>> GetAuthorizations(
+    Task<IEnumerable<Authorization>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime,
         Dictionary<string, PersonWithAuthorizations> personMapper,
         AppDbContext context
     );
-    Task<IEnumerable<PosseService.AuthorizationDto>> GetAuthorizationsByEnvClientId(
+    Task<IEnumerable<AuthorizationDto>> GetAuthorizationsByEnvClientId(
         string envClientId,
         DateTimeOffset modifiedSinceDateTime
     );

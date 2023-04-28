@@ -8,6 +8,7 @@ using WildlifeMortalities.App.Features.Auth;
 using WildlifeMortalities.App.HostedServices;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Shared.Services.Posse;
 using WildlifeMortalities.Shared.Services.Reports;
 
 Log.Logger = new LoggerConfiguration().MinimumLevel

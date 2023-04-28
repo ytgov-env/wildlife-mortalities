@@ -3,7 +3,8 @@ using RichardSzalay.MockHttp;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Data.Entities.Seasons;
+using WildlifeMortalities.Shared.Services.Posse;
 
 namespace WildlifeMortalities.Test;
 
@@ -12,15 +13,8 @@ public class PosseServiceTester
     private const string BaseAddress = "https://localhost";
     private const string AuthorizationsUri =
         "https://localhost/authorizations?modifiedSinceDateTime=2020-01-01T00:00:00.0000000-07:00";
-    private static readonly DateTimeOffset s_authorizationsTimestamp = new DateTimeOffset(
-        2020,
-        1,
-        1,
-        0,
-        0,
-        0,
-        TimeSpan.FromHours(-7)
-    );
+    private static readonly DateTimeOffset s_authorizationsTimestamp =
+        new(2020, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7));
 
     [Fact]
     public async Task GetClients_With22ApplicableAuthorizations_ShouldReturn22Authorizations()
@@ -66,10 +60,7 @@ public class PosseServiceTester
 
         var service = new PosseService(client);
 
-        Dictionary<string, PersonWithAuthorizations> clientMapper = new Dictionary<
-            string,
-            PersonWithAuthorizations
-        >
+        var clientMapper = new Dictionary<string, PersonWithAuthorizations>
         {
             {
                 "523203",
@@ -77,10 +68,13 @@ public class PosseServiceTester
             }
         };
 
-        DbContextOptionsBuilder<AppDbContext> builder = new DbContextOptionsBuilder<AppDbContext>();
+        var builder = new DbContextOptionsBuilder<AppDbContext>();
         builder.UseInMemoryDatabase(TestName);
 
-        AppDbContext context = new AppDbContext(builder.Options);
+        var context = new AppDbContext(builder.Options);
+
+        context.Seasons.Add(new HuntingSeason(2021));
+        await context.SaveChangesAsync();
 
         // Act
         var response = await service.GetAuthorizations(
@@ -92,7 +86,7 @@ public class PosseServiceTester
         // Assert
         response.Should().ContainSingle();
 
-        var authorization = response.First().Item1;
+        var authorization = response.First();
         authorization
             .Should()
             .BeAssignableTo<SmallGameHuntingLicence>()

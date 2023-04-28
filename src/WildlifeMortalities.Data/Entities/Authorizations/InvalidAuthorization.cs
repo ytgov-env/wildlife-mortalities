@@ -4,9 +4,9 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class InvalidAuthorization
 {
-    public InvalidAuthorization() { }
+    private InvalidAuthorization() { }
 
-    public InvalidAuthorization(Authorization authorization)
+    public InvalidAuthorization(Authorization authorization, string validationErrorMessage)
     {
         Number = authorization.Number;
         Type = authorization.GetAuthorizationType();
@@ -15,6 +15,7 @@ public class InvalidAuthorization
         DateCreated = DateTimeOffset.Now;
         Season = authorization.Season;
         Person = authorization.Person;
+        ValidationErrorMessage = validationErrorMessage;
     }
 
     public int Id { get; set; }
@@ -27,6 +28,7 @@ public class InvalidAuthorization
     public Season? Season { get; set; }
     public int PersonId { get; set; }
     public Person Person { get; set; } = null!;
+    public string ValidationErrorMessage { get; set; } = string.Empty;
 
     public string GetIdentifier() => $"{Type}-{Number}-{PersonId}";
 }

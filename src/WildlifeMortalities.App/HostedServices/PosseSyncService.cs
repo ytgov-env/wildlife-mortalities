@@ -2,6 +2,7 @@
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Shared.Services.Posse;
 
 namespace WildlifeMortalities.App.HostedServices;
 
@@ -105,24 +106,7 @@ public class PosseSyncService : TimerBasedHostedService
             personMapper,
             context
         );
-        foreach (var (auth, envClientId) in authorizations)
-        {
-            personMapper.TryGetValue(envClientId, out var client);
-            if (client != null)
-            {
-                auth.Person = personMapper[envClientId];
-                context.Authorizations.Add(auth);
-            }
-            else
-            {
-                Log.Error(
-                    "An authorization is associated with EnvClientId {EnvClientId}, which doesn't exist. The authorization was rejected: {@authorization}",
-                    envClientId,
-                    auth
-                );
-            }
-        }
-
+        context.Authorizations.AddRange(authorizations);
         await context.SaveChangesAsync();
     }
 }
