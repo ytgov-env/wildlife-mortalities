@@ -154,7 +154,7 @@ public class PosseService : IPosseService
             },
             {
                 AuthorizationType.HuntingPermit_WoodBisonThreshold,
-                () => new HuntingPermit(HuntingPermit.PermitType.WoodBisonThreshold)
+                () => new HuntingPermit(HuntingPermit.PermitType.WoodBison)
             },
             {
                 AuthorizationType.HuntingSeal_AmericanBlackBear,

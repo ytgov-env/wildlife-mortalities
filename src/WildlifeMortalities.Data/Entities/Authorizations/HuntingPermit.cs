@@ -34,8 +34,8 @@ public class HuntingPermit : Authorization
         [Display(Name = "Moose threshold")]
         MooseThreshold = 80,
 
-        [Display(Name = "Bison threshold")]
-        WoodBisonThreshold = 90
+        [Display(Name = "Bison")]
+        WoodBison = 90
     }
 
     public HuntingPermit() { }
@@ -59,7 +59,7 @@ public class HuntingPermit : Authorization
 
     public bool IsMooseRelated() => Type is PermitType.MooseThreshold;
 
-    public bool IsWoodBisonRelated() => Type is PermitType.WoodBisonThreshold;
+    public bool IsWoodBisonRelated() => Type is PermitType.WoodBison;
 
     public override AuthorizationResult GetResult(Report report)
     {
