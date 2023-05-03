@@ -39,7 +39,7 @@ public class AppDbContext : DbContext
     public DbSet<RegisteredTrappingConcession> RegisteredTrappingConcessions =>
         Set<RegisteredTrappingConcession>();
 
-    public DbSet<AppConfiguration> AppConfiguration => Set<AppConfiguration>();
+    public DbSet<AppConfiguration> AppConfigurations => Set<AppConfiguration>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

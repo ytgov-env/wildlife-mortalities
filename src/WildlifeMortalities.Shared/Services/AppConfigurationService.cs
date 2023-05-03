@@ -34,7 +34,7 @@ public class AppConfigurationService : IAppConfigurationService
     {
         using var context = _dbContextFactory.CreateDbContext();
         var appConfiguration =
-            await context.AppConfiguration.FirstOrDefaultAsync(x => x.Key == key)
+            await context.AppConfigurations.FirstOrDefaultAsync(x => x.Key == key)
             ?? throw new ArgumentException("Key not found");
         if (appConfiguration.Value != null)
         {
@@ -51,7 +51,7 @@ public class AppConfigurationService : IAppConfigurationService
     public async Task SetValue<T>(string key, T value)
     {
         using var context = _dbContextFactory.CreateDbContext();
-        var appConfiguration = await context.AppConfiguration.FirstOrDefaultAsync(
+        var appConfiguration = await context.AppConfigurations.FirstOrDefaultAsync(
             x => x.Key == key
         );
         if (appConfiguration == null)
