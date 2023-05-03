@@ -42,6 +42,19 @@ public class TrappingLicence : Authorization
 
     public override string GetAuthorizationType() =>
         $"Trapping licence - {Type.GetDisplayName().ToLower()}";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not TrappingLicence trappingLicence)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(TrappingLicence)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        Type = trappingLicence.Type;
+        RegisteredTrappingConcession = trappingLicence.RegisteredTrappingConcession;
+    }
 }
 
 public class TrappingLicenceConfig : IEntityTypeConfiguration<TrappingLicence>

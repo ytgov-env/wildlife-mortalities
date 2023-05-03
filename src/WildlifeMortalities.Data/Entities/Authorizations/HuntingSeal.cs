@@ -55,6 +55,18 @@ public class HuntingSeal : Authorization
 
     public override string GetAuthorizationType() =>
         $"Hunting seal - {Type.GetDisplayName().ToLower()}";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not HuntingSeal huntingSeal)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(HuntingSeal)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        Type = huntingSeal.Type;
+    }
 }
 
 public class SealConfig : IEntityTypeConfiguration<HuntingSeal>

@@ -4,10 +4,22 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class CustomWildlifeActPermit : Authorization
 {
-    public string Conditions { get; set; }
+    public string Conditions { get; set; } = string.Empty;
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
 
     public override string GetAuthorizationType() => "Custom wildlife act permit";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not CustomWildlifeActPermit customWildlifeActPermit)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(CustomWildlifeActPermit)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        Conditions = customWildlifeActPermit.Conditions;
+    }
 }

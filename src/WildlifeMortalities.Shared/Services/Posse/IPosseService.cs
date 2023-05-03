@@ -11,10 +11,6 @@ public interface IPosseService
         Dictionary<string, PersonWithAuthorizations> personMapper,
         AppDbContext context
     );
-    Task<IEnumerable<AuthorizationDto>> GetAuthorizationsByEnvClientId(
-        string envClientId,
-        DateTimeOffset modifiedSinceDateTime
-    );
     Task<IEnumerable<(Client client, IEnumerable<string> previousEnvClientIds)>> GetClients(
         DateTimeOffset modifiedSinceDateTime
     );

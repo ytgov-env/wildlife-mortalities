@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Services;
 using WildlifeMortalities.Shared.Services.Posse;
@@ -9,7 +10,11 @@ namespace WildlifeMortalities.App.HostedServices;
 public class PosseSyncService : TimerBasedHostedService
 {
     private readonly IServiceProvider _serviceProvider;
-    private const string LastSuccessfulSyncKey = "PosseSyncService.LastSuccessfulSync";
+
+    private const string LastSuccessfulClientsSyncKey =
+        "PosseSyncService.LastSuccessfulClientsSync";
+    private const string LastSuccessfulAuthorizationsSyncKey =
+        "PosseSyncService.LastSuccessfulAuthorizationsSync";
 
     public PosseSyncService(IServiceProvider serviceProvider)
         : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(2)) =>
@@ -22,10 +27,6 @@ public class PosseSyncService : TimerBasedHostedService
         var posseService = scope.ServiceProvider.GetRequiredService<IPosseService>();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var appConfiguration = scope.ServiceProvider.GetRequiredService<IAppConfigurationService>();
-        var lastSuccessfulSync = await appConfiguration.TryGetValue(
-            LastSuccessfulSyncKey,
-            DateTimeOffset.MinValue
-        );
 
         var personMapper = context.People
             .AsSplitQuery()
@@ -40,22 +41,59 @@ public class PosseSyncService : TimerBasedHostedService
             .Include(x => ((Client)x).SpecialGuidedHuntReportsAsClient)
             .Include(x => ((Client)x).TrappedMortalitiesReports)
             .Include(x => x.Authorizations)
+            .ThenInclude(x => x.Season)
+            .Include(x => x.Authorizations)
+            .ThenInclude(x => ((BigGameHuntingLicence)x).OutfitterAreas)
+            .Include(x => x.Authorizations)
+            .ThenInclude(x => ((SmallGameHuntingLicence)x).OutfitterAreas)
+            .Include(x => x.Authorizations)
+            .ThenInclude(x => ((OutfitterChiefGuideLicence)x).OutfitterAreas)
+            .Include(x => x.Authorizations)
+            .ThenInclude(x => ((OutfitterAssistantGuideLicence)x).OutfitterAreas)
+            .Include(x => x.Authorizations)
+            .ThenInclude(x => ((TrappingLicence)x).RegisteredTrappingConcession)
             .ToDictionary(x => x.EnvPersonId, x => x);
 
-        await SyncClients(personMapper, context, posseService, lastSuccessfulSync);
-        await SyncAuthorizations(personMapper, context, posseService, lastSuccessfulSync);
-        await appConfiguration.SetValue(LastSuccessfulSyncKey, DateTimeOffset.Now);
+        var lastSuccessfulClientsSync = await appConfiguration.TryGetValue(
+            LastSuccessfulClientsSyncKey,
+            DateTimeOffset.MinValue
+        );
+        var clientsSyncInitiatedTimestamp = await SyncClients(
+            personMapper,
+            context,
+            posseService,
+            lastSuccessfulClientsSync
+        );
+        await appConfiguration.SetValue(
+            LastSuccessfulClientsSyncKey,
+            clientsSyncInitiatedTimestamp
+        );
 
+        var lastSuccessfulAuthorizationsSync = await appConfiguration.TryGetValue(
+            LastSuccessfulAuthorizationsSyncKey,
+            DateTimeOffset.MinValue
+        );
+        var authorizationsSyncInitiatedDateTime = await SyncAuthorizations(
+            personMapper,
+            context,
+            posseService,
+            lastSuccessfulAuthorizationsSync
+        );
+        await appConfiguration.SetValue(
+            LastSuccessfulAuthorizationsSyncKey,
+            authorizationsSyncInitiatedDateTime
+        );
         Log.Information("Finished posse sync");
     }
 
-    private static async Task SyncClients(
+    private static async Task<DateTimeOffset> SyncClients(
         Dictionary<string, PersonWithAuthorizations> personMapper,
         AppDbContext context,
         IPosseService posseService,
         DateTimeOffset lastSuccessfulSync
     )
     {
+        var syncInitiatedTimestamp = DateTimeOffset.Now;
         var recentlyModifiedClients = await posseService.GetClients(lastSuccessfulSync);
 
         foreach (
@@ -92,21 +130,52 @@ public class PosseSyncService : TimerBasedHostedService
                 await context.SaveChangesAsync();
             }
         }
+        return syncInitiatedTimestamp;
     }
 
-    private static async Task SyncAuthorizations(
+    private static async Task<DateTimeOffset> SyncAuthorizations(
         Dictionary<string, PersonWithAuthorizations> personMapper,
         AppDbContext context,
         IPosseService posseService,
         DateTimeOffset lastSuccessfulSync
     )
     {
-        var authorizations = await posseService.GetAuthorizations(
+        var syncInitiatedTimestamp = DateTimeOffset.Now;
+        var validAuthorizations = await posseService.GetAuthorizations(
             lastSuccessfulSync,
             personMapper,
             context
         );
-        context.Authorizations.AddRange(authorizations);
+
+        var existingAuthorizations = personMapper
+            .SelectMany(x => x.Value.Authorizations)
+            .ToDictionary(GetUniqueIdentifier, x => x);
+        foreach (var authorization in validAuthorizations)
+        {
+            var inputKey = GetUniqueIdentifier(authorization);
+            existingAuthorizations.TryGetValue(inputKey, out var existingAuthorization);
+
+            if (existingAuthorization != null)
+            {
+                existingAuthorization.Update(authorization);
+            }
+            else
+            {
+                context.Authorizations.Add(authorization);
+            }
+        }
+
         await context.SaveChangesAsync();
+        return syncInitiatedTimestamp;
+
+        static string GetNormalizedNumber(Authorization authorization) =>
+            authorization.Number.EndsWith('C') ? authorization.Number[..^1] : authorization.Number;
+
+        static string GetUniqueIdentifier(Authorization authorization)
+        {
+            var result =
+                $"{GetNormalizedNumber(authorization)}-{authorization.GetType().Name}-{authorization.Person.Id}-{authorization.Season.Id}";
+            return result;
+        }
     }
 }

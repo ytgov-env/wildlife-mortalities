@@ -14,6 +14,18 @@ public class SpecialGuideLicence : Authorization
         throw new NotImplementedException();
 
     public override string GetAuthorizationType() => "Special guide licence";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not SpecialGuideLicence specialGuideLicence)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(SpecialGuideLicence)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        GuidedClient = specialGuideLicence.GuidedClient;
+    }
 }
 
 public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLicence>

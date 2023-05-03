@@ -16,7 +16,8 @@ public abstract class Authorization
     public Season Season { get; set; } = null!;
 
     public int PersonId { get; set; }
-    public Person Person { get; set; } = null!;
+    public PersonWithAuthorizations Person { get; set; } = null!;
+    public bool IsCancelled { get; set; }
 
     public static AuthorizationsSummary GetSummary(
         IEnumerable<Authorization> authorizations,
@@ -43,6 +44,20 @@ public abstract class Authorization
     );
 
     public abstract string GetAuthorizationType();
+
+    protected abstract void UpdateInternal(Authorization authorization);
+
+    public void Update(Authorization authorization)
+    {
+        Number = authorization.Number;
+        IsCancelled = Number.EndsWith('C');
+        ValidFromDateTime = authorization.ValidFromDateTime;
+        ValidToDateTime = authorization.ValidToDateTime;
+        LastModifiedDateTime = authorization.LastModifiedDateTime;
+        Season = authorization.Season;
+
+        UpdateInternal(authorization);
+    }
 }
 
 public class AuthorizationConfig : IEntityTypeConfiguration<Authorization>

@@ -37,13 +37,26 @@ public class PhaHuntingPermit : Authorization
     public PhaHuntingPermit(PermitType type) => Type = type;
 
     public PermitType Type { get; set; }
-    public string HuntCode { get; set; } = null!;
+    public string HuntCode { get; set; } = string.Empty;
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
 
     public override string GetAuthorizationType() =>
         $"Pha hunting permit - {Type.GetDisplayName().ToLower()}";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not PhaHuntingPermit phaHuntingPermit)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(PhaHuntingPermit)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        Type = phaHuntingPermit.Type;
+        HuntCode = phaHuntingPermit.HuntCode;
+    }
 }
 
 public class PhaHuntingPermitConfig : IEntityTypeConfiguration<PhaHuntingPermit>

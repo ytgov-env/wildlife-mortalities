@@ -47,6 +47,19 @@ public class BigGameHuntingLicence : Authorization, IHasOutfitterAreas
 
     public override string GetAuthorizationType() =>
         $"Big game hunting licence - {Type.GetDisplayName().ToLower()}";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not BigGameHuntingLicence bigGameHuntingLicence)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(BigGameHuntingLicence)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        Type = bigGameHuntingLicence.Type;
+        OutfitterAreas = bigGameHuntingLicence.OutfitterAreas;
+    }
 }
 
 public class BigGameHuntingLicenceConfig : IEntityTypeConfiguration<BigGameHuntingLicence>

@@ -30,5 +30,5 @@ public class InvalidAuthorization
     public Person Person { get; set; } = null!;
     public string ValidationErrorMessage { get; set; } = string.Empty;
 
-    public string GetIdentifier() => $"{Type}-{Number}-{PersonId}";
+    public string GetIdentifier() => $"{Type}-{Number}-{Person.Id}";
 }

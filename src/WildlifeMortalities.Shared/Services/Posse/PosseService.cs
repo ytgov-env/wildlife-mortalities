@@ -346,19 +346,6 @@ public class PosseService : IPosseService
         return clients;
     }
 
-    public async Task<IEnumerable<AuthorizationDto>> GetAuthorizationsByEnvClientId(
-        string envClientId,
-        DateTimeOffset modifiedSinceDateTime
-    )
-    {
-        return await Task.FromResult(Array.Empty<AuthorizationDto>());
-        //return (
-        //    await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-        //        $"authorizations/{envClientId}?modifiedSinceDateTime={modifiedSinceDateTime:O}"
-        //    )
-        //)!.Authorizations;
-    }
-
     public async Task<IEnumerable<Authorization>> GetAuthorizations(
         DateTimeOffset modifiedSinceDateTime,
         Dictionary<string, PersonWithAuthorizations> personMapper,

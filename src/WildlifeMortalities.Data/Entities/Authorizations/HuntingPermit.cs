@@ -92,6 +92,18 @@ public class HuntingPermit : Authorization
 
     public override string GetAuthorizationType() =>
         $"Hunting permit - {Type.GetDisplayName().ToLower()}";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not HuntingPermit huntingPermit)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(HuntingPermit)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        Type = huntingPermit.Type;
+    }
 }
 
 public class HuntingPermitConfig : IEntityTypeConfiguration<HuntingPermit>

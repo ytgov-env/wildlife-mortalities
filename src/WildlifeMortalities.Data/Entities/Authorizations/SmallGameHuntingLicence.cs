@@ -47,6 +47,19 @@ public class SmallGameHuntingLicence : Authorization, IHasOutfitterAreas
 
     public override string GetAuthorizationType() =>
         $"Small game hunting licence - {Type.GetDisplayName().ToLower()}";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not SmallGameHuntingLicence smallGameHuntingLicence)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(SmallGameHuntingLicence)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        Type = smallGameHuntingLicence.Type;
+        OutfitterAreas = smallGameHuntingLicence.OutfitterAreas;
+    }
 }
 
 public class SmallGameHuntingLicenceConfig : IEntityTypeConfiguration<SmallGameHuntingLicence>

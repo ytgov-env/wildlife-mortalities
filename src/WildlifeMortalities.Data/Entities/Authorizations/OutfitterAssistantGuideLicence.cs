@@ -12,6 +12,18 @@ public class OutfitterAssistantGuideLicence : Authorization, IHasOutfitterAreas
         throw new NotImplementedException();
 
     public override string GetAuthorizationType() => "Outfitter assistant guide licence";
+
+    protected override void UpdateInternal(Authorization authorization)
+    {
+        if (authorization is not OutfitterAssistantGuideLicence outfitterAssistantGuideLicence)
+        {
+            throw new ArgumentException(
+                $"Expected {nameof(OutfitterAssistantGuideLicence)} but received {authorization.GetType().Name}"
+            );
+        }
+
+        OutfitterAreas = outfitterAssistantGuideLicence.OutfitterAreas;
+    }
 }
 
 public class OutfitterAssistantGuideLicenceConfig
