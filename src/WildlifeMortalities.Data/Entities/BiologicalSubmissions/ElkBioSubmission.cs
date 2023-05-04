@@ -20,9 +20,6 @@ public class ElkBioSubmission : BioSubmission<ElkMortality>
 
     [IsRequiredOrganicMaterialForBioSubmission("Evidence of sex is attached")]
     public bool? IsEvidenceOfSexAttached { get; set; }
-
-    public override bool HasSubmittedAllRequiredOrganicMaterial() =>
-        IsHideProvided == true && IsHeadProvided == true && IsEvidenceOfSexAttached == true;
 }
 
 public class ElkBioSubmissionConfig : IEntityTypeConfiguration<ElkBioSubmission>

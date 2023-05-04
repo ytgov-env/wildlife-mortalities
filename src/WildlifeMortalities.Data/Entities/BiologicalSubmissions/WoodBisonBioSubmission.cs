@@ -14,8 +14,6 @@ public class WoodBisonBioSubmission : BioSubmission<WoodBisonMortality>
 
     [IsRequiredOrganicMaterialForBioSubmission("Incisor bar")]
     public bool? IsIncisorBarProvided { get; set; }
-
-    public override bool HasSubmittedAllRequiredOrganicMaterial() => IsIncisorBarProvided == true;
 }
 
 public class WoodBisonBioSubmissionConfig : IEntityTypeConfiguration<WoodBisonBioSubmission>

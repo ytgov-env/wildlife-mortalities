@@ -18,11 +18,6 @@ public class WolverineBioSubmission : BioSubmission<WolverineMortality>, IHasFur
     public string? FurbearerSealNumber { get; set; }
 
     public override bool CanBeAnalysed => true;
-
-    public override bool HasSubmittedAllRequiredOrganicMaterial() => IsPeltProvided == true;
-
-    public override bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() =>
-        IsPeltProvided == true;
 }
 
 public class WolverineBioSubmissionConfig : IEntityTypeConfiguration<WolverineBioSubmission>

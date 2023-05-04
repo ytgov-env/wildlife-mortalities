@@ -23,11 +23,6 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
 
     public override bool CanBeAnalysed => true;
 
-    public override bool HasSubmittedAllRequiredOrganicMaterial() => IsSkullProvided == true;
-
-    public override bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() =>
-        IsSkullProvided == true;
-
     public enum AmericanBlackBearSkullCondition
     {
         [Display(Name = "Destroyed")]

@@ -38,42 +38,44 @@
         <MudText>Analysis: <MudChip Color="GetAnalysisChipColor()">@BioSubmission.AnalysisStatus.GetDisplayName().ToLower()</MudChip></MudText>
     }
 </MudStack>
-@*This component is read-only, but it requires an EditForm as the child components contain input components which have a dependancy on EditContext*@
-<EditForm Model="BioSubmission">
-    @switch (BioSubmission)
-    {
-        case AmericanBlackBearBioSubmission bioSubmission:
-            <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-            break;
-        case CanadaLynxBioSubmission bioSubmission:
-            <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-            break;
-        case GreyWolfBioSubmission bioSubmission:
-            <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-            break;
-        case GrizzlyBearBioSubmission bioSubmission:
-            <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-            break;
-        case MountainGoatBioSubmission bioSubmission:
-            <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-            break;
-        case ThinhornSheepBioSubmission bioSubmission:
-            <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-            break;
-        case WolverineBioSubmission bioSubmission:
-            <WolverineBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
-            break;
-    }
-    @if (BioSubmission.Age is not null)
-    {
-        <MudField Label="Age (years)" DisableUnderLine="true">@BioSubmission.Age.Years</MudField>
-        <MudField Label="Confidence in age" DisableUnderLine="true">@BioSubmission.Age.Confidence?.GetDisplayName()</MudField>
-    }
-    @if (!string.IsNullOrWhiteSpace(BioSubmission.Comment))
-    {
-        <MudField Label="Comment" DisableUnderLine="true">@BioSubmission.Comment</MudField>
-    }
-</EditForm>
+@if(BioSubmission.RequiredOrganicMaterialsStatus != BioSubmissionRequiredOrganicMaterialsStatus.NotStarted){
+    @*This component is read-only, but it requires an EditForm as the child components contain input components which have a dependancy on EditContext*@
+    <EditForm Model="BioSubmission">
+        @switch (BioSubmission)
+        {
+            case AmericanBlackBearBioSubmission bioSubmission:
+                <AmericanBlackBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+                break;
+            case CanadaLynxBioSubmission bioSubmission:
+                <CanadaLynxBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+                break;
+            case GreyWolfBioSubmission bioSubmission:
+                <GreyWolfBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+                break;
+            case GrizzlyBearBioSubmission bioSubmission:
+                <GrizzlyBearBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+                break;
+            case MountainGoatBioSubmission bioSubmission:
+                <MountainGoatBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+                break;
+            case ThinhornSheepBioSubmission bioSubmission:
+                <ThinhornSheepBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+                break;
+            case WolverineBioSubmission bioSubmission:
+                <WolverineBioSubmissionComponent BioSubmission="bioSubmission" IsReadOnly="true"/>
+                break;
+        }
+        @if (BioSubmission.Age is not null)
+        {
+            <MudField Label="Age (years)" DisableUnderLine="true">@BioSubmission.Age.Years</MudField>
+            <MudField Label="Confidence in age" DisableUnderLine="true">@BioSubmission.Age.Confidence?.GetDisplayName()</MudField>
+        }
+        @if (!string.IsNullOrWhiteSpace(BioSubmission.Comment))
+        {
+            <MudField Label="Comment" DisableUnderLine="true">@BioSubmission.Comment</MudField>
+        }
+    </EditForm>
+}
 
 
 @code {

@@ -344,27 +344,25 @@ public class MortalityService : IMortalityService
             bioSubmission,
             () =>
             {
-                if (bioSubmission.HasSubmittedAllRequiredOrganicMaterial())
+                var previousStatus = bioSubmission.RequiredOrganicMaterialsStatus;
+                bioSubmission.UpdateRequiredOrganicMaterialsStatus();
+                if (
+                    previousStatus != BioSubmissionRequiredOrganicMaterialsStatus.Submitted
+                    && bioSubmission.RequiredOrganicMaterialsStatus
+                        == BioSubmissionRequiredOrganicMaterialsStatus.Submitted
+                )
                 {
-                    bioSubmission.RequiredOrganicMaterialsStatus =
-                        BioSubmissionRequiredOrganicMaterialsStatus.Submitted;
-                    bioSubmission.DateSubmitted ??= DateTimeOffset.Now;
+                    bioSubmission.DateSubmitted = DateTimeOffset.Now;
                 }
-                else
-                {
-                    bioSubmission.RequiredOrganicMaterialsStatus =
-                        BioSubmissionRequiredOrganicMaterialsStatus.DidNotSubmit;
-                    //Todo: raise violation
-                }
+
+                //Todo: raise violation for other statuses
+
                 bioSubmission.DateModified = DateTimeOffset.Now;
             }
         );
 
     public async Task UpdateBioSubmissionAnalysis(BioSubmission bioSubmission) =>
-        await UpdateBioSubmission(
-            bioSubmission,
-            () => bioSubmission.AnalysisStatus = BioSubmissionAnalysisStatus.Complete
-        );
+        await UpdateBioSubmission(bioSubmission, bioSubmission.UpdateAnalysisStatus);
 
     public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
     {

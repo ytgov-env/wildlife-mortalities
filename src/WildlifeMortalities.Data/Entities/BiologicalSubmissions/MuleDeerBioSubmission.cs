@@ -20,9 +20,6 @@ public class MuleDeerBioSubmission : BioSubmission<MuleDeerMortality>
 
     [IsRequiredOrganicMaterialForBioSubmission("Antlers")]
     public bool? IsAntlersProvided { get; set; }
-
-    public override bool HasSubmittedAllRequiredOrganicMaterial() =>
-        IsHideProvided == true && IsHeadProvided == true && IsAntlersProvided == true;
 }
 
 public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioSubmission>
