@@ -19,8 +19,8 @@
 <MudStack Row="true" Class="mb-1">
     <MudText Typo="Typo.h6">Biological submission</MudText>
     <MudSpacer />
-    @if (BioSubmission.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() && (BioSubmission.RequiredOrganicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.Submitted ||
-                    BioSubmission.RequiredOrganicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.DidNotSubmit))
+    @if (BioSubmission.CanBeAnalysed && BioSubmission.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() && 
+        (BioSubmission.RequiredOrganicMaterialsStatus != BioSubmissionRequiredOrganicMaterialsStatus.NotStarted))
     {
         <MudMenu Label="Update" Color="Color.Secondary" Variant="Variant.Outlined">
             <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>

@@ -22,7 +22,7 @@ public abstract class BioSubmission
     public Age? Age { get; set; }
     public abstract void ClearDependencies();
 
-    private bool?[] GetRequiredOrganicMaterialStates() =>
+    private bool?[] GetRequiredOrganicMaterialValues() =>
         GetOrganicMaterialBooleans<IsRequiredOrganicMaterialForBioSubmissionAttribute>();
 
     private bool?[] GetOrganicMaterialPrerequisitesForAnalysis() =>
@@ -41,8 +41,8 @@ public abstract class BioSubmission
 
     public void UpdateRequiredOrganicMaterialsStatus()
     {
-        var organicMaterialStates = GetRequiredOrganicMaterialStates();
-        var nullValueFound = organicMaterialStates.Any(x => x == null);
+        var organicMaterialValues = GetRequiredOrganicMaterialValues();
+        var nullValueFound = organicMaterialValues.Any(x => x == null);
         if (nullValueFound)
         {
             throw new InvalidOperationException(
@@ -50,10 +50,10 @@ public abstract class BioSubmission
             );
         }
 
-        var submittedMaterials = organicMaterialStates.Where(x => x!.Value).ToArray();
-        if (submittedMaterials.Any())
+        var submittedOrganicMaterials = organicMaterialValues.Where(x => x!.Value).ToArray();
+        if (submittedOrganicMaterials.Any())
         {
-            if (organicMaterialStates.Length == 1)
+            if (organicMaterialValues.Length == 1)
             {
                 RequiredOrganicMaterialsStatus =
                     BioSubmissionRequiredOrganicMaterialsStatus.Submitted;
@@ -61,7 +61,7 @@ public abstract class BioSubmission
             else
             {
                 RequiredOrganicMaterialsStatus =
-                    submittedMaterials.Length == organicMaterialStates.Length
+                    submittedOrganicMaterials.Length == organicMaterialValues.Length
                         ? BioSubmissionRequiredOrganicMaterialsStatus.Submitted
                         : BioSubmissionRequiredOrganicMaterialsStatus.PartiallySubmitted;
             }
@@ -78,7 +78,7 @@ public abstract class BioSubmission
         if (!HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis())
         {
             throw new InvalidOperationException(
-                $"The analysis status for submission {Id} cannot be set to complete unless all of the prerequisite organic materials were provided."
+                $"The {nameof(AnalysisStatus)} for submission {Id} cannot be set to {nameof(BioSubmissionAnalysisStatus.Complete)} unless all of the prerequisite organic materials were provided."
             );
         }
         AnalysisStatus = BioSubmissionAnalysisStatus.Complete;
@@ -90,25 +90,24 @@ public abstract class BioSubmission
     {
         if (CanBeAnalysed == false)
         {
-            throw new Exception(
-                $"This species can be analysed, but is missing an override for {nameof(HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis)}"
+            throw new InvalidOperationException(
+                $"{nameof(HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis)} was called on a bio submission that does not require analysis."
             );
         }
 
-        var submissionValues = GetRequiredOrganicMaterialStates();
-        if (submissionValues.All(x => x == null))
+        var prerequisiteOrganicMaterialValues = GetOrganicMaterialPrerequisitesForAnalysis();
+        if (prerequisiteOrganicMaterialValues.All(x => x == null))
         {
             return false;
         }
-        else if (submissionValues.Any(x => x == null))
+        else if (prerequisiteOrganicMaterialValues.Any(x => x == null))
         {
             throw new InvalidOperationException(
                 $"Bio submission {Id} was updated while an organic material boolean is still null."
             );
         }
 
-        var isAllSubmitted = !submissionValues.Any(x => x == false);
-        return isAllSubmitted;
+        return !prerequisiteOrganicMaterialValues.Any(x => x == false);
     }
 }
 
