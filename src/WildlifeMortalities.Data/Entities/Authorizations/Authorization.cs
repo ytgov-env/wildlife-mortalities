@@ -8,6 +8,7 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 public abstract class Authorization
 {
     public int Id { get; set; }
+    public string? PosseId { get; set; }
     public string Number { get; set; } = string.Empty;
     public DateTimeOffset ValidFromDateTime { get; set; }
     public DateTimeOffset ValidToDateTime { get; set; }

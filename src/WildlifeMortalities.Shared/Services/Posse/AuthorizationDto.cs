@@ -3,6 +3,7 @@
 namespace WildlifeMortalities.Shared.Services.Posse;
 
 public record AuthorizationDto(
+    string? Id,
     string Type,
     string EnvClientId,
     string Number,

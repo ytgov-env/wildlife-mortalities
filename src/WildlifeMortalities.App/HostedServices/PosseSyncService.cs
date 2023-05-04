@@ -174,7 +174,8 @@ public class PosseSyncService : TimerBasedHostedService
         static string GetUniqueIdentifier(Authorization authorization)
         {
             var result =
-                $"{GetNormalizedNumber(authorization)}-{authorization.GetType().Name}-{authorization.Person.Id}-{authorization.Season.Id}";
+                authorization.PosseId
+                ?? $"{GetNormalizedNumber(authorization)}-{authorization.GetAuthorizationType()}-{authorization.Person.Id}-{authorization.Season.Id}";
             return result;
         }
     }

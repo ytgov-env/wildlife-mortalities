@@ -385,6 +385,7 @@ public class PosseService : IPosseService
             if (Enum.TryParse(posseAuthorization.Type, out AuthorizationType typeValue))
             {
                 var authorization = s_authorizationMapper[typeValue]();
+                authorization.PosseId = posseAuthorization.Id;
                 authorization.Number = posseAuthorization.Number;
                 authorization.ValidFromDateTime = posseAuthorization.ValidFromDateTime;
                 authorization.ValidToDateTime = posseAuthorization.ValidToDateTime;
@@ -524,7 +525,7 @@ public class PosseService : IPosseService
                             );
                             if (
                                 existingInvalidAuthorizations.ContainsKey(
-                                    invalidAuthorization.GetIdentifier()
+                                    invalidAuthorization.PosseId
                                 ) == false
                             )
                             {
@@ -539,7 +540,7 @@ public class PosseService : IPosseService
                 {
                     if (
                         existingInvalidAuthorizations.TryGetValue(
-                            new InvalidAuthorization(authorization, string.Empty).GetIdentifier(),
+                            authorization.PosseId,
                             out var invalidAuthorization
                         )
                     )

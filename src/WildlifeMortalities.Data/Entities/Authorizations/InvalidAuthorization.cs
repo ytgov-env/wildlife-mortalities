@@ -8,6 +8,7 @@ public class InvalidAuthorization
 
     public InvalidAuthorization(Authorization authorization, string validationErrorMessage)
     {
+        PosseId = authorization.PosseId;
         Number = authorization.Number;
         Type = authorization.GetAuthorizationType();
         ValidFromDateTime = authorization.ValidFromDateTime;
@@ -19,6 +20,7 @@ public class InvalidAuthorization
     }
 
     public int Id { get; set; }
+    public string? PosseId { get; set; }
     public string Number { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
     public DateTimeOffset ValidFromDateTime { get; set; }
@@ -30,5 +32,5 @@ public class InvalidAuthorization
     public Person Person { get; set; } = null!;
     public string ValidationErrorMessage { get; set; } = string.Empty;
 
-    public string GetIdentifier() => $"{Type}-{Number}-{Person.Id}";
+    public string GetIdentifier() => $"{Type}-{Number}-{Person.Id}-{Season.Id}";
 }
