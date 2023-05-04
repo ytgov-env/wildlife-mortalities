@@ -11,9 +11,7 @@ public class DbContextAwareComponent : ComponentBase, IDisposable
     protected ReadOnlyAppDbContext Context { get; private set; } = null!;
 
     [Inject]
-#pragma warning disable RCS1170 // Use read-only auto-implemented property.
     private IDbContextFactory<ReadOnlyAppDbContext> DbContextFactory { get; set; } = null!;
-#pragma warning restore RCS1170 // Use read-only auto-implemented property.
 
     protected override void OnInitialized()
     {
