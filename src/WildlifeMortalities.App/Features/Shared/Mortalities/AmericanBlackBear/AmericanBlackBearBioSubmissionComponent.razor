@@ -13,8 +13,10 @@
 </MudSelect>
 @if (BioSubmission.SkullCondition.HasValue && BioSubmission.SkullCondition is not AmericanBlackBearSkullCondition.Destroyed)
 {
-    <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly"/>
-    <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly"/>
+    <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" 
+        For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly" HideSpinButtons="IsReadOnly"/>
+    <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" 
+        For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly" HideSpinButtons="IsReadOnly"/>
 }
 
 @code {
@@ -34,10 +36,15 @@
             When(x => x.SkullCondition != null && x.SkullCondition != AmericanBlackBearSkullCondition.Destroyed, () =>
             {
                 RuleFor(x => x.SkullLengthMillimetres)
-                    .NotNull()
+                    .NotNull();
+                RuleFor(x => x.SkullWidthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
+                // Simple workaround to prevent the error message from appearing before the user has entered the width value (which is below length in the UI)
+                When(x => x.SkullWidthMillimetres != null, () =>
+                {
+                    RuleFor(x => x.SkullLengthMillimetres)
                     .GreaterThan(x => x.SkullWidthMillimetres).WithMessage("Skull length must be greater than skull width.")
                     .LessThan(1000);
-                RuleFor(x => x.SkullWidthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
+                });
             });
         }
     }
