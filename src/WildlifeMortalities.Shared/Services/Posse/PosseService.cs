@@ -317,19 +317,20 @@ public class PosseService : IPosseService
     {
         var clients = new List<(Client, IEnumerable<string>)>();
 
-        //var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
-        //    $"clients?modifiedSinceDateTime={modifiedSinceDateTime:O}"
-        //);
+        var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
+            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+        );
 
-        var jsonDoc = await File.ReadAllTextAsync("C:\\Users\\jhodgins\\SND_clients.json");
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var results = JsonSerializer.Deserialize<GetClientsResponse>(jsonDoc, options);
+        //var jsonDoc = await File.ReadAllTextAsync("C:\\Users\\jhodgins\\SND_clients.json");
+        //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        //var results = JsonSerializer.Deserialize<GetClientsResponse>(jsonDoc, options);
 
         var rand = new Random();
         foreach (var recentlyModifiedClient in results.Clients)
         {
             var client = new Client
             {
+                // Todo: remove anonymizing logic
                 EnvPersonId = recentlyModifiedClient.EnvClientId,
                 //FirstName = recentlyModifiedClient.FirstName,
                 FirstName = FakeClients.FirstNames[rand.Next(FakeClients.FirstNames.Length)],
@@ -352,15 +353,15 @@ public class PosseService : IPosseService
         AppDbContext context
     )
     {
-        //var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-        //    $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
-        //);
-
-        var jsonDoc = await File.ReadAllTextAsync(
-            "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations-subset.json"
+        var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+            $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
         );
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
+
+        //var jsonDoc = await File.ReadAllTextAsync(
+        //    "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations-subset.json"
+        //);
+        //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        //var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
 
         var authorizations = new List<Authorization>();
         if (results == null)
@@ -372,7 +373,7 @@ public class PosseService : IPosseService
             await context.RegisteredTrappingConcessions.ToArrayAsync();
 
         var existingInvalidAuthorizations = await context.InvalidAuthorizations.ToDictionaryAsync(
-            x => x.GetIdentifier(),
+            x => x.GetUniqueIdentifier(),
             x => x
         );
         foreach (
@@ -525,7 +526,7 @@ public class PosseService : IPosseService
                             );
                             if (
                                 existingInvalidAuthorizations.ContainsKey(
-                                    invalidAuthorization.PosseId
+                                    invalidAuthorization.GetUniqueIdentifier()
                                 ) == false
                             )
                             {
@@ -538,15 +539,16 @@ public class PosseService : IPosseService
                 }
                 if (isValid)
                 {
-                    if (
-                        existingInvalidAuthorizations.TryGetValue(
-                            authorization.PosseId,
-                            out var invalidAuthorization
-                        )
-                    )
-                    {
-                        context.InvalidAuthorizations.Remove(invalidAuthorization);
-                    }
+                    // Todo: fix to support GetUniqueIdentifier()
+                    //if (
+                    //    existingInvalidAuthorizations.TryGetValue(
+                    //        authorization.PosseId,
+                    //        out var invalidAuthorization
+                    //    )
+                    //)
+                    //{
+                    //    context.InvalidAuthorizations.Remove(invalidAuthorization);
+                    //}
 
                     authorizations.Add(authorization);
                 }
