@@ -17,15 +17,16 @@ public enum ReportStatus
 
 public abstract class Report
 {
-    public ReportStatus Status { get; set; }
+    // Todo: Implement report status
+    //public ReportStatus Status { get; set; }
 
-    public bool IsDone() => HasStatusFlag(ReportStatus.Done);
+    //public bool IsDone() => HasStatusFlag(ReportStatus.Done);
 
-    public bool HasStatusFlag(ReportStatus flag) => (Status & flag) == flag;
+    //public bool HasStatusFlag(ReportStatus flag) => (Status & flag) == flag;
 
-    public void RemoveStatusFlag(ReportStatus flag) => Status &= ~flag;
+    //public void RemoveStatusFlag(ReportStatus flag) => Status &= ~flag;
 
-    public void AddStatusFlag(ReportStatus flag) => Status |= flag;
+    //public void AddStatusFlag(ReportStatus flag) => Status |= flag;
 
     public int Id { get; set; }
     public string Discriminator { get; set; } = null!;
