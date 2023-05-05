@@ -63,10 +63,52 @@ public abstract class Report
     {
         var rand = new Random();
         // Excludes O, 0, and I to avoid users mixing them up
-        const string Chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
-        HumanReadableId = new string(
-            Enumerable.Repeat(Chars, 4).Select(s => s[rand.Next(s.Length)]).ToArray()
-        );
+        const string EligibleChars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+        var filteredWords = new[]
+        {
+            "FUCK",
+            "SHIT",
+            "PISS",
+            "TWAT",
+            "TITS",
+            "CUNT",
+            "SLUT",
+            "SLAG",
+            "PUSS",
+            "DICK",
+            "COCK",
+            "GOOK",
+            "KIKE",
+            "SPIC",
+            "COON",
+            "PAKI",
+            "JERK",
+            "JISM",
+            "DYKE",
+            "ARSE",
+            "HELL",
+            "CRAP",
+            "WANK",
+            "WANG",
+            "DAMN",
+            "MONG",
+            "DAGO",
+            "SHAG",
+            "TURD",
+            "HOMO",
+            "SCUM",
+            "CLIT",
+            "ANAL",
+            "ANUS",
+            "DUMB",
+            "SUCK"
+        };
+        do
+        {
+            HumanReadableId = new string(
+                Enumerable.Repeat(EligibleChars, 4).Select(s => s[rand.Next(s.Length)]).ToArray()
+            );
+        } while (!filteredWords.All(x => x != HumanReadableId));
     }
 
     public abstract bool HasHuntingActivity();
