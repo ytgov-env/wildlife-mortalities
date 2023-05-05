@@ -96,15 +96,9 @@ public abstract class BioSubmission
         }
 
         var prerequisiteOrganicMaterialValues = GetOrganicMaterialPrerequisitesForAnalysis();
-        if (prerequisiteOrganicMaterialValues.All(x => x == null))
+        if (prerequisiteOrganicMaterialValues.Any(x => x == null))
         {
             return false;
-        }
-        else if (prerequisiteOrganicMaterialValues.Any(x => x == null))
-        {
-            throw new InvalidOperationException(
-                $"Bio submission {Id} was updated while an organic material boolean is still null."
-            );
         }
 
         return !prerequisiteOrganicMaterialValues.Any(x => x == false);
