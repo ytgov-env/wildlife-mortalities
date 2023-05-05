@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using WildlifeMortalities.App.Features.Reports;
-using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
-using WildlifeMortalities.App.Features.Shared.Mortalities.Elk;
-using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
-using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
-using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
@@ -25,7 +20,7 @@ public partial class MortalityComponent
 
     private void SpeciesChanged(Species? value)
     {
-        if (value.HasValue == false)
+        if (!value.HasValue)
         {
             return;
         }
@@ -36,9 +31,6 @@ public partial class MortalityComponent
         }
 
         ViewModel.Species = value;
-
-        var viewModel = MortalityViewModel.Create(value.Value);
-
-        ViewModel.MortalityViewModel = viewModel;
+        ViewModel.MortalityViewModel = MortalityViewModel.Create(value.Value);
     }
 }
