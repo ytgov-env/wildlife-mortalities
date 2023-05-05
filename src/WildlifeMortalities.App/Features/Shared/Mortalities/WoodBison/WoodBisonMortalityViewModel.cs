@@ -38,7 +38,10 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
     public override Dictionary<string, string?> GetProperties()
     {
         var result = base.GetProperties();
-        result.Add("Was pregnant", PregnancyStatus?.GetDisplayName());
+        if (PregnancyStatus != null)
+        {
+            result.Add("Was pregnant", PregnancyStatus.GetDisplayName());
+        }
         result.Add("Was wounded", IsWounded.ToString());
 
         return result;
