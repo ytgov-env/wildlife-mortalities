@@ -17,7 +17,7 @@ public abstract class ActivityViewModel
         MortalityWithSpeciesSelectionViewModel = new MortalityWithSpeciesSelectionViewModel
         {
             Species = activity.Mortality.Species,
-            MortalityViewModel = new MortalityViewModel(activity.Mortality, reportDetail)
+            MortalityViewModel = MortalityViewModel.Create(activity.Mortality, reportDetail)
         };
 
         Comment = activity.Comment;

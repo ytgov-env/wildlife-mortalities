@@ -39,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WildlifeMortalities.App\WildlifeMortalities.App.csproj" />
     <ProjectReference Include="..\WildlifeMortalities.Data\WildlifeMortalities.Data.csproj" />
     <ProjectReference Include="..\WildlifeMortalities.Shared\WildlifeMortalities.Shared.csproj" />
   </ItemGroup>

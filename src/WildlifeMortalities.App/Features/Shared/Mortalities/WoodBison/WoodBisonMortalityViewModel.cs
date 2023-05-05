@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Shared.Extensions;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison;
 
@@ -8,6 +9,16 @@ public class WoodBisonMortalityViewModel : MortalityViewModel
 {
     public WoodBisonMortalityViewModel()
         : base(Data.Enums.Species.WoodBison) { }
+
+    public WoodBisonMortalityViewModel(
+        WoodBisonMortality mortality,
+        ReportDetail? reportDetail = null
+    )
+        : base(mortality, reportDetail)
+    {
+        PregnancyStatus = mortality.PregnancyStatus;
+        IsWounded = mortality.IsWounded;
+    }
 
     public PregnancyStatus? PregnancyStatus { get; set; }
     public bool IsWounded { get; set; }

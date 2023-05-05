@@ -1,4 +1,5 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
 
@@ -6,6 +7,15 @@ public class AmericanBlackBearMortalityViewModel : MortalityViewModel
 {
     public AmericanBlackBearMortalityViewModel()
         : base(Data.Enums.Species.AmericanBlackBear) { }
+
+    public AmericanBlackBearMortalityViewModel(
+        AmericanBlackBearMortality mortality,
+        ReportDetail? reportDetail = null
+    )
+        : base(mortality, reportDetail)
+    {
+        IsShotInConflict = mortality.IsShotInConflict;
+    }
 
     public bool IsShotInConflict { get; set; }
 

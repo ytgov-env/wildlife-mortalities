@@ -1,4 +1,10 @@
 ﻿using FluentValidation;
+using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
+using WildlifeMortalities.App.Features.Shared.Mortalities.Caribou;
+using WildlifeMortalities.App.Features.Shared.Mortalities.Elk;
+using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
+using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
+using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
@@ -37,8 +43,6 @@ public class MortalityViewModel
         }
     }
 
-    public MortalityViewModel() { }
-
     public MortalityViewModel(Mortality mortality, ReportDetail? reportDetail = null)
     {
         DateOfDeath = mortality.DateOfDeath?.DateTime;
@@ -49,9 +53,12 @@ public class MortalityViewModel
 
         _existingMortality = mortality;
         Id = mortality.Id;
-        BioSubmission = reportDetail.BioSubmissions
-            .FirstOrDefault(x => x.mortalityId == mortality.Id)
-            .submission;
+        if (reportDetail != null)
+        {
+            BioSubmission = reportDetail.BioSubmissions
+                .FirstOrDefault(x => x.mortalityId == mortality.Id)
+                .submission;
+        }
     }
 
     public MortalityViewModel(Species species) => Species = species;
@@ -107,6 +114,7 @@ public class MortalityViewModel
 
     protected void SetBaseValues(Mortality derivatingMortality)
     {
+        derivatingMortality.Id = Id ?? 0;
         derivatingMortality.DateOfDeath =
             DateOfDeath == null
                 ? null
@@ -114,6 +122,63 @@ public class MortalityViewModel
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitude;
         derivatingMortality.Sex = Sex;
+    }
+
+    internal static MortalityViewModel Create(Mortality mortality, ReportDetail? reportDetail) =>
+        Create(null, mortality, reportDetail);
+
+    internal static MortalityViewModel Create(Species value) => Create(value, null, null);
+
+    private static MortalityViewModel Create(
+        Species? value,
+        Mortality? mortality,
+        ReportDetail? reportDetail
+    )
+    {
+        var species =
+            (mortality?.Species ?? value)
+            ?? throw new ArgumentException("Either species or mortality needs to be specified");
+
+        return species switch
+        {
+            Data.Enums.Species.AmericanBlackBear
+                => mortality == null
+                    ? new AmericanBlackBearMortalityViewModel()
+                    : new AmericanBlackBearMortalityViewModel(
+                        (AmericanBlackBearMortality)mortality,
+                        reportDetail
+                    ),
+            Data.Enums.Species.Caribou
+                => mortality == null
+                    ? new CaribouMortalityViewModel()
+                    : new CaribouMortalityViewModel((CaribouMortality)mortality, reportDetail),
+            Data.Enums.Species.Elk
+                => mortality == null
+                    ? new ElkMortalityViewModel()
+                    : new ElkMortalityViewModel((ElkMortality)mortality, reportDetail),
+            Data.Enums.Species.GrizzlyBear
+                => mortality == null
+                    ? new GrizzlyBearMortalityViewModel()
+                    : new GrizzlyBearMortalityViewModel(
+                        (GrizzlyBearMortality)mortality,
+                        reportDetail
+                    ),
+            Data.Enums.Species.ThinhornSheep
+                => mortality == null
+                    ? new ThinhornSheepMortalityViewModel()
+                    : new ThinhornSheepMortalityViewModel(
+                        (ThinhornSheepMortality)mortality,
+                        reportDetail
+                    ),
+            Data.Enums.Species.WoodBison
+                => mortality == null
+                    ? new WoodBisonMortalityViewModel()
+                    : new WoodBisonMortalityViewModel((WoodBisonMortality)mortality, reportDetail),
+            _
+                => mortality == null
+                    ? new MortalityViewModel(species)
+                    : new MortalityViewModel(mortality, reportDetail),
+        };
     }
 }
 

@@ -171,6 +171,7 @@ public class MortalityService : IMortalityService
                     var existingMortality = existingReport
                         .GetMortalities()
                         .First(x => x.Id == mortality.Id);
+                    mortality.ActivityId = existingMortality.ActivityId;
                     context.Entry(existingMortality).CurrentValues.SetValues(mortality);
                 }
                 else

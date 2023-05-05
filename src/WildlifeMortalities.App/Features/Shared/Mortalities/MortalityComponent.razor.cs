@@ -37,30 +37,7 @@ public partial class MortalityComponent
 
         ViewModel.Species = value;
 
-        var viewModel = new MortalityViewModel(value.Value);
-
-        switch (value)
-        {
-            case Species.AmericanBlackBear:
-                viewModel = new AmericanBlackBearMortalityViewModel();
-                break;
-
-            case Species.Elk:
-                viewModel = new ElkMortalityViewModel();
-                break;
-
-            case Species.GrizzlyBear:
-                viewModel = new GrizzlyBearMortalityViewModel();
-                break;
-
-            case Species.ThinhornSheep:
-                viewModel = new ThinhornSheepMortalityViewModel();
-                break;
-
-            case Species.WoodBison:
-                viewModel = new WoodBisonMortalityViewModel();
-                break;
-        }
+        var viewModel = MortalityViewModel.Create(value.Value);
 
         ViewModel.MortalityViewModel = viewModel;
     }

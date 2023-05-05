@@ -19,7 +19,6 @@ public abstract class Mortality
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
     public Sex? Sex { get; set; }
-    public string Discriminator { get; set; } = null!;
     public Family? Family { get; protected set; }
     public abstract Species Species { get; }
 }
