@@ -80,6 +80,9 @@
 @code {
 
     [Parameter]
+    public EventCallback ChangeSpeciesClicked { get; set; }
+
+    [Parameter]
     public ActivityViewModel ActivityViewModel { get; set; } = null!;
 
     public MortalityViewModel MortalityViewModel => ActivityViewModel.MortalityWithSpeciesSelectionViewModel.MortalityViewModel;

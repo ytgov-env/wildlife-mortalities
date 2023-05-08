@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using WildlifeMortalities.App.Features.Reports;
 using WildlifeMortalities.Data.Enums;
 
@@ -18,6 +19,9 @@ public partial class MortalityComponent
 
     public MortalityViewModel GetViewModel() => ViewModel.MortalityViewModel;
 
+    [Inject]
+    public IDialogService DialogService { get; set; } = null!;
+
     private void SpeciesChanged(Species? value)
     {
         if (!value.HasValue)
@@ -31,6 +35,39 @@ public partial class MortalityComponent
         }
 
         ViewModel.Species = value;
-        ViewModel.MortalityViewModel = MortalityViewModel.Create(value.Value);
+        ViewModel.MortalityViewModel = MortalityViewModel.Create(
+            value.Value,
+            ViewModel.MortalityViewModel
+        );
+    }
+
+    private async Task ChangeSpeciesClicked()
+    {
+        var message = ViewModel.MortalityViewModel switch
+        {
+            { Id: null }
+            or {
+                Id: not null,
+                BioSubmission.RequiredOrganicMaterialsStatus: Data.Entities
+                    .BiologicalSubmissions
+                    .BioSubmissionRequiredOrganicMaterialsStatus
+                    .NotStarted
+            }
+                => "This will reset all species specific mortality data. Do you want to continue?",
+            _
+                => "This will reset all species specific mortality data, and reset the bio submission. Do you want to continue?",
+        };
+
+        var result = await DialogService.ShowMessageBox(
+            "Change species?",
+            message,
+            "Proceed",
+            "Cancel"
+        );
+
+        if (result == true)
+        {
+            DisableSpeciesSelection = false;
+        }
     }
 }

@@ -53,7 +53,11 @@ public class MortalityService : IMortalityService
         } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
 
         context.Add(report);
-        await AddDefaultBioSubmissions(context, report);
+        AddDefaultBioSubmissions(
+            context,
+            report,
+            new ReportDetail(report, Array.Empty<(int, BioSubmission)>())
+        );
         await context.SaveChangesAsync();
     }
 
@@ -162,7 +166,12 @@ public class MortalityService : IMortalityService
 
     public async Task UpdateReport(Report report)
     {
-        static void UpdateActivities(AppDbContext context, Report report, Report existingReport)
+        static void UpdateActivities(
+            AppDbContext context,
+            Report report,
+            Report existingReport,
+            ReportDetail reportDetail
+        )
         {
             foreach (var mortality in report.GetMortalities())
             {
@@ -171,8 +180,37 @@ public class MortalityService : IMortalityService
                     var existingMortality = existingReport
                         .GetMortalities()
                         .First(x => x.Id == mortality.Id);
+
                     mortality.ActivityId = existingMortality.ActivityId;
-                    context.Entry(existingMortality).CurrentValues.SetValues(mortality);
+
+                    if (mortality.Species != existingMortality.Species)
+                    {
+                        var (_, bio) = reportDetail.BioSubmissions.FirstOrDefault(
+                            x => x.mortalityId == existingMortality.Id
+                        );
+
+                        if (bio != null)
+                        {
+                            context.BioSubmissions.Remove(bio);
+                        }
+                        context.Mortalities.Remove(existingMortality);
+                        mortality.Id = 0;
+                        context.Add(mortality);
+
+                        if (
+                            mortality is IHasBioSubmission bioSubmissionMortality
+                            && bioSubmissionMortality.CreateDefaultBioSubmission()
+                                is BioSubmission bioSubmission
+                            && bioSubmission is not null
+                        )
+                        {
+                            context.BioSubmissions.Add(bioSubmission);
+                        }
+                    }
+                    else
+                    {
+                        context.Entry(existingMortality).CurrentValues.SetValues(mortality);
+                    }
                 }
                 else
                 {
@@ -252,8 +290,13 @@ public class MortalityService : IMortalityService
 
         context.Entry(existingReport).CurrentValues.SetValues(report);
 
-        await AddDefaultBioSubmissions(context, report);
-        UpdateActivities(context, report, existingReport);
+        var reportDetails =
+            report.Id > 0 ? await context.Reports.GetDetails(report.Id, context) : null;
+
+        reportDetails ??= new ReportDetail(null!, Array.Empty<(int, BioSubmission)>());
+
+        AddDefaultBioSubmissions(context, report, reportDetails);
+        UpdateActivities(context, report, existingReport, reportDetails);
 
         await context.SaveChangesAsync();
     }
@@ -288,22 +331,22 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
-    private static async Task AddDefaultBioSubmissions(AppDbContext context, Report report)
+    private static void AddDefaultBioSubmissions(
+        AppDbContext context,
+        Report report,
+        ReportDetail reportDetails
+    )
     {
-        var reportDetails =
-            report.Id > 0 ? await context.Reports.GetDetails(report.Id, context) : null;
-
-        reportDetails ??= new ReportDetail(null!, Array.Empty<(int, BioSubmission)>());
-
         foreach (var item in report.GetMortalities().OfType<IHasBioSubmission>())
         {
+            var bioSubmission = item.CreateDefaultBioSubmission();
+            if (bioSubmission == null)
+            {
+                continue;
+            }
+
             if (reportDetails.BioSubmissions.Any(x => x.mortalityId == item.Id) == false)
             {
-                var bioSubmission = item.CreateDefaultBioSubmission();
-                if (bioSubmission == null)
-                {
-                    continue;
-                }
                 context.BioSubmissions.Add(bioSubmission);
             }
         }

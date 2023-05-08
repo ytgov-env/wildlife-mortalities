@@ -65,7 +65,7 @@ public class MortalityViewModel
 
     public BioSubmission? BioSubmission { get; set; }
 
-    public int? Id { get; }
+    public int? Id { get; private set; }
     public Species? Species { get; init; }
     public DateTime? DateOfDeath { get; set; }
     public decimal? Longitude { get; set; }
@@ -127,7 +127,20 @@ public class MortalityViewModel
     internal static MortalityViewModel Create(Mortality mortality, ReportDetail? reportDetail) =>
         Create(null, mortality, reportDetail);
 
-    internal static MortalityViewModel Create(Species value) => Create(value, null, null);
+    internal static MortalityViewModel Create(Species value, MortalityViewModel? previous)
+    {
+        var result = Create(value, null, null);
+        if (previous != null)
+        {
+            result.Id = previous.Id;
+            result.DateOfDeath = previous.DateOfDeath;
+            result.Latitude = previous.Latitude;
+            result.Longitude = previous.Longitude;
+            result.Sex = previous.Sex;
+        }
+
+        return result;
+    }
 
     private static MortalityViewModel Create(
         Species? value,
