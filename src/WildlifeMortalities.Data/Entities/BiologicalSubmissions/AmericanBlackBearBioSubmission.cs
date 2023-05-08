@@ -48,7 +48,7 @@ public class AmericanBlackBearBioSubmissionConfig
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         // AmericanBlackBearBioSubmission is the first entity in the BioSubmission hierarchy that EF Core looks at
         // when generating a migration (alphabetically),so it gets the column "MortalityId" (sans prefix) for the foreign key
         // to Mortality. The other entities in this hierarchy are assigned to a column that contains their name as the prefix.

@@ -50,7 +50,7 @@ public class GrizzlyBearBioSubmissionConfig : IEntityTypeConfiguration<GrizzlyBe
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(GrizzlyBearBioSubmission)}_MortalityId] IS NOT NULL");

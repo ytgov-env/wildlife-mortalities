@@ -41,7 +41,7 @@ public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<Mountain
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder.OwnsMany(
             t => t.HornMeasurementEntries,
             ownedNavigationBuilder =>

@@ -45,7 +45,7 @@ public class GreyWolfBioSubmissionConfig : IEntityTypeConfiguration<GreyWolfBioS
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(GreyWolfBioSubmission)}_MortalityId] IS NOT NULL");

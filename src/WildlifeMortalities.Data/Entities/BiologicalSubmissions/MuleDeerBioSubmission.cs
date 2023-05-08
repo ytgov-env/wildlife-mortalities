@@ -30,7 +30,7 @@ public class MuleDeerBioSubmissionConfig : IEntityTypeConfiguration<MuleDeerBioS
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(MuleDeerBioSubmission)}_MortalityId] IS NOT NULL");

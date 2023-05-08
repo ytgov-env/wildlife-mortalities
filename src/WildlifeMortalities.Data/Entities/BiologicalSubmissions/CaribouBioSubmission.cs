@@ -27,7 +27,7 @@ public class CaribouBioSubmissionConfig : IEntityTypeConfiguration<CaribouBioSub
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(CaribouBioSubmission)}_MortalityId] IS NOT NULL");

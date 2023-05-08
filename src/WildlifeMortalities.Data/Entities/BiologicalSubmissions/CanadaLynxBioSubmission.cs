@@ -30,7 +30,7 @@ public class CanadaLynxBioSubmissionConfig : IEntityTypeConfiguration<CanadaLynx
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(CanadaLynxBioSubmission)}_MortalityId] IS NOT NULL");

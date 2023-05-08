@@ -30,7 +30,7 @@ public class ElkBioSubmissionConfig : IEntityTypeConfiguration<ElkBioSubmission>
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
 
         builder
             .HasIndex(x => x.MortalityId)

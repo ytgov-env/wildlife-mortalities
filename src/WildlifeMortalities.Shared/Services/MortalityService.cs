@@ -53,11 +53,7 @@ public class MortalityService : IMortalityService
         } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
 
         context.Add(report);
-        AddDefaultBioSubmissions(
-            context,
-            report,
-            new ReportDetail(report, Array.Empty<(int, BioSubmission)>())
-        );
+        await AddDefaultBioSubmissions(context, report);
         await context.SaveChangesAsync();
     }
 
@@ -166,12 +162,7 @@ public class MortalityService : IMortalityService
 
     public async Task UpdateReport(Report report)
     {
-        static void UpdateActivities(
-            AppDbContext context,
-            Report report,
-            Report existingReport,
-            ReportDetail reportDetail
-        )
+        static void UpdateActivities(AppDbContext context, Report report, Report existingReport)
         {
             foreach (var mortality in report.GetMortalities())
             {
@@ -182,17 +173,8 @@ public class MortalityService : IMortalityService
                         .First(x => x.Id == mortality.Id);
 
                     mortality.ActivityId = existingMortality.ActivityId;
-
                     if (mortality.Species != existingMortality.Species)
                     {
-                        var (_, bio) = reportDetail.BioSubmissions.FirstOrDefault(
-                            x => x.mortalityId == existingMortality.Id
-                        );
-
-                        if (bio != null)
-                        {
-                            context.BioSubmissions.Remove(bio);
-                        }
                         context.Mortalities.Remove(existingMortality);
                         mortality.Id = 0;
                         context.Add(mortality);
@@ -243,7 +225,6 @@ public class MortalityService : IMortalityService
                 var existingActivity = existingReport
                     .GetActivities()
                     .First(x => x.Id == activityId);
-                context.Mortalities.Remove(existingActivity.Mortality);
                 context.Activities.Remove(existingActivity);
             }
         }
@@ -290,13 +271,8 @@ public class MortalityService : IMortalityService
 
         context.Entry(existingReport).CurrentValues.SetValues(report);
 
-        var reportDetails =
-            report.Id > 0 ? await context.Reports.GetDetails(report.Id, context) : null;
-
-        reportDetails ??= new ReportDetail(null!, Array.Empty<(int, BioSubmission)>());
-
-        AddDefaultBioSubmissions(context, report, reportDetails);
-        UpdateActivities(context, report, existingReport, reportDetails);
+        await AddDefaultBioSubmissions(context, report);
+        UpdateActivities(context, report, existingReport);
 
         await context.SaveChangesAsync();
     }
@@ -331,22 +307,22 @@ public class MortalityService : IMortalityService
         await context.SaveChangesAsync();
     }
 
-    private static void AddDefaultBioSubmissions(
-        AppDbContext context,
-        Report report,
-        ReportDetail reportDetails
-    )
+    private static async Task AddDefaultBioSubmissions(AppDbContext context, Report report)
     {
+        var reportDetails =
+            report.Id > 0 ? await context.Reports.GetDetails(report.Id, context) : null;
+
+        reportDetails ??= new ReportDetail(null!, Array.Empty<(int, BioSubmission)>());
+
         foreach (var item in report.GetMortalities().OfType<IHasBioSubmission>())
         {
-            var bioSubmission = item.CreateDefaultBioSubmission();
-            if (bioSubmission == null)
+            if (!reportDetails.BioSubmissions.Any(x => x.mortalityId == item.Id))
             {
-                continue;
-            }
-
-            if (reportDetails.BioSubmissions.Any(x => x.mortalityId == item.Id) == false)
-            {
+                var bioSubmission = item.CreateDefaultBioSubmission();
+                if (bioSubmission == null)
+                {
+                    continue;
+                }
                 context.BioSubmissions.Add(bioSubmission);
             }
         }

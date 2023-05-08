@@ -46,7 +46,7 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder.OwnsMany(
             t => t.HornMeasurementEntries,
             ownedNavigationBuilder =>

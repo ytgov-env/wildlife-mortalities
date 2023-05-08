@@ -28,7 +28,7 @@ public class WolverineBioSubmissionConfig : IEntityTypeConfiguration<WolverineBi
             .ToTable("BioSubmissions")
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.ClientCascade);
         builder
             .HasIndex(x => x.MortalityId)
             .HasFilter($"[{nameof(WolverineBioSubmission)}_MortalityId] IS NOT NULL");
