@@ -23,17 +23,25 @@ div.mud-dialog-content:has(div.scrollable-dialog) {
     justify-content: unset;
 }
 
-    div.mud-dialog-actions > div {
+div.mud-dialog-actions > div {
+    width: 100%
+}
+
+    div.mud-dialog-actions > div > div {
         width: 100%
     }
 
-        div.mud-dialog-actions > div > div {
-            width: 100%
+        div.mud-dialog-actions > div > div > div:nth-child(4) {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
         }
 
-            div.mud-dialog-actions > div > div > div:nth-child(4) {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                width: 100%;
-            }
+.mud-dialog-actions .mud-button {
+   flex: 0 0 auto;
+}
+
+    .mud-dialog-actions .mud-button .mud-button-label {
+        white-space: nowrap;
+    }
