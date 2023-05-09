@@ -364,15 +364,17 @@ public class MortalityService : IMortalityService
             bioSubmission,
             () =>
             {
-                var previousStatus = bioSubmission.RequiredOrganicMaterialsStatus;
                 bioSubmission.UpdateRequiredOrganicMaterialsStatus();
                 if (
-                    previousStatus != BioSubmissionRequiredOrganicMaterialsStatus.Submitted
-                    && bioSubmission.RequiredOrganicMaterialsStatus
-                        == BioSubmissionRequiredOrganicMaterialsStatus.Submitted
+                    bioSubmission.RequiredOrganicMaterialsStatus
+                    == BioSubmissionRequiredOrganicMaterialsStatus.Submitted
                 )
                 {
-                    bioSubmission.DateSubmitted = DateTimeOffset.Now;
+                    bioSubmission.DateSubmitted ??= DateTimeOffset.Now;
+                }
+                else
+                {
+                    bioSubmission.DateSubmitted = null;
                 }
 
                 //Todo: raise violation for other statuses

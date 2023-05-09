@@ -9,6 +9,7 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using FluentValidation
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+@using WildlifeMortalities.Data.Entities.Reports;
 @using WildlifeMortalities.Shared.Extensions;
 @inject ISnackbar Snackbar
 <EditForm OnValidSubmit="Create" Model="BioSubmission" class="scrollable-dialog-parent" onkeypress="preventEnterFromSubmitting(event)">
@@ -101,9 +102,12 @@
     [Parameter]
     public BioSubmission BioSubmission { get; set; } = null!;
 
+    [Parameter]
+    public Report Report { get; set; } = null!;
+
     protected override void OnInitialized()
     {
-        _viewModel = new OrganicMaterialForBioSubmissionDialogViewModel(BioSubmission);
+        _viewModel = new OrganicMaterialForBioSubmissionDialogViewModel(BioSubmission, Report);
     }
 
     private void SubmitClicked()

@@ -2,16 +2,23 @@
 using FluentValidation;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using static WildlifeMortalities.App.Features.Shared.Mortalities.OrganicMaterialForBioSubmissionDialog;
+using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public class OrganicMaterialForBioSubmissionDialogViewModel
 {
     private readonly BioSubmission _bioSubmission;
+    public DateTime DateReportSubmitted { get; }
     public string Comment
     {
         get => _bioSubmission.Comment;
         set => _bioSubmission.Comment = value;
+    }
+    public DateTime? DateSubmitted
+    {
+        get => _bioSubmission.DateSubmitted?.DateTime;
+        set => _bioSubmission.DateSubmitted = value;
     }
 
     public bool CanBeAnalysed => _bioSubmission.CanBeAnalysed;
@@ -22,10 +29,13 @@ public class OrganicMaterialForBioSubmissionDialogViewModel
     public IEnumerable<BioSubmissionMaterialCheckbox> RequiredOrganicMaterial { get; set; } =
         Array.Empty<BioSubmissionMaterialCheckbox>();
 
-    public OrganicMaterialForBioSubmissionDialogViewModel(BioSubmission bioSubmission)
+    public OrganicMaterialForBioSubmissionDialogViewModel(
+        BioSubmission bioSubmission,
+        Report report
+    )
     {
         _bioSubmission = bioSubmission;
-        Comment = bioSubmission.Comment;
+        DateReportSubmitted = report.DateSubmitted.DateTime;
         var type = bioSubmission.GetType();
         RequiredOrganicMaterial = type.GetProperties()
             .Select(
@@ -56,6 +66,7 @@ public class OrganicMaterialForBioSubmissionDialogViewModelValidator
 {
     public OrganicMaterialForBioSubmissionDialogViewModelValidator()
     {
+        RuleFor(x => x.DateSubmitted).GreaterThanOrEqualTo(x => x.DateReportSubmitted);
         RuleFor(x => x.Comment).MaximumLength(500);
         RuleForEach(x => x.RequiredOrganicMaterial)
             .ChildRules(rules =>

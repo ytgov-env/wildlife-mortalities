@@ -4,6 +4,7 @@ using System.Reflection;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using FluentValidation;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
@@ -47,14 +48,17 @@ public partial class OrganicMaterialForBioSubmissionDialog
     private BioSubmissionDialogResult _result = BioSubmissionDialogResult.Cancel;
 
     [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = null!;
+    private MudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public BioSubmission BioSubmission { get; set; } = null!;
 
+    [Parameter, EditorRequired]
+    public Report Report { get; set; } = null!;
+
     protected override void OnInitialized()
     {
-        _viewModel = new(BioSubmission);
+        _viewModel = new(BioSubmission, Report);
         base.OnInitialized();
     }
 

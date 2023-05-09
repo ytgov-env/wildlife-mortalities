@@ -2,6 +2,7 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+@using WildlifeMortalities.Data.Entities.Reports;
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services
@@ -59,7 +60,7 @@
         <MudSpacer/>
         @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
         {
-            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission"/>
+            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report"/>
         }
     </MudCardContent>
     <MudCardActions>
@@ -81,6 +82,9 @@
 
     [Parameter]
     public EventCallback ChangeSpeciesClicked { get; set; }
+
+    [Parameter, EditorRequired]
+    public Report Report { get; set; } = null!;
 
     [Parameter]
     public ActivityViewModel ActivityViewModel { get; set; } = null!;

@@ -15,6 +15,10 @@
             </MudText>
         </TitleContent>
         <DialogContent>
+            @if(_viewModel.DateSubmitted != null)
+            {
+                <MudDatePicker @bind-Date="_viewModel.DateSubmitted" Label="Date submitted" For="(() => _viewModel.DateSubmitted)" />
+            }
             @foreach (var item in _viewModel.RequiredOrganicMaterial)
             {
                 <MudCheckBox @bind-Checked="@item.IsChecked" For="@( () => item.IsChecked)" Label="@item.Label" Disabled="@item.IsDisabled"/>

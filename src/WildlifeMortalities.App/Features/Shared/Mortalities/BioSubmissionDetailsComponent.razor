@@ -7,6 +7,7 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
 @using WildlifeMortalities.App.Features.Shared.Mortalities.Wolverine
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
+@using WildlifeMortalities.Data.Entities.Reports;
 @using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services;
 
@@ -87,6 +88,10 @@
     [EditorRequired]
     public BioSubmission BioSubmission { get; set; } = null!;
 
+    [Parameter]
+    [EditorRequired]
+    public Report Report { get; set; } = null!;
+
     [Inject]
     IDialogService DialogService { get; set; } = null!;
 
@@ -129,6 +134,7 @@
 
         var parameters = new DialogParameters();
         parameters.Add(nameof(BioSubmissionAnalysisDialog.BioSubmission), BioSubmission);
+        parameters.Add(nameof(BioSubmissionAnalysisDialog.Report), Report);
 
         var dialog = await DialogService.ShowAsync<BioSubmissionAnalysisDialog>("", parameters);
         var result = await dialog.Result;
@@ -147,6 +153,7 @@
 
         var parameters = new DialogParameters();
         parameters.Add(nameof(OrganicMaterialForBioSubmissionDialog.BioSubmission), BioSubmission);
+        parameters.Add(nameof(OrganicMaterialForBioSubmissionDialog.Report), Report);
 
         var dialog = await DialogService.ShowAsync<OrganicMaterialForBioSubmissionDialog>("", parameters);
         var result = await dialog.Result;
