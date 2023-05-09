@@ -37,9 +37,7 @@ namespace WildlifeMortalities.App.Pages
                 return Page();
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(
-                x => x.EmailAddress.ToLower() == email.ToLower()
-            );
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Sid == sid);
             if (user == null)
             {
                 user = new User
@@ -60,7 +58,7 @@ namespace WildlifeMortalities.App.Pages
                 UserSettings = user.Settings,
             };
 
-            Log.Information("User {Email} logged in", email);
+            Log.Information("User {Email}, {Sid} logged in", email, sid);
 
             return Page();
         }
