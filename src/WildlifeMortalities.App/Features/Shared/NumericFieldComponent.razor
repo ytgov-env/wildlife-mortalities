@@ -1,0 +1,25 @@
+﻿@using System.Linq.Expressions;
+@typeparam T
+
+<MudNumericField T="T" Label="@Label" Min="Min" Max="Max" Adornment="Adornment.End" AdornmentText="@AdornmentText" Value="Value" ValueChanged="ValueChanged"
+                 For="For" Disabled="IsReadOnly" HideSpinButtons="IsReadOnly" />
+
+@code{
+    [Parameter, EditorRequired] public string Label { get; set; } = null!;
+    [Parameter, EditorRequired] public Expression<Func<T>> For { get; set; } = null!;
+    [Parameter] public EventCallback<T> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; }
+
+    [Parameter]
+    public T Value { get; set; } = default!;
+
+    [Parameter]
+    public string AdornmentText { get; set; }
+
+    [Parameter] public T Min { get; set; }
+    [Parameter] public T Max { get; set; }
+
+
+}

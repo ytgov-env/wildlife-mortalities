@@ -13,6 +13,8 @@
 </MudSelect>
 @if (BioSubmission.SkullCondition.HasValue && BioSubmission.SkullCondition is not AmericanBlackBearSkullCondition.Destroyed)
 {
+    @*<NumericFieldComponent Label="Skull length" Min="0" Max="1000" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres"
+                       For="() => BioSubmission.SkullLengthMillimetres" IsReadOnly="IsReadOnly" />*@
     <MudNumericField Label="Skull length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullLengthMillimetres" 
         For="() => BioSubmission.SkullLengthMillimetres" Disabled="IsReadOnly" HideSpinButtons="IsReadOnly"/>
     <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres" 
