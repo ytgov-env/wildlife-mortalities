@@ -54,6 +54,16 @@ try
     builder.Services.AddSingleton<IAppConfigurationService, AppConfigurationService>();
 
     // Add authentication services
+    var isAuthConfigurationMissingValues = configuration
+        .GetRequiredSection("AuthNProvider")
+        .GetChildren()
+        .Any(child => string.IsNullOrWhiteSpace(child.Value));
+    if (isAuthConfigurationMissingValues)
+    {
+        throw new Exception(
+            "One or more children of AuthNProvider in appsettings are missing a value."
+        );
+    }
     builder.Services
         .AddAuthentication(options =>
         {
@@ -67,7 +77,7 @@ try
             options.LogoutPath = $"/{configuration["AuthNProvider:LogoutPath"]}";
         })
         .AddOpenIdConnect(
-            configuration["AuthNProvider:Name"],
+            configuration["AuthNProvider:Name"]!,
             options =>
             {
                 options.Authority = $"https://{configuration["AuthNProvider:Domain"]}";
@@ -84,7 +94,7 @@ try
                 options.SignedOutCallbackPath = configuration[
                     "AuthNProvider:SignedOutCallbackPath"
                 ];
-                options.SignedOutRedirectUri = configuration["AuthNProvider:SignedOutRedirectUri"];
+                options.SignedOutRedirectUri = configuration["AuthNProvider:SignedOutRedirectUri"]!;
                 options.ClaimsIssuer = configuration["AuthNProvider:Name"];
 
                 options.Events = new OpenIdConnectEvents
