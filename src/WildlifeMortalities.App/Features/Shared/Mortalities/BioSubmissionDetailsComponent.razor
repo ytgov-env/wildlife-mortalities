@@ -80,7 +80,7 @@
         }
         @if (!string.IsNullOrWhiteSpace(BioSubmission.Comment))
         {
-            <MudField Label="Comment" DisableUnderLine="true">@BioSubmission.Comment</MudField>
+            <MudField Style="white-space: pre-wrap" Label="Comment" DisableUnderLine="true">@BioSubmission.Comment</MudField>
         }
     </EditForm>
 }

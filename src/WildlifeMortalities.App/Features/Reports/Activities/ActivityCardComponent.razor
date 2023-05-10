@@ -54,7 +54,7 @@
             }
             @if (!string.IsNullOrWhiteSpace(ActivityViewModel.Comment))
             {
-                <MudField DisableUnderLine="true" Label="Comment">@ActivityViewModel.Comment</MudField>
+                <MudField Style="white-space: pre-wrap" DisableUnderLine="true" Label="Comment">@ActivityViewModel.Comment</MudField>
             }
         </MudStack>
         <MudSpacer/>
@@ -83,8 +83,8 @@
     [Parameter]
     public EventCallback ChangeSpeciesClicked { get; set; }
 
-    [Parameter, EditorRequired]
-    public Report Report { get; set; } = null!;
+    [Parameter]
+    public Report? Report { get; set; } = null!;
 
     [Parameter]
     public ActivityViewModel ActivityViewModel { get; set; } = null!;
