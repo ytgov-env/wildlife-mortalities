@@ -56,7 +56,7 @@ public class PosseSyncService : TimerBasedHostedService
 
         var lastSuccessfulClientsSync = await appConfiguration.TryGetValue(
             LastSuccessfulClientsSyncKey,
-            DateTimeOffset.MinValue
+            new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7))
         );
         var clientsSyncInitiatedTimestamp = await SyncClients(
             personMapper,
@@ -71,9 +71,9 @@ public class PosseSyncService : TimerBasedHostedService
 
         var lastSuccessfulAuthorizationsSync = await appConfiguration.TryGetValue(
             LastSuccessfulAuthorizationsSyncKey,
-            DateTimeOffset.MinValue
+            new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7))
         );
-        var authorizationsSyncInitiatedDateTime = await SyncAuthorizations(
+        var authorizationsSyncInitiatedTimestamp = await SyncAuthorizations(
             personMapper,
             context,
             posseService,
@@ -81,7 +81,7 @@ public class PosseSyncService : TimerBasedHostedService
         );
         await appConfiguration.SetValue(
             LastSuccessfulAuthorizationsSyncKey,
-            authorizationsSyncInitiatedDateTime
+            authorizationsSyncInitiatedTimestamp
         );
         Log.Information("Finished posse sync");
     }
@@ -147,17 +147,22 @@ public class PosseSyncService : TimerBasedHostedService
             context
         );
 
+        // Todo: remove grouping once PosseId is implemented
         var existingAuthorizations = personMapper
             .SelectMany(x => x.Value.Authorizations)
-            .ToDictionary(GetUniqueIdentifier, x => x);
+            .GroupBy(x => x.GetUniqueIdentifier())
+            .ToDictionary(x => x.Key, x => x.Select(y => y));
         foreach (var authorization in validAuthorizations)
         {
-            var inputKey = GetUniqueIdentifier(authorization);
+            var inputKey = authorization.GetUniqueIdentifier();
             existingAuthorizations.TryGetValue(inputKey, out var existingAuthorization);
 
             if (existingAuthorization != null)
             {
-                existingAuthorization.Update(authorization);
+                foreach (var auth in existingAuthorization)
+                {
+                    auth.Update(authorization);
+                }
             }
             else
             {
@@ -167,16 +172,5 @@ public class PosseSyncService : TimerBasedHostedService
 
         await context.SaveChangesAsync();
         return syncInitiatedTimestamp;
-
-        static string GetNormalizedNumber(Authorization authorization) =>
-            authorization.Number.EndsWith('C') ? authorization.Number[..^1] : authorization.Number;
-
-        static string GetUniqueIdentifier(Authorization authorization)
-        {
-            var result =
-                authorization.PosseId
-                ?? $"{GetNormalizedNumber(authorization)}-{authorization.GetAuthorizationType()}-{authorization.Person.Id}-{authorization.Season.Id}";
-            return result;
-        }
     }
 }

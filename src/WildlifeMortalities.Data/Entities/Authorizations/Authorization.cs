@@ -59,6 +59,19 @@ public abstract class Authorization
 
         UpdateInternal(authorization);
     }
+
+    private string GetNormalizedNumber() => Number.EndsWith('C') ? Number[..^1] : Number;
+
+    public string GetUniqueIdentifier()
+    {
+        return PosseId
+            ?? $"{GetNormalizedNumber()}-{GetAuthorizationType()}-{Person.Id}-{Season.Id}";
+    }
+
+    public string GetUniqueIdentifierWithoutSeason()
+    {
+        return PosseId ?? $"{GetNormalizedNumber()}-{GetAuthorizationType()}-{Person.Id}-{0}";
+    }
 }
 
 public class AuthorizationConfig : IEntityTypeConfiguration<Authorization>

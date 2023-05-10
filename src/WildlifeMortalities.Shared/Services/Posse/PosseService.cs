@@ -539,16 +539,20 @@ public class PosseService : IPosseService
                 }
                 if (isValid)
                 {
-                    // Todo: fix to support GetUniqueIdentifier()
-                    //if (
-                    //    existingInvalidAuthorizations.TryGetValue(
-                    //        authorization.PosseId,
-                    //        out var invalidAuthorization
-                    //    )
-                    //)
-                    //{
-                    //    context.InvalidAuthorizations.Remove(invalidAuthorization);
-                    //}
+                    if (
+                        existingInvalidAuthorizations.TryGetValue(
+                            //authorization.PosseId,
+                            authorization.GetUniqueIdentifier(),
+                            out var invalidAuthorization
+                        )
+                        || existingInvalidAuthorizations.TryGetValue(
+                            authorization.GetUniqueIdentifierWithoutSeason(),
+                            out invalidAuthorization
+                        )
+                    )
+                    {
+                        context.InvalidAuthorizations.Remove(invalidAuthorization);
+                    }
 
                     authorizations.Add(authorization);
                 }
