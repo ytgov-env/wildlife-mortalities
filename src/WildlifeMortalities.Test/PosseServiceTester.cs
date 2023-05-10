@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using RichardSzalay.MockHttp;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Authorizations;
@@ -34,7 +35,8 @@ public class PosseServiceTester
         var client = mockHttp.ToHttpClient();
         client.BaseAddress = new Uri(BaseAddress);
 
-        var service = new PosseService(client);
+        var config = new ConfigurationBuilder().Build();
+        var service = new PosseService(client, config);
         var start = new DateTimeOffset(2023, 03, 16, 14, 30, 10, TimeSpan.FromHours(-7));
 
         // Act
@@ -58,7 +60,8 @@ public class PosseServiceTester
         var client = mockHttp.ToHttpClient();
         client.BaseAddress = new Uri(BaseAddress);
 
-        var service = new PosseService(client);
+        var config = new ConfigurationBuilder().Build();
+        var service = new PosseService(client, config);
 
         var clientMapper = new Dictionary<string, PersonWithAuthorizations>
         {

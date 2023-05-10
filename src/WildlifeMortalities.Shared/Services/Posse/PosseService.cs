@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
@@ -305,10 +306,12 @@ public class PosseService : IPosseService
         };
 
     private readonly HttpClient _httpClient;
+    private readonly bool _isAnonymized;
 
-    public PosseService(HttpClient httpClient)
+    public PosseService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _isAnonymized = configuration.GetSection("Posse:ClientService:AnonymizeData").Get<bool>();
     }
 
     public async Task<
@@ -330,16 +333,23 @@ public class PosseService : IPosseService
         {
             var client = new Client
             {
-                // Todo: remove anonymizing logic
                 EnvPersonId = recentlyModifiedClient.EnvClientId,
-                //FirstName = recentlyModifiedClient.FirstName,
-                FirstName = FakeClients.FirstNames[rand.Next(FakeClients.FirstNames.Length)],
-                //LastName = recentlyModifiedClient.LastName,
-                LastName = FakeClients.LastNames[rand.Next(FakeClients.LastNames.Length)],
-                //BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
-                BirthDate = new DateTime(rand.Next(1930, 2010), rand.Next(1, 12), rand.Next(1, 28)),
+                FirstName = recentlyModifiedClient.FirstName,
+                LastName = recentlyModifiedClient.LastName,
+                BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
                 LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
             };
+
+            if (_isAnonymized)
+            {
+                client.FirstName = FakeClients.FirstNames[rand.Next(FakeClients.FirstNames.Length)];
+                client.LastName = FakeClients.LastNames[rand.Next(FakeClients.LastNames.Length)];
+                client.BirthDate = new DateTime(
+                    rand.Next(1930, 2010),
+                    rand.Next(1, 12),
+                    rand.Next(1, 28)
+                );
+            }
 
             clients.Add((client, recentlyModifiedClient.PreviousEnvClientIds));
         }
