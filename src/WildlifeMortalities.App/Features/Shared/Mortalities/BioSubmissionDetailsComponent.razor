@@ -39,6 +39,10 @@
         <MudText>Analysis: <MudChip Color="GetAnalysisChipColor()">@BioSubmission.AnalysisStatus.GetDisplayName().ToLower()</MudChip></MudText>
     }
 </MudStack>
+@if(BioSubmission.DateSubmitted != null)
+{
+    <MudField Label="Date submitted" DisableUnderLine="true">@BioSubmission.DateSubmitted?.ToString("D")</MudField>
+}
 @if(BioSubmission.RequiredOrganicMaterialsStatus != BioSubmissionRequiredOrganicMaterialsStatus.NotStarted){
     @*This component is read-only, but it requires an EditForm as the child components contain input components which have a dependancy on EditContext*@
     <EditForm Model="BioSubmission">
