@@ -6,7 +6,7 @@ namespace WildlifeMortalities.Data.Entities.Users;
 public class User
 {
     public int Id { get; set; }
-    public string Sid { get; set; } = string.Empty;
+    public string NameIdentifier { get; set; } = string.Empty;
     public string EmailAddress { get; set; } = string.Empty;
     public UserSettings Settings { get; set; } = null!;
 }

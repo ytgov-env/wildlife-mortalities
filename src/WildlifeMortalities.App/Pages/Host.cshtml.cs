@@ -31,18 +31,20 @@ namespace WildlifeMortalities.App.Pages
                 return Page();
             }
 
-            var sid = User.FindFirst("sid")?.Value ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(sid))
+            var nameIdentifier = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(nameIdentifier))
             {
                 return Page();
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Sid == sid);
+            var user = await _context.Users.FirstOrDefaultAsync(
+                x => x.NameIdentifier == nameIdentifier
+            );
             if (user == null)
             {
                 user = new User
                 {
-                    Sid = sid,
+                    NameIdentifier = nameIdentifier,
                     EmailAddress = email,
                     Settings = UserSettings.Default
                 };
@@ -58,7 +60,7 @@ namespace WildlifeMortalities.App.Pages
                 UserSettings = user.Settings,
             };
 
-            Log.Information("User {Email}, {Sid} logged in", email, sid);
+            Log.Information("User {Email}, {NameIdentifier} logged in", email, nameIdentifier);
 
             return Page();
         }
