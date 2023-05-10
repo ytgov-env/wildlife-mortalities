@@ -15,11 +15,3 @@ function isTestEnvironment() {
     const hostname = window.location.hostname;
     return hostname.includes("wildlifemortalities-test") || hostname.includes("localhost");
 }
-
-function openTeamsUri(route) {
-    try {
-        window.location.href = `msteams://teams.microsoft.com${route}`;
-    } catch (error) {
-        window.location.href = `https://teams.microsoft.com${route}`;
-    }
-}

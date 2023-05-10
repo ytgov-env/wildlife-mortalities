@@ -1,4 +1,4 @@
-﻿@inject IConfiguration Configuration;
+﻿@inject IConfiguration Configuration
 @inject IJSRuntime JsRuntime
 
 <MudNavMenu>
@@ -7,8 +7,8 @@
     @*<MudNavLink Href="@Constants.Routes.GetConservationOfficerLookupPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.LocalPolice">Conservation officer overview</MudNavLink>*@
     <MudNavLink Href="@Constants.Routes.GetReportsOverviewPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CrueltyFree">All reports</MudNavLink>
     <MudNavGroup Icon="@Icons.Material.Filled.Help" Title="Help" Expanded="true">
-        <MudNavLink OnClick="OpenTeamsHelpChannel">Questions/feedback</MudNavLink>
-        <MudNavLink OnClick="OpenTeamsIssueTracker">Issue tracker</MudNavLink>
+        <MudNavLink Href="@_teamsHelpChannelUri">Questions/feedback</MudNavLink>
+        <MudNavLink Href="@_teamsIssueTrackerUri">Issue tracker</MudNavLink>
     </MudNavGroup>
     <MudDivider/>
     @*<MudNavGroup Icon="@Icons.Material.Filled.Settings" Title="Administration">
@@ -16,29 +16,41 @@
     <MudNavGroup Icon="@Icons.Material.Filled.DeviceHub" Title="Related apps">
         <MudNavLink OnClick="OpenPosseWebUiInNewTab">POSSE WebUI</MudNavLink>
         <MudNavLink OnClick="OpenPosseStaffUiInNewTab">POSSE StaffUI</MudNavLink>
-        <MudNavLink OnClick="OpenHumanWildlifeConflictInNewTab">Human-wildlife conflict</MudNavLink>
+        <MudNavLink Href="@_humanWildlifeConflictUri">Human-wildlife conflict</MudNavLink>
     </MudNavGroup>
 </MudNavMenu>
 
 @code {
-    private async Task OpenTeamsIssueTracker()
-    {
-        await JsRuntime.InvokeVoidAsync("openTeamsUri", Configuration["MicrosoftTeams:IssueTrackerRoute"]);
-    }
-    private async Task OpenTeamsHelpChannel()
-    {
-        await JsRuntime.InvokeVoidAsync("openTeamsUri", Configuration["MicrosoftTeams:HelpChannelRoute"]);
-    }
+    // These deep links will silently fail if the user does not have the relevant app installed (i.e. the URI scheme has no registered handler),
+    //  but users should have the apps installed in virtually all cases. 
+    // Unfortunately, there is no way for a web app to verify whether a handler is registered (standard browser security feature), 
+    //  so therefore we cannot provide a fallback experience.
+    // The alternative would be to send the user to an intermediate URL (ex: https://survey123.arcgis.app?itemID=d07322e663294b9b92e60f674e8f45e4), 
+    //  but this has a worse UX as the user now has to close a tab in order to get back to wildlife mortalities.
+    private string _teamsHelpChannelUri => $"msteams://teams.microsoft.com{Configuration["MicrosoftTeams:HelpChannelRoute"]}";
+    private string _teamsIssueTrackerUri => $"msteams://teams.microsoft.com{Configuration["MicrosoftTeams:IssueTrackerRoute"]}";
+    private string _humanWildlifeConflictUri => $"arcgis-survey123://?itemID={Configuration["HumanWildlifeConflictSurvey123:ItemId"]}";
+
     private async Task OpenPosseWebUiInNewTab()
     {
-        await JsRuntime.InvokeVoidAsync("open", CancellationToken.None, Configuration["Posse:WebUiUri"], "_blank");
+        await OpenInNewTab(Configuration["Posse:WebUiUrl"]!);
     }
+
     private async Task OpenPosseStaffUiInNewTab()
     {
-        await JsRuntime.InvokeVoidAsync("open", CancellationToken.None, Configuration["Posse:StaffUiUri"], "_blank");
+        await OpenInNewTab(Configuration["Posse:StaffUiUrl"]!);
     }
-    private async Task OpenHumanWildlifeConflictInNewTab()
+
+    private async Task OpenInNewTab(string url)
     {
-        await Task.CompletedTask;
+        Uri? uriResult;
+        bool isValidUrl = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
+                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+        if (!isValidUrl)
+        {
+            throw new ArgumentException($"'{nameof(url)}' must be a valid URL.", nameof(url));
+        }
+
+        await JsRuntime.InvokeVoidAsync("open", CancellationToken.None, url, "_blank");
     }
 }
