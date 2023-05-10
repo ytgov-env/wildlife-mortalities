@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
@@ -9,7 +10,10 @@ public class ElkMortality : Mortality, IHasBioSubmission
 {
     public enum ElkHerd
     {
+        [Display(Name = "Braeburn")]
         Braeburn = 10,
+
+        [Display(Name = "Takhini")]
         Takhini = 20
     }
 
