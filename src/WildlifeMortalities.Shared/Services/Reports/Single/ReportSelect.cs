@@ -31,6 +31,8 @@ public static class ReportSelect
             .Include(x => ((TrappedMortalitiesReport)x).RegisteredTrappingConcession)
             .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
             .ThenInclude(x => x.Mortality)
+            .Include(x => x.CreatedBy)
+            .Include(x => x.LastModifiedBy)
             .AsSplitQuery();
     }
 

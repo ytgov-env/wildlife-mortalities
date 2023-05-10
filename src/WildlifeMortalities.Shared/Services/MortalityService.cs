@@ -19,13 +19,19 @@ public class MortalityService : IMortalityService
     public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) =>
         _dbContextFactory = dbContextFactory;
 
-    public async Task CreateReport(Report report)
+    public async Task CreateReport(Report report, int userId)
     {
         SetReportNavigationPropertyForActivities(report, report);
         report.DateSubmitted = DateTimeOffset.Now;
         report.DateModified = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
+
+        var user =
+            await context.Users.FindAsync(userId)
+            ?? throw new Exception($"User {userId} not found.");
+        report.CreatedBy = user;
+        report.LastModifiedBy = user;
         switch (report)
         {
             case IndividualHuntedMortalityReport individualHuntedMortalityReport:
@@ -160,7 +166,7 @@ public class MortalityService : IMortalityService
         }
     }
 
-    public async Task UpdateReport(Report report)
+    public async Task UpdateReport(Report report, int userId)
     {
         static void UpdateActivities(AppDbContext context, Report report, Report existingReport)
         {
@@ -267,6 +273,10 @@ public class MortalityService : IMortalityService
 
         report.Discriminator = existingReport.Discriminator;
         report.HumanReadableId = existingReport.HumanReadableId;
+        report.CreatedById = existingReport.CreatedById;
+        report.LastModifiedById =
+            (await context.Users.SingleOrDefaultAsync(x => x.Id == userId))?.Id
+            ?? throw new Exception($"User {userId} not found.");
         report.DateModified = DateTimeOffset.Now;
 
         context.Entry(existingReport).CurrentValues.SetValues(report);

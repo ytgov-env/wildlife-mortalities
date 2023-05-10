@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Users;
 
 namespace WildlifeMortalities.Data.Entities.Reports;
 
@@ -35,8 +36,12 @@ public abstract class Report
     public DateTimeOffset DateSubmitted { get; set; }
     public DateTimeOffset DateModified { get; set; }
 
-    //public User CreatedBy { get; set; } = null!;
-    //public User LastModifiedBy { get; set; } = null!;
+    public int CreatedById { get; set; }
+    public User CreatedBy { get; set; } = null!;
+
+    public int LastModifiedById { get; set; }
+    public User LastModifiedBy { get; set; } = null!;
+
     public ReportPdf? Pdf { get; set; }
 
     public IEnumerable<Mortality> GetMortalities() =>

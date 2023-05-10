@@ -39,6 +39,9 @@ public partial class MortalityReportPage : DbContextAwareComponent
     [Inject]
     public ISnackbar SnackbarService { get; set; } = default!;
 
+    [CascadingParameter]
+    public AppParameters AppParameters { get; set; } = null!;
+
     private void CreateNewEditContext()
     {
         if (_editContext != null)
@@ -185,7 +188,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
         var personId = _personId!.Value;
         var report = _vm.ReportViewModel.GetReport(personId);
         Log.Information("Creating report {@Report}", report);
-        await MortalityService.CreateReport(report);
+        await MortalityService.CreateReport(report, AppParameters.UserId);
         Log.Information("Created report");
         NavigationManager.NavigateTo(
             Constants.Routes.GetReportDetailsPageLink(HumanReadablePersonId, report.Id)
@@ -197,7 +200,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
         var personId = _personId!.Value;
         var report = _vm.ReportViewModel.GetReport(personId);
         Log.Information("Updating report {@Report}", report);
-        await MortalityService.UpdateReport(report);
+        await MortalityService.UpdateReport(report, AppParameters.UserId);
         Log.Information("Updated report");
         NavigationManager.NavigateTo(
             Constants.Routes.GetReportDetailsPageLink(HumanReadablePersonId, report.Id)
