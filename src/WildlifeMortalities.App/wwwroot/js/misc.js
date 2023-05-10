@@ -3,6 +3,9 @@ function preventEnterFromSubmitting(e) {
         if (e.srcElement && e.srcElement.localName == 'button') {
             return true;
         }
+        if (e.srcElement && e.srcElement.localName == 'textarea') {
+            return false;
+        }
         e.preventDefault();
         e.stopPropagation();
         return false;
