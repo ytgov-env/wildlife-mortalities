@@ -14,9 +14,6 @@ public class CaribouBioSubmission : BioSubmission<CaribouMortality>
 
     [IsRequiredOrganicMaterialForBioSubmission("Incisor bar")]
     public bool? IsIncisorBarProvided { get; set; }
-
-    [IsRequiredOrganicMaterialForBioSubmission("Evidence of sex is attached")]
-    public bool? IsEvidenceOfSexAttached { get; set; }
 }
 
 public class CaribouBioSubmissionConfig : IEntityTypeConfiguration<CaribouBioSubmission>

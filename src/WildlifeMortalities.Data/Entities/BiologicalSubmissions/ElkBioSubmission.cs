@@ -17,9 +17,6 @@ public class ElkBioSubmission : BioSubmission<ElkMortality>
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
     public bool? IsHeadProvided { get; set; }
-
-    [IsRequiredOrganicMaterialForBioSubmission("Evidence of sex is attached")]
-    public bool? IsEvidenceOfSexAttached { get; set; }
 }
 
 public class ElkBioSubmissionConfig : IEntityTypeConfiguration<ElkBioSubmission>
