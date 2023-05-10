@@ -18,8 +18,9 @@
         @{
             List<string> seasons = new();
         }
-        @if(_authorizationsViewModel.Authorizations.Any() == false){
-            <MudTabPanel Text="None"/>
+        @if (_authorizationsViewModel.Authorizations.Any() == false)
+        {
+            <MudTabPanel Text="None" />
         }
         @foreach (var authorization in _authorizationsViewModel.Authorizations)
         {
@@ -42,7 +43,7 @@
                 }
                 <MudItem Class="mx-2 my-2">
                 @if (bigGameHuntingLicences.Any() == true || smallGameHuntingLicences.Any() == true || outfitterChiefGuideLicences.Any() == true
-                    || outfitterAssistantGuideLicences.Any() == true || specialGuideLicences.Any() ==true)
+                   || outfitterAssistantGuideLicences.Any() == true || specialGuideLicences.Any() == true)
                 {
                     <MudItem>
                         <MudText Typo="Typo.h6">Hunting licences</MudText>
@@ -173,6 +174,7 @@
 @code {
     private int _panelIndex = 0;
     private int? _queuedPanelIndex;
+    private SemaphoreSlim _semaphoreSlim = new(1, 1);
 
     [Parameter]
     [EditorRequired]
@@ -181,14 +183,24 @@
     private AuthorizationsViewModel _authorizationsViewModel = new();
     private bool _isLoading = true;
 
+    private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
     protected override async Task OnParametersSetAsync()
     {
+        _isLoading = true;
+
+        cancellationTokenSource.Cancel();
+        await _semaphoreSlim.WaitAsync();
+        cancellationTokenSource = new();
+        var cancellationToken = cancellationTokenSource.Token;
         var authorizations = await Context.Authorizations.Where(a => a.PersonId == PersonId)
             .Include(x => ((BigGameHuntingLicence)x).OutfitterAreas)
             .Include(x => ((TrappingLicence)x).RegisteredTrappingConcession)
             .Include(x => x.Season)
-            .ToArrayAsync();
+        .ToArrayAsync(cancellationToken);
+        _authorizationsViewModel.Authorizations = authorizations;
+        _queuedPanelIndex = _authorizationsViewModel.Authorizations.Select(x => x.Season.FriendlyName).Distinct().Count() - 1;
+        _semaphoreSlim.Release();
 
         _authorizationsViewModel.Authorizations = authorizations;
 
