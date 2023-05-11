@@ -22,8 +22,6 @@ public class MortalityService : IMortalityService
     public async Task CreateReport(Report report, int userId)
     {
         SetReportNavigationPropertyForActivities(report, report);
-        report.DateSubmitted = DateTimeOffset.Now;
-        report.DateModified = DateTimeOffset.Now;
 
         using var context = _dbContextFactory.CreateDbContext();
 
@@ -31,7 +29,9 @@ public class MortalityService : IMortalityService
             await context.Users.FindAsync(userId)
             ?? throw new Exception($"User {userId} not found.");
         report.CreatedBy = user;
-        report.LastModifiedBy = user;
+        report.DateCreated = DateTimeOffset.Now;
+        report.DateSubmitted = DateTimeOffset.Now;
+
         switch (report)
         {
             case IndividualHuntedMortalityReport individualHuntedMortalityReport:
@@ -168,6 +168,59 @@ public class MortalityService : IMortalityService
 
     public async Task UpdateReport(Report report, int userId)
     {
+        using var context = _dbContextFactory.CreateDbContext();
+        var existingReport = await context.Reports
+            .WithEntireGraph()
+            .FirstAsync(x => x.Id == report.Id);
+
+        SetReportNavigationPropertyForActivities(report, existingReport);
+
+        switch (report)
+        {
+            case IndividualHuntedMortalityReport individualHuntedMortalityReport:
+                await CreateOrUpdateReport(context, individualHuntedMortalityReport);
+                break;
+            case SpecialGuidedHuntReport specialGuidedHuntReport:
+                await CreateOrUpdateReport(
+                    context,
+                    specialGuidedHuntReport,
+                    (SpecialGuidedHuntReport)existingReport
+                );
+                break;
+            case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
+                await CreateOrUpdateReport(
+                    context,
+                    outfitterGuidedHuntReport,
+                    (OutfitterGuidedHuntReport)existingReport
+                );
+                break;
+            case HumanWildlifeConflictMortalityReport humanWildlifeConflictMortalityReport:
+                await CreateOrUpdateReport(context, humanWildlifeConflictMortalityReport);
+                break;
+            case TrappedMortalitiesReport trappedMortalitiesReport:
+                await CreateOrUpdateReport(context, trappedMortalitiesReport);
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+
+        report.Discriminator = existingReport.Discriminator;
+        report.HumanReadableId = existingReport.HumanReadableId;
+        report.CreatedById = existingReport.CreatedById;
+        report.LastModifiedById =
+            (await context.Users.SingleOrDefaultAsync(x => x.Id == userId))?.Id
+            ?? throw new Exception($"User {userId} not found.");
+        report.DateCreated = existingReport.DateCreated;
+        report.DateSubmitted = existingReport.DateSubmitted;
+        report.DateModified = DateTimeOffset.Now;
+
+        context.Entry(existingReport).CurrentValues.SetValues(report);
+
+        await AddDefaultBioSubmissions(context, report);
+        UpdateActivities(context, report, existingReport);
+
+        await context.SaveChangesAsync();
+
         static void UpdateActivities(AppDbContext context, Report report, Report existingReport)
         {
             foreach (var mortality in report.GetMortalities())
@@ -234,57 +287,6 @@ public class MortalityService : IMortalityService
                 context.Activities.Remove(existingActivity);
             }
         }
-
-        using var context = _dbContextFactory.CreateDbContext();
-        var existingReport = await context.Reports
-            .WithEntireGraph()
-            .FirstAsync(x => x.Id == report.Id);
-
-        SetReportNavigationPropertyForActivities(report, existingReport);
-
-        switch (report)
-        {
-            case IndividualHuntedMortalityReport individualHuntedMortalityReport:
-                await CreateOrUpdateReport(context, individualHuntedMortalityReport);
-                break;
-            case SpecialGuidedHuntReport specialGuidedHuntReport:
-                await CreateOrUpdateReport(
-                    context,
-                    specialGuidedHuntReport,
-                    (SpecialGuidedHuntReport)existingReport
-                );
-                break;
-            case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
-                await CreateOrUpdateReport(
-                    context,
-                    outfitterGuidedHuntReport,
-                    (OutfitterGuidedHuntReport)existingReport
-                );
-                break;
-            case HumanWildlifeConflictMortalityReport humanWildlifeConflictMortalityReport:
-                await CreateOrUpdateReport(context, humanWildlifeConflictMortalityReport);
-                break;
-            case TrappedMortalitiesReport trappedMortalitiesReport:
-                await CreateOrUpdateReport(context, trappedMortalitiesReport);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
-
-        report.Discriminator = existingReport.Discriminator;
-        report.HumanReadableId = existingReport.HumanReadableId;
-        report.CreatedById = existingReport.CreatedById;
-        report.LastModifiedById =
-            (await context.Users.SingleOrDefaultAsync(x => x.Id == userId))?.Id
-            ?? throw new Exception($"User {userId} not found.");
-        report.DateModified = DateTimeOffset.Now;
-
-        context.Entry(existingReport).CurrentValues.SetValues(report);
-
-        await AddDefaultBioSubmissions(context, report);
-        UpdateActivities(context, report, existingReport);
-
-        await context.SaveChangesAsync();
     }
 
     public async Task CreateDraftReport(string reportType, string report, int personId)

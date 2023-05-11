@@ -40,8 +40,17 @@ else if (_reportDetail is null)
         break;
 }
 
-<MudField Label="Date submitted" DisableUnderLine="true">@_reportDetail.Report.DateSubmitted.ToString("D")</MudField>
-
+<MudItem xs="12" sm="4">
+    <MudPaper Class="mb-2">
+        <MudItem Class="ml-3">
+            <MudField Label="Created by" DisableUnderLine="true" Class="pt-2">@_reportDetail.Report.CreatedBy.Name on @_reportDetail.Report.DateCreated.ToString("D")</MudField>
+        @if (_reportDetail.Report.DateModified != null && _reportDetail.Report.LastModifiedBy != null)
+        {
+            <MudField Label="Modified by" DisableUnderLine="true">@_reportDetail.Report.LastModifiedBy.Name on @_reportDetail.Report.DateModified?.ToString("D")</MudField>
+        }
+        </MudItem>
+    </MudPaper>
+</MudItem>
 
 @if (_reportDetail.Report is not IndividualHuntedMortalityReport)
 {
