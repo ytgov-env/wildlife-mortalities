@@ -14,5 +14,9 @@ public class HumanWildlifeConflictActivityConfig
     : IEntityTypeConfiguration<HumanWildlifeConflictActivity>
 {
     public void Configure(EntityTypeBuilder<HumanWildlifeConflictActivity> builder) =>
-        builder.ToTable("Activities");
+        builder
+            .ToTable("Activities")
+            .HasOne(x => x.Report)
+            .WithMany(x => x.ConflictActivities)
+            .OnDelete(DeleteBehavior.NoAction);
 }

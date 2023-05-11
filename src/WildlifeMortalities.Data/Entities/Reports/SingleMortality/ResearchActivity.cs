@@ -12,5 +12,9 @@ public class ResearchActivity : Activity
 public class ResearchActivityConfig : IEntityTypeConfiguration<ResearchActivity>
 {
     public void Configure(EntityTypeBuilder<ResearchActivity> builder) =>
-        builder.ToTable("Activities");
+        builder
+            .ToTable("Activities")
+            .HasOne(x => x.Report)
+            .WithOne(x => x.Activity)
+            .OnDelete(DeleteBehavior.NoAction);
 }

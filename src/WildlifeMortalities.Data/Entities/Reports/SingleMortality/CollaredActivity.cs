@@ -12,5 +12,9 @@ public class CollaredActivity : Activity
 public class CollaredActivityConfig : IEntityTypeConfiguration<CollaredActivity>
 {
     public void Configure(EntityTypeBuilder<CollaredActivity> builder) =>
-        builder.ToTable("Activities");
+        builder
+            .ToTable("Activities")
+            .HasOne(x => x.Report)
+            .WithOne(x => x.Activity)
+            .OnDelete(DeleteBehavior.NoAction);
 }

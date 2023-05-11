@@ -7,12 +7,12 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 public class CollaredMortalityReport : Report, ISingleMortalityReport
 {
-    public CollaredActivity CollaredActivity { get; set; } = null!;
+    public CollaredActivity Activity { get; set; } = null!;
     public string CollarNumber { get; set; } = string.Empty;
 
-    public Mortality GetMortality() => CollaredActivity.Mortality;
+    public Mortality GetMortality() => Activity.Mortality;
 
-    public Activity GetActivity() => CollaredActivity;
+    public Activity GetActivity() => Activity;
 
     public override bool HasHuntingActivity() => false;
 }
