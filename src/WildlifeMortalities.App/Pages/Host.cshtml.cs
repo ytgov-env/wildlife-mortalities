@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.Users;
 
@@ -45,13 +46,19 @@ namespace WildlifeMortalities.App.Pages
                 user = new User
                 {
                     NameIdentifier = nameIdentifier,
+                    Name = GetName(email),
                     EmailAddress = email,
                     Settings = UserSettings.Default
                 };
 
                 _context.Users.Add(user);
-                await _context.SaveChangesAsync();
             }
+            else
+            {
+                user.Name = GetName(email);
+                user.EmailAddress = email;
+            }
+            await _context.SaveChangesAsync();
 
             AppParameters = new AppParameters
             {
@@ -63,6 +70,8 @@ namespace WildlifeMortalities.App.Pages
             Log.Information("User {Email}, {NameIdentifier} logged in", email, nameIdentifier);
 
             return Page();
+
+            static string GetName(string email) => email[..email.IndexOf('@')].Replace('.', ' ');
         }
     }
 }
