@@ -57,7 +57,10 @@ public class AppDbContext : DbContext
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        configurationBuilder.Properties<string>().HaveMaxLength(1000);
+        configurationBuilder
+            .Properties<string>()
+            .HaveMaxLength(1000)
+            .HaveConversion<TrimConverter>();
         base.ConfigureConventions(configurationBuilder);
     }
 
