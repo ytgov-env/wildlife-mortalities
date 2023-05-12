@@ -46,9 +46,8 @@ public class HuntingSeal : Authorization
 
     public SealType Type { get; set; }
 
-    // Todo: Rename to "HuntedActivityId", and fix System.InvalidOperationException: The property 'HuntedActivityId' cannot be added to entity type 'Authorization' because it is declared on the CLR type 'HuntingSeal'.
-    public int? HuntedActivityyId { get; set; }
-    public HuntedActivity? HuntedActivityy { get; set; }
+    public int? HuntedActivityId { get; set; }
+    public HuntedActivity? HuntedActivity { get; set; }
 
     public override AuthorizationResult GetResult(Report report) =>
         throw new NotImplementedException();
