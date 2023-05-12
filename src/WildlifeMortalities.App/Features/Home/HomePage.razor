@@ -1,65 +1,67 @@
 ﻿@attribute [Route(Constants.Routes.HomePage)]
+@inject IJSRuntime JsRuntime
 
 <MudText Typo="Typo.h3" GutterBottom="true">Home</MudText>
 <MudText Typo="Typo.h5" Class="mb-4">Welcome to the wildlife mortalities app!</MudText>
 <MudGrid>
-    @*<MudItem xs="12" sm="6">
-        <MudAlert Severity="Severity.Normal" Class="mb-4">
-            Feedback/questions? Contact:
-            <MudLink Href="mailto:jon.hodgins@yukon.ca?subject=WildlifeMortalities - " Typo="Typo.body2" Color="Color.Inherit">
-                <b>jon.hodgins@yukon.ca</b>
-            </MudLink>
-        </MudAlert>
-    </MudItem>*@
-    <MudPaper Elevation="2" Class="pa-4 mb-5">
-        <MudText Typo="Typo.h5">Testing info</MudText>
-        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">
-            Clients and authorizations are synced from POSSE production, but their name and birth date have been randomized.
-        </MudText>
-        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">
-            You can view any client and create a mortality report for them by clicking the <b>client overview</b> button in the left-hand navigation bar. Here are some clients that have authorizations for 22/23: <MudLink Href="/reporters/clients/549048">549048</MudLink>, <MudLink Href="/reporters/clients/650420">650420</MudLink>, <MudLink Href="/reporters/clients/807297">807297</MudLink>
-        </MudText>
-        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">Please provide feedback or post your questions in Microsoft Teams. You can click the <b>questions/feedback</b> button in the navigation bar to get there.</MudText>
-        <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">You can view a list of known issues and planned tasks in the issue tracker.</MudText>
-    </MudPaper>
-    <MudItem xs="12">
-        <MudExpansionPanels>
-            <MudExpansionPanel Text="User claims (debug information)">
-                <MudSimpleTable Style="overflow-x: auto;">
-                    <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if (AuthState is not null)
-                    {
-                        @foreach (var claim in AuthState.User.Claims)
+    @if (_isTestEnvironment)
+    {
+        <MudPaper Elevation="2" Class="pa-4 mb-5">
+            <MudText Typo="Typo.h5">Testing info</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">
+                Clients and authorizations are synced from POSSE production, but their name and birth date have been randomized.
+            </MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">
+                You can view any client and create a mortality report for them by clicking the <b>client overview</b> button in the left-hand navigation bar. Here are some clients that have authorizations for 22/23: <MudLink Href="/reporters/clients/549048">549048</MudLink>, <MudLink Href="/reporters/clients/650420">650420</MudLink>, <MudLink Href="/reporters/clients/807297">807297</MudLink>
+            </MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">Please provide feedback or post your questions in Microsoft Teams. You can click the <b>questions/feedback</b> button in the navigation bar to get there.</MudText>
+            <MudText Typo="Typo.subtitle1" Class="mud-text-secondary my-2">You can view a list of known issues and planned tasks in the issue tracker.</MudText>
+        </MudPaper>
+        <MudItem xs="12">
+            <MudExpansionPanels>
+                <MudExpansionPanel Text="User claims (debug information)">
+                    <MudSimpleTable Style="overflow-x: auto;">
+                        <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if (AuthState is not null)
                         {
-                            <tr>
-                                <td>@claim.Type</td>
-                                <td>@claim.Value</td>
-                            </tr>
+                            @foreach (var claim in AuthState.User.Claims)
+                            {
+                                <tr>
+                                    <td>@claim.Type</td>
+                                    <td>@claim.Value</td>
+                                </tr>
+                            }
                         }
-                    }
-                    </tbody>
-                </MudSimpleTable>
-            </MudExpansionPanel>
-        </MudExpansionPanels>
-    </MudItem>
+                        </tbody>
+                    </MudSimpleTable>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        </MudItem>
+    }
 </MudGrid>
 
 @code {
+    private bool _isTestEnvironment = false;
 
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
     private AuthenticationState? AuthState { get; set; }
 
+    private async Task<bool> IsTestEnvironment()
+    {
+        return await JsRuntime.InvokeAsync<bool>("isTestEnvironment");
+    }
+
     protected override async Task OnInitializedAsync()
     {
         AuthState = await AuthenticationStateTask;
+        _isTestEnvironment = await IsTestEnvironment();
     }
-
 }
