@@ -94,27 +94,30 @@ public class PosseSyncService : TimerBasedHostedService
     )
     {
         var syncInitiatedTimestamp = DateTimeOffset.Now;
-        var recentlyModifiedClients = await posseService.GetClients(lastSuccessfulSync);
+        var clientsInResponse = await posseService.GetClients(lastSuccessfulSync);
 
         foreach (
-            var (client, previousEnvClientIds) in recentlyModifiedClients.OrderBy(
+            var (clientInResponse, previousEnvClientIds) in clientsInResponse.OrderBy(
                 x => x.client.LastModifiedDateTime
             )
         )
         {
             // Determine which are existing clients, and update them
-            if (personMapper.TryGetValue(client.EnvPersonId, out var clientInDatabase))
+            if (personMapper.TryGetValue(clientInResponse.EnvPersonId, out var clientInDatabase))
             {
-                clientInDatabase.Update(client);
-                await context.SaveChangesAsync();
+                if (clientInDatabase.LastModifiedDateTime != clientInResponse.LastModifiedDateTime)
+                {
+                    clientInDatabase.Update(clientInResponse);
+                    await context.SaveChangesAsync();
+                }
             }
             // Or, add a new client
             else
             {
-                context.Add(client);
+                context.Add(clientInResponse);
                 await context.SaveChangesAsync();
-                personMapper.Add(client.EnvPersonId, client);
-                clientInDatabase = client;
+                personMapper.Add(clientInResponse.EnvPersonId, clientInResponse);
+                clientInDatabase = clientInResponse;
             }
 
             // Determine if client was merged in POSSE, and merge them
@@ -141,32 +144,33 @@ public class PosseSyncService : TimerBasedHostedService
     )
     {
         var syncInitiatedTimestamp = DateTimeOffset.Now;
-        var validAuthorizations = await posseService.GetAuthorizations(
+        var validAuthorizationsInResponse = await posseService.GetAuthorizations(
             lastSuccessfulSync,
             personMapper,
             context
         );
 
         // Todo: remove grouping once PosseId is implemented
-        var existingAuthorizations = personMapper
-            .SelectMany(x => x.Value.Authorizations)
+        var authorizationsInDatabase = personMapper
+            .SelectMany(x => x.Value.Authorizations ?? new List<Authorization>())
             .GroupBy(x => x.GetUniqueIdentifier())
             .ToDictionary(x => x.Key, x => x.Select(y => y));
-        foreach (var authorization in validAuthorizations)
+        foreach (var authInResponse in validAuthorizationsInResponse)
         {
-            var inputKey = authorization.GetUniqueIdentifier();
-            existingAuthorizations.TryGetValue(inputKey, out var existingAuthorization);
-
-            if (existingAuthorization != null)
+            var inputKey = authInResponse.GetUniqueIdentifier();
+            if (authorizationsInDatabase.TryGetValue(inputKey, out var authsInDatabase))
             {
-                foreach (var auth in existingAuthorization)
+                foreach (var authInDatabase in authsInDatabase)
                 {
-                    auth.Update(authorization);
+                    if (authInDatabase.LastModifiedDateTime != authInResponse.LastModifiedDateTime)
+                    {
+                        authInDatabase.Update(authInResponse);
+                    }
                 }
             }
             else
             {
-                context.Authorizations.Add(authorization);
+                context.Authorizations.Add(authInResponse);
             }
         }
 
