@@ -320,13 +320,13 @@ public class PosseService : IPosseService
     {
         var clients = new List<(Client, IEnumerable<string>)>();
 
-        var results = await _httpClient.GetFromJsonAsync<GetClientsResponse>(
-            $"clients?modifiedSinceDateTime={modifiedSinceDateTime:O}"
-        );
-
-        //var jsonDoc = await File.ReadAllTextAsync("C:\\Users\\jhodgins\\SND_clients.json");
-        //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        //var results = JsonSerializer.Deserialize<GetClientsResponse>(jsonDoc, options);
+        var results =
+            await _httpClient.GetFromJsonAsync<GetClientsResponse>(
+                $"clients?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+            )
+            ?? throw new Exception(
+                "The posse api /clients endpoint did not send a valid response."
+            );
 
         var rand = new Random();
         foreach (var recentlyModifiedClient in results.Clients)
@@ -363,21 +363,15 @@ public class PosseService : IPosseService
         AppDbContext context
     )
     {
-        var results = await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
-            $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
-        );
-
-        //var jsonDoc = await File.ReadAllTextAsync(
-        //    "C:\\Users\\jhodgins\\OneDrive - Government of Yukon\\Desktop\\SND_authorizations-subset.json"
-        //);
-        //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        //var results = JsonSerializer.Deserialize<GetAuthorizationsResponse>(jsonDoc, options);
+        var results =
+            await _httpClient.GetFromJsonAsync<GetAuthorizationsResponse>(
+                $"authorizations?modifiedSinceDateTime={modifiedSinceDateTime:O}"
+            )
+            ?? throw new Exception(
+                "The posse api /authorizations endpoint did not send a valid response."
+            );
 
         var authorizations = new List<Authorization>();
-        if (results == null)
-        {
-            return authorizations;
-        }
         var outfitterAreas = await context.OutfitterAreas.ToArrayAsync();
         var registeredTrappingConcessions =
             await context.RegisteredTrappingConcessions.ToArrayAsync();
