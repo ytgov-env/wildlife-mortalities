@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
@@ -13,6 +14,7 @@ public class CaribouBioSubmission : BioSubmission<CaribouMortality>
         : base(mortality) { }
 
     [IsRequiredOrganicMaterialForBioSubmission("Incisor bar")]
+    [Column($"{nameof(CaribouBioSubmission)}_{nameof(IsIncisorBarProvided)}")]
     public bool? IsIncisorBarProvided { get; set; }
 }
 
@@ -26,7 +28,7 @@ public class CaribouBioSubmissionConfig : IEntityTypeConfiguration<CaribouBioSub
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder
-            .HasIndex(x => x.MortalityId)
-            .HasFilter($"[{nameof(CaribouBioSubmission)}_MortalityId] IS NOT NULL");
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
 }

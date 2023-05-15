@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -36,7 +37,10 @@ public class PhaHuntingPermit : Authorization
 
     public PhaHuntingPermit(PermitType type) => Type = type;
 
+    [Column($"{nameof(PhaHuntingPermit)}_{nameof(Type)}")]
     public PermitType Type { get; set; }
+
+    [Column($"{nameof(PhaHuntingPermit)}_{nameof(HuntCode)}")]
     public string HuntCode { get; set; } = string.Empty;
 
     public override AuthorizationResult GetResult(Report report) =>

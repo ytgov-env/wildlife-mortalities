@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
@@ -9,8 +10,12 @@ namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport
 {
     public List<TrappedActivity> TrappedActivities { get; set; } = null!;
+
+    [Column($"{nameof(TrappedMortalitiesReport)}_{nameof(RegisteredTrappingConcessionId)}")]
     public int RegisteredTrappingConcessionId { get; set; }
     public RegisteredTrappingConcession RegisteredTrappingConcession { get; set; } = null!;
+
+    [Column($"{nameof(TrappedMortalitiesReport)}_{nameof(ClientId)}")]
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 

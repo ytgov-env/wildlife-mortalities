@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -13,12 +14,15 @@ public class WhiteTailedDeerBioSubmission : BioSubmission<WhiteTailedDeerMortali
         : base(mortality) { }
 
     [IsRequiredOrganicMaterialForBioSubmission("Hide")]
+    [Column($"{nameof(WhiteTailedDeerBioSubmission)}_{nameof(IsHideProvided)}")]
     public bool? IsHideProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
+    [Column($"{nameof(WhiteTailedDeerBioSubmission)}_{nameof(IsHeadProvided)}")]
     public bool? IsHeadProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Antlers")]
+    [Column($"{nameof(WhiteTailedDeerBioSubmission)}_{nameof(IsAntlersProvided)}")]
     public bool? IsAntlersProvided { get; set; }
 }
 
@@ -33,7 +37,7 @@ public class WhiteTailedDeerBioSubmissionConfig
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder
-            .HasIndex(x => x.MortalityId)
-            .HasFilter($"[{nameof(WhiteTailedDeerBioSubmission)}_MortalityId] IS NOT NULL");
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
 }

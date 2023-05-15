@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
@@ -13,12 +14,18 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
     public AmericanBlackBearBioSubmission(AmericanBlackBearMortality mortality)
         : base(mortality) { }
 
+    [Column($"{nameof(AmericanBlackBearBioSubmission)}_{nameof(SkullCondition)}")]
     public AmericanBlackBearSkullCondition? SkullCondition { get; set; }
+
+    [Column($"{nameof(AmericanBlackBearBioSubmission)}_{nameof(SkullLengthMillimetres)}")]
     public int? SkullLengthMillimetres { get; set; }
+
+    [Column($"{nameof(AmericanBlackBearBioSubmission)}_{nameof(SkullWidthMillimetres)}")]
     public int? SkullWidthMillimetres { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Skull")]
     [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
+    [Column($"{nameof(AmericanBlackBearBioSubmission)}_{nameof(IsSkullProvided)}")]
     public bool? IsSkullProvided { get; set; }
 
     public override bool CanBeAnalysed => true;
@@ -49,9 +56,9 @@ public class AmericanBlackBearBioSubmissionConfig
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);
-        // AmericanBlackBearBioSubmission is the first entity in the BioSubmission hierarchy that EF Core looks at
-        // when generating a migration (alphabetically),so it gets the column "MortalityId" (sans prefix) for the foreign key
-        // to Mortality. The other entities in this hierarchy are assigned to a column that contains their name as the prefix.
-        builder.HasIndex(x => x.MortalityId).HasFilter("[MortalityId] IS NOT NULL");
+        
+        builder
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
 }

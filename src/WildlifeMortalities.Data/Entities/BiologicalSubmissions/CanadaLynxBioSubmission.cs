@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -14,10 +15,16 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>, IHasF
 
     [IsRequiredOrganicMaterialForBioSubmission("Pelt")]
     [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
+    [Column($"{nameof(CanadaLynxBioSubmission)}_{nameof(IsPeltProvided)}")]
     public bool? IsPeltProvided { get; set; }
 
+    [Column($"{nameof(CanadaLynxBioSubmission)}_{nameof(PeltLengthMillimetres)}")]
     public int? PeltLengthMillimetres { get; set; }
+
+    [Column($"{nameof(CanadaLynxBioSubmission)}_{nameof(PeltWidthMillimetres)}")]
     public int? PeltWidthMillimetres { get; set; }
+
+    [Column($"{nameof(FurbearerSealNumber)}")]
     public string? FurbearerSealNumber { get; set; }
     public override bool CanBeAnalysed => true;
 }
@@ -32,11 +39,8 @@ public class CanadaLynxBioSubmissionConfig : IEntityTypeConfiguration<CanadaLynx
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder
-            .HasIndex(x => x.MortalityId)
-            .HasFilter($"[{nameof(CanadaLynxBioSubmission)}_MortalityId] IS NOT NULL");
-        builder
-            .Property(x => x.FurbearerSealNumber)
-            .HasColumnName(nameof(CanadaLynxBioSubmission.FurbearerSealNumber));
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
         builder.HasIndex(x => x.FurbearerSealNumber).IsUnique();
     }
 }

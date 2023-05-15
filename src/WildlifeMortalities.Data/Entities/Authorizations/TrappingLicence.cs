@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -33,7 +34,10 @@ public class TrappingLicence : Authorization
 
     public TrappingLicence(LicenceType type) => Type = type;
 
+    [Column($"{nameof(TrappingLicence)}_{nameof(Type)}")]
     public LicenceType Type { get; set; }
+
+    [Column($"{nameof(TrappingLicence)}_{nameof(RegisteredTrappingConcessionId)}")]
     public int RegisteredTrappingConcessionId { get; set; }
     public RegisteredTrappingConcession RegisteredTrappingConcession { get; set; } = null!;
 

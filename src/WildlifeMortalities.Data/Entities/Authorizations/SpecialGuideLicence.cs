@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -7,6 +8,7 @@ namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class SpecialGuideLicence : Authorization
 {
+    [Column($"{nameof(SpecialGuideLicence)}_{nameof(GuidedClientId)}")]
     public int GuidedClientId { get; set; }
     public Client GuidedClient { get; set; } = null!;
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
@@ -14,7 +15,10 @@ public class WolverineBioSubmission : BioSubmission<WolverineMortality>, IHasFur
 
     [IsRequiredOrganicMaterialForBioSubmission("Pelt")]
     [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
+    [Column($"{nameof(WolverineBioSubmission)}_{nameof(IsPeltProvided)}")]
     public bool? IsPeltProvided { get; set; }
+
+    [Column($"{nameof(FurbearerSealNumber)}")]
     public string? FurbearerSealNumber { get; set; }
 
     public override bool CanBeAnalysed => true;
@@ -30,10 +34,7 @@ public class WolverineBioSubmissionConfig : IEntityTypeConfiguration<WolverineBi
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder
-            .HasIndex(x => x.MortalityId)
-            .HasFilter($"[{nameof(WolverineBioSubmission)}_MortalityId] IS NOT NULL");
-        builder
-            .Property(x => x.FurbearerSealNumber)
-            .HasColumnName(nameof(WolverineBioSubmission.FurbearerSealNumber));
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
 }

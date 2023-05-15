@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -42,6 +43,7 @@ public class HuntingPermit : Authorization
 
     public HuntingPermit(PermitType type) => Type = type;
 
+    [Column($"{nameof(HuntingPermit)}_{nameof(Type)}")]
     public PermitType Type { get; set; }
 
     public bool IsCaribouRelated() =>

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
@@ -6,6 +7,7 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 public class TrappedActivity : Activity
 {
+    [Column($"{nameof(TrappedActivity)}_{nameof(TrappedMortalitiesReportId)}")]
     public int TrappedMortalitiesReportId { get; set; }
     public TrappedMortalitiesReport TrappedMortalitiesReport { get; set; } = null!;
 }

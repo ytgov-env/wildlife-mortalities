@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -44,8 +45,10 @@ public class HuntingSeal : Authorization
 
     public HuntingSeal(SealType type) => Type = type;
 
+    [Column($"{nameof(HuntingSeal)}_{nameof(Type)}")]
     public SealType Type { get; set; }
 
+    [Column($"{nameof(HuntingSeal)}_{nameof(HuntedActivityId)}")]
     public int? HuntedActivityId { get; set; }
     public HuntedActivity? HuntedActivity { get; set; }
 

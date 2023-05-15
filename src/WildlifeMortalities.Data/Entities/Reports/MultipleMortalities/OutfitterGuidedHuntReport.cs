@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
@@ -8,14 +9,26 @@ namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
 {
+    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(HuntStartDate)}")]
     public DateTime? HuntStartDate { get; set; }
+
+    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(HuntEndDate)}")]
     public DateTime? HuntEndDate { get; set; }
+
+    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(ChiefGuideId)}")]
     public int ChiefGuideId { get; set; }
     public Client ChiefGuide { get; set; } = null!;
     public List<Client> AssistantGuides { get; set; } = null!;
+
+    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(OutfitterAreaId)}")]
+    public int OutfitterAreaId { get; set; }
     public OutfitterArea OutfitterArea { get; set; } = null!;
+
+    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(Result)}")]
     public GuidedHuntResult Result { get; set; }
     public List<HuntedActivity> HuntedActivities { get; set; } = null!;
+
+    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(ClientId)}")]
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 

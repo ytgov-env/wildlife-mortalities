@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -102,6 +103,7 @@ public class CaribouMortality : Mortality, IHasBioSubmission
     }
 
     // Todo: herd resolution logic
+    [Column($"{nameof(CaribouMortality)}_{nameof(Herd)}")]
     public CaribouHerd Herd { get; set; }
 
     public override Species Species => Species.Caribou;
@@ -116,8 +118,5 @@ public class CaribouMortality : Mortality, IHasBioSubmission
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>
 {
     public void Configure(EntityTypeBuilder<CaribouMortality> builder) =>
-        builder
-            .ToTable("Mortalities")
-            .Property(w => w.Herd)
-            .HasColumnName(nameof(CaribouMortality.CaribouHerd));
+        builder.ToTable("Mortalities");
 }

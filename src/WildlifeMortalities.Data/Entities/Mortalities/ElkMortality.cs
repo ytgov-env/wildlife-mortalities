@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
@@ -17,6 +18,7 @@ public class ElkMortality : Mortality, IHasBioSubmission
         Takhini = 20
     }
 
+    [Column($"{nameof(ElkMortality)}_{nameof(Herd)}")]
     public ElkHerd Herd { get; set; }
     public override Species Species => Species.Elk;
     public ElkBioSubmission? BioSubmission { get; set; }
@@ -27,8 +29,5 @@ public class ElkMortality : Mortality, IHasBioSubmission
 public class ElkMortalityConfig : IEntityTypeConfiguration<ElkMortality>
 {
     public void Configure(EntityTypeBuilder<ElkMortality> builder) =>
-        builder
-            .ToTable("Mortalities")
-            .Property(w => w.Herd)
-            .HasColumnName(nameof(ElkMortality.ElkHerd));
+        builder.ToTable("Mortalities");
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -16,21 +17,36 @@ public class ThinhornSheepBioSubmission
 
     [IsRequiredOrganicMaterialForBioSubmission("Horns")]
     [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsHornsProvided)}")]
     public bool? IsHornsProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
     [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsHeadProvided)}")]
     public bool? IsHeadProvided { get; set; }
 
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornLengthToThirdAnnulusMillimetres)}")]
     public int? HornLengthToThirdAnnulusMillimetres { get; set; }
+
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsFullCurl)}")]
     public bool? IsFullCurl { get; set; }
+
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(PlugNumber)}")]
     public string? PlugNumber { get; set; }
 
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornMeasured)}")]
     public HornMeasured? HornMeasured { get; set; }
+
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(BroomedStatus)}")]
     public BroomedStatus? BroomedStatus { get; set; }
 
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornTotalLengthMillimetres)}")]
     public int? HornTotalLengthMillimetres { get; set; }
+
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornBaseCircumferenceMillimetres)}")]
     public int? HornBaseCircumferenceMillimetres { get; set; }
+
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornTipSpreadMillimetres)}")]
     public int? HornTipSpreadMillimetres { get; set; }
 
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
@@ -56,7 +72,7 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
             }
         );
         builder
-            .HasIndex(x => x.MortalityId)
-            .HasFilter($"[{nameof(ThinhornSheepBioSubmission)}_MortalityId] IS NOT NULL");
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
 }

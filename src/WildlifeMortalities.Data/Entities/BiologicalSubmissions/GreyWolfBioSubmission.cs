@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
@@ -13,11 +14,15 @@ public class GreyWolfBioSubmission : BioSubmission<GreyWolfMortality>, IHasFurbe
     public GreyWolfBioSubmission(GreyWolfMortality mortality)
         : base(mortality) { }
 
+    [Column($"{nameof(GreyWolfBioSubmission)}_{nameof(PeltColour)}")]
     public GreyWolfPeltColour? PeltColour { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Pelt")]
     [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
+    [Column($"{nameof(GreyWolfBioSubmission)}_{nameof(IsPeltProvided)}")]
     public bool? IsPeltProvided { get; set; }
+
+    [Column($"{nameof(FurbearerSealNumber)}")]
     public string? FurbearerSealNumber { get; set; }
     public override bool CanBeAnalysed => true;
 
@@ -47,10 +52,7 @@ public class GreyWolfBioSubmissionConfig : IEntityTypeConfiguration<GreyWolfBioS
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);
         builder
-            .HasIndex(x => x.MortalityId)
-            .HasFilter($"[{nameof(GreyWolfBioSubmission)}_MortalityId] IS NOT NULL");
-        builder
-            .Property(x => x.FurbearerSealNumber)
-            .HasColumnName(nameof(GreyWolfBioSubmission.FurbearerSealNumber));
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
 }

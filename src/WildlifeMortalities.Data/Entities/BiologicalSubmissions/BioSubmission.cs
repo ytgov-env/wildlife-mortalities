@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -84,6 +85,7 @@ public abstract class BioSubmission
         AnalysisStatus = BioSubmissionAnalysisStatus.Complete;
     }
 
+    [NotMapped]
     public virtual bool CanBeAnalysed { get; }
 
     public bool HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis()
@@ -138,7 +140,6 @@ public class BioSubmissionConfig : IEntityTypeConfiguration<BioSubmission>
                 a.WithOwner();
             }
         );
-        builder.Ignore(b => b.CanBeAnalysed);
     }
 }
 

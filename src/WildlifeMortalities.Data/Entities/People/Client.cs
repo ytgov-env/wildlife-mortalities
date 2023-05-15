@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -8,9 +10,13 @@ namespace WildlifeMortalities.Data.Entities.People;
 
 public class Client : PersonWithAuthorizations
 {
+    [Column($"{nameof(Client)}_{nameof(FirstName)}")]
     public string FirstName { get; set; } = string.Empty;
 
+    [Column($"{nameof(Client)}_{nameof(LastName)}")]
     public string LastName { get; set; } = string.Empty;
+
+    [Column($"{nameof(Client)}_{nameof(BirthDate)}")]
     public DateTime BirthDate { get; set; }
 
     public List<SpecialGuideLicence> SpecialGuideLicencesAsClient { get; set; } = null!;
@@ -93,7 +99,5 @@ public class ClientConfig : IEntityTypeConfiguration<Client>
     public void Configure(EntityTypeBuilder<Client> builder)
     {
         builder.HasIndex(c => c.EnvPersonId).IsUnique();
-        builder.Property(c => c.FirstName).HasColumnName(nameof(Client.FirstName));
-        builder.Property(c => c.LastName).HasColumnName(nameof(Client.LastName));
     }
 }

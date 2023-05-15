@@ -1,9 +1,11 @@
-﻿using WildlifeMortalities.Data.Entities.Reports;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
 public class CustomWildlifeActPermit : Authorization
 {
+    [Column($"{nameof(CustomWildlifeActPermit)}_{nameof(Conditions)}")]
     public string Conditions { get; set; } = string.Empty;
 
     public override AuthorizationResult GetResult(Report report) =>

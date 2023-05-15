@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
@@ -13,9 +14,11 @@ public class ElkBioSubmission : BioSubmission<ElkMortality>
         : base(mortality) { }
 
     [IsRequiredOrganicMaterialForBioSubmission("Hide")]
+    [Column($"{nameof(ElkBioSubmission)}_{nameof(IsHideProvided)}")]
     public bool? IsHideProvided { get; set; }
 
     [IsRequiredOrganicMaterialForBioSubmission("Head")]
+    [Column($"{nameof(ElkBioSubmission)}_{nameof(IsHeadProvided)}")]
     public bool? IsHeadProvided { get; set; }
 }
 
@@ -30,7 +33,7 @@ public class ElkBioSubmissionConfig : IEntityTypeConfiguration<ElkBioSubmission>
             .OnDelete(DeleteBehavior.ClientCascade);
 
         builder
-            .HasIndex(x => x.MortalityId)
-            .HasFilter("[ElkBioSubmission_MortalityId] IS NOT NULL");
+            .Property(x => x.MortalityId)
+            .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
 }

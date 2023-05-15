@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
@@ -13,8 +13,14 @@ public class HumanWildlifeConflictMortalityReport
         IHasConservationOfficerReporter
 {
     public List<HumanWildlifeConflictActivity> ConflictActivities { get; set; } = null!;
+
+    [Column($"{nameof(HumanWildlifeConflictMortalityReport)}_{nameof(ConservationOfficerId)}")]
     public int ConservationOfficerId { get; set; }
     public ConservationOfficer ConservationOfficer { get; set; } = null!;
+
+    [Column(
+        $"{nameof(HumanWildlifeConflictMortalityReport)}_{nameof(HumanWildlifeConflictNumber)}"
+    )]
     public string HumanWildlifeConflictNumber { get; set; } = string.Empty;
 
     IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities()

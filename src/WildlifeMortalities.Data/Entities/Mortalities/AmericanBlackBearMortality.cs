@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
@@ -7,6 +8,7 @@ namespace WildlifeMortalities.Data.Entities.Mortalities;
 
 public class AmericanBlackBearMortality : Mortality<AmericanBlackBearMortality>, IHasBioSubmission
 {
+    [Column($"{nameof(AmericanBlackBearMortality)}_{nameof(IsShotInConflict)}")]
     public bool IsShotInConflict { get; set; }
     public AmericanBlackBearBioSubmission? BioSubmission { get; set; }
 
@@ -21,7 +23,5 @@ public class AmericanBlackBearMortality : Mortality<AmericanBlackBearMortality>,
 public class AmericanBlackBearMortalityConfig : IEntityTypeConfiguration<AmericanBlackBearMortality>
 {
     public void Configure(EntityTypeBuilder<AmericanBlackBearMortality> builder) =>
-        builder
-            .Property(m => m.IsShotInConflict)
-            .HasColumnName(nameof(AmericanBlackBearMortality.IsShotInConflict));
+        builder.ToTable("Mortalities");
 }

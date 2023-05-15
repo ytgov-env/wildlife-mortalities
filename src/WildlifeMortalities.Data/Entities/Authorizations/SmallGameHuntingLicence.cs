@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -39,6 +40,7 @@ public class SmallGameHuntingLicence : Authorization, IHasOutfitterAreas
 
     public SmallGameHuntingLicence(LicenceType type) => Type = type;
 
+    [Column($"{nameof(SmallGameHuntingLicence)}_{nameof(Type)}")]
     public LicenceType Type { get; set; }
     public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 

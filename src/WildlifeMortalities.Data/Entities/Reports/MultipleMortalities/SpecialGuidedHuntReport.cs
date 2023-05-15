@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
@@ -8,12 +9,21 @@ namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport
 {
+    [Column($"{nameof(SpecialGuidedHuntReport)}_{nameof(HuntStartDate)}")]
     public DateTime? HuntStartDate { get; set; }
+
+    [Column($"{nameof(SpecialGuidedHuntReport)}_{nameof(HuntEndDate)}")]
     public DateTime? HuntEndDate { get; set; }
+
+    [Column($"{nameof(SpecialGuidedHuntReport)}_{nameof(GuideId)}")]
     public int GuideId { get; set; }
     public Client Guide { get; set; } = null!;
+
+    [Column($"{nameof(SpecialGuidedHuntReport)}_{nameof(Result)}")]
     public GuidedHuntResult Result { get; set; }
     public List<HuntedActivity> HuntedActivities { get; set; } = null!;
+
+    [Column($"{nameof(SpecialGuidedHuntReport)}_{nameof(ClientId)}")]
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
