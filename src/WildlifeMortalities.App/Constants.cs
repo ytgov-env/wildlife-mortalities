@@ -73,4 +73,12 @@ public static class Constants
             $"reporters/conservation-officers/{badgeNumber}";
         #endregion
     }
+
+    public static class AppConfigurationService
+    {
+        public const string LastSuccessfulClientsSyncKey =
+            "PosseSyncService.LastSuccessfulClientsSync";
+        public const string LastSuccessfulAuthorizationsSyncKey =
+            "PosseSyncService.LastSuccessfulAuthorizationsSync";
+    }
 }

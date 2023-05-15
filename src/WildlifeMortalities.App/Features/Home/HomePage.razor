@@ -1,9 +1,20 @@
-﻿@attribute [Route(Constants.Routes.HomePage)]
+﻿@using WildlifeMortalities.Shared.Services;
+@attribute [Route(Constants.Routes.HomePage)]
 @inject IJSRuntime JsRuntime
 
 <MudText Typo="Typo.h3" GutterBottom="true">Home</MudText>
 <MudText Typo="Typo.h5" Class="mb-4">Welcome to the wildlife mortalities app!</MudText>
 <MudGrid>
+    <MudPaper Elevation="2" Class="pa-4 mb-5">
+        <MudText Typo="Typo.h5">Status</MudText>
+        <MudText Typo="Typo.h6">Posse sync service</MudText>
+        <MudAlert Severity="GetSeverity(_lastSuccessfulClientsSync)" Dense="true">
+            <MudText Typo="Typo.subtitle1">Last successful clients sync: @_lastSuccessfulClientsSync</MudText>
+        </MudAlert>
+        <MudAlert Severity="GetSeverity(_lastSuccessfulAuthorizationsSync)" Dense="true" Class="mt-1">
+            <MudText Typo="Typo.subtitle1">Last successful authorizations sync: @_lastSuccessfulAuthorizationsSync</MudText>
+        </MudAlert>
+    </MudPaper>
     @if (_isTestEnvironment)
     {
         <MudPaper Elevation="2" Class="pa-4 mb-5">
@@ -48,9 +59,14 @@
 
 @code {
     private bool _isTestEnvironment = false;
+    private DateTimeOffset _lastSuccessfulClientsSync;
+    private DateTimeOffset _lastSuccessfulAuthorizationsSync;
 
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
+
+    [Inject]
+    private IAppConfigurationService AppConfigurationService { get; set; } = null!;
 
     private AuthenticationState? AuthState { get; set; }
 
@@ -63,5 +79,28 @@
     {
         AuthState = await AuthenticationStateTask;
         _isTestEnvironment = await IsTestEnvironment();
+        _lastSuccessfulClientsSync = await AppConfigurationService.GetValue<DateTimeOffset>(
+            Constants.AppConfigurationService.LastSuccessfulClientsSyncKey
+        );
+        _lastSuccessfulAuthorizationsSync = await AppConfigurationService.GetValue<DateTimeOffset>(
+            Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey
+        );
+    }
+
+    private Severity GetSeverity(DateTimeOffset dateTimeOffset)
+    {
+        var timeSinceLastSync = DateTimeOffset.Now - dateTimeOffset;
+        if (timeSinceLastSync.TotalDays > 1)
+        {
+            return Severity.Error;
+        }
+        else if (timeSinceLastSync.TotalHours > 1)
+        {
+            return Severity.Warning;
+        }
+        else
+        {
+            return Severity.Success;
+        }
     }
 }

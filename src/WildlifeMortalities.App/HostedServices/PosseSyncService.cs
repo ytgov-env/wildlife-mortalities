@@ -11,11 +11,6 @@ public class PosseSyncService : TimerBasedHostedService
 {
     private readonly IServiceProvider _serviceProvider;
 
-    private const string LastSuccessfulClientsSyncKey =
-        "PosseSyncService.LastSuccessfulClientsSync";
-    private const string LastSuccessfulAuthorizationsSyncKey =
-        "PosseSyncService.LastSuccessfulAuthorizationsSync";
-
     public PosseSyncService(IServiceProvider serviceProvider)
         : base(TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(2)) =>
         _serviceProvider = serviceProvider;
@@ -55,7 +50,7 @@ public class PosseSyncService : TimerBasedHostedService
             .ToDictionary(x => x.EnvPersonId, x => x);
 
         var lastSuccessfulClientsSync = await appConfiguration.TryGetValue(
-            LastSuccessfulClientsSyncKey,
+            Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
             new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7))
         );
         var clientsSyncInitiatedTimestamp = await SyncClients(
@@ -65,12 +60,12 @@ public class PosseSyncService : TimerBasedHostedService
             lastSuccessfulClientsSync
         );
         await appConfiguration.SetValue(
-            LastSuccessfulClientsSyncKey,
+            Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
             clientsSyncInitiatedTimestamp
         );
 
         var lastSuccessfulAuthorizationsSync = await appConfiguration.TryGetValue(
-            LastSuccessfulAuthorizationsSyncKey,
+            Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
             new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7))
         );
         var authorizationsSyncInitiatedTimestamp = await SyncAuthorizations(
@@ -80,7 +75,7 @@ public class PosseSyncService : TimerBasedHostedService
             lastSuccessfulAuthorizationsSync
         );
         await appConfiguration.SetValue(
-            LastSuccessfulAuthorizationsSyncKey,
+            Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
             authorizationsSyncInitiatedTimestamp
         );
         Log.Information("Finished posse sync");
