@@ -10,13 +10,25 @@
         </CardHeaderAvatar>
     </MudCardHeader>
     <MudCardContent Class="ml-3 mt-n6">
+        <MudField Label="Number" DisableUnderLine="true">
+            @(Regex.Replace(Authorization.Number, "[A-Za-z-]", ""))
+        </MudField>
         @if(Authorization is IHasOutfitterAreas auth  && auth.OutfitterAreas != null && auth.OutfitterAreas.Any())
         {
             <MudField Label="Outfitter areas" DisableUnderLine="true">@string.Join(", ", auth.OutfitterAreas.Select(x => x.Area))</MudField>
         }
-        <MudField Label="Number" DisableUnderLine="true">
-            @(Regex.Replace(Authorization.Number, "[A-Za-z-]", ""))
-        </MudField>
+        @if(Authorization is PhaHuntingPermit phaHuntingPermit)
+        {
+            <MudField Label="Hunt code" DisableUnderLine="true">@phaHuntingPermit.HuntCode</MudField>
+        }
+        @if(Authorization is SpecialGuideLicence specialGuideLicence)
+        {
+            <MudField Label="Guided client" DisableUnderLine="true">@specialGuideLicence.GuidedClient.EnvPersonId</MudField>
+        }
+        @if (Authorization is TrappingLicence trappingLicence)
+        {
+            <MudField Label="Registered trapping concession" DisableUnderLine="true">@trappingLicence.RegisteredTrappingConcession.Area</MudField>
+        }
         <MudField Label="Validity" DisableUnderLine="true">
             @Authorization.ValidFromDateTime.ToString("M") - @Authorization.ValidToDateTime.ToString("M")
         </MudField>

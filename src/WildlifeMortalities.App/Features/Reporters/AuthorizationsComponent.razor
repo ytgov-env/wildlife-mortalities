@@ -231,6 +231,7 @@
         var authorizations = await Context.Authorizations.Where(a => a.PersonId == PersonId)
         .Include(x => ((BigGameHuntingLicence)x).OutfitterAreas)
         .Include(x => ((TrappingLicence)x).RegisteredTrappingConcession)
+        .Include(x => ((SpecialGuideLicence)x).GuidedClient)
         .Include(x => x.Season)
         .ToArrayAsync(cancellationToken);
         _authorizationsViewModel.Authorizations = authorizations;
