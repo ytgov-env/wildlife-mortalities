@@ -94,7 +94,7 @@ public class PosseSyncService : TimerBasedHostedService
     )
     {
         var syncInitiatedTimestamp = DateTimeOffset.Now;
-        var clientsInResponse = await posseService.GetClients(lastSuccessfulSync);
+        var clientsInResponse = await posseService.GetClients(lastSuccessfulSync.AddMinutes(-10));
 
         foreach (
             var (clientInResponse, previousEnvClientIds) in clientsInResponse.OrderBy(
@@ -145,7 +145,7 @@ public class PosseSyncService : TimerBasedHostedService
     {
         var syncInitiatedTimestamp = DateTimeOffset.Now;
         var validAuthorizationsInResponse = await posseService.GetAuthorizations(
-            lastSuccessfulSync,
+            lastSuccessfulSync.AddMinutes(-10),
             personMapper,
             context
         );
