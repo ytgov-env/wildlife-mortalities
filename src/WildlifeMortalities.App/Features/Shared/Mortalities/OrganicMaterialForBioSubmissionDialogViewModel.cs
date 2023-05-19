@@ -67,11 +67,18 @@ public class OrganicMaterialForBioSubmissionDialogViewModelValidator
     public OrganicMaterialForBioSubmissionDialogViewModelValidator()
     {
         RuleFor(x => x.DateSubmitted)
-            .GreaterThanOrEqualTo(x => x.DateReportSubmitted)
+            .Must(
+                (viewModel, dateSubmitted) =>
+                    dateSubmitted!.Value.Date >= viewModel.DateReportSubmitted.Date
+            )
             .When(x => x.RequiredOrganicMaterial.All(x => x.IsChecked == true))
             .WithMessage(
                 "The bio submission date submitted cannot occur before the date the report was submitted."
             );
+        RuleFor(x => x.DateSubmitted)
+            .LessThanOrEqualTo(_ => DateTime.Now)
+            .When(x => x.RequiredOrganicMaterial.All(x => x.IsChecked == true))
+            .WithMessage("The bio submission date submitted cannot occur in the future.");
         RuleFor(x => x.Comment).MaximumLength(500);
         RuleForEach(x => x.RequiredOrganicMaterial)
             .ChildRules(rules =>
