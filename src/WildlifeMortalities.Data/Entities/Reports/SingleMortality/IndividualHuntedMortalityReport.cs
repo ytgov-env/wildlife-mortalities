@@ -19,6 +19,14 @@ public class IndividualHuntedMortalityReport : Report, ISingleMortalityReport
     public Activity GetActivity() => HuntedActivity;
 
     public override bool HasHuntingActivity() => true;
+
+    [NotMapped]
+    public override GeneralizedReportType GeneralizedReportType => GeneralizedReportType.Hunted;
+
+    internal override PersonWithAuthorizations GetPerson()
+    {
+        return Person;
+    }
 }
 
 public class IndividualHuntedMortalityReportConfig

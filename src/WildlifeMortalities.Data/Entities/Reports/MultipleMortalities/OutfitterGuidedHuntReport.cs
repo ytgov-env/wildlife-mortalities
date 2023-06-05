@@ -32,6 +32,9 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
+    [NotMapped]
+    public override GeneralizedReportType GeneralizedReportType => GeneralizedReportType.Hunted;
+
     IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities()
     {
         if (HuntedActivities == null)
@@ -56,6 +59,11 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
         }
 
         return guides[..^2];
+    }
+
+    internal override PersonWithAuthorizations GetPerson()
+    {
+        return Client;
     }
 }
 

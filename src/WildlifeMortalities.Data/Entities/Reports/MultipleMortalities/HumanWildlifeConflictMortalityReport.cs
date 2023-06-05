@@ -23,6 +23,10 @@ public class HumanWildlifeConflictMortalityReport
     )]
     public string HumanWildlifeConflictNumber { get; set; } = string.Empty;
 
+    [NotMapped]
+    public override GeneralizedReportType GeneralizedReportType =>
+        GeneralizedReportType.HumanWildlifeConflict;
+
     IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities()
     {
         if (ConflictActivities == null)
@@ -37,6 +41,11 @@ public class HumanWildlifeConflictMortalityReport
         ConflictActivities?.ToArray() ?? Array.Empty<HumanWildlifeConflictActivity>();
 
     public override bool HasHuntingActivity() => false;
+
+    internal override PersonWithAuthorizations GetPerson()
+    {
+        throw new Exception("This report type cannot have a PersonWithAuthorizations");
+    }
 }
 
 public class HumanWildlifeConflictMortalityReportConfig

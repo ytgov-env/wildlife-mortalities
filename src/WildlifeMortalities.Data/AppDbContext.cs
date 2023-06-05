@@ -6,6 +6,7 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Users;
+using static WildlifeMortalities.Data.Entities.BagLimitRule;
 
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
@@ -38,6 +39,9 @@ public class AppDbContext : DbContext
 
     public DbSet<RegisteredTrappingConcession> RegisteredTrappingConcessions =>
         Set<RegisteredTrappingConcession>();
+
+    public DbSet<BagLimitEntryPerPerson> BagLimitEntriesPerPerson => Set<BagLimitEntryPerPerson>();
+    public DbSet<BagLimitEntry> BagLimitEntries => Set<BagLimitEntry>();
 
     public DbSet<AppConfiguration> AppConfigurations => Set<AppConfiguration>();
 

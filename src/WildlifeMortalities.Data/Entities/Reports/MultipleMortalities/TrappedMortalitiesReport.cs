@@ -19,12 +19,20 @@ public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
+    [NotMapped]
+    public override GeneralizedReportType GeneralizedReportType => GeneralizedReportType.Trapped;
+
     IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities() =>
         TrappedActivities.Select(x => x.Mortality).ToArray();
 
     IEnumerable<Activity> IMultipleMortalitiesReport.GetActivities() => TrappedActivities.ToArray();
 
     public override bool HasHuntingActivity() => false;
+
+    internal override PersonWithAuthorizations GetPerson()
+    {
+        return Client;
+    }
 }
 
 public class TrappedMortalitiesReportConfig : IEntityTypeConfiguration<TrappedMortalitiesReport>

@@ -27,6 +27,9 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
 
+    [NotMapped]
+    public override GeneralizedReportType GeneralizedReportType => GeneralizedReportType.Hunted;
+
     IEnumerable<Mortality> IMultipleMortalitiesReport.GetMortalities()
     {
         if (HuntedActivities == null)
@@ -41,6 +44,11 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport
         HuntedActivities?.ToArray() ?? Array.Empty<HuntedActivity>();
 
     public override bool HasHuntingActivity() => true;
+
+    internal override PersonWithAuthorizations GetPerson()
+    {
+        return Client;
+    }
 }
 
 public class SpecialGuidedHuntReportConfig : IEntityTypeConfiguration<SpecialGuidedHuntReport>

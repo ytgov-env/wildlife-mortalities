@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -18,6 +19,14 @@ public class CollaredMortalityReport : Report, ISingleMortalityReport
     public Activity GetActivity() => Activity;
 
     public override bool HasHuntingActivity() => false;
+
+    [NotMapped]
+    public override GeneralizedReportType GeneralizedReportType => GeneralizedReportType.Collared;
+
+    internal override PersonWithAuthorizations GetPerson()
+    {
+        throw new Exception("This report type cannot have a PersonWithAuthorizations");
+    }
 }
 
 public class CollaredMortalityReportConfig : IEntityTypeConfiguration<CollaredMortalityReport>

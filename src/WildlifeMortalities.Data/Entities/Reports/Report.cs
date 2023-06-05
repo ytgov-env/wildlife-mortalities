@@ -4,6 +4,8 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Users;
+using System.ComponentModel.DataAnnotations.Schema;
+using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities.Reports;
 
@@ -44,6 +46,9 @@ public abstract class Report
     public DateTimeOffset? DateModified { get; set; }
 
     public ReportPdf? Pdf { get; set; }
+
+    [NotMapped]
+    public abstract GeneralizedReportType GeneralizedReportType { get; }
 
     public IEnumerable<Mortality> GetMortalities() =>
         this switch
@@ -119,6 +124,8 @@ public abstract class Report
     }
 
     public abstract bool HasHuntingActivity();
+
+    internal abstract PersonWithAuthorizations GetPerson();
 }
 
 public class ReportConfig : IEntityTypeConfiguration<Report>
@@ -127,4 +134,13 @@ public class ReportConfig : IEntityTypeConfiguration<Report>
     {
         builder.HasIndex(r => r.HumanReadableId).IsUnique();
     }
+}
+
+public enum GeneralizedReportType
+{
+    Hunted,
+    Trapped,
+    HumanWildlifeConflict,
+    Collared,
+    Research
 }
