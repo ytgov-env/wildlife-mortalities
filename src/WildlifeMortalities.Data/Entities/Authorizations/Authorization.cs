@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -19,6 +20,7 @@ public abstract class Authorization
     public int PersonId { get; set; }
     public PersonWithAuthorizations Person { get; set; } = null!;
     public bool IsCancelled { get; set; }
+    public List<Activity> Activities { get; set; } = null!;
 
     public static AuthorizationsSummary GetSummary(
         IEnumerable<Authorization> authorizations,

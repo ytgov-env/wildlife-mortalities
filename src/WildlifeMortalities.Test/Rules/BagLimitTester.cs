@@ -1,14 +1,14 @@
-﻿using System;
-using FluentAssertions;
+﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
-using Xunit;
-using static WildlifeMortalities.Data.Entities.BagLimitRule;
+using WildlifeMortalities.Data.Rules;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Test.Rules;
 
@@ -51,6 +51,49 @@ public class BagLimitTester
         var result = await rule.Process(report, context);
         result.IsApplicable.Should().BeTrue();
         result.Violations.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Process_WithUnconfiguredEntry_ReturnsViolation()
+    {
+        var report = new IndividualHuntedMortalityReport
+        {
+            HuntedActivity = new HuntedActivity()
+            {
+                Mortality = new CaribouMortality()
+                {
+                    DateOfDeath = new DateTimeOffset(2023, 4, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                    Herd = CaribouMortality.CaribouHerd.Atlin
+                },
+                GameManagementArea = new GameManagementArea
+                {
+                    Zone = "4",
+                    Subzone = "03",
+                    Id = 10,
+                }
+            },
+            Season = new HuntingSeason(2023)
+        };
+
+        var rule = new BagLimitRule();
+        var builder = new DbContextOptionsBuilder<AppDbContext>();
+        const string TestName = nameof(Process_WithUnconfiguredEntry_ReturnsViolation);
+        builder.UseInMemoryDatabase(TestName);
+
+        var context = new AppDbContext(builder.Options);
+
+        var result = await rule.Process(report, context);
+        result.Violations.Should().ContainSingle();
+        var violation = result.Violations.First();
+
+        violation.Description
+            .Should()
+            .Be(
+                "Bag limit has not been configured for Caribou in 4-03 for 23/24 season. Please report to service desk."
+            );
+        violation.Activity.Should().Be(report.HuntedActivity);
+        violation.Severity.Should().Be(ViolationSeverity.InternalError);
+        violation.Rule.Should().Be(RuleType.BagLimit);
     }
 
     [Fact]

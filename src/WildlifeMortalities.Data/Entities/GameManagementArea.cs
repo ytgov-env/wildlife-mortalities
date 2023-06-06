@@ -13,6 +13,9 @@ public class GameManagementArea
     public static Species ResolveSubType(Species species) =>
         // Todo implement herd/group resolution logic
         species;
+
+    public override string ToString() =>
+        string.IsNullOrWhiteSpace(Area) ? $"{Zone}-{Subzone}" : Area;
 }
 
 public class GameManagementAreaConfig : IEntityTypeConfiguration<GameManagementArea>

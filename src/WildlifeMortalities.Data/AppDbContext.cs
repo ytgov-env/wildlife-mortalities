@@ -5,8 +5,8 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Users;
-using static WildlifeMortalities.Data.Entities.BagLimitRule;
 
 // ReSharper disable ReturnTypeCanBeEnumerable.Global
 
