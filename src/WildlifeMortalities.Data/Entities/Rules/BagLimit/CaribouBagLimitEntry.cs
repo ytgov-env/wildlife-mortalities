@@ -6,6 +6,11 @@ namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 public class CaribouBagLimitEntry : BagLimitEntry
 {
+    public CaribouBagLimitEntry()
+    {
+        Species = Species.Caribou;
+    }
+
     public CaribouHerd Herd { get; set; }
 
     override public bool Matches(HuntedActivity activity, Season season)

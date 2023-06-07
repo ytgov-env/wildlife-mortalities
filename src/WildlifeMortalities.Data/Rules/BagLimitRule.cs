@@ -31,7 +31,7 @@ public class BagLimitRule : Rule
         Species.WoodBison
     };
 
-    public static async Task<IList<BagLimitEntryPerPerson>> GetCurrentBagCount(
+    private static async Task<IList<BagLimitEntryPerPerson>> GetCurrentBagCount(
         AppDbContext context,
         Season season,
         PersonWithAuthorizations person
@@ -57,7 +57,12 @@ public class BagLimitRule : Rule
 
         var violations = new List<Violation>();
         var personalEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
-        foreach (var item in report.GetActivities().OfType<HuntedActivity>())
+        foreach (
+            var item in report
+                .GetActivities()
+                .OfType<HuntedActivity>()
+                .OrderBy(x => x.Mortality.DateOfDeath)
+        )
         {
             var personalEntry = personalEntries.FirstOrDefault(
                 x => x.BagLimitEntry.Matches(item, report.Season)
@@ -99,19 +104,21 @@ public class BagLimitRule : Rule
                 personalEntries.Add(personalEntry);
             }
 
-            if (personalEntry.Total + 1 > personalEntry.BagLimitEntry.MaxValue)
+            var isLimitExceeded = personalEntry.Increase(context, personalEntries);
+
+            if (isLimitExceeded)
             {
                 violations.Add(
                     new Violation
                     {
+                        Activity = item,
+                        Rule = Violation.RuleType.BagLimit,
                         Description =
-                            $"Bag limit exceeded for {personalEntry.BagLimitEntry.Species} in {personalEntry.BagLimitEntry.Area} for {personalEntry.BagLimitEntry.Season} season",
-                        //Severity = ViolationSeverity.Major
+                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {personalEntry.BagLimitEntry.Area} for {personalEntry.BagLimitEntry.Season} season.",
+                        Severity = Violation.ViolationSeverity.Illegal
                     }
                 );
             }
-
-            personalEntry.Increase(context, personalEntries);
         }
 
         return violations.Count == 0 ? RuleResult.IsLegal : RuleResult.IsIllegal(violations);

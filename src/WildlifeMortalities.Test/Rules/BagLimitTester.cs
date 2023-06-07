@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
@@ -14,6 +16,83 @@ namespace WildlifeMortalities.Test.Rules;
 
 public class BagLimitTester
 {
+    private static AppDbContext GetContext()
+    {
+        var builder = new DbContextOptionsBuilder<AppDbContext>();
+        var caller = new StackTrace().GetFrame(1)!.GetMethod()!;
+        var callerMethodName = caller.Name;
+        builder.UseInMemoryDatabase(callerMethodName);
+
+        return new AppDbContext(builder.Options);
+    }
+
+    private static void GenerateBagLimitDefaults(
+        out AppDbContext context,
+        out Report report,
+        Action<BagLimitEntryPerPerson, AppDbContext>? personEntryModifier = null,
+        Action<BagLimitEntry, AppDbContext>? entryModifier = null,
+        Func<GameManagementArea, Season, PersonWithAuthorizations, Report>? reportModifier = null
+    )
+    {
+        context = GetContext();
+        var person = new Client { Id = 4 };
+
+        var area = new GameManagementArea
+        {
+            Zone = "4",
+            Subzone = "03",
+            Id = 10,
+        };
+
+        var activity = new HuntedActivity()
+        {
+            Mortality = new CaribouMortality()
+            {
+                DateOfDeath = new DateTimeOffset(2023, 4, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                Herd = CaribouMortality.CaribouHerd.Atlin,
+                Sex = Data.Enums.Sex.Male
+            },
+            GameManagementArea = area,
+        };
+
+        var season = new HuntingSeason(2023);
+
+        report =
+            reportModifier?.Invoke(area, season, person)
+            ?? new IndividualHuntedMortalityReport
+            {
+                HuntedActivity = activity,
+                Season = season,
+                Person = person,
+            };
+
+        var bagLimitEntry = new CaribouBagLimitEntry
+        {
+            Area = area,
+            Herd = CaribouMortality.CaribouHerd.Atlin,
+            MaxValue = 2,
+            Season = season,
+            SharedWith = Array.Empty<BagLimitEntry>(),
+        };
+
+        entryModifier?.Invoke(bagLimitEntry, context);
+
+        var personalBagLimit = new BagLimitEntryPerPerson
+        {
+            BagLimitEntry = bagLimitEntry,
+            Person = person,
+        };
+
+        personEntryModifier?.Invoke(personalBagLimit, context);
+
+        context.Reports.Add(report);
+        context.People.Add(person);
+        context.BagLimitEntries.Add(bagLimitEntry);
+        context.BagLimitEntriesPerPerson.Add(personalBagLimit);
+
+        context.SaveChanges();
+    }
+
     [Theory]
     [InlineData(typeof(HumanWildlifeConflictMortalityReport))]
     [InlineData(typeof(TrappedMortalitiesReport))]
@@ -46,7 +125,7 @@ public class BagLimitTester
         };
 
         var rule = new BagLimitRule();
-        using var context = new AppDbContext();
+        var context = GetContext();
 
         var result = await rule.Process(report, context);
         result.IsApplicable.Should().BeTrue();
@@ -76,11 +155,7 @@ public class BagLimitTester
         };
 
         var rule = new BagLimitRule();
-        var builder = new DbContextOptionsBuilder<AppDbContext>();
-        const string TestName = nameof(Process_WithUnconfiguredEntry_ReturnsViolation);
-        builder.UseInMemoryDatabase(TestName);
-
-        var context = new AppDbContext(builder.Options);
+        var context = GetContext();
 
         var result = await rule.Process(report, context);
         result.Violations.Should().ContainSingle();
@@ -88,12 +163,269 @@ public class BagLimitTester
 
         violation.Description
             .Should()
-            .Be(
+            .BeEquivalentTo(
                 "Bag limit has not been configured for Caribou in 4-03 for 23/24 season. Please report to service desk."
             );
         violation.Activity.Should().Be(report.HuntedActivity);
         violation.Severity.Should().Be(ViolationSeverity.InternalError);
         violation.Rule.Should().Be(RuleType.BagLimit);
+    }
+
+    [Fact]
+    public async Task Process_WithExceededLimit_ReturnsViolation()
+    {
+        GenerateBagLimitDefaults(
+            out var context,
+            out var report,
+            personEntryModifier: (entry, _) =>
+            {
+                entry.Increase(null!, null!).Should().BeFalse();
+                entry.Increase(null!, null!).Should().BeFalse();
+            }
+        );
+
+        var rule = new BagLimitRule();
+        var result = await rule.Process(report, context);
+        result.Violations.Should().ContainSingle();
+        var violation = result.Violations.First();
+
+        violation.Description
+            .Should()
+            .BeEquivalentTo("Bag limit exceeded for Caribou in 4-03 for 23/24 season.");
+        violation.Activity.Should().Be(report.GetActivities().First());
+        violation.Severity.Should().Be(ViolationSeverity.Illegal);
+        violation.Rule.Should().Be(RuleType.BagLimit);
+    }
+
+    [Fact]
+    public async Task Process_WithExceededLimitFromShared_ReturnsViolation()
+    {
+        GenerateBagLimitDefaults(
+            out var context,
+            out var report,
+            entryModifier: (entry, context) =>
+            {
+                var otherBagEntry = new BagLimitEntry
+                {
+                    Species = Data.Enums.Species.AmericanBlackBear,
+                    MaxValue = 1,
+                    Sex = Data.Enums.Sex.Male,
+                    SharedWith = Array.Empty<BagLimitEntry>(),
+                };
+
+                var otherPersonalBagEntry = new BagLimitEntryPerPerson
+                {
+                    BagLimitEntry = otherBagEntry,
+                };
+
+                otherPersonalBagEntry.Increase(null!, null!);
+
+                entry.SharedWith = new[] { otherBagEntry };
+
+                context.BagLimitEntries.Add(otherBagEntry);
+                context.BagLimitEntriesPerPerson.Add(otherPersonalBagEntry);
+            }
+        );
+
+        var rule = new BagLimitRule();
+        var result = await rule.Process(report, context);
+        result.Violations.Should().ContainSingle();
+        var violation = result.Violations.First();
+
+        violation.Description
+            .Should()
+            .BeEquivalentTo(
+                "Bag limit exceeded for Caribou and Black bear in 4-03 for 23/24 season."
+            );
+        violation.Activity.Should().Be(report.GetActivities().First());
+        violation.Severity.Should().Be(ViolationSeverity.Illegal);
+        violation.Rule.Should().Be(RuleType.BagLimit);
+    }
+
+    [Fact]
+    public async Task Process_WithSharedNotExceedingLimit_ReturnsNoViolation()
+    {
+        GenerateBagLimitDefaults(
+            out var context,
+            out var report,
+            entryModifier: (entry, context) =>
+            {
+                var otherBagEntry = new BagLimitEntry
+                {
+                    Species = Data.Enums.Species.AmericanBlackBear,
+                    MaxValue = 2,
+                    Sex = Data.Enums.Sex.Male,
+                    SharedWith = Array.Empty<BagLimitEntry>(),
+                };
+
+                var otherPersonalBagEntry = new BagLimitEntryPerPerson
+                {
+                    BagLimitEntry = otherBagEntry,
+                };
+
+                otherPersonalBagEntry.Increase(null!, null!);
+
+                entry.SharedWith = new[] { otherBagEntry };
+
+                context.BagLimitEntries.Add(otherBagEntry);
+                context.BagLimitEntriesPerPerson.Add(otherPersonalBagEntry);
+            }
+        );
+
+        var rule = new BagLimitRule();
+        var result = await rule.Process(report, context);
+        result.Violations.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Process_WithSharedNotExceedingLimit_AddNewPersonBagLimitEntry_AND_ReturnsNoViolation()
+    {
+        GenerateBagLimitDefaults(
+            out var context,
+            out var report,
+            entryModifier: (entry, context) =>
+            {
+                var otherBagEntry = new BagLimitEntry
+                {
+                    Species = Data.Enums.Species.AmericanBlackBear,
+                    MaxValue = 2,
+                    Sex = Data.Enums.Sex.Male,
+                    SharedWith = Array.Empty<BagLimitEntry>(),
+                };
+
+                entry.SharedWith = new[] { otherBagEntry };
+
+                context.BagLimitEntries.Add(otherBagEntry);
+            }
+        );
+
+        var rule = new BagLimitRule();
+        var result = await rule.Process(report, context);
+        result.Violations.Should().BeEmpty();
+
+        context.SaveChanges();
+        var personalEntry = context.BagLimitEntriesPerPerson.FirstOrDefault(
+            x => x.BagLimitEntry.Species == Data.Enums.Species.AmericanBlackBear
+        );
+        personalEntry.Should().NotBeNull();
+
+        personalEntry!.SharedValue.Should().Be(1);
+        personalEntry!.CurrentValue.Should().Be(0);
+        personalEntry!.Total.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task Process_WithExceededLimitOnSecondActivity_ReturnsViolation()
+    {
+        GenerateBagLimitDefaults(
+            out var context,
+            out var report,
+            reportModifier: (area, season, person) =>
+                new SpecialGuidedHuntReport()
+                {
+                    Client = (Client)person,
+                    HuntedActivities = new List<HuntedActivity>
+                    {
+                        new HuntedActivity()
+                        {
+                            Mortality = new CaribouMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    4,
+                                    3,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                Sex = Data.Enums.Sex.Male
+                            },
+                            GameManagementArea = area,
+                        },
+                        new HuntedActivity()
+                        {
+                            Mortality = new CaribouMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    4,
+                                    5,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                Sex = Data.Enums.Sex.Male
+                            },
+                            GameManagementArea = area,
+                        },
+                        new HuntedActivity()
+                        {
+                            Mortality = new CaribouMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    4,
+                                    2,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                Sex = Data.Enums.Sex.Male
+                            },
+                            GameManagementArea = area,
+                        },
+                        new HuntedActivity()
+                        {
+                            Mortality = new CaribouMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    4,
+                                    7,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                Sex = Data.Enums.Sex.Male
+                            },
+                            GameManagementArea = area,
+                        },
+                    },
+                    Season = season
+                }
+        );
+
+        var rule = new BagLimitRule();
+        var result = await rule.Process(report, context);
+        result.Violations.Should().HaveCount(2);
+        {
+            var violation = result.Violations.First();
+
+            violation.Description
+                .Should()
+                .BeEquivalentTo("Bag limit exceeded for caribou in 4-03 for 23/24 season.");
+            violation.Activity.Should().Be(report.GetActivities().ElementAt(1));
+            violation.Severity.Should().Be(ViolationSeverity.Illegal);
+            violation.Rule.Should().Be(RuleType.BagLimit);
+        }
+        {
+            var violation = result.Violations.Last();
+
+            violation.Description
+                .Should()
+                .BeEquivalentTo("Bag limit exceeded for caribou in 4-03 for 23/24 season.");
+            violation.Activity.Should().Be(report.GetActivities().Last());
+            violation.Severity.Should().Be(ViolationSeverity.Illegal);
+            violation.Rule.Should().Be(RuleType.BagLimit);
+        }
     }
 
     [Fact]
