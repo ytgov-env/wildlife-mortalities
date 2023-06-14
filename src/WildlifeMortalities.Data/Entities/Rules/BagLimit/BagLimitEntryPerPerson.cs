@@ -1,6 +1,5 @@
 ﻿using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Extensions;
-using static WildlifeMortalities.Data.Rules.BagLimitRule;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 

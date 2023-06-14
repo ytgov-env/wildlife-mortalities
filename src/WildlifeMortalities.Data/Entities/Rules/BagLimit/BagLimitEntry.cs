@@ -9,6 +9,8 @@ public class BagLimitEntry
     public Species Species { get; set; }
     public Sex? Sex { get; set; }
     public Season Season { get; set; } = null!;
+    public DateTimeOffset PeriodStart { get; set; }
+    public DateTimeOffset PeriodEnd { get; set; }
     public IEnumerable<BagLimitEntry> SharedWith { get; set; } = null!;
 
     public int MaxValue { get; set; }
@@ -18,6 +20,8 @@ public class BagLimitEntry
         return Area.Id == activity.GameManagementArea.Id
             && Species == activity.Mortality.Species
             && Season.Id == season.Id
+            && PeriodStart <= activity.Mortality.DateOfDeath
+            && PeriodEnd >= activity.Mortality.DateOfDeath
             && (!Sex.HasValue || Sex == activity.Mortality.Sex);
     }
 }
