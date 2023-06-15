@@ -14,27 +14,27 @@ using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Test.Rules;
 
-public static class ThreadSafeRandom
+internal static class ThreadSafeRandom
 {
-    private static readonly Random _globalRandom = new Random();
+    private static readonly Random s_globalRandom = new();
 
     [ThreadStatic]
-    private static Random? _localRandom;
+    private static Random? s_localRandom;
 
     public static int Next()
     {
-        if (_localRandom == null)
+        if (s_localRandom == null)
         {
             var seed = 0;
-            lock (_globalRandom)
+            lock (s_globalRandom)
             {
-                seed = _globalRandom.Next();
+                seed = s_globalRandom.Next();
             }
 
-            _localRandom = new Random(seed);
+            s_localRandom = new Random(seed);
         }
 
-        return _localRandom.Next();
+        return s_localRandom.Next();
     }
 }
 
@@ -90,11 +90,11 @@ public class BagLimitTester
 
         var bagLimitEntry = new CaribouBagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Herd = CaribouMortality.CaribouHerd.Atlin,
             MaxValue = 2,
             Season = season,
-            SharedWith = Array.Empty<BagLimitEntry>(),
+            SharedWithSpecies = new(),
             PeriodStart = season.StartDate,
             PeriodEnd = season.EndDate
         };
@@ -223,9 +223,9 @@ public class BagLimitTester
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValue = 1,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWith = Array.Empty<BagLimitEntry>(),
+                    SharedWithSpecies = new(),
                     Season = entry.Season,
-                    Area = entry.Area,
+                    Areas = entry.Areas.ToList(),
                 };
 
                 var otherPersonalBagEntry = new BagLimitEntryPerPerson
@@ -236,7 +236,7 @@ public class BagLimitTester
 
                 otherPersonalBagEntry.Increase(null!, null!);
 
-                entry.SharedWith = new[] { otherBagEntry };
+                entry.SharedWithSpecies = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagLimitEntriesPerPerson.Add(otherPersonalBagEntry);
@@ -271,7 +271,7 @@ public class BagLimitTester
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValue = 2,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWith = Array.Empty<BagLimitEntry>(),
+                    SharedWithSpecies = new(),
                 };
 
                 var otherPersonalBagEntry = new BagLimitEntryPerPerson
@@ -281,7 +281,7 @@ public class BagLimitTester
 
                 otherPersonalBagEntry.Increase(null!, null!);
 
-                entry.SharedWith = new[] { otherBagEntry };
+                entry.SharedWithSpecies = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagLimitEntriesPerPerson.Add(otherPersonalBagEntry);
@@ -306,10 +306,10 @@ public class BagLimitTester
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValue = 2,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWith = Array.Empty<BagLimitEntry>(),
+                    SharedWithSpecies = new(),
                 };
 
-                entry.SharedWith = new[] { otherBagEntry };
+                entry.SharedWithSpecies = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
             }
@@ -327,7 +327,7 @@ public class BagLimitTester
 
         personalEntry!.SharedValue.Should().Be(1);
         personalEntry!.CurrentValue.Should().Be(0);
-        personalEntry!.Total.Should().Be(1);
+        personalEntry!.TotalValue.Should().Be(1);
     }
 
     [Fact]
@@ -456,7 +456,7 @@ public class BagLimitTester
         };
         var entry = new BagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Season = season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose,
@@ -492,7 +492,7 @@ public class BagLimitTester
         };
         var entry = new BagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Season = season,
             Sex = null,
             Species = Data.Enums.Species.Moose,
@@ -525,7 +525,7 @@ public class BagLimitTester
         };
         var entry = new BagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Season = season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose,
@@ -558,7 +558,7 @@ public class BagLimitTester
         };
         var entry = new BagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Season = season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose
@@ -586,7 +586,7 @@ public class BagLimitTester
         };
         var entry = new BagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Season = season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose
@@ -613,7 +613,7 @@ public class BagLimitTester
         };
         var entry = new BagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Season = season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose
@@ -645,7 +645,7 @@ public class BagLimitTester
         };
         var entry = new BagLimitEntry
         {
-            Area = area,
+            Areas = new() { area },
             Season = season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose,

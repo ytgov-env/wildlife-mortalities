@@ -8,8 +8,7 @@ public class BagLimitEntryPerPerson
     public int Id { get; set; }
     public int CurrentValue { get; private set; }
     public int SharedValue { get; private set; }
-    public int Total => CurrentValue + SharedValue;
-
+    public int TotalValue => CurrentValue + SharedValue;
     public PersonWithAuthorizations Person { get; init; } = null!;
     public BagLimitEntry BagLimitEntry { get; init; } = null!;
 
@@ -17,7 +16,7 @@ public class BagLimitEntryPerPerson
     {
         var species = new List<Species> { BagLimitEntry.Species };
 
-        species.AddRange(BagLimitEntry.SharedWith.Select(x => x.Species));
+        species.AddRange(BagLimitEntry.SharedWithSpecies.Select(x => x.Species));
 
         return species.Select(x => x.GetDisplayName().ToLower()).ToArray();
     }
@@ -29,12 +28,12 @@ public class BagLimitEntryPerPerson
     {
         var hasExceeded = false;
         CurrentValue++;
-        if (Total > BagLimitEntry.MaxValue)
+        if (TotalValue > BagLimitEntry.MaxValue)
         {
             hasExceeded = true;
         }
 
-        foreach (var shared in BagLimitEntry.SharedWith)
+        foreach (var shared in BagLimitEntry.SharedWithSpecies)
         {
             var sharedPersonalEntry = personalEntries.FirstOrDefault(
                 x => x.BagLimitEntry == shared
@@ -52,7 +51,7 @@ public class BagLimitEntryPerPerson
             }
 
             sharedPersonalEntry.SharedValue++;
-            if (sharedPersonalEntry.Total > sharedPersonalEntry.BagLimitEntry.MaxValue)
+            if (sharedPersonalEntry.TotalValue > sharedPersonalEntry.BagLimitEntry.MaxValue)
             {
                 hasExceeded = true;
             }

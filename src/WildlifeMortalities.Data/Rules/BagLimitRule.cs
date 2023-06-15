@@ -114,7 +114,7 @@ public class BagLimitRule : Rule
                         Activity = item,
                         Rule = Violation.RuleType.BagLimit,
                         Description =
-                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {personalEntry.BagLimitEntry.Area} for {personalEntry.BagLimitEntry.Season} season.",
+                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {item.GameManagementArea} for {personalEntry.BagLimitEntry.Season} season.",
                         Severity = Violation.ViolationSeverity.Illegal
                     }
                 );
