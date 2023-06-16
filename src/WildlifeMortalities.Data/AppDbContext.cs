@@ -40,7 +40,7 @@ public class AppDbContext : DbContext
     public DbSet<RegisteredTrappingConcession> RegisteredTrappingConcessions =>
         Set<RegisteredTrappingConcession>();
 
-    public DbSet<BagLimitEntryPerPerson> BagLimitEntriesPerPerson => Set<BagLimitEntryPerPerson>();
+    public DbSet<BagEntry> BagEntries => Set<BagEntry>();
     public DbSet<BagLimitEntry> BagLimitEntries => Set<BagLimitEntry>();
 
     public DbSet<AppConfiguration> AppConfigurations => Set<AppConfiguration>();

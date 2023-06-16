@@ -14,6 +14,7 @@ public class Violation
     public enum RuleType
     {
         BagLimit = 10,
+        HarvestPeriod = 20,
     }
 
     public enum ViolationSeverity

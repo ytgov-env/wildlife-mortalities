@@ -4,6 +4,7 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Rules;
 
@@ -31,13 +32,13 @@ public class BagLimitRule : Rule
         Species.WoodBison
     };
 
-    private static async Task<IList<BagLimitEntryPerPerson>> GetCurrentBagCount(
+    private static async Task<IList<BagEntry>> GetCurrentBagCount(
         AppDbContext context,
         Season season,
         PersonWithAuthorizations person
     )
     {
-        return await context.BagLimitEntriesPerPerson
+        return await context.BagEntries
             .Where(x => x.BagLimitEntry.Season == season)
             .Where(x => x.Person == person)
             .ToListAsync();
@@ -85,22 +86,21 @@ public class BagLimitRule : Rule
                         new Violation
                         {
                             Activity = item,
-                            Rule = Violation.RuleType.BagLimit,
+                            Rule = Violation.RuleType.HarvestPeriod,
                             Description =
-                                $"Bag limit has not been configured for {item.Mortality.Species} in {item.GameManagementArea} for {report.Season} season. Please report to service desk.",
-                            Severity = Violation.ViolationSeverity.InternalError
+                                $"Area {item.GameManagementArea} is closed to hunting for {item.Mortality.Species.GetDisplayName().ToLower()} on {item.Mortality.DateOfDeath:yyyy-MM-dd}.",
+                            Severity = Violation.ViolationSeverity.Illegal
                         }
                     );
-                    continue;
                 }
 
-                personalEntry = new BagLimitEntryPerPerson
+                personalEntry = new BagEntry
                 {
                     BagLimitEntry = entry,
                     Person = report.GetPerson(),
                 };
 
-                context.BagLimitEntriesPerPerson.Add(personalEntry);
+                context.BagEntries.Add(personalEntry);
                 personalEntries.Add(personalEntry);
             }
 

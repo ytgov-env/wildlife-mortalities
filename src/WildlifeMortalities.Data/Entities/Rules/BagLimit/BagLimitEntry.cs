@@ -11,8 +11,11 @@ public class BagLimitEntry
     public Season Season { get; set; } = null!;
     public DateTimeOffset PeriodStart { get; set; }
     public DateTimeOffset PeriodEnd { get; set; }
-    public List<BagLimitEntry> SharedWithSpecies { get; set; } = null!;
-    public int MaxValue { get; set; }
+    public List<BagLimitEntry> SharedWith { get; set; } = null!;
+    public int MaxValuePerPerson { get; set; }
+
+    public int CurrentValue { get; set; }
+    public int? MaxValueForThreshold { get; set; }
 
     public virtual bool Matches(HuntedActivity activity, Season season)
     {

@@ -52,7 +52,7 @@ public class BagLimitTester
     private static void GenerateBagLimitDefaults(
         out AppDbContext context,
         out Report report,
-        Action<BagLimitEntryPerPerson, AppDbContext>? personEntryModifier = null,
+        Action<BagEntry, AppDbContext>? personEntryModifier = null,
         Action<BagLimitEntry, PersonWithAuthorizations, AppDbContext>? entryModifier = null,
         Func<GameManagementArea, Season, PersonWithAuthorizations, Report>? reportModifier = null
     )
@@ -92,27 +92,23 @@ public class BagLimitTester
         {
             Areas = new() { area },
             Herd = CaribouMortality.CaribouHerd.Atlin,
-            MaxValue = 2,
+            MaxValuePerPerson = 2,
             Season = season,
-            SharedWithSpecies = new(),
+            SharedWith = new(),
             PeriodStart = season.StartDate,
             PeriodEnd = season.EndDate
         };
 
         entryModifier?.Invoke(bagLimitEntry, person, context);
 
-        var personalBagLimit = new BagLimitEntryPerPerson
-        {
-            BagLimitEntry = bagLimitEntry,
-            Person = person,
-        };
+        var personalBagLimit = new BagEntry { BagLimitEntry = bagLimitEntry, Person = person, };
 
         personEntryModifier?.Invoke(personalBagLimit, context);
 
         context.Reports.Add(report);
         context.People.Add(person);
         context.BagLimitEntries.Add(bagLimitEntry);
-        context.BagLimitEntriesPerPerson.Add(personalBagLimit);
+        context.BagEntries.Add(personalBagLimit);
 
         context.SaveChanges();
     }
@@ -146,7 +142,7 @@ public class BagLimitTester
     }
 
     [Fact]
-    public async Task Process_WithUnconfiguredEntry_ReturnsViolation()
+    public async Task Process_WithNoEntry_ReturnsHarvestPeriodViolation()
     {
         var report = new IndividualHuntedMortalityReport
         {
@@ -176,12 +172,10 @@ public class BagLimitTester
 
         violation.Description
             .Should()
-            .BeEquivalentTo(
-                "Bag limit has not been configured for Caribou in 4-03 for 23/24 season. Please report to service desk."
-            );
+            .BeEquivalentTo("Area 4-03 is closed to hunting for caribou on 2023-04-01.");
         violation.Activity.Should().Be(report.HuntedActivity);
-        violation.Severity.Should().Be(ViolationSeverity.InternalError);
-        violation.Rule.Should().Be(RuleType.BagLimit);
+        violation.Severity.Should().Be(ViolationSeverity.Illegal);
+        violation.Rule.Should().Be(RuleType.HarvestPeriod);
     }
 
     [Fact]
@@ -221,14 +215,14 @@ public class BagLimitTester
                 var otherBagEntry = new BagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
-                    MaxValue = 1,
+                    MaxValuePerPerson = 1,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWithSpecies = new(),
+                    SharedWith = new(),
                     Season = entry.Season,
                     Areas = entry.Areas.ToList(),
                 };
 
-                var otherPersonalBagEntry = new BagLimitEntryPerPerson
+                var otherPersonalBagEntry = new BagEntry
                 {
                     BagLimitEntry = otherBagEntry,
                     Person = person,
@@ -236,10 +230,10 @@ public class BagLimitTester
 
                 otherPersonalBagEntry.Increase(null!, null!);
 
-                entry.SharedWithSpecies = new() { otherBagEntry };
+                entry.SharedWith = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
-                context.BagLimitEntriesPerPerson.Add(otherPersonalBagEntry);
+                context.BagEntries.Add(otherPersonalBagEntry);
             }
         );
 
@@ -269,22 +263,19 @@ public class BagLimitTester
                 var otherBagEntry = new BagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
-                    MaxValue = 2,
+                    MaxValuePerPerson = 2,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWithSpecies = new(),
+                    SharedWith = new(),
                 };
 
-                var otherPersonalBagEntry = new BagLimitEntryPerPerson
-                {
-                    BagLimitEntry = otherBagEntry,
-                };
+                var otherPersonalBagEntry = new BagEntry { BagLimitEntry = otherBagEntry, };
 
                 otherPersonalBagEntry.Increase(null!, null!);
 
-                entry.SharedWithSpecies = new() { otherBagEntry };
+                entry.SharedWith = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
-                context.BagLimitEntriesPerPerson.Add(otherPersonalBagEntry);
+                context.BagEntries.Add(otherPersonalBagEntry);
             }
         );
 
@@ -294,7 +285,7 @@ public class BagLimitTester
     }
 
     [Fact]
-    public async Task Process_WithSharedNotExceedingLimit_AddNewPersonBagLimitEntry_AND_ReturnsNoViolation()
+    public async Task Process_WithSharedNotExceedingLimit_AddNewPersonBagLimitEntry_ReturnsNoViolation()
     {
         GenerateBagLimitDefaults(
             out var context,
@@ -304,12 +295,12 @@ public class BagLimitTester
                 var otherBagEntry = new BagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
-                    MaxValue = 2,
+                    MaxValuePerPerson = 2,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWithSpecies = new(),
+                    SharedWith = new(),
                 };
 
-                entry.SharedWithSpecies = new() { otherBagEntry };
+                entry.SharedWith = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
             }
@@ -320,7 +311,7 @@ public class BagLimitTester
         result.Violations.Should().BeEmpty();
 
         context.SaveChanges();
-        var personalEntry = context.BagLimitEntriesPerPerson.FirstOrDefault(
+        var personalEntry = context.BagEntries.FirstOrDefault(
             x => x.BagLimitEntry.Species == Data.Enums.Species.AmericanBlackBear
         );
         personalEntry.Should().NotBeNull();

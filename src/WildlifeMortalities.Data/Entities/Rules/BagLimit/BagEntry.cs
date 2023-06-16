@@ -3,7 +3,7 @@ using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
-public class BagLimitEntryPerPerson
+public class BagEntry
 {
     public int Id { get; set; }
     public int CurrentValue { get; private set; }
@@ -16,42 +16,37 @@ public class BagLimitEntryPerPerson
     {
         var species = new List<Species> { BagLimitEntry.Species };
 
-        species.AddRange(BagLimitEntry.SharedWithSpecies.Select(x => x.Species));
+        species.AddRange(BagLimitEntry.SharedWith.Select(x => x.Species));
 
         return species.Select(x => x.GetDisplayName().ToLower()).ToArray();
     }
 
-    internal bool Increase(
-        AppDbContext context,
-        ICollection<BagLimitEntryPerPerson> personalEntries
-    )
+    internal bool Increase(AppDbContext context, ICollection<BagEntry> personalEntries)
     {
         var hasExceeded = false;
         CurrentValue++;
-        if (TotalValue > BagLimitEntry.MaxValue)
+        if (TotalValue > BagLimitEntry.MaxValuePerPerson)
         {
             hasExceeded = true;
         }
 
-        foreach (var shared in BagLimitEntry.SharedWithSpecies)
+        foreach (var shared in BagLimitEntry.SharedWith)
         {
             var sharedPersonalEntry = personalEntries.FirstOrDefault(
                 x => x.BagLimitEntry == shared
             );
             if (sharedPersonalEntry == null)
             {
-                sharedPersonalEntry = new BagLimitEntryPerPerson
-                {
-                    BagLimitEntry = shared,
-                    Person = Person,
-                };
+                sharedPersonalEntry = new BagEntry { BagLimitEntry = shared, Person = Person, };
 
                 personalEntries.Add(sharedPersonalEntry);
-                context.BagLimitEntriesPerPerson.Add(sharedPersonalEntry);
+                context.BagEntries.Add(sharedPersonalEntry);
             }
 
             sharedPersonalEntry.SharedValue++;
-            if (sharedPersonalEntry.TotalValue > sharedPersonalEntry.BagLimitEntry.MaxValue)
+            if (
+                sharedPersonalEntry.TotalValue > sharedPersonalEntry.BagLimitEntry.MaxValuePerPerson
+            )
             {
                 hasExceeded = true;
             }
