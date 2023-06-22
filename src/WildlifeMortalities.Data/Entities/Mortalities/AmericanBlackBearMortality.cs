@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -23,5 +24,5 @@ public class AmericanBlackBearMortality : Mortality<AmericanBlackBearMortality>,
 public class AmericanBlackBearMortalityConfig : IEntityTypeConfiguration<AmericanBlackBearMortality>
 {
     public void Configure(EntityTypeBuilder<AmericanBlackBearMortality> builder) =>
-        builder.ToTable("Mortalities");
+        builder.ToTable(TableNameConstants.Mortalities);
 }

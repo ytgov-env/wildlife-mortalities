@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -15,7 +16,7 @@ public class CollaredActivityConfig : IEntityTypeConfiguration<CollaredActivity>
 {
     public void Configure(EntityTypeBuilder<CollaredActivity> builder) =>
         builder
-            .ToTable("Activities")
+            .ToTable(TableNameConstants.Activities)
             .HasOne(x => x.Report)
             .WithOne(x => x.Activity)
             .OnDelete(DeleteBehavior.NoAction);

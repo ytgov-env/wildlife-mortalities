@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -118,5 +119,5 @@ public class CaribouMortality : Mortality, IHasBioSubmission
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>
 {
     public void Configure(EntityTypeBuilder<CaribouMortality> builder) =>
-        builder.ToTable("Mortalities");
+        builder.ToTable(TableNameConstants.Mortalities);
 }

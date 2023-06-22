@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
-using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-public class HuntedActivity : Activity
+public class HuntedActivity : HarvestActivity
 {
     [Column($"{nameof(HuntedActivity)}_{nameof(GameManagementAreaId)}")]
     public int GameManagementAreaId { get; set; }
@@ -26,11 +26,10 @@ public class HuntedActivity : Activity
     [Column($"{nameof(HuntedActivity)}_{nameof(SpecialGuidedHuntReportId)}")]
     public int? SpecialGuidedHuntReportId { get; set; }
     public SpecialGuidedHuntReport? SpecialGuidedHuntReport { get; set; }
-    public ActivityQueueItem ActivityQueueItem { get; set; } = null!;
 }
 
 public class HuntedActivityConfig : IEntityTypeConfiguration<HuntedActivity>
 {
     public void Configure(EntityTypeBuilder<HuntedActivity> builder) =>
-        builder.ToTable("Activities");
+        builder.ToTable(TableNameConstants.Activities);
 }

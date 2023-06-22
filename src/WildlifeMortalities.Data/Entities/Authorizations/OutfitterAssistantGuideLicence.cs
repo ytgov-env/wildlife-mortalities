@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -30,5 +31,5 @@ public class OutfitterAssistantGuideLicenceConfig
     : IEntityTypeConfiguration<OutfitterAssistantGuideLicence>
 {
     public void Configure(EntityTypeBuilder<OutfitterAssistantGuideLicence> builder) =>
-        builder.ToTable("Authorizations");
+        builder.ToTable(TableNameConstants.Authorizations);
 }

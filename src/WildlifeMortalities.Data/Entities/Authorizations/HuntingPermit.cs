@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Extensions;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -111,5 +112,5 @@ public class HuntingPermit : Authorization
 public class HuntingPermitConfig : IEntityTypeConfiguration<HuntingPermit>
 {
     public void Configure(EntityTypeBuilder<HuntingPermit> builder) =>
-        builder.ToTable("Authorizations");
+        builder.ToTable(TableNameConstants.Authorizations);
 }

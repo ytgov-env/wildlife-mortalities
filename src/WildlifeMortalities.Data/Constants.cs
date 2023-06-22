@@ -2,6 +2,40 @@
 
 public static class Constants
 {
+    public static class TableNameConstants
+    {
+        public const string Activities = "Activities";
+        public const string ActivityAuthorization = "ActivityAuthorization";
+        public const string ActivityQueueItems = "ActivityQueueItems";
+        public const string AppConfigurations = "AppConfigurations";
+        public const string AssistantGuideOutfitterGuidedHuntReport =
+            "AssistantGuideOutfitterGuidedHuntReport";
+        public const string Authorizations = "Authorizations";
+        public const string BagEntries = "BagEntries";
+        public const string BagLimitEntries = "BagLimitEntries";
+        public const string BigGameHuntingLicenceOutfitterArea =
+            "BigGameHuntingLicenceOutfitterArea";
+        public const string BioSubmissions = "BioSubmissions";
+        public const string DraftReports = "DraftReports";
+        public const string GameManagementAreas = "GameManagementAreas";
+        public const string InvalidAuthorizations = "InvalidAuthorizations";
+        public const string Mortalities = "Mortalities";
+        public const string OutfitterAreaOutfitterAssistantGuideLicence =
+            "OutfitterAreaOutfitterAssistantGuideLicence";
+        public const string OutfitterAreaOutfitterChiefGuideLicence =
+            "OutfitterAreaOutfitterChiefGuideLicence";
+        public const string OutfitterAreas = "OutfitterAreas";
+        public const string OutfitterAreaSmallGameHuntingLicence =
+            "OutfitterAreaSmallGameHuntingLicence";
+        public const string People = "People";
+        public const string RegisteredTrappingConcessions = "RegisteredTrappingConcessions";
+        public const string ReportPdf = "ReportPdf";
+        public const string Reports = "Reports";
+        public const string Seasons = "Seasons";
+        public const string Users = "Users";
+        public const string Violations = "Violations";
+    }
+
     public static class SpeciesConstants
     {
         public const string AmericanBeaver = "Beaver";

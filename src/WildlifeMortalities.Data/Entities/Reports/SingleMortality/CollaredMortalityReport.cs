@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -32,5 +33,5 @@ public class CollaredMortalityReport : Report, ISingleMortalityReport
 public class CollaredMortalityReportConfig : IEntityTypeConfiguration<CollaredMortalityReport>
 {
     public void Configure(EntityTypeBuilder<CollaredMortalityReport> builder) =>
-        builder.ToTable("Reports");
+        builder.ToTable(TableNameConstants.Reports);
 }

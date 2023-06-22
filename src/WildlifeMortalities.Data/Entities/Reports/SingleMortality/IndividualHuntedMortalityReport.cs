@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -34,7 +35,7 @@ public class IndividualHuntedMortalityReportConfig
 {
     public void Configure(EntityTypeBuilder<IndividualHuntedMortalityReport> builder)
     {
-        builder.ToTable("Reports");
+        builder.ToTable(TableNameConstants.Reports);
         builder.HasOne(h => h.HuntedActivity).WithOne(i => i.IndividualHuntedMortalityReport);
     }
 }

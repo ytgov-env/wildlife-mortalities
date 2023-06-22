@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Authorizations;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities;
 
@@ -46,7 +47,10 @@ public class SeasonConfig<T> : IEntityTypeConfiguration<T>
 {
     public virtual void Configure(EntityTypeBuilder<T> builder)
     {
-        builder.ToTable("Seasons").HasIndex(s => new { s.StartDate, s.EndDate }).IsUnique();
+        builder
+            .ToTable(TableNameConstants.Seasons)
+            .HasIndex(s => new { s.StartDate, s.EndDate })
+            .IsUnique();
         builder.HasMany(s => s.Reports).WithOne(r => (T)r.Season);
     }
 }

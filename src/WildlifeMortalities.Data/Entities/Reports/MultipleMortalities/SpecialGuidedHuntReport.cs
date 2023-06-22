@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
@@ -56,7 +57,7 @@ public class SpecialGuidedHuntReportConfig : IEntityTypeConfiguration<SpecialGui
     public void Configure(EntityTypeBuilder<SpecialGuidedHuntReport> builder)
     {
         builder
-            .ToTable("Reports")
+            .ToTable(TableNameConstants.Reports)
             .HasOne(m => m.Guide)
             .WithMany(m => m.SpecialGuidedHuntReportsAsGuide)
             .OnDelete(DeleteBehavior.NoAction);

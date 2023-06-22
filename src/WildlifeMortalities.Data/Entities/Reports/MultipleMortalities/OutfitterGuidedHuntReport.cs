@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
@@ -72,7 +73,7 @@ public class OutfitterGuidedHuntReportConfig : IEntityTypeConfiguration<Outfitte
     public void Configure(EntityTypeBuilder<OutfitterGuidedHuntReport> builder)
     {
         builder
-            .ToTable("Reports")
+            .ToTable(TableNameConstants.Reports)
             .HasOne(t => t.Client)
             .WithMany(t => t.OutfitterGuidedHuntReportsAsClient)
             .OnDelete(DeleteBehavior.NoAction);

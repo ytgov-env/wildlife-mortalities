@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -20,5 +21,6 @@ public abstract class Activity
 
 public class ActivityConfig : IEntityTypeConfiguration<Activity>
 {
-    public void Configure(EntityTypeBuilder<Activity> builder) => builder.ToTable("Activities");
+    public void Configure(EntityTypeBuilder<Activity> builder) =>
+        builder.ToTable(TableNameConstants.Activities);
 }

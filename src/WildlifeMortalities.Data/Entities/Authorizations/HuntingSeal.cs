@@ -74,5 +74,5 @@ public class HuntingSeal : Authorization
 public class SealConfig : IEntityTypeConfiguration<HuntingSeal>
 {
     public void Configure(EntityTypeBuilder<HuntingSeal> builder) =>
-        builder.ToTable("Authorizations");
+        builder.ToTable(TableNameConstants.Authorizations);
 }

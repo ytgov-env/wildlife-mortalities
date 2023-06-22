@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -28,7 +29,7 @@ public class MortalityConfig<T> : IEntityTypeConfiguration<T>
 {
     public void Configure(EntityTypeBuilder<T> builder)
     {
-        builder.ToTable("Mortalities");
+        builder.ToTable(TableNameConstants.Mortalities);
         builder.Property(m => m.Latitude).HasPrecision(10, 8);
         builder.Property(m => m.Longitude).HasPrecision(11, 8);
         builder.Property(m => m.Sex).IsRequired();

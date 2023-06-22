@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -34,7 +35,7 @@ public class SpecialGuideLicenceConfig : IEntityTypeConfiguration<SpecialGuideLi
 {
     public void Configure(EntityTypeBuilder<SpecialGuideLicence> builder)
     {
-        builder.ToTable("Authorizations");
+        builder.ToTable(TableNameConstants.Authorizations);
         builder
             .HasOne(s => s.GuidedClient)
             .WithMany(c => c.SpecialGuideLicencesAsClient)

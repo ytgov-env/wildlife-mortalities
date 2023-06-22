@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using System.ComponentModel.DataAnnotations.Schema;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -17,7 +18,7 @@ public class HumanWildlifeConflictActivityConfig
 {
     public void Configure(EntityTypeBuilder<HumanWildlifeConflictActivity> builder) =>
         builder
-            .ToTable("Activities")
+            .ToTable(TableNameConstants.Activities)
             .HasOne(x => x.Report)
             .WithMany(x => x.ConflictActivities)
             .OnDelete(DeleteBehavior.NoAction);

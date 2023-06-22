@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Extensions;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -64,5 +65,5 @@ public class TrappingLicence : Authorization
 public class TrappingLicenceConfig : IEntityTypeConfiguration<TrappingLicence>
 {
     public void Configure(EntityTypeBuilder<TrappingLicence> builder) =>
-        builder.ToTable("Authorizations");
+        builder.ToTable(TableNameConstants.Authorizations);
 }

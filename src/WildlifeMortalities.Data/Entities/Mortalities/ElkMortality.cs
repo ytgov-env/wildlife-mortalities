@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Mortalities;
 
@@ -29,5 +30,5 @@ public class ElkMortality : Mortality, IHasBioSubmission
 public class ElkMortalityConfig : IEntityTypeConfiguration<ElkMortality>
 {
     public void Configure(EntityTypeBuilder<ElkMortality> builder) =>
-        builder.ToTable("Mortalities");
+        builder.ToTable(TableNameConstants.Mortalities);
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
@@ -29,7 +30,7 @@ public class WolverineBioSubmissionConfig : IEntityTypeConfiguration<WolverineBi
     public void Configure(EntityTypeBuilder<WolverineBioSubmission> builder)
     {
         builder
-            .ToTable("BioSubmissions")
+            .ToTable(TableNameConstants.BioSubmissions)
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);

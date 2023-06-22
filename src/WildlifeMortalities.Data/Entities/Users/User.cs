@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Reports;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Users;
 
@@ -20,7 +21,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("Users").OwnsOne(x => x.Settings).WithOwner();
+        builder.ToTable(TableNameConstants.Users).OwnsOne(x => x.Settings).WithOwner();
         builder
             .HasMany(x => x.CreatedReports)
             .WithOne(x => x.CreatedBy)

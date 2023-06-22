@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
@@ -59,7 +60,7 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
     public void Configure(EntityTypeBuilder<ThinhornSheepBioSubmission> builder)
     {
         builder
-            .ToTable("BioSubmissions")
+            .ToTable(TableNameConstants.BioSubmissions)
             .HasOne(b => b.Mortality)
             .WithOne(m => m.BioSubmission)
             .OnDelete(DeleteBehavior.ClientCascade);
