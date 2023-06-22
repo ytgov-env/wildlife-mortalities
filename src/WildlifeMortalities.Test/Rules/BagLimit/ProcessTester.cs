@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
@@ -10,40 +11,18 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Rules;
+using WildlifeMortalities.Test.Helpers;
+using Xunit;
 using static WildlifeMortalities.Data.Entities.Violation;
 
-namespace WildlifeMortalities.Test.Rules;
+namespace WildlifeMortalities.Test.Rules.BagLimit;
 
-internal static class ThreadSafeRandom
-{
-    private static readonly Random s_globalRandom = new();
-
-    [ThreadStatic]
-    private static Random? s_localRandom;
-
-    public static int Next()
-    {
-        if (s_localRandom == null)
-        {
-            var seed = 0;
-            lock (s_globalRandom)
-            {
-                seed = s_globalRandom.Next();
-            }
-
-            s_localRandom = new Random(seed);
-        }
-
-        return s_localRandom.Next();
-    }
-}
-
-public class BagLimitTester
+public class ProcessTester
 {
     private static AppDbContext GetContext()
     {
-        var contextName = ThreadSafeRandom.Next().ToString();
         var builder = new DbContextOptionsBuilder<AppDbContext>();
+        var contextName = ThreadSafeRandom.Next().ToString();
         builder.UseInMemoryDatabase(contextName);
 
         return new AppDbContext(builder.Options);
@@ -52,8 +31,8 @@ public class BagLimitTester
     private static void GenerateBagLimitDefaults(
         out AppDbContext context,
         out Report report,
-        Action<BagEntry, AppDbContext>? personEntryModifier = null,
-        Action<BagLimitEntry, PersonWithAuthorizations, AppDbContext>? entryModifier = null,
+        Action<BagEntry, Report, AppDbContext>? personEntryModifier = null,
+        Action<BagLimitEntry, PersonWithAuthorizations, Report, AppDbContext>? entryModifier = null,
         Func<GameManagementArea, Season, PersonWithAuthorizations, Report>? reportModifier = null
     )
     {
@@ -91,19 +70,19 @@ public class BagLimitTester
         var bagLimitEntry = new CaribouBagLimitEntry
         {
             Areas = new() { area },
-            Herd = CaribouMortality.CaribouHerd.Atlin,
+            Herds = new() { CaribouMortality.CaribouHerd.Atlin },
             MaxValuePerPerson = 2,
             Season = season,
-            SharedWith = new(),
+            SharedWithDifferentSpeciesAndOrSex = new(),
             PeriodStart = season.StartDate,
             PeriodEnd = season.EndDate
         };
 
-        entryModifier?.Invoke(bagLimitEntry, person, context);
+        entryModifier?.Invoke(bagLimitEntry, person, report, context);
 
         var personalBagLimit = new BagEntry { BagLimitEntry = bagLimitEntry, Person = person, };
 
-        personEntryModifier?.Invoke(personalBagLimit, context);
+        personEntryModifier?.Invoke(personalBagLimit, report, context);
 
         context.Reports.Add(report);
         context.People.Add(person);
@@ -184,10 +163,16 @@ public class BagLimitTester
         GenerateBagLimitDefaults(
             out var context,
             out var report,
-            personEntryModifier: (entry, _) =>
+            personEntryModifier: (entry, report, _) =>
             {
-                entry.Increase(null!, null!).Should().BeFalse();
-                entry.Increase(null!, null!).Should().BeFalse();
+                entry
+                    .Increase(null!, (HuntedActivity)report.GetActivities().First(), null!)
+                    .Should()
+                    .BeFalse();
+                entry
+                    .Increase(null!, (HuntedActivity)report.GetActivities().First(), null!)
+                    .Should()
+                    .BeFalse();
             }
         );
 
@@ -210,14 +195,14 @@ public class BagLimitTester
         GenerateBagLimitDefaults(
             out var context,
             out var report,
-            entryModifier: (entry, person, context) =>
+            entryModifier: (entry, person, report, context) =>
             {
                 var otherBagEntry = new BagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValuePerPerson = 1,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWith = new(),
+                    SharedWithDifferentSpeciesAndOrSex = new(),
                     Season = entry.Season,
                     Areas = entry.Areas.ToList(),
                 };
@@ -228,9 +213,13 @@ public class BagLimitTester
                     Person = person,
                 };
 
-                otherPersonalBagEntry.Increase(null!, null!);
+                otherPersonalBagEntry.Increase(
+                    null!,
+                    (HuntedActivity)report.GetActivities().First(),
+                    null!
+                );
 
-                entry.SharedWith = new() { otherBagEntry };
+                entry.SharedWithDifferentSpeciesAndOrSex = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagEntries.Add(otherPersonalBagEntry);
@@ -258,21 +247,25 @@ public class BagLimitTester
         GenerateBagLimitDefaults(
             out var context,
             out var report,
-            entryModifier: (entry, _, context) =>
+            entryModifier: (entry, _, report, context) =>
             {
                 var otherBagEntry = new BagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValuePerPerson = 2,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWith = new(),
+                    SharedWithDifferentSpeciesAndOrSex = new(),
                 };
 
                 var otherPersonalBagEntry = new BagEntry { BagLimitEntry = otherBagEntry, };
 
-                otherPersonalBagEntry.Increase(null!, null!);
+                otherPersonalBagEntry.Increase(
+                    null!,
+                    (HuntedActivity)report.GetActivities().First(),
+                    null!
+                );
 
-                entry.SharedWith = new() { otherBagEntry };
+                entry.SharedWithDifferentSpeciesAndOrSex = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagEntries.Add(otherPersonalBagEntry);
@@ -290,17 +283,17 @@ public class BagLimitTester
         GenerateBagLimitDefaults(
             out var context,
             out var report,
-            entryModifier: (entry, _, context) =>
+            entryModifier: (entry, _, _, context) =>
             {
                 var otherBagEntry = new BagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValuePerPerson = 2,
                     Sex = Data.Enums.Sex.Male,
-                    SharedWith = new(),
+                    SharedWithDifferentSpeciesAndOrSex = new(),
                 };
 
-                entry.SharedWith = new() { otherBagEntry };
+                entry.SharedWithDifferentSpeciesAndOrSex = new() { otherBagEntry };
 
                 context.BagLimitEntries.Add(otherBagEntry);
             }
@@ -433,242 +426,7 @@ public class BagLimitTester
             violation.Severity.Should().Be(ViolationSeverity.Illegal);
             violation.Rule.Should().Be(RuleType.BagLimit);
         }
-    }
 
-    [Fact]
-    public void Matches_WithMatching_ReturnsTrue()
-    {
-        var season = new HuntingSeason(2023);
-        var area = new GameManagementArea
-        {
-            Zone = "4",
-            Subzone = "03",
-            Id = 10,
-        };
-        var entry = new BagLimitEntry
-        {
-            Areas = new() { area },
-            Season = season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate
-        };
-
-        var activity = new HuntedActivity
-        {
-            Mortality = new MooseMortality
-            {
-                Sex = Data.Enums.Sex.Male,
-                DateOfDeath = season.StartDate.AddDays(2)
-            },
-            GameManagementArea = area,
-        };
-
-        entry.Matches(activity, season).Should().BeTrue();
-    }
-
-    [Theory]
-    [InlineData(Data.Enums.Sex.Male)]
-    [InlineData(Data.Enums.Sex.Female)]
-    [InlineData(Data.Enums.Sex.Unknown)]
-    public void Matches_WithMatching_NoSexSpecified_ReturnsTrue(Data.Enums.Sex sex)
-    {
-        var season = new HuntingSeason(2023);
-        var area = new GameManagementArea
-        {
-            Zone = "4",
-            Subzone = "03",
-            Id = 10,
-        };
-        var entry = new BagLimitEntry
-        {
-            Areas = new() { area },
-            Season = season,
-            Sex = null,
-            Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate
-        };
-
-        var activity = new HuntedActivity
-        {
-            Mortality = new MooseMortality
-            {
-                Sex = sex,
-                DateOfDeath = season.StartDate.AddDays(20)
-            },
-            GameManagementArea = area,
-        };
-
-        entry.Matches(activity, season).Should().BeTrue();
-    }
-
-    [Fact]
-    public void Matches_WithDifferentSex_ReturnsFalse()
-    {
-        var season = new HuntingSeason(2023);
-        var area = new GameManagementArea
-        {
-            Zone = "4",
-            Subzone = "03",
-            Id = 10,
-        };
-        var entry = new BagLimitEntry
-        {
-            Areas = new() { area },
-            Season = season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate
-        };
-
-        var activity = new HuntedActivity
-        {
-            Mortality = new MooseMortality
-            {
-                Sex = Data.Enums.Sex.Female,
-                DateOfDeath = season.StartDate.AddDays(2)
-            },
-            GameManagementArea = area,
-        };
-
-        entry.Matches(activity, season).Should().BeFalse();
-    }
-
-    [Fact]
-    public void Matches_WithDifferentSpecies_ReturnsFalse()
-    {
-        var season = new HuntingSeason(2023);
-        var area = new GameManagementArea
-        {
-            Zone = "4",
-            Subzone = "03",
-            Id = 10,
-        };
-        var entry = new BagLimitEntry
-        {
-            Areas = new() { area },
-            Season = season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose
-        };
-
-        var activity = new HuntedActivity
-        {
-            Mortality = new CaribouMortality { Sex = Data.Enums.Sex.Male },
-            GameManagementArea = area,
-        };
-
-        entry.Matches(activity, season).Should().BeFalse();
-    }
-
-    [Fact]
-    public void Matches_WithDifferentSeason_ReturnsFalse()
-    {
-        var season = new HuntingSeason(2023) { Id = 1 };
-        var season2 = new HuntingSeason(2024) { Id = 2 };
-        var area = new GameManagementArea
-        {
-            Zone = "4",
-            Subzone = "03",
-            Id = 10,
-        };
-        var entry = new BagLimitEntry
-        {
-            Areas = new() { area },
-            Season = season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose
-        };
-
-        var activity = new HuntedActivity
-        {
-            Mortality = new MooseMortality { Sex = Data.Enums.Sex.Male },
-            GameManagementArea = area,
-        };
-
-        entry.Matches(activity, season2).Should().BeFalse();
-    }
-
-    [Fact]
-    public void Matches_WithDifferentArea_ReturnsFalse()
-    {
-        var season = new HuntingSeason(2023);
-        var area = new GameManagementArea
-        {
-            Zone = "4",
-            Subzone = "03",
-            Id = 10,
-        };
-        var entry = new BagLimitEntry
-        {
-            Areas = new() { area },
-            Season = season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose
-        };
-
-        var activity = new HuntedActivity
-        {
-            Mortality = new MooseMortality { Sex = Data.Enums.Sex.Male },
-            GameManagementArea = new GameManagementArea
-            {
-                Zone = "4",
-                Subzone = "02",
-                Id = 9
-            },
-        };
-
-        entry.Matches(activity, season).Should().BeFalse();
-    }
-
-    [Fact]
-    public void Matches_WithDifferentPeriod_ReturnsFalse()
-    {
-        var season = new HuntingSeason(2023);
-        var area = new GameManagementArea
-        {
-            Zone = "4",
-            Subzone = "03",
-            Id = 10,
-        };
-        var entry = new BagLimitEntry
-        {
-            Areas = new() { area },
-            Season = season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate.AddDays(1),
-            PeriodEnd = season.EndDate.AddDays(-1)
-        };
-
-        {
-            var activity = new HuntedActivity
-            {
-                Mortality = new MooseMortality
-                {
-                    Sex = Data.Enums.Sex.Male,
-                    DateOfDeath = entry.PeriodStart.AddDays(-1)
-                },
-                GameManagementArea = area,
-            };
-
-            entry.Matches(activity, season).Should().BeFalse();
-        }
-        {
-            var activity = new HuntedActivity
-            {
-                Mortality = new MooseMortality
-                {
-                    Sex = Data.Enums.Sex.Male,
-                    DateOfDeath = entry.PeriodEnd.AddDays(1)
-                },
-                GameManagementArea = area,
-            };
-
-            entry.Matches(activity, season).Should().BeFalse();
-        }
+        context.BagLimitEntries.First().ActivityQueue.Should().HaveCount(4);
     }
 }

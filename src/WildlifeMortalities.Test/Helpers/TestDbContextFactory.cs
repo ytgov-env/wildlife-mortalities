@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 
-namespace WildlifeMortalities.Test;
+namespace WildlifeMortalities.Test.Helpers;
 
 public class TestDbContextFactory : IDbContextFactory<AppDbContext>
 {

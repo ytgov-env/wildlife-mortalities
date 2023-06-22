@@ -1,7 +1,7 @@
 ﻿using WildlifeMortalities.App.Features.Shared.Mortalities;
-using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Test.Helpers;
 
 namespace WildlifeMortalities.Test;
 
@@ -19,11 +19,7 @@ public class ViewModelTester
                 continue;
             }
 
-            var ownProperties = type.GetProperties(
-                    System.Reflection.BindingFlags.Public
-                        | System.Reflection.BindingFlags.Instance
-                        | System.Reflection.BindingFlags.DeclaredOnly
-                )
+            var ownProperties = type.GetPublicNoneBaseProperties()
                 .Where(
                     x =>
                         x.CanWrite == true
