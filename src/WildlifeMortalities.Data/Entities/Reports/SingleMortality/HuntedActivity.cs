@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -25,6 +26,7 @@ public class HuntedActivity : Activity
     [Column($"{nameof(HuntedActivity)}_{nameof(SpecialGuidedHuntReportId)}")]
     public int? SpecialGuidedHuntReportId { get; set; }
     public SpecialGuidedHuntReport? SpecialGuidedHuntReport { get; set; }
+    public ActivityQueueItem ActivityQueueItem { get; set; } = null!;
 }
 
 public class HuntedActivityConfig : IEntityTypeConfiguration<HuntedActivity>

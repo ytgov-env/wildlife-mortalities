@@ -39,6 +39,10 @@ public class BagLimitRule : Rule
     )
     {
         return await context.BagEntries
+            .Include(x => x.BagLimitEntry)
+            .ThenInclude(x => x.ActivityQueue)
+            .ThenInclude(x => x.Activity)
+            .ThenInclude(x => x.Mortality)
             .Where(x => x.BagLimitEntry.Season == season)
             .Where(x => x.Person == person)
             .ToListAsync();
@@ -59,39 +63,44 @@ public class BagLimitRule : Rule
         var violations = new List<Violation>();
         var personalEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
         foreach (
-            var item in report
+            var activity in report
                 .GetActivities()
                 .OfType<HuntedActivity>()
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
             var personalEntry = personalEntries.FirstOrDefault(
-                x => x.BagLimitEntry.Matches(item, report.Season)
+                x => x.BagLimitEntry.Matches(activity, report.Season)
             );
             if (personalEntry == null)
             {
                 var entry = (
                     await context.BagLimitEntries
+                        .Include(x => x.ActivityQueue)
+                        .ThenInclude(x => x.Activity)
+                        .ThenInclude(x => x.Mortality)
                         .Where(
                             x =>
                                 x.Season.Id == report.Season.Id
-                                && x.Species == item.Mortality.Species
+                                && x.Species == activity.Mortality.Species
                         )
                         .ToArrayAsync()
-                ).FirstOrDefault(x => x.Matches(item, report.Season));
+                ).FirstOrDefault(x => x.Matches(activity, report.Season));
 
                 if (entry == null)
                 {
                     violations.Add(
                         new Violation
                         {
-                            Activity = item,
+                            Activity = activity,
                             Rule = Violation.RuleType.HarvestPeriod,
                             Description =
-                                $"Area {item.GameManagementArea} is closed to hunting for {item.Mortality.Species.GetDisplayName().ToLower()} on {item.Mortality.DateOfDeath:yyyy-MM-dd}.",
+                                $"Area {activity.GameManagementArea} is closed to hunting for {activity.Mortality.Species.GetDisplayName().ToLower()} on {activity.Mortality.DateOfDeath:yyyy-MM-dd}.",
                             Severity = Violation.ViolationSeverity.Illegal
                         }
                     );
+
+                    continue;
                 }
 
                 personalEntry = new BagEntry
@@ -104,17 +113,17 @@ public class BagLimitRule : Rule
                 personalEntries.Add(personalEntry);
             }
 
-            var isLimitExceeded = personalEntry.Increase(context, personalEntries);
+            var isLimitExceeded = personalEntry.Increase(context, activity, personalEntries);
 
             if (isLimitExceeded)
             {
                 violations.Add(
                     new Violation
                     {
-                        Activity = item,
+                        Activity = activity,
                         Rule = Violation.RuleType.BagLimit,
                         Description =
-                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {item.GameManagementArea} for {personalEntry.BagLimitEntry.Season} season.",
+                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {activity.GameManagementArea} for {personalEntry.BagLimitEntry.Season} season.",
                         Severity = Violation.ViolationSeverity.Illegal
                     }
                 );

@@ -1,4 +1,5 @@
 ﻿using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
@@ -16,12 +17,16 @@ public class BagEntry
     {
         var species = new List<Species> { BagLimitEntry.Species };
 
-        species.AddRange(BagLimitEntry.SharedWith.Select(x => x.Species));
+        species.AddRange(BagLimitEntry.SharedWithDifferentSpeciesAndOrSex.Select(x => x.Species));
 
         return species.Select(x => x.GetDisplayName().ToLower()).ToArray();
     }
 
-    internal bool Increase(AppDbContext context, ICollection<BagEntry> personalEntries)
+    internal bool Increase(
+        AppDbContext context,
+        HuntedActivity activity,
+        ICollection<BagEntry> personalEntries
+    )
     {
         var hasExceeded = false;
         CurrentValue++;
@@ -30,7 +35,9 @@ public class BagEntry
             hasExceeded = true;
         }
 
-        foreach (var shared in BagLimitEntry.SharedWith)
+        BagLimitEntry.AddToQueue(activity);
+
+        foreach (var shared in BagLimitEntry.SharedWithDifferentSpeciesAndOrSex)
         {
             var sharedPersonalEntry = personalEntries.FirstOrDefault(
                 x => x.BagLimitEntry == shared

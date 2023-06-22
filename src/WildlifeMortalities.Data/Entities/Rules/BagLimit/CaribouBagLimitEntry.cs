@@ -11,7 +11,7 @@ public class CaribouBagLimitEntry : BagLimitEntry
         Species = Species.Caribou;
     }
 
-    public CaribouHerd Herd { get; set; }
+    public List<CaribouHerd> Herds { get; set; } = null!;
 
     override public bool Matches(HuntedActivity activity, Season season)
     {
@@ -22,6 +22,6 @@ public class CaribouBagLimitEntry : BagLimitEntry
         if (activity.Mortality is not CaribouMortality caribouMortality)
             return false;
 
-        return caribouMortality.Herd == Herd;
+        return Herds.Contains(caribouMortality.Herd);
     }
 }

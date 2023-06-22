@@ -29,8 +29,14 @@ public class MortalityService : IMortalityService
             await context.Users.FindAsync(userId)
             ?? throw new Exception($"User {userId} not found.");
         report.CreatedBy = user;
-        report.DateCreated = DateTimeOffset.Now;
-        report.DateSubmitted = DateTimeOffset.Now;
+        var now = DateTimeOffset.Now;
+        report.DateCreated = now;
+        report.DateSubmitted = now;
+
+        foreach (var activity in report.GetActivities())
+        {
+            activity.CreatedTimestamp = now;
+        }
 
         switch (report)
         {
@@ -204,6 +210,8 @@ public class MortalityService : IMortalityService
                 throw new NotImplementedException();
         }
 
+        var now = DateTimeOffset.Now;
+
         report.Discriminator = existingReport.Discriminator;
         report.HumanReadableId = existingReport.HumanReadableId;
         report.CreatedById = existingReport.CreatedById;
@@ -212,16 +220,21 @@ public class MortalityService : IMortalityService
             ?? throw new Exception($"User {userId} not found.");
         report.DateCreated = existingReport.DateCreated;
         report.DateSubmitted = existingReport.DateSubmitted;
-        report.DateModified = DateTimeOffset.Now;
+        report.DateModified = now;
 
         context.Entry(existingReport).CurrentValues.SetValues(report);
 
         await AddDefaultBioSubmissions(context, report);
-        UpdateActivities(context, report, existingReport);
+        UpdateActivities(context, report, existingReport, now);
 
         await context.SaveChangesAsync();
 
-        static void UpdateActivities(AppDbContext context, Report report, Report existingReport)
+        static void UpdateActivities(
+            AppDbContext context,
+            Report report,
+            Report existingReport,
+            DateTimeOffset now
+        )
         {
             foreach (var mortality in report.GetMortalities())
             {
@@ -275,6 +288,7 @@ public class MortalityService : IMortalityService
                 }
                 else
                 {
+                    activity.CreatedTimestamp = now;
                     context.Add(activity);
                 }
             }
