@@ -15,6 +15,7 @@ public class Violation
     {
         BagLimit = 10,
         HarvestPeriod = 20,
+        Authorization = 30,
     }
 
     public enum ViolationSeverity

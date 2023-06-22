@@ -18,6 +18,9 @@ public class IsTrappableAttribute : Attribute { }
 [AttributeUsage(AttributeTargets.Field)]
 public class HasGameManagementAreaAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Field)]
+public class IsBigGameAttribute : Attribute { }
+
 public enum Species
 {
     [IsTrappable]
@@ -28,6 +31,7 @@ public enum Species
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.AmericanBlackBear)]
     AmericanBlackBear = 200,
 
@@ -57,6 +61,7 @@ public enum Species
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.Caribou)]
     Caribou = 900,
 
@@ -70,6 +75,7 @@ public enum Species
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [IsTrappable]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.Coyote)]
     Coyote = 1200,
 
@@ -77,6 +83,7 @@ public enum Species
     DuskyGrouse = 1201,
 
     [IsIndividualHuntable]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.Elk)]
     Elk = 1300,
 
@@ -92,12 +99,14 @@ public enum Species
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [IsTrappable]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.GreyWolf)]
     GreyWolf = 1600,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.GrizzlyBear)]
     GrizzlyBear = 1700,
 
@@ -127,17 +136,20 @@ public enum Species
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.Moose)]
     Moose = 2400,
 
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.MountainGoat)]
     MountainGoat = 2500,
 
     [IsIndividualHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.MuleDeer)]
     MuleDeer = 2600,
 
@@ -196,6 +208,7 @@ public enum Species
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.ThinhornSheep)]
     ThinhornSheep = 3900,
 
@@ -203,6 +216,7 @@ public enum Species
     Vole = 4000,
 
     [IsIndividualHuntable]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.WhiteTailedDeer)]
     WhiteTailedDeer = 4100,
 
@@ -215,6 +229,7 @@ public enum Species
     [IsIndividualHuntable]
     [IsOutfitterGuidedHuntable]
     [IsTrappable]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.Wolverine)]
     Wolverine = 4200,
 
@@ -222,6 +237,7 @@ public enum Species
     [IsOutfitterGuidedHuntable]
     [IsSpecialGuidedHuntable]
     [HasGameManagementArea]
+    [IsBigGame]
     [Display(Name = SpeciesConstants.WoodBison)]
     WoodBison = 4300,
 
