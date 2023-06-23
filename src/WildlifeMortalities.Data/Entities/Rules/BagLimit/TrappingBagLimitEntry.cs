@@ -33,5 +33,9 @@ public class TrappingBagLimitEntryConfig : IEntityTypeConfiguration<TrappingBagL
     public void Configure(EntityTypeBuilder<TrappingBagLimitEntry> builder)
     {
         builder.ToTable(TableNameConstants.BagLimitEntries);
+        builder
+            .HasOne(x => x.Season)
+            .WithMany(x => x.BagLimitEntries)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

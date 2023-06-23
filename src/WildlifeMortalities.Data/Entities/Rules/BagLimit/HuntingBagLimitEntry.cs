@@ -29,5 +29,9 @@ public class HuntingBagLimitEntryConfig : IEntityTypeConfiguration<HuntingBagLim
     public void Configure(EntityTypeBuilder<HuntingBagLimitEntry> builder)
     {
         builder.ToTable(TableNameConstants.BagLimitEntries);
+        builder
+            .HasOne(x => x.Season)
+            .WithMany(x => x.BagLimitEntries)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

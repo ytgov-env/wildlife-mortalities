@@ -1,5 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 namespace WildlifeMortalities.Data.Entities.Seasons;
 
@@ -13,6 +14,8 @@ public class HuntingSeason : Season
         EndDate = new DateTimeOffset(startYear + 1, 3, 31, 23, 59, 59, TimeSpan.FromHours(-7));
         FriendlyName = ToString();
     }
+
+    public List<HuntingBagLimitEntry> BagLimitEntries { get; set; } = null!;
 
     public static async Task<HuntingSeason> GetSeason(Report report, AppDbContext context) =>
         await GetSeason<HuntingSeason>(report, context);

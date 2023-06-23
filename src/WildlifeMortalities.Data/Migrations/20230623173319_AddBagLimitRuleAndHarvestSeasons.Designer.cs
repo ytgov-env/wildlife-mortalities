@@ -12,7 +12,7 @@ using WildlifeMortalities.Data;
 namespace WildlifeMortalities.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230623170713_AddBagLimitRuleAndHarvestSeasons")]
+    [Migration("20230623173319_AddBagLimitRuleAndHarvestSeasons")]
     partial class AddBagLimitRuleAndHarvestSeasons
     {
         /// <inheritdoc />
@@ -3275,9 +3275,9 @@ namespace WildlifeMortalities.Data.Migrations
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Rules.BagLimit.HuntingBagLimitEntry", b =>
                 {
                     b.HasOne("WildlifeMortalities.Data.Entities.Seasons.HuntingSeason", "Season")
-                        .WithMany()
+                        .WithMany("BagLimitEntries")
                         .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Season");
@@ -3286,9 +3286,9 @@ namespace WildlifeMortalities.Data.Migrations
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Rules.BagLimit.TrappingBagLimitEntry", b =>
                 {
                     b.HasOne("WildlifeMortalities.Data.Entities.Seasons.TrappingSeason", "Season")
-                        .WithMany()
+                        .WithMany("BagLimitEntries")
                         .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Season");
@@ -3500,6 +3500,16 @@ namespace WildlifeMortalities.Data.Migrations
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Rules.BagLimit.TrappingBagLimitEntry", b =>
                 {
                     b.Navigation("RegisteredTrappingConcessions");
+                });
+
+            modelBuilder.Entity("WildlifeMortalities.Data.Entities.Seasons.HuntingSeason", b =>
+                {
+                    b.Navigation("BagLimitEntries");
+                });
+
+            modelBuilder.Entity("WildlifeMortalities.Data.Entities.Seasons.TrappingSeason", b =>
+                {
+                    b.Navigation("BagLimitEntries");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.People.Client", b =>
