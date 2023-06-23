@@ -152,6 +152,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
         }
     }
 
+    // Todo: should allow user to save as draft if exception thrown by rule engine
     private async Task CreateDraftReport()
     {
         if (_editContext.GetValidationMessages().Any())

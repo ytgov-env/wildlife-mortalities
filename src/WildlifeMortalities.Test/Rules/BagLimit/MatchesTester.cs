@@ -11,21 +11,21 @@ public class MatchesTester
     [Fact]
     public void Matches_WithMatching_ReturnsTrue()
     {
-        var season = new HuntingSeason(2023);
+        var report = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
         var area = new GameManagementArea
         {
             Zone = "4",
             Subzone = "03",
             Id = 10,
         };
-        var entry = new BagLimitEntry
+        var entry = new HuntingBagLimitEntry
         {
             Areas = new() { area },
-            Season = season,
+            Season = (HuntingSeason)report.Season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate
+            PeriodStart = report.Season.StartDate,
+            PeriodEnd = report.Season.EndDate
         };
 
         var activity = new HuntedActivity
@@ -33,12 +33,12 @@ public class MatchesTester
             Mortality = new MooseMortality
             {
                 Sex = Data.Enums.Sex.Male,
-                DateOfDeath = season.StartDate.AddDays(2)
+                DateOfDeath = report.Season.StartDate.AddDays(2)
             },
             GameManagementArea = area,
         };
 
-        entry.Matches(activity, season).Should().BeTrue();
+        entry.Matches(activity, report).Should().BeTrue();
     }
 
     [Theory]
@@ -47,21 +47,21 @@ public class MatchesTester
     [InlineData(Data.Enums.Sex.Unknown)]
     public void Matches_WithMatching_NoSexSpecified_ReturnsTrue(Data.Enums.Sex sex)
     {
-        var season = new HuntingSeason(2023);
+        var report = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
         var area = new GameManagementArea
         {
             Zone = "4",
             Subzone = "03",
             Id = 10,
         };
-        var entry = new BagLimitEntry
+        var entry = new HuntingBagLimitEntry
         {
             Areas = new() { area },
-            Season = season,
+            Season = (HuntingSeason)report.Season,
             Sex = null,
             Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate
+            PeriodStart = report.Season.StartDate,
+            PeriodEnd = report.Season.EndDate
         };
 
         var activity = new HuntedActivity
@@ -69,32 +69,32 @@ public class MatchesTester
             Mortality = new MooseMortality
             {
                 Sex = sex,
-                DateOfDeath = season.StartDate.AddDays(20)
+                DateOfDeath = report.Season.StartDate.AddDays(20)
             },
             GameManagementArea = area,
         };
 
-        entry.Matches(activity, season).Should().BeTrue();
+        entry.Matches(activity, report).Should().BeTrue();
     }
 
     [Fact]
     public void Matches_WithDifferentSex_ReturnsFalse()
     {
-        var season = new HuntingSeason(2023);
+        var report = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
         var area = new GameManagementArea
         {
             Zone = "4",
             Subzone = "03",
             Id = 10,
         };
-        var entry = new BagLimitEntry
+        var entry = new HuntingBagLimitEntry
         {
             Areas = new() { area },
-            Season = season,
+            Season = (HuntingSeason)report.Season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate
+            PeriodStart = report.Season.StartDate,
+            PeriodEnd = report.Season.EndDate
         };
 
         var activity = new HuntedActivity
@@ -102,28 +102,28 @@ public class MatchesTester
             Mortality = new MooseMortality
             {
                 Sex = Data.Enums.Sex.Female,
-                DateOfDeath = season.StartDate.AddDays(2)
+                DateOfDeath = report.Season.StartDate.AddDays(2)
             },
             GameManagementArea = area,
         };
 
-        entry.Matches(activity, season).Should().BeFalse();
+        entry.Matches(activity, report).Should().BeFalse();
     }
 
     [Fact]
     public void Matches_WithDifferentSpecies_ReturnsFalse()
     {
-        var season = new HuntingSeason(2023);
+        var report = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
         var area = new GameManagementArea
         {
             Zone = "4",
             Subzone = "03",
             Id = 10,
         };
-        var entry = new BagLimitEntry
+        var entry = new HuntingBagLimitEntry
         {
             Areas = new() { area },
-            Season = season,
+            Season = (HuntingSeason)report.Season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose
         };
@@ -134,24 +134,25 @@ public class MatchesTester
             GameManagementArea = area,
         };
 
-        entry.Matches(activity, season).Should().BeFalse();
+        entry.Matches(activity, report).Should().BeFalse();
     }
 
     [Fact]
     public void Matches_WithDifferentSeason_ReturnsFalse()
     {
-        var season = new HuntingSeason(2023) { Id = 1 };
-        var season2 = new HuntingSeason(2024) { Id = 2 };
+        var report2023 = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
+        var report2024 = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2024) };
+
         var area = new GameManagementArea
         {
             Zone = "4",
             Subzone = "03",
             Id = 10,
         };
-        var entry = new BagLimitEntry
+        var entry = new HuntingBagLimitEntry
         {
             Areas = new() { area },
-            Season = season,
+            Season = (HuntingSeason)report2023.Season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose
         };
@@ -162,23 +163,24 @@ public class MatchesTester
             GameManagementArea = area,
         };
 
-        entry.Matches(activity, season2).Should().BeFalse();
+        entry.Matches(activity, report2024).Should().BeFalse();
     }
 
     [Fact]
     public void Matches_WithDifferentArea_ReturnsFalse()
     {
-        var season = new HuntingSeason(2023);
+        var report = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
+
         var area = new GameManagementArea
         {
             Zone = "4",
             Subzone = "03",
             Id = 10,
         };
-        var entry = new BagLimitEntry
+        var entry = new HuntingBagLimitEntry
         {
             Areas = new() { area },
-            Season = season,
+            Season = (HuntingSeason)report.Season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose
         };
@@ -194,27 +196,27 @@ public class MatchesTester
             },
         };
 
-        entry.Matches(activity, season).Should().BeFalse();
+        entry.Matches(activity, report).Should().BeFalse();
     }
 
     [Fact]
     public void Matches_WithDifferentPeriod_ReturnsFalse()
     {
-        var season = new HuntingSeason(2023);
+        var report = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
         var area = new GameManagementArea
         {
             Zone = "4",
             Subzone = "03",
             Id = 10,
         };
-        var entry = new BagLimitEntry
+        var entry = new HuntingBagLimitEntry
         {
             Areas = new() { area },
-            Season = season,
+            Season = (HuntingSeason)report.Season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.Moose,
-            PeriodStart = season.StartDate.AddDays(1),
-            PeriodEnd = season.EndDate.AddDays(-1)
+            PeriodStart = report.Season.StartDate.AddDays(1),
+            PeriodEnd = report.Season.EndDate.AddDays(-1)
         };
 
         {
@@ -228,7 +230,7 @@ public class MatchesTester
                 GameManagementArea = area,
             };
 
-            entry.Matches(activity, season).Should().BeFalse();
+            entry.Matches(activity, report).Should().BeFalse();
         }
         {
             var activity = new HuntedActivity
@@ -241,7 +243,7 @@ public class MatchesTester
                 GameManagementArea = area,
             };
 
-            entry.Matches(activity, season).Should().BeFalse();
+            entry.Matches(activity, report).Should().BeFalse();
         }
     }
 }

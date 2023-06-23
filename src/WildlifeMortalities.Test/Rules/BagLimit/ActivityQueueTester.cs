@@ -11,12 +11,6 @@ namespace WildlifeMortalities.Test.Rules.BagLimit;
 
 public class ActivityQueueTester
 {
-    [Fact]
-    public void AddToQueue_EmptyQueueWithSingleActivity()
-    {
-        var bagLimitEntry = new BagLimitEntry();
-    }
-
     private class ActivityQueueComparer : IComparer<HuntedActivity>
     {
         public int Compare(HuntedActivity? x, HuntedActivity? y)
@@ -53,7 +47,7 @@ public class ActivityQueueTester
         var bagLimitEntry = new CaribouBagLimitEntry
         {
             Areas = new() { area },
-            Herds = new() { CaribouMortality.CaribouHerd.Atlin },
+            //Herds = new() { CaribouMortality.CaribouHerd.Atlin },
             MaxValuePerPerson = 1,
             Season = season,
             PeriodStart = season.StartDate,

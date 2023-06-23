@@ -42,6 +42,7 @@ public class AppDbContext : DbContext
 
     public DbSet<BagEntry> BagEntries => Set<BagEntry>();
     public DbSet<BagLimitEntry> BagLimitEntries => Set<BagLimitEntry>();
+    public DbSet<ActivityQueueItem> ActivityQueueItems => Set<ActivityQueueItem>();
 
     public DbSet<AppConfiguration> AppConfigurations => Set<AppConfiguration>();
 

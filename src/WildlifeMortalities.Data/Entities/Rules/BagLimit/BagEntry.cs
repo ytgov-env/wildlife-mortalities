@@ -24,7 +24,7 @@ public class BagEntry
 
     internal bool Increase(
         AppDbContext context,
-        HuntedActivity activity,
+        HarvestActivity activity,
         ICollection<BagEntry> personalEntries
     )
     {

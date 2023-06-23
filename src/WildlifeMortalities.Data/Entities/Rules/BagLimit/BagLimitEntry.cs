@@ -1,16 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Reports;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
-public class BagLimitEntry
+public abstract class BagLimitEntry
 {
+    public abstract Season GetSeason();
+
+    protected abstract bool IsWithinArea(HarvestActivity activity, Report report);
+
     public int Id { get; set; }
-    public List<GameManagementArea> Areas { get; set; } = null!;
     public Species Species { get; set; }
     public Sex? Sex { get; set; }
-    public Season Season { get; set; } = null!;
     public DateTimeOffset PeriodStart { get; set; }
     public DateTimeOffset PeriodEnd { get; set; }
 
@@ -23,17 +27,17 @@ public class BagLimitEntry
     public List<ActivityQueueItem> ActivityQueue { get; set; } = null!;
     public int? MaxValueForThreshold { get; set; }
 
-    public virtual bool Matches(HuntedActivity activity, Season season)
+    public virtual bool Matches(HarvestActivity activity, Report report)
     {
-        return Areas.Any(x => x.Id == activity.GameManagementArea.Id)
+        return IsWithinArea(activity, report)
             && Species == activity.Mortality.Species
-            && Season.Id == season.Id
+            && GetSeason().Id == report.Season.Id
             && PeriodStart <= activity.Mortality.DateOfDeath
             && PeriodEnd >= activity.Mortality.DateOfDeath
             && (!Sex.HasValue || Sex == activity.Mortality.Sex);
     }
 
-    public void AddToQueue(HuntedActivity activity)
+    public void AddToQueue(HarvestActivity activity)
     {
         ActivityQueue ??= new();
 
@@ -41,7 +45,7 @@ public class BagLimitEntry
         ReorderQueue();
     }
 
-    public void RemoveFromQueue(HuntedActivity activity)
+    public void RemoveFromQueue(HarvestActivity activity)
     {
         ActivityQueue.Remove(ActivityQueue.First(x => x.Activity.Id == activity.Id));
         ReorderQueue();
@@ -65,15 +69,24 @@ public class BagLimitEntryConfig : IEntityTypeConfiguration<BagLimitEntry>
 {
     public void Configure(EntityTypeBuilder<BagLimitEntry> builder)
     {
-        builder.OwnsMany(x => x.ActivityQueue).WithOwner(x => x.BagLimitEntry);
+        builder.ToTable(TableNameConstants.BagLimitEntries);
     }
 }
 
 public class ActivityQueueItem
 {
+    public int Id { get; set; }
+    public int ActivityId { get; set; }
+    public HarvestActivity Activity { get; set; } = null!;
     public int BagLimitEntryId { get; set; }
     public BagLimitEntry BagLimitEntry { get; set; } = null!;
-    public int ActivityId { get; set; }
-    public HuntedActivity Activity { get; set; } = null!;
     public int Position { get; set; }
+}
+
+public class ActivityQueueItemConfig : IEntityTypeConfiguration<ActivityQueueItem>
+{
+    public void Configure(EntityTypeBuilder<ActivityQueueItem> builder)
+    {
+        builder.ToTable(TableNameConstants.ActivityQueueItems);
+    }
 }

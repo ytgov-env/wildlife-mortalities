@@ -32,7 +32,12 @@ public class ProcessTester
         out AppDbContext context,
         out Report report,
         Action<BagEntry, Report, AppDbContext>? personEntryModifier = null,
-        Action<BagLimitEntry, PersonWithAuthorizations, Report, AppDbContext>? entryModifier = null,
+        Action<
+            HuntingBagLimitEntry,
+            PersonWithAuthorizations,
+            Report,
+            AppDbContext
+        >? entryModifier = null,
         Func<GameManagementArea, Season, PersonWithAuthorizations, Report>? reportModifier = null
     )
     {
@@ -70,7 +75,7 @@ public class ProcessTester
         var bagLimitEntry = new CaribouBagLimitEntry
         {
             Areas = new() { area },
-            Herds = new() { CaribouMortality.CaribouHerd.Atlin },
+            //Herds = new() { CaribouMortality.CaribouHerd.Atlin },
             MaxValuePerPerson = 2,
             Season = season,
             SharedWithDifferentSpeciesAndOrSex = new(),
@@ -197,13 +202,13 @@ public class ProcessTester
             out var report,
             entryModifier: (entry, person, report, context) =>
             {
-                var otherBagEntry = new BagLimitEntry
+                var otherBagEntry = new HuntingBagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValuePerPerson = 1,
                     Sex = Data.Enums.Sex.Male,
                     SharedWithDifferentSpeciesAndOrSex = new(),
-                    Season = entry.Season,
+                    Season = (HuntingSeason)entry.GetSeason(),
                     Areas = entry.Areas.ToList(),
                 };
 
@@ -249,7 +254,7 @@ public class ProcessTester
             out var report,
             entryModifier: (entry, _, report, context) =>
             {
-                var otherBagEntry = new BagLimitEntry
+                var otherBagEntry = new HuntingBagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValuePerPerson = 2,
@@ -285,7 +290,7 @@ public class ProcessTester
             out var report,
             entryModifier: (entry, _, _, context) =>
             {
-                var otherBagEntry = new BagLimitEntry
+                var otherBagEntry = new HuntingBagLimitEntry
                 {
                     Species = Data.Enums.Species.AmericanBlackBear,
                     MaxValuePerPerson = 2,

@@ -43,8 +43,16 @@ public class BagLimitRule : Rule
             .ThenInclude(x => x.ActivityQueue)
             .ThenInclude(x => x.Activity)
             .ThenInclude(x => x.Mortality)
-            .Where(x => x.BagLimitEntry.Season == season)
             .Where(x => x.Person == person)
+            .Where(
+                x =>
+                    season.Id
+                    == (
+                        x.BagLimitEntry is HuntingBagLimitEntry
+                            ? ((HuntingBagLimitEntry)x.BagLimitEntry).Season.Id
+                            : ((TrappingBagLimitEntry)x.BagLimitEntry).Season.Id
+                    )
+            )
             .ToListAsync();
     }
 
@@ -70,7 +78,7 @@ public class BagLimitRule : Rule
         )
         {
             var personalEntry = personalEntries.FirstOrDefault(
-                x => x.BagLimitEntry.Matches(activity, report.Season)
+                x => x.BagLimitEntry.Matches(activity, report)
             );
             if (personalEntry == null)
             {
@@ -81,11 +89,11 @@ public class BagLimitRule : Rule
                         .ThenInclude(x => x.Mortality)
                         .Where(
                             x =>
-                                x.Season.Id == report.Season.Id
-                                && x.Species == activity.Mortality.Species
+                                //x.Season.Id == report.Season.Id &&
+                                x.Species == activity.Mortality.Species
                         )
                         .ToArrayAsync()
-                ).FirstOrDefault(x => x.Matches(activity, report.Season));
+                ).FirstOrDefault(x => x.Matches(activity, report));
 
                 if (entry == null)
                 {
@@ -123,7 +131,7 @@ public class BagLimitRule : Rule
                         Activity = activity,
                         Rule = Violation.RuleType.BagLimit,
                         Description =
-                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {activity.GameManagementArea} for {personalEntry.BagLimitEntry.Season} season.",
+                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {activity.GameManagementArea} for {personalEntry.BagLimitEntry.GetSeason()} season.",
                         Severity = Violation.ViolationSeverity.Illegal
                     }
                 );
