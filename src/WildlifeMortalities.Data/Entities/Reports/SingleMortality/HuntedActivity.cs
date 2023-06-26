@@ -26,6 +26,8 @@ public class HuntedActivity : HarvestActivity
     [Column($"{nameof(HuntedActivity)}_{nameof(SpecialGuidedHuntReportId)}")]
     public int? SpecialGuidedHuntReportId { get; set; }
     public SpecialGuidedHuntReport? SpecialGuidedHuntReport { get; set; }
+
+    public override string GetAreaName(Report report) => GameManagementArea.ToString();
 }
 
 public class HuntedActivityConfig : IEntityTypeConfiguration<HuntedActivity>

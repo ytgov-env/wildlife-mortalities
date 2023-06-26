@@ -4,34 +4,11 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
-using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Rules;
 
 public class BagLimitRule : Rule
 {
-    private readonly Species[] _speciesWithBagLimit = new[]
-    {
-        Species.AmericanBlackBear,
-        Species.Caribou,
-        Species.DuskyGrouse,
-        Species.Elk,
-        Species.GreyWolf,
-        Species.GrizzlyBear,
-        Species.Moose,
-        Species.MountainGoat,
-        Species.MuleDeer,
-        Species.RockPtarmigan,
-        Species.RuffedGrouse,
-        Species.SharpTailedGrouse,
-        Species.SpruceGrouse,
-        Species.ThinhornSheep,
-        Species.WhiteTailedPtarmigan,
-        Species.WillowPtarmigan,
-        Species.Wolverine,
-        Species.WoodBison
-    };
-
     private static async Task<IList<BagEntry>> GetCurrentBagCount(
         AppDbContext context,
         Season season,
@@ -58,22 +35,21 @@ public class BagLimitRule : Rule
 
     public override async Task<RuleResult> Process(Report report, AppDbContext context)
     {
-        if (report.GeneralizedReportType is not GeneralizedReportType.Hunted)
+        if (
+            report.GeneralizedReportType
+            is not GeneralizedReportType.Hunted
+                and not GeneralizedReportType.Trapped
+        )
+        {
             return RuleResult.NotApplicable;
-
-        var relevantActivities = report
-            .GetActivities()
-            .Where(x => _speciesWithBagLimit.Contains(x.Mortality.Species))
-            .ToArray();
-        if (relevantActivities.Length == 0)
-            return RuleResult.NotApplicable;
+        }
 
         var violations = new List<Violation>();
         var personalEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
         foreach (
             var activity in report
                 .GetActivities()
-                .OfType<HuntedActivity>()
+                .OfType<HarvestActivity>()
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
@@ -97,17 +73,7 @@ public class BagLimitRule : Rule
 
                 if (entry == null)
                 {
-                    violations.Add(
-                        new Violation
-                        {
-                            Activity = activity,
-                            Rule = Violation.RuleType.HarvestPeriod,
-                            Description =
-                                $"Area {activity.GameManagementArea} is closed to hunting for {activity.Mortality.Species.GetDisplayName().ToLower()} on {activity.Mortality.DateOfDeath:yyyy-MM-dd}.",
-                            Severity = Violation.ViolationSeverity.Illegal
-                        }
-                    );
-
+                    violations.Add(Violation.IllegalHarvestPeriod(activity, report));
                     continue;
                 }
 
@@ -125,16 +91,7 @@ public class BagLimitRule : Rule
 
             if (isLimitExceeded)
             {
-                violations.Add(
-                    new Violation
-                    {
-                        Activity = activity,
-                        Rule = Violation.RuleType.BagLimit,
-                        Description =
-                            $"Bag limit exceeded for {string.Join(" and ", personalEntry.GetSpeciesDescriptions())} in {activity.GameManagementArea} for {personalEntry.BagLimitEntry.GetSeason()} season.",
-                        Severity = Violation.ViolationSeverity.Illegal
-                    }
-                );
+                violations.Add(Violation.BagLimitExceeded(activity, report, personalEntry));
             }
         }
 

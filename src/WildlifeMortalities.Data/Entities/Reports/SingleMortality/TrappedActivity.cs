@@ -11,6 +11,10 @@ public class TrappedActivity : HarvestActivity
     [Column($"{nameof(TrappedActivity)}_{nameof(TrappedMortalitiesReportId)}")]
     public int TrappedMortalitiesReportId { get; set; }
     public TrappedMortalitiesReport TrappedMortalitiesReport { get; set; } = null!;
+
+    public override string GetAreaName(Report report) =>
+        (report as TrappedMortalitiesReport)?.RegisteredTrappingConcession.Area
+        ?? "<error invalid concession>";
 }
 
 public class TrappedActivityConfig : IEntityTypeConfiguration<TrappedActivity>

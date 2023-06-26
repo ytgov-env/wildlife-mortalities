@@ -8,6 +8,8 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 public abstract class HarvestActivity : Activity
 {
     public ActivityQueueItem ActivityQueueItem { get; set; } = null!;
+
+    public abstract string GetAreaName(Report report);
 }
 
 public class HarvestActivityConfig : IEntityTypeConfiguration<HarvestActivity>

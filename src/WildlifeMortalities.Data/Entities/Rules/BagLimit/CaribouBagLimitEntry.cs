@@ -15,7 +15,7 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
         Species = Species.Caribou;
     }
 
-    //public List<CaribouHerd> Herds { get; set; } = null!;
+    public List<CaribouHerd> Herds { get; set; } = null!;
 
     override public bool Matches(HarvestActivity activity, Report report)
     {
@@ -26,8 +26,7 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
         if (activity.Mortality is not CaribouMortality caribouMortality)
             return false;
 
-        return true;
-        //return Herds.Contains(caribouMortality.Herd);
+        return Herds.Contains(caribouMortality.Herd);
     }
 }
 
@@ -36,5 +35,16 @@ public class CaribouBagLimitEntryConfig : IEntityTypeConfiguration<CaribouBagLim
     public void Configure(EntityTypeBuilder<CaribouBagLimitEntry> builder)
     {
         builder.ToTable(TableNameConstants.BagLimitEntries);
+        builder
+            .Property(x => x.Herds)
+            .HasConversion(
+                v => string.Join(",", v.Select(e => e.ToString("D")).ToArray()),
+                v =>
+                    v.Split(new[] { ',' })
+                        .Select(e => Enum.Parse(typeof(CaribouHerd), e))
+                        .Cast<CaribouHerd>()
+                        .ToList()
+            )
+            .HasMaxLength(200);
     }
 }

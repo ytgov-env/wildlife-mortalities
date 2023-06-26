@@ -10,15 +10,15 @@ namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 public class TrappingBagLimitEntry : BagLimitEntry
 {
-    public List<RegisteredTrappingConcession> RegisteredTrappingConcessions { get; set; } = null!;
-    public TrappingSeason Season { get; set; } = null!;
+    public List<RegisteredTrappingConcession> RegisteredTrappingConcessions { get; init; } = null!;
+
+    public int SeasonId { get; init; }
+    public TrappingSeason Season { get; init; } = null!;
 
     public override Season GetSeason()
     {
         return Season;
     }
-
-    //private Expression<Func<BagLimitEntry, Season>> expression = (x) => ((TrappingBagLimitEntry)x).Season;
 
     protected override bool IsWithinArea(HarvestActivity activity, Report report)
     {

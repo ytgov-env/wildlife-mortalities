@@ -9,9 +9,10 @@ namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 public class HuntingBagLimitEntry : BagLimitEntry
 {
-    public List<GameManagementArea> Areas { get; set; } = null!;
+    public List<GameManagementArea> Areas { get; init; } = null!;
 
-    public HuntingSeason Season { get; set; } = null!;
+    public int SeasonId { get; init; }
+    public HuntingSeason Season { get; init; } = null!;
 
     public override Season GetSeason()
     {

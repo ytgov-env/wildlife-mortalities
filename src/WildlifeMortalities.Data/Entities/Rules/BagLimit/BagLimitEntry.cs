@@ -8,6 +8,8 @@ namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 public abstract class BagLimitEntry
 {
+    public const int InfiniteMaxValuePerPerson = int.MaxValue;
+
     public abstract Season GetSeason();
 
     protected abstract bool IsWithinArea(HarvestActivity activity, Report report);
@@ -22,9 +24,9 @@ public abstract class BagLimitEntry
     // Hypothetical use case: A person is allowed to kill 5 moose, but only 2 females
     // Hypothetical use case: A person is allowed to kill 5 moose across the yukon, but a maximum of 2 moose in any specific area
     public List<BagLimitEntry> SharedWithDifferentSpeciesAndOrSex { get; set; } = null!;
-    public int MaxValuePerPerson { get; set; }
-
+    public List<BagEntry> BagEntries { get; set; } = null!;
     public List<ActivityQueueItem> ActivityQueue { get; set; } = null!;
+    public int MaxValuePerPerson { get; set; }
     public int? MaxValueForThreshold { get; set; }
 
     public virtual bool Matches(HarvestActivity activity, Report report)
@@ -70,6 +72,18 @@ public class BagLimitEntryConfig : IEntityTypeConfiguration<BagLimitEntry>
     public void Configure(EntityTypeBuilder<BagLimitEntry> builder)
     {
         builder.ToTable(TableNameConstants.BagLimitEntries);
+        builder
+            .HasIndex(
+                x =>
+                    new
+                    {
+                        x.Species,
+                        x.Sex,
+                        x.PeriodStart,
+                        x.PeriodEnd
+                    }
+            )
+            .IsUnique();
     }
 }
 
