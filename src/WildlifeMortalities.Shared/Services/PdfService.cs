@@ -10,8 +10,11 @@ public class PdfService
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
-    public PdfService(IDbContextFactory<AppDbContext> dbContextFactory) =>
+    public PdfService(IDbContextFactory<AppDbContext> dbContextFactory)
+    {
         _dbContextFactory = dbContextFactory;
+        QuestPDF.Settings.License = LicenseType.Community;
+    }
 
     public static byte[] GetReportPdf(int reportId)
     {
