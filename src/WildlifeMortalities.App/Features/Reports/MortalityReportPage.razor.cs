@@ -120,24 +120,15 @@ public partial class MortalityReportPage : DbContextAwareComponent
         CreateNewEditContext();
         _vm.ReportType = type;
 
-        switch (_vm.ReportType)
+        _vm.ReportViewModel = _vm.ReportType switch
         {
-            case ReportType.IndividualHuntedMortalityReport:
-                _vm.ReportViewModel = new IndividualHuntedMortalityReportViewModel();
-                ;
-                break;
-            case ReportType.OutfitterGuidedHuntReport:
-                _vm.ReportViewModel = new OutfitterGuidedHuntReportViewModel();
-                break;
-            case ReportType.SpecialGuidedHuntReport:
-                _vm.ReportViewModel = new SpecialGuidedHuntReportViewModel();
-                break;
-            case ReportType.TrappedMortalitiesReport:
-                _vm.ReportViewModel = new TrappedReportViewModel();
-                break;
-            default:
-                throw new NotImplementedException();
-        }
+            ReportType.IndividualHuntedMortalityReport
+                => new IndividualHuntedMortalityReportViewModel(),
+            ReportType.OutfitterGuidedHuntReport => new OutfitterGuidedHuntReportViewModel(),
+            ReportType.SpecialGuidedHuntReport => new SpecialGuidedHuntReportViewModel(),
+            ReportType.TrappedMortalitiesReport => new TrappedReportViewModel(),
+            _ => throw new NotImplementedException(),
+        };
     }
 
     private async Task SubmitReport()
