@@ -8,6 +8,7 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 public abstract class HarvestActivity : Activity
 {
     public ActivityQueueItem ActivityQueueItem { get; set; } = null!;
+    public bool IsThreshold { get; set; }
 
     public abstract string GetAreaName(Report report);
 }

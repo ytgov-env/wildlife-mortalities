@@ -37,6 +37,7 @@ public class Violation
         BagLimit = 10,
         HarvestPeriod = 20,
         Authorization = 30,
+        LateReport = 40,
     }
 
     public enum SeverityType

@@ -434,6 +434,34 @@ public class ProcessTester
         context.BagLimitEntries.First().ActivityQueue.Should().HaveCount(4);
     }
 
+    [Theory]
+    [InlineData(5, true)]
+    [InlineData(null, false)]
+    public async Task Process_BagLimitEntryWithThresholdSet_SetsIsThresholdOnActivity(
+        int? thresholdValue,
+        bool thresholdShouldBeSet
+    )
+    {
+        GenerateHuntingBagLimitDefaults(
+            out var context,
+            out var report,
+            entryModifier: (entry, _, _, _) =>
+            {
+                entry.MaxValueForThreshold = thresholdValue;
+            }
+        );
+
+        var rule = new BagLimitRule();
+
+        var result = await rule.Process(report, context);
+        report
+            .GetActivities()
+            .OfType<HarvestActivity>()
+            .First()
+            .IsThreshold.Should()
+            .Be(thresholdShouldBeSet);
+    }
+
     private static void GenerateTrappingBagLimitDefaults(
         out AppDbContext context,
         out Report report,

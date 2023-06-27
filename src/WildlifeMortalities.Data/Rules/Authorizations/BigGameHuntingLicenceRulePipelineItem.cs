@@ -45,23 +45,22 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
                     report is SpecialGuidedHuntReport
                     && authorization.Type
                         is not BigGameHuntingLicence.LicenceType.CanadianResidentSpecialGuided
-                ) {
+                )
+                {
                     context.Violations.Add(
-                            new Violation(
-                                activity,
-                                Violation.RuleType.Authorization,
-                                Violation.SeverityType.Illegal,
-                                "Hunted big game as a Canadian resident without a valid licence."
-                            )
-                        );
+                        new Violation(
+                            activity,
+                            Violation.RuleType.Authorization,
+                            Violation.SeverityType.Illegal,
+                            "Hunted big game as a Canadian resident without a valid licence."
+                        )
+                    );
                 }
                 else if (
-                    (
-                        report is IndividualHuntedMortalityReport
-                        && authorization.Type
-                            is BigGameHuntingLicence.LicenceType.CanadianResident
-                                or BigGameHuntingLicence.LicenceType.CanadianResidentSpecialGuided
-                    )
+                    report is IndividualHuntedMortalityReport
+                    && authorization.Type
+                        is BigGameHuntingLicence.LicenceType.CanadianResident
+                            or BigGameHuntingLicence.LicenceType.CanadianResidentSpecialGuided
                 )
                 {
                     context.Violations.Add(
@@ -72,7 +71,8 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
                             "Hunted big game as a Canadian resident without a guide."
                         )
                     );
-                } else if(report is OutfitterGuidedHuntReport)
+                }
+                else if (report is OutfitterGuidedHuntReport) { }
             }
         }
 
