@@ -2,6 +2,7 @@
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Rules.Authorizations;
@@ -10,47 +11,68 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
 {
     public override Task<bool> Process(Report report, AuthorizationRulePipelineContext context)
     {
-        foreach (var item in report.GetActivities())
+        if (report.GeneralizedReportType is not GeneralizedReportType.Hunted)
         {
-            if (!item.Mortality.Species.IsBigGameSpecies())
+            return Task.FromResult(true);
+        }
+
+        foreach (var activity in report.GetActivities())
+        {
+            if (!activity.Mortality.Species.IsBigGameSpecies())
             {
                 continue;
             }
 
             var authorization = report
                 .GetPerson()
-                .Authorizations.GetValidAuthorization<BigGameHuntingLicence>(item);
+                .Authorizations.GetValidAuthorization<BigGameHuntingLicence>(activity);
             if (authorization == null)
             {
                 context.Violations.Add(
-                    new Violation
-                    {
-                        Activity = item,
-                        Severity = Violation.ViolationSeverity.Illegal,
-                        Description = "",
-                        Rule = Violation.RuleType.Authorization
-                    }
+                    new Violation(
+                        activity,
+                        Violation.RuleType.Authorization,
+                        Violation.SeverityType.Illegal,
+                        $"No big game hunting licence valid on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+                    )
                 );
             }
             else
             {
-                context.UsedAuthorizations.Add(authorization);
+                context.RelevantAuthorizations.Add(authorization);
 
                 if (
-                    authorization.Type is BigGameHuntingLicence.LicenceType.CanadianResident
-                    && report is not SpecialGuidedHuntReport or OutfitterGuidedHuntReport
+                    report is SpecialGuidedHuntReport
+                    && authorization.Type
+                        is not BigGameHuntingLicence.LicenceType.CanadianResidentSpecialGuided
+                ) {
+                    context.Violations.Add(
+                            new Violation(
+                                activity,
+                                Violation.RuleType.Authorization,
+                                Violation.SeverityType.Illegal,
+                                "Hunted big game as a Canadian resident without a valid licence."
+                            )
+                        );
+                }
+                else if (
+                    (
+                        report is IndividualHuntedMortalityReport
+                        && authorization.Type
+                            is BigGameHuntingLicence.LicenceType.CanadianResident
+                                or BigGameHuntingLicence.LicenceType.CanadianResidentSpecialGuided
+                    )
                 )
                 {
                     context.Violations.Add(
-                        new Violation
-                        {
-                            Activity = item,
-                            Severity = Violation.ViolationSeverity.Illegal,
-                            Description = "Hunted without a guide.",
-                            Rule = Violation.RuleType.Authorization
-                        }
+                        new Violation(
+                            activity,
+                            Violation.RuleType.Authorization,
+                            Violation.SeverityType.Illegal,
+                            "Hunted big game as a Canadian resident without a guide."
+                        )
                     );
-                }
+                } else if(report is OutfitterGuidedHuntReport)
             }
         }
 

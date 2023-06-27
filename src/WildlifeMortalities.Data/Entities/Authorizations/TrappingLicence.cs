@@ -42,9 +42,6 @@ public class TrappingLicence : Authorization
     public int RegisteredTrappingConcessionId { get; set; }
     public RegisteredTrappingConcession RegisteredTrappingConcession { get; set; } = null!;
 
-    public override AuthorizationResult GetResult(Report report) =>
-        throw new NotImplementedException();
-
     public override string GetAuthorizationType() =>
         $"Trapping licence - {Type.GetDisplayName().ToLower()}";
 

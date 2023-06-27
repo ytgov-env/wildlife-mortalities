@@ -44,9 +44,6 @@ public class PhaHuntingPermit : Authorization
     [Column($"{nameof(PhaHuntingPermit)}_{nameof(HuntCode)}")]
     public string HuntCode { get; set; } = string.Empty;
 
-    public override AuthorizationResult GetResult(Report report) =>
-        throw new NotImplementedException();
-
     public override string GetAuthorizationType() =>
         $"Pha hunting permit - {Type.GetDisplayName().ToLower()}";
 

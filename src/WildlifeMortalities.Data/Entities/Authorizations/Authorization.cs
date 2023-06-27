@@ -22,30 +22,6 @@ public abstract class Authorization
     public bool IsCancelled { get; set; }
     public List<Activity> Activities { get; set; } = null!;
 
-    public static AuthorizationsSummary GetSummary(
-        IEnumerable<Authorization> authorizations,
-        Report report
-    )
-    {
-        List<AuthorizationResult> applicableAuthorizationResults = new();
-        foreach (var authorization in authorizations)
-        {
-            var authorizationResult = authorization.GetResult(report);
-            if (authorizationResult.IsApplicable)
-            {
-                applicableAuthorizationResults.Add(authorizationResult);
-            }
-        }
-
-        return new AuthorizationsSummary(applicableAuthorizationResults);
-    }
-
-    public abstract AuthorizationResult GetResult(Report report);
-
-    public record AuthorizationsSummary(
-        IEnumerable<AuthorizationResult> ApplicableAuthorizationResults
-    );
-
     public abstract string GetAuthorizationType();
 
     protected abstract void UpdateInternal(Authorization authorization);

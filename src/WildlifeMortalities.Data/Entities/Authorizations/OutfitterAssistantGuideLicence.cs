@@ -9,9 +9,6 @@ public class OutfitterAssistantGuideLicence : Authorization, IHasOutfitterAreas
 {
     public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 
-    public override AuthorizationResult GetResult(Report report) =>
-        throw new NotImplementedException();
-
     public override string GetAuthorizationType() => "Outfitter assistant guide licence";
 
     protected override void UpdateInternal(Authorization authorization)

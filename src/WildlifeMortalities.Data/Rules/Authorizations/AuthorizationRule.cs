@@ -2,12 +2,24 @@
 
 namespace WildlifeMortalities.Data.Rules.Authorizations;
 
-internal class AuthorizationRule : Rule
+public class AuthorizationRule : Rule
 {
+    private Func<AuthorizationRulePipelineContext, AuthorizationRulePipeline> _pipelineFactory;
+
+    internal AuthorizationRule(
+        Func<AuthorizationRulePipelineContext, AuthorizationRulePipeline> pipelineFactory
+    )
+    {
+        _pipelineFactory = pipelineFactory;
+    }
+
+    public AuthorizationRule()
+        : this((x) => new AuthorizationRulePipeline(x)) { }
+
     public override async Task<RuleResult> Process(Report report, AppDbContext context)
     {
         var pipelineContext = new AuthorizationRulePipelineContext(context);
-        var pipeline = new AuthorizationRulePipeline(pipelineContext);
+        var pipeline = _pipelineFactory.Invoke(pipelineContext);
 
         await pipeline.Process(report);
 
@@ -17,7 +29,7 @@ internal class AuthorizationRule : Rule
         }
         else
         {
-            return pipelineContext.UsedAuthorizations.Any()
+            return pipelineContext.RelevantAuthorizations.Any()
                 ? RuleResult.IsLegal
                 : RuleResult.NotApplicable;
         }

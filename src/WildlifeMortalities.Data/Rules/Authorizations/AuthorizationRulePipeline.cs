@@ -6,10 +6,14 @@ namespace WildlifeMortalities.Data.Rules.Authorizations;
 
 public class AuthorizationRulePipeline
 {
-    public IEnumerable<AuthorizationRulePipelineItem> Items { get; set; } =
-        new[] { new IndigenousAuthorizationRulePipelineItem() };
+    public IEnumerable<AuthorizationRulePipelineItem> Items { get; protected set; } =
+        new AuthorizationRulePipelineItem[]
+        {
+            new IndigenousAuthorizationRulePipelineItem(),
+            new BigGameHuntingLicenceRulePipelineItem()
+        };
 
-    private AuthorizationRulePipelineContext _context;
+    private readonly AuthorizationRulePipelineContext _context;
 
     public AuthorizationRulePipeline(AuthorizationRulePipelineContext context)
     {
@@ -35,6 +39,6 @@ public class AuthorizationRulePipelineContext
     }
 
     public ICollection<Violation> Violations { get; } = new List<Violation>();
-    public ICollection<Authorization> UsedAuthorizations { get; } = new List<Authorization>();
+    public ICollection<Authorization> RelevantAuthorizations { get; } = new List<Authorization>();
     public AppDbContext DbContext { get; }
 }

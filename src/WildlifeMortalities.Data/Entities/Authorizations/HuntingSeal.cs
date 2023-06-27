@@ -52,9 +52,6 @@ public class HuntingSeal : Authorization
     public int? HuntedActivityId { get; set; }
     public HuntedActivity? HuntedActivity { get; set; }
 
-    public override AuthorizationResult GetResult(Report report) =>
-        throw new NotImplementedException();
-
     public override string GetAuthorizationType() =>
         $"Hunting seal - {Type.GetDisplayName().ToLower()}";
 

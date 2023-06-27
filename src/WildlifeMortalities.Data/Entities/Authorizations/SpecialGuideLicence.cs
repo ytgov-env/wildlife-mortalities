@@ -13,9 +13,6 @@ public class SpecialGuideLicence : Authorization
     public int GuidedClientId { get; set; }
     public Client GuidedClient { get; set; } = null!;
 
-    public override AuthorizationResult GetResult(Report report) =>
-        throw new NotImplementedException();
-
     public override string GetAuthorizationType() => "Special guide licence";
 
     protected override void UpdateInternal(Authorization authorization)

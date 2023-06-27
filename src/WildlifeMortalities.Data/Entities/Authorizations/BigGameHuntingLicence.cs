@@ -45,9 +45,6 @@ public class BigGameHuntingLicence : Authorization, IHasOutfitterAreas
     public LicenceType Type { get; set; }
     public List<OutfitterArea> OutfitterAreas { get; set; } = null!;
 
-    public override AuthorizationResult GetResult(Report report) =>
-        throw new NotImplementedException();
-
     public override string GetAuthorizationType() =>
         $"Big game hunting licence - {Type.GetDisplayName().ToLower()}";
 

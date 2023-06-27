@@ -64,35 +64,6 @@ public class HuntingPermit : Authorization
 
     public bool IsWoodBisonRelated() => Type is PermitType.WoodBison;
 
-    public override AuthorizationResult GetResult(Report report)
-    {
-        if (report.HasHuntingActivity() == false)
-        {
-            return AuthorizationResult.NotApplicable(this);
-        }
-
-        // AuthorizationResult authorizationResult = new(this, new List<Violation>());
-
-        // if (IsCaribouRelated() &&
-        //     huntedMortalityReport.Mortality is CaribouMortality)
-        // {
-        // }
-        // else if (IsElkRelated() && huntedMortalityReport.Mortality is ElkMortality)
-        // {
-        // }
-        // else if (IsMooseRelated() && huntedMortalityReport.Mortality is MooseMortality)
-        // {
-        // }
-        // else if (IsWoodBisonRelated() && huntedMortalityReport.Mortality is WoodBisonMortality)
-        // {
-        // }
-        // else
-        // {
-        //     return AuthorizationResult.NotApplicable(this);
-        // }
-        throw new NotImplementedException();
-    }
-
     public override string GetAuthorizationType() =>
         $"Hunting permit - {Type.GetDisplayName().ToLower()}";
 
