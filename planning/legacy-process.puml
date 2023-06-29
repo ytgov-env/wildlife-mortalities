@@ -1,0 +1,19 @@
+@startuml legacy-process
+!theme materia
+skinparam backgroundColor white
+title legacy process
+
+actor "Client" as client
+actor "FOA/CO" as foa
+actor "F&W" as fw
+participant "WHIMSY" as whimsy
+client -> foa : provide paper harvest report
+foa -> foa : verify report
+loop
+    foa -> client: request missing information
+    client --> foa: provide missing information
+end
+foa -> client : thank client
+client -> client: leave
+foa -> fw : provide paper harvest report
+fw -> whimsy : enter harvest report

@@ -1,0 +1,21 @@
+@startuml transition-process
+!theme materia
+skinparam backgroundColor white
+title transition process
+
+actor "Client" as client
+actor "FOA/CO" as foa
+actor "F&W" as fw
+participant "WHIMSY" as whimsy
+participant "Wildlife Mortalities" as wm
+client -> foa : provide paper harvest report
+loop
+    foa -> foa : verify report
+    foa -> client: request missing information
+    client --> foa: provide missing information
+end
+foa -> client : thank client
+client -> client: leave
+foa -> wm : enter harvest report
+foa -> fw : provide paper harvest report
+fw -> whimsy : enter harvest report
