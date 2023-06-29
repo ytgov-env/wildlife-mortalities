@@ -38,6 +38,7 @@ public class Violation
         HarvestPeriod = 20,
         Authorization = 30,
         LateReport = 40,
+        LateBioSubmission = 50,
     }
 
     public enum SeverityType

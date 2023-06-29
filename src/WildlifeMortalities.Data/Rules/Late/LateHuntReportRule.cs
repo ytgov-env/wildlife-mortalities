@@ -1,33 +1,31 @@
-﻿using System.Diagnostics;
-using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Rules.Late;
 
-internal class LateHuntReportRule : Rule
+internal class LateHuntReportRule : LateRule<HuntedActivity>
 {
-    private static DateTimeOffset? GetLatestAcceptableReportTimestamp(HuntedActivity activity)
+    protected override DateTimeOffset? GetDeadlineTimestamp(HuntedActivity activity)
     {
-        //if (activity?.ActivityQueueItem?.BagLimitEntry?.MaxValueForThreshold == null)
-        //{
-        //    throw new ArgumentException();
-        //}
+        if (activity?.ActivityQueueItem?.BagLimitEntry == null)
+        {
+            throw new ArgumentException(
+                $"{nameof(BagLimitEntry)} must not be null. Probably a navigation property is not included.",
+                nameof(activity)
+            );
+        }
         return activity switch
         {
             { Mortality.Species: Species.Moose }
-            and { IsThreshold: true }
-                //{ Mortality.Species: Species.Moose }
-                //and { ActivityQueueItem.BagLimitEntry.MaxValueForThreshold: 0 }
-                => GetTimestampAfterKill(activity, 72),
+            and { ActivityQueueItem.BagLimitEntry.IsThreshold: true }
+                => activity.GetTimestampAfterKill(72),
             { Mortality.Species: Species.Moose }
-            and { IsThreshold: false }
-                => OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(
-                    activity
-                ),
+            and { ActivityQueueItem.BagLimitEntry.IsThreshold: false }
+                => activity.OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(),
             var _
                 when activity.Mortality
                     is CaribouMortality
@@ -35,12 +33,10 @@ internal class LateHuntReportRule : Rule
                             Herd: CaribouMortality.CaribouHerd.Fortymile
                                 or CaribouMortality.CaribouHerd.Nelchina
                         }
-                => GetTimestampAfterKill(activity, 72),
+                => activity.GetTimestampAfterKill(72),
             var _ when activity.Mortality is CaribouMortality and { Herd: _ }
-                => OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(
-                    activity
-                ),
-            { Mortality.Species: Species.WoodBison } => GetTimestampAfterKill(activity, 240),
+                => activity.OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(),
+            { Mortality.Species: Species.WoodBison } => activity.GetTimestampAfterKill(240),
             {
                 Mortality.Species: Species.ThinhornSheep
                     or Species.MountainGoat
@@ -50,77 +46,42 @@ internal class LateHuntReportRule : Rule
                     or Species.Coyote
                     or Species.Wolverine
             }
-                => OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(
-                    activity
+                => activity.OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(),
+            { Mortality.Species: Species.Elk } => activity.GetTimestampAfterKill(72),
+            { Mortality.Species: Species.GreyWolf }
+                => new DateTimeOffset(
+                    activity.ActivityQueueItem.BagLimitEntry.GetSeason().EndDate.Year,
+                    4,
+                    15,
+                    23,
+                    59,
+                    59,
+                    TimeSpan.FromHours(-7)
                 ),
-            { Mortality.Species: Species.Elk } => GetTimestampAfterKill(activity, 72),
-            //Todo: wolf
-            //{ Mortality.Species: Species.GreyWolf } => new DateTimeOffset(activity.Mortality.DateOfDeath.Value.Year, ),
             _ => null,
         };
     }
 
-    public override async Task<RuleResult> Process(Report report, AppDbContext context)
-    {
-        if (report.GeneralizedReportType is not GeneralizedReportType.Hunted)
-        {
-            return RuleResult.NotApplicable;
-        }
+    protected override Task<DateTimeOffset> GetTimestampThatMustOccurBeforeTheDeadline(
+        HuntedActivity _,
+        Report report,
+        AppDbContext __
+    ) => Task.FromResult(report.DateSubmitted);
 
-        var violations = new List<Violation>();
-        var isUsed = false;
-        foreach (
-            var activity in report
-                .GetActivities()
-                .OfType<HuntedActivity>()
-                .OrderBy(x => x.Mortality.DateOfDeath)
-        )
-        {
-            var latestAcceptableReportTimestamp = GetLatestAcceptableReportTimestamp(activity);
-
-            if (!latestAcceptableReportTimestamp.HasValue)
-            {
-                continue;
-            }
-
-            isUsed = true;
-            if (report.DateSubmitted > latestAcceptableReportTimestamp.Value)
-            {
-                violations.Add(
-                    new Violation(
-                        activity,
-                        Violation.RuleType.LateReport,
-                        Violation.SeverityType.Illegal,
-                        $"Report submitted after deadline for {activity.Mortality.Species.GetDisplayName()}. Deadline was {latestAcceptableReportTimestamp.Value:yyyy-MM-dd}."
-                    )
-                );
-            }
-        }
-
-        return !isUsed
-            ? RuleResult.NotApplicable
-            : (violations.Any() ? RuleResult.IsIllegal(violations) : RuleResult.IsLegal);
-    }
-
-    private static DateTimeOffset GetTimestampAfterKill(HuntedActivity activity, int hours) =>
-        activity.Mortality.DateOfDeath!.Value.AddDays(1).AddSeconds(-1).AddHours(hours);
-
-    private static DateTimeOffset OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(
-        HuntedActivity activity
+    protected override Violation GenerateViolation(
+        HuntedActivity activity,
+        Report report,
+        DateTimeOffset latestAcceptableTimestamp
     )
     {
-        var dateOfDeath = activity.Mortality.DateOfDeath!.Value;
-        var lastDayOfMonth = new DateTimeOffset(
-            dateOfDeath.Year,
-            dateOfDeath.Month,
-            1,
-            0,
-            0,
-            0,
-            dateOfDeath.Offset
-        )
-            .AddMonths(1)
-            .AddSeconds(-1);
-        return lastDayOfMonth.AddDays(15);
+        return new Violation(
+            activity,
+            Violation.RuleType.LateReport,
+            Violation.SeverityType.Illegal,
+            $"Report submitted after deadline for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {latestAcceptableTimestamp:yyyy-MM-dd}."
+        );
     }
+
+    protected override bool IsValidReportType(GeneralizedReportType type) =>
+        type == GeneralizedReportType.Hunted;
 }

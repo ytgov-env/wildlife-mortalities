@@ -3,19 +3,14 @@ using WildlifeMortalities.Data;
 
 namespace WildlifeMortalities.Test.Helpers;
 
-public class TestDbContextFactory : IDbContextFactory<AppDbContext>
+public static class TestDbContextFactory
 {
-    private readonly DbContextOptions<AppDbContext> _options;
-
-    public TestDbContextFactory(DbContextOptions<AppDbContext> options, bool cleanRequired = true)
+    public static AppDbContext GetContext()
     {
-        _options = options;
-        if (cleanRequired)
-        {
-            using var context = CreateDbContext();
-            context.Database.EnsureClean();
-        }
-    }
+        var builder = new DbContextOptionsBuilder<AppDbContext>();
+        var contextName = ThreadSafeRandom.Next().ToString();
+        builder.UseInMemoryDatabase(contextName);
 
-    public AppDbContext CreateDbContext() => new(_options);
+        return new AppDbContext(builder.Options);
+    }
 }

@@ -30,6 +30,7 @@ public abstract class BagLimitEntry
 
     //Todo: create violation on threshold exceeded
     public int? MaxValueForThreshold { get; set; }
+    public bool IsThreshold => MaxValueForThreshold.HasValue;
 
     public virtual bool Matches(HarvestActivity activity, Report report)
     {
@@ -43,8 +44,6 @@ public abstract class BagLimitEntry
 
     public void AddToQueue(HarvestActivity activity)
     {
-        activity.IsThreshold = MaxValueForThreshold.HasValue;
-
         ActivityQueue ??= new();
         ActivityQueue.Add(new ActivityQueueItem { Activity = activity, BagLimitEntry = this });
         ReorderQueue();
@@ -52,8 +51,6 @@ public abstract class BagLimitEntry
 
     public void RemoveFromQueue(HarvestActivity activity)
     {
-        activity.IsThreshold = false;
-
         ActivityQueue.Remove(ActivityQueue.First(x => x.Activity.Id == activity.Id));
         ReorderQueue();
     }
