@@ -1,9 +1,11 @@
-﻿using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+﻿using System.Diagnostics;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Rules.Late;
 using WildlifeMortalities.Test.Helpers;
 
@@ -22,7 +24,6 @@ public class LateBioSubmissionTester
     private static readonly DateTimeOffset s_15DaysPrevious = s_bioSubmissionSubmittedDate.AddDays(
         -15
     );
-
     private static readonly DateTimeOffset s_16DaysPrevious = s_bioSubmissionSubmittedDate.AddDays(
         -16
     );
@@ -176,11 +177,49 @@ public class LateBioSubmissionTester
                 s_lastDayOfPreviousPreviousMonth,
                 true
             ),
-            //Todo: wolf
+            GenerateTestCaseGreyWolf<HuntedActivity>(
+                new DateTimeOffset(2023, 10, 20, 0, 0, 0, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2023, 9, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                false
+            ),
+            GenerateTestCaseGreyWolf<HuntedActivity>(
+                new DateTimeOffset(2024, 3, 20, 0, 0, 0, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2024, 3, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                false
+            ),
+            GenerateTestCaseGreyWolf<HuntedActivity>(
+                new DateTimeOffset(2024, 4, 15, 23, 59, 59, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2024, 3, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                false
+            ),
+            GenerateTestCaseGreyWolf<HuntedActivity>(
+                new DateTimeOffset(2024, 4, 16, 0, 0, 0, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2024, 3, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                true
+            ),
             #endregion
 
             #region trapping
-            //Todo: wolf
+            GenerateTestCaseGreyWolf<TrappedActivity>(
+                new DateTimeOffset(2023, 10, 20, 0, 0, 0, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2023, 9, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                false
+            ),
+            GenerateTestCaseGreyWolf<TrappedActivity>(
+                new DateTimeOffset(2024, 3, 20, 0, 0, 0, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2024, 3, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                false
+            ),
+            GenerateTestCaseGreyWolf<TrappedActivity>(
+                new DateTimeOffset(2024, 4, 15, 23, 59, 59, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2024, 3, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                false
+            ),
+            GenerateTestCaseGreyWolf<TrappedActivity>(
+                new DateTimeOffset(2024, 4, 16, 0, 0, 0, TimeSpan.FromHours(-7)),
+                new DateTimeOffset(2024, 3, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
+                true
+            ),
             GenerateTestCase<WolverineMortality, WolverineBioSubmission, TrappedActivity>(
                 s_3DaysPrevious,
                 false
@@ -264,5 +303,47 @@ public class LateBioSubmissionTester
                 }
             }
         };
+    }
+
+    private static object[] GenerateTestCaseGreyWolf<TActivity>(
+        DateTimeOffset dateToVerify,
+        DateTimeOffset dateOfDeath,
+        bool shouldBeLate
+    )
+        where TActivity : HarvestActivity, new()
+    {
+        var bioSubmission = new GreyWolfBioSubmission()
+        {
+            DateSubmitted = dateToVerify,
+            Mortality = new GreyWolfMortality()
+            {
+                Sex = Data.Enums.Sex.Male,
+                DateOfDeath = dateOfDeath,
+                Activity = new TActivity()
+                {
+                    ActivityQueueItem = new()
+                    {
+                        BagLimitEntry =
+                            typeof(TActivity) == typeof(HuntedActivity)
+                                ? new HuntingBagLimitEntry()
+                                {
+                                    Season =
+                                        dateOfDeath.Month > 3
+                                            ? new HuntingSeason(dateOfDeath.Year)
+                                            : new HuntingSeason(dateOfDeath.Year - 1)
+                                }
+                                : new TrappingBagLimitEntry()
+                                {
+                                    PeriodEnd = dateOfDeath,
+                                    Season =
+                                        dateOfDeath.Month > 3
+                                            ? new TrappingSeason(dateOfDeath.Year)
+                                            : new TrappingSeason(dateOfDeath.Year - 1)
+                                }
+                    }
+                }
+            }
+        };
+        return new object[] { bioSubmission.Mortality.Activity, bioSubmission, shouldBeLate };
     }
 }

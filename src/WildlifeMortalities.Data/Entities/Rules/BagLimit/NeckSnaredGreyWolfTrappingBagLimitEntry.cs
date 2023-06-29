@@ -4,7 +4,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
-public class WolfTrappingBagLimitEntry : TrappingBagLimitEntry
+public class NeckSnaredGreyWolfTrappingBagLimitEntry : TrappingBagLimitEntry
 {
     override public bool Matches(HarvestActivity activity, Report report)
     {

@@ -48,9 +48,18 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
             }
                 => huntedActivity.OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(),
             TrappedActivity trappedActivity
-            and { Mortality.Species: Species.CanadaLynx or Species.Wolverine or Species.GreyWolf }
+            and { Mortality.Species: Species.CanadaLynx or Species.Wolverine }
                 => trappedActivity.OccuredMoreThanFifteenDaysAfterTheEndOfTheTrappingSeasonForSpecies(),
-            //Todo: wolf hunting
+            { Mortality.Species: Species.GreyWolf }
+                => new DateTimeOffset(
+                    activity.ActivityQueueItem.BagLimitEntry.GetSeason().EndDate.Year,
+                    4,
+                    15,
+                    23,
+                    59,
+                    59,
+                    TimeSpan.FromHours(-7)
+                ),
             _ => null
         };
     }

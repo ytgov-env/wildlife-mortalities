@@ -3,6 +3,7 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 namespace WildlifeMortalities.Test.Rules.BagLimit;
 
@@ -245,5 +246,45 @@ public class MatchesTester
 
             entry.Matches(activity, report).Should().BeFalse();
         }
+    }
+
+    [Theory]
+    [InlineData(TrappedActivity.HarvestMethodType.NeckSnare, true)]
+    [InlineData(TrappedActivity.HarvestMethodType.ConibearTrap, false)]
+    [InlineData(TrappedActivity.HarvestMethodType.LegholdTrap, false)]
+    [InlineData(TrappedActivity.HarvestMethodType.Other, false)]
+    public void Matches_WithMatchingGreyWolf_ReturnsTrue(
+        TrappedActivity.HarvestMethodType type,
+        bool shouldMatch
+    )
+    {
+        var concession = new RegisteredTrappingConcession { Id = 10, Area = "09" };
+        var report = new TrappedMortalitiesReport()
+        {
+            Season = new TrappingSeason(2023),
+            RegisteredTrappingConcession = concession
+        };
+
+        var entry = new NeckSnaredGreyWolfTrappingBagLimitEntry
+        {
+            RegisteredTrappingConcessions = new() { concession },
+            Season = (TrappingSeason)report.Season,
+            Sex = Data.Enums.Sex.Male,
+            Species = Data.Enums.Species.GreyWolf,
+            PeriodStart = report.Season.StartDate,
+            PeriodEnd = report.Season.EndDate,
+        };
+
+        var activity = new TrappedActivity
+        {
+            Mortality = new GreyWolfMortality
+            {
+                Sex = Data.Enums.Sex.Male,
+                DateOfDeath = report.Season.StartDate.AddDays(2)
+            },
+            HarvestMethod = type
+        };
+
+        entry.Matches(activity, report).Should().Be(shouldMatch);
     }
 }

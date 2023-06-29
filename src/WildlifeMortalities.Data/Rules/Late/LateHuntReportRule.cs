@@ -71,14 +71,14 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
     protected override Violation GenerateViolation(
         HuntedActivity activity,
         Report report,
-        DateTimeOffset latestAcceptableTimestamp
+        DateTimeOffset deadlineTimestamp
     )
     {
         return new Violation(
             activity,
             Violation.RuleType.LateReport,
             Violation.SeverityType.Illegal,
-            $"Report submitted after deadline for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {latestAcceptableTimestamp:yyyy-MM-dd}."
+            $"Report submitted after deadline for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
         );
     }
 

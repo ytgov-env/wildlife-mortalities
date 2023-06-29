@@ -19,12 +19,16 @@ public class LateHuntReportTester
 
     [Theory]
     [MemberData(nameof(GetTestActivities))]
-    public async Task Process_WithParameterizedInputs(HuntedActivity activity, bool shouldBeLate)
+    public async Task Process_WithParameterizedInputs(
+        HuntedActivity activity,
+        bool shouldBeLate,
+        DateTimeOffset? reportedSubmittedDate
+    )
     {
         var report = new IndividualHuntedMortalityReport
         {
             HuntedActivity = activity,
-            DateSubmitted = s_reportedSubmittedDate
+            DateSubmitted = reportedSubmittedDate ?? s_reportedSubmittedDate
         };
 
         var rule = new LateHuntReportRule();
@@ -44,51 +48,51 @@ public class LateHuntReportTester
     {
         return new List<object[]>
         {
-            //GenerateTestCase<MooseMortality>(s_3DaysPrevious, false, true),
-            //GenerateTestCase<MooseMortality>(s_4DaysPrevious, true, true),
-            //GenerateTestCase<MooseMortality>(s_15DaysPrevious, true, true),
-            //GenerateTestCase<MooseMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<MooseMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<MooseMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCaseCaribou(s_3DaysPrevious, false, CaribouMortality.CaribouHerd.Fortymile),
-            //GenerateTestCaseCaribou(s_4DaysPrevious, true, CaribouMortality.CaribouHerd.Fortymile),
-            //GenerateTestCaseCaribou(s_15DaysPrevious, true, CaribouMortality.CaribouHerd.Fortymile),
-            //GenerateTestCaseCaribou(s_3DaysPrevious, false, CaribouMortality.CaribouHerd.Nelchina),
-            //GenerateTestCaseCaribou(s_4DaysPrevious, true, CaribouMortality.CaribouHerd.Nelchina),
-            //GenerateTestCaseCaribou(s_15DaysPrevious, true, CaribouMortality.CaribouHerd.Nelchina),
-            //GenerateTestCaseCaribou(s_3DaysPrevious, false, CaribouMortality.CaribouHerd.Tay),
-            //GenerateTestCaseCaribou(s_15DaysPrevious, false, CaribouMortality.CaribouHerd.Tay),
-            //GenerateTestCaseCaribou(
-            //    s_lastDayOf2PriorMonths,
-            //    true,
-            //    CaribouMortality.CaribouHerd.Tay
-            //),
-            //GenerateTestCase<WoodBisonMortality>(s_reportedSubmittedDate.AddDays(-10), false),
-            //GenerateTestCase<WoodBisonMortality>(s_reportedSubmittedDate.AddDays(-11), true),
-            //GenerateTestCase<ThinhornSheepMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<ThinhornSheepMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<ThinhornSheepMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCase<MountainGoatMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<MountainGoatMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<MountainGoatMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCase<MuleDeerMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<MuleDeerMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<MuleDeerMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCase<ElkMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<ElkMortality>(s_15DaysPrevious, true),
-            //GenerateTestCase<ElkMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCase<GrizzlyBearMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<GrizzlyBearMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<GrizzlyBearMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCase<AmericanBlackBearMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<AmericanBlackBearMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<AmericanBlackBearMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCase<CoyoteMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<CoyoteMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<CoyoteMortality>(s_lastDayOf2PriorMonths, true),
-            //GenerateTestCase<WolverineMortality>(s_3DaysPrevious, false),
-            //GenerateTestCase<WolverineMortality>(s_15DaysPrevious, false),
-            //GenerateTestCase<WolverineMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<MooseMortality>(s_3DaysPrevious, false, true),
+            GenerateTestCase<MooseMortality>(s_4DaysPrevious, true, true),
+            GenerateTestCase<MooseMortality>(s_15DaysPrevious, true, true),
+            GenerateTestCase<MooseMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<MooseMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<MooseMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCaseCaribou(s_3DaysPrevious, false, CaribouMortality.CaribouHerd.Fortymile),
+            GenerateTestCaseCaribou(s_4DaysPrevious, true, CaribouMortality.CaribouHerd.Fortymile),
+            GenerateTestCaseCaribou(s_15DaysPrevious, true, CaribouMortality.CaribouHerd.Fortymile),
+            GenerateTestCaseCaribou(s_3DaysPrevious, false, CaribouMortality.CaribouHerd.Nelchina),
+            GenerateTestCaseCaribou(s_4DaysPrevious, true, CaribouMortality.CaribouHerd.Nelchina),
+            GenerateTestCaseCaribou(s_15DaysPrevious, true, CaribouMortality.CaribouHerd.Nelchina),
+            GenerateTestCaseCaribou(s_3DaysPrevious, false, CaribouMortality.CaribouHerd.Tay),
+            GenerateTestCaseCaribou(s_15DaysPrevious, false, CaribouMortality.CaribouHerd.Tay),
+            GenerateTestCaseCaribou(
+                s_lastDayOf2PriorMonths,
+                true,
+                CaribouMortality.CaribouHerd.Tay
+            ),
+            GenerateTestCase<WoodBisonMortality>(s_reportedSubmittedDate.AddDays(-10), false),
+            GenerateTestCase<WoodBisonMortality>(s_reportedSubmittedDate.AddDays(-11), true),
+            GenerateTestCase<ThinhornSheepMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<ThinhornSheepMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<ThinhornSheepMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<MountainGoatMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<MountainGoatMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<MountainGoatMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<MuleDeerMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<MuleDeerMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<MuleDeerMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<ElkMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<ElkMortality>(s_15DaysPrevious, true),
+            GenerateTestCase<ElkMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<GrizzlyBearMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<GrizzlyBearMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<GrizzlyBearMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<AmericanBlackBearMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<AmericanBlackBearMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<AmericanBlackBearMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<CoyoteMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<CoyoteMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<CoyoteMortality>(s_lastDayOf2PriorMonths, true),
+            GenerateTestCase<WolverineMortality>(s_3DaysPrevious, false),
+            GenerateTestCase<WolverineMortality>(s_15DaysPrevious, false),
+            GenerateTestCase<WolverineMortality>(s_lastDayOf2PriorMonths, true),
             GenerateTestCaseGreyWolf(
                 new DateTimeOffset(2024, 3, 20, 0, 0, 0, TimeSpan.FromHours(-7)),
                 new DateTimeOffset(2024, 3, 15, 0, 0, 0, TimeSpan.FromHours(-7)),
@@ -114,7 +118,12 @@ public class LateHuntReportTester
     )
         where T : Mortality, new()
     {
-        return new object[] { GetHuntedActivity<T>(dateToVerify, isThreshold), shouldBeLate };
+        return new object[]
+        {
+            GetHuntedActivity<T>(dateToVerify, isThreshold),
+            shouldBeLate,
+            null!
+        };
     }
 
     private static object[] GenerateTestCaseCaribou(
@@ -125,7 +134,7 @@ public class LateHuntReportTester
     {
         var activity = GetHuntedActivity<CaribouMortality>(dateOfDeath);
         (activity.Mortality as CaribouMortality)!.Herd = herd;
-        return new object[] { activity, shouldBeLate };
+        return new object[] { activity, shouldBeLate, null! };
     }
 
     private static HuntedActivity GetHuntedActivity<T>(
@@ -167,6 +176,6 @@ public class LateHuntReportTester
                 }
             }
         };
-        return new object[] { activity, shouldBeLate };
+        return new object[] { activity, shouldBeLate, dateToVerify };
     }
 }
