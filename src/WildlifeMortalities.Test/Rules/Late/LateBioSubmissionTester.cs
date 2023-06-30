@@ -52,7 +52,7 @@ public class LateBioSubmissionTester
         }
 
         var rule = new LateBioSubmissionRule();
-        var context = TestDbContextFactory.GetContext();
+        var context = TestDbContextFactory.CreateContext();
         context.BioSubmissions.Add(bioSubmission);
         await context.SaveChangesAsync();
         var result = await rule.Process(report, context);

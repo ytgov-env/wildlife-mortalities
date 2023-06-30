@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
@@ -64,26 +58,26 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
         };
     }
 
-    protected override async Task<DateTimeOffset> GetTimestampThatMustOccurBeforeTheDeadline(
+    protected override async Task<DateTimeOffset?> GetTimestampThatMustOccurBeforeTheDeadline(
         HarvestActivity activity,
         Report _,
         AppDbContext context
     )
     {
         var bioSubmission = await context.BioSubmissions.FirstAsync(x => x.Id == activity.Id);
-        return bioSubmission?.DateSubmitted ?? DateTimeOffset.Now;
+        return bioSubmission?.DateSubmitted;
     }
 
     protected override Violation GenerateViolation(
         HarvestActivity activity,
         Report _,
-        DateTimeOffset latestAcceptableTimestamp
+        DateTimeOffset deadlineTimestamp
     ) =>
         new(
             activity,
             Violation.RuleType.LateBioSubmission,
             Violation.SeverityType.Illegal,
-            $"Biological submission was not submitted for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {latestAcceptableTimestamp:yyyy-MM-dd}."
+            $"Biological submission was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
         );
 
     protected override bool IsValidReportType(GeneralizedReportType type) =>

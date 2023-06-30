@@ -19,7 +19,7 @@ namespace WildlifeMortalities.Test.Rules.BagLimit;
 
 public class ProcessTester
 {
-    private static AppDbContext GetContext() => TestDbContextFactory.GetContext();
+    private static AppDbContext GetContext() => TestDbContextFactory.CreateContext();
 
     private static void GenerateHuntingBagLimitDefaults(
         out AppDbContext context,
@@ -127,7 +127,8 @@ public class ProcessTester
                 Mortality = new CaribouMortality()
                 {
                     DateOfDeath = new DateTimeOffset(2023, 4, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
-                    Herd = CaribouMortality.CaribouHerd.Atlin
+                    Herd = CaribouMortality.CaribouHerd.Atlin,
+                    Sex = Data.Enums.Sex.Unknown
                 },
                 GameManagementArea = new GameManagementArea
                 {
@@ -148,7 +149,9 @@ public class ProcessTester
 
         violation.Description
             .Should()
-            .BeEquivalentTo("Area 4-03 is closed to harvest for caribou on 2023-04-01.");
+            .BeEquivalentTo(
+                "Area 4-03 is closed to hunting for caribou of unknown sex on 2023-04-01."
+            );
         violation.Activity.Should().Be(report.HuntedActivity);
         violation.Severity.Should().Be(SeverityType.Illegal);
         violation.Rule.Should().Be(RuleType.HarvestPeriod);
@@ -231,7 +234,7 @@ public class ProcessTester
         violation.Description
             .Should()
             .BeEquivalentTo(
-                "Bag limit exceeded for Caribou and Black bear in 4-03 for 23/24 season."
+                "Bag limit exceeded for caribou and black bear in 4-03 for 23/24 season."
             );
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
@@ -530,7 +533,9 @@ public class ProcessTester
 
         violation.Description
             .Should()
-            .BeEquivalentTo("Area 15 is closed to harvest for beaver on 2023-07-01.");
+            .BeEquivalentTo(
+                "Concession 15 is closed to trapping for beaver of male sex on 2023-07-01."
+            );
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
         violation.Rule.Should().Be(RuleType.HarvestPeriod);

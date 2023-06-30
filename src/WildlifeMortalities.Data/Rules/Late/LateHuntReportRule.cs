@@ -62,11 +62,11 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
         };
     }
 
-    protected override Task<DateTimeOffset> GetTimestampThatMustOccurBeforeTheDeadline(
+    protected override Task<DateTimeOffset?> GetTimestampThatMustOccurBeforeTheDeadline(
         HuntedActivity _,
         Report report,
         AppDbContext __
-    ) => Task.FromResult(report.DateSubmitted);
+    ) => Task.FromResult<DateTimeOffset?>(report.DateSubmitted);
 
     protected override Violation GenerateViolation(
         HuntedActivity activity,

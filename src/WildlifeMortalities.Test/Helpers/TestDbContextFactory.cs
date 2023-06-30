@@ -5,7 +5,7 @@ namespace WildlifeMortalities.Test.Helpers;
 
 public static class TestDbContextFactory
 {
-    public static AppDbContext GetContext()
+    public static AppDbContext CreateContext()
     {
         var builder = new DbContextOptionsBuilder<AppDbContext>();
         var contextName = ThreadSafeRandom.Next().ToString();

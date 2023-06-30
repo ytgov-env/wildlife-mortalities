@@ -56,7 +56,7 @@ public class Violation
             activity,
             RuleType.HarvestPeriod,
             SeverityType.Illegal,
-            $"Area {activity.GetAreaName(report)} is closed to harvest for {activity.Mortality.Species.GetDisplayName().ToLower()} on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+            $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Species.GetDisplayName().ToLower()} of {activity.Mortality.Sex!.GetDisplayName().ToLower()} sex on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
         );
 
     internal static Violation BagLimitExceeded(

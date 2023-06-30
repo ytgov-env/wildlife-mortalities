@@ -11,7 +11,7 @@ public abstract class LateRule<TActivity> : Rule
 {
     protected abstract DateTimeOffset? GetDeadlineTimestamp(TActivity activity);
     protected abstract bool IsValidReportType(GeneralizedReportType type);
-    protected abstract Task<DateTimeOffset> GetTimestampThatMustOccurBeforeTheDeadline(
+    protected abstract Task<DateTimeOffset?> GetTimestampThatMustOccurBeforeTheDeadline(
         TActivity activity,
         Report report,
         AppDbContext context
@@ -45,11 +45,14 @@ public abstract class LateRule<TActivity> : Rule
                 continue;
             }
 
+            var timestampThatMustOccurBeforeTheDeadline =
+                await GetTimestampThatMustOccurBeforeTheDeadline(activity, report, context);
+            if (!timestampThatMustOccurBeforeTheDeadline.HasValue)
+            {
+                continue;
+            }
             isUsed = true;
-            if (
-                await GetTimestampThatMustOccurBeforeTheDeadline(activity, report, context)
-                > deadlineTimestamp.Value
-            )
+            if (timestampThatMustOccurBeforeTheDeadline.Value > deadlineTimestamp.Value)
             {
                 violations.Add(GenerateViolation(activity, report, deadlineTimestamp.Value));
             }

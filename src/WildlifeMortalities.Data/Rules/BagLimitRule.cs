@@ -63,11 +63,7 @@ public class BagLimitRule : Rule
                         .Include(x => x.ActivityQueue)
                         .ThenInclude(x => x.Activity)
                         .ThenInclude(x => x.Mortality)
-                        .Where(
-                            x =>
-                                //x.Season.Id == report.Season.Id &&
-                                x.Species == activity.Mortality.Species
-                        )
+                        .Where(x => x.Species == activity.Mortality.Species)
                         .ToArrayAsync()
                 ).FirstOrDefault(x => x.Matches(activity, report));
 
