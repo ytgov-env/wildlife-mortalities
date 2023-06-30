@@ -39,6 +39,7 @@ public class Violation
         Authorization = 30,
         LateReport = 40,
         LateBioSubmission = 50,
+        MissingBioSubmission = 60,
     }
 
     public enum SeverityType
@@ -49,7 +50,6 @@ public class Violation
     }
 
     #region Violations
-
 
     internal static Violation IllegalHarvestPeriod(HarvestActivity activity, Report report) =>
         new(
