@@ -1,0 +1,68 @@
+@startuml goal-process-stage2
+!theme materia
+skinparam backgroundColor white
+title goal process (stage 2)
+
+actor "Client" as client
+actor "FOA" as foa
+participant "Wildlife Mortalities" as wm
+participant "AIMES" as aimes
+actor "CO" as co
+actor "F&W" as fw
+alt phone
+    client -> foa : call
+else in person
+    client -> foa : enter ENV office
+end
+loop
+    foa -> client : request information
+    client --> foa : provide information
+    foa -> wm : enter data
+end
+loop
+    foa -> wm : submit report
+    wm -> wm : validate data
+    
+    alt #LightPink validation failure
+        wm --> foa: reject report
+        alt error by FOA
+            foa -> foa : fix error
+        else error by client
+            foa -> client : request corrected information
+            client --> foa : provide corrected information
+            foa -> foa : fix error
+        end
+    else #LightGreen validation success
+        wm -> wm: save report and exit loop
+    end
+end
+wm -> wm : analyze report and generate violations
+note left 
+check:
+    deadlines,
+    authorizations,
+    bio submission(s),
+    harvest period(s),
+    bag limit(s),
+    threshold(s),
+    etc.
+end note
+wm --> foa : display submitted report
+alt #LightPink report has violation(s)
+    foa -> client : inform client of violation(s)
+    wm -> aimes : notify
+    aimes -> co : notify
+else #LightGreen report has no violation
+end
+foa -> wm : request report PDF
+wm -> wm : generate PDF
+wm --> foa : provide PDF
+foa -> foa : print PDF
+alt in person
+foa -> client : provide printed report
+else phone
+foa -> client : mail printed report (?)
+end
+foa -> client : thank client
+client -> client: leave/hang up
+fw -> wm : view report

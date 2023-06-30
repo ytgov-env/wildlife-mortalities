@@ -4,16 +4,32 @@ skinparam backgroundColor white
 title legacy process
 
 actor "Client" as client
-actor "FOA/CO" as foa
+actor "FOA" as foa
+actor "CO" as co
+participant "POSSE" as posse
 actor "F&W" as fw
 participant "WHIMSY" as whimsy
-client -> foa : provide paper harvest report
-foa -> foa : verify report
+alt phone
+    client -> foa : call
+else in person
+    client -> foa : enter ENV office
+end
+foa -> foa : begin paper harvest report
+foa -> posse : request client profile
+posse --> foa : provide client profile
+foa -> foa : write down client details
 loop
     foa -> client: request missing information
     client --> foa: provide missing information
+    foa -> foa : check for missing information
 end
+foa -> foa : manually verify authorizations
+alt #LightPink missing required authorization(s)
+    foa -> co : notify
+else #LightGreen has required authorization(s)
+end
+
 foa -> client : thank client
-client -> client: leave
+client -> client: leave/hang up
 foa -> fw : provide paper harvest report
 fw -> whimsy : enter harvest report
