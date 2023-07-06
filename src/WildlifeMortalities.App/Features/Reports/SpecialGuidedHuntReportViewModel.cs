@@ -77,7 +77,8 @@ public class SpecialGuidedHuntReportViewModelValidator
             .WithMessage("Please enter the hunting dates.");
         RuleFor(x => x.HuntingDateRange)
             .Must(
-                (model, dateRange) => dateRange.End <= (model.DateSubmitted ?? DateTimeOffset.Now)
+                (model, dateRange) =>
+                    dateRange.End <= (model.DateSubmitted?.Date ?? DateTimeOffset.Now.Date)
             )
             .When(x => x.Result is not GuidedHuntResult.DidNotHunt)
             .WithMessage("The hunting dates cannot be in the future.");
