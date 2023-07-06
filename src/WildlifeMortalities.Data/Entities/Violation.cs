@@ -32,14 +32,25 @@ public class Violation
     public SeverityType Severity { get; init; }
     public string Description { get; set; } = string.Empty;
 
+    // 0-99 Bag Limits
+    // 100-199 Authorizations
+    // 200-299 Biological Submissions
+    // 300-399 Late
+    // 400-499 Other
     public enum RuleType
     {
         BagLimit = 10,
         HarvestPeriod = 20,
-        Authorization = 30,
-        LateReport = 40,
-        LateBioSubmission = 50,
-        MissingBioSubmission = 60,
+        Authorization = 100,
+        NoValidBigGameHuntingLicence = 110,
+        SpecialGuidedWithoutValidLicence = 120,
+        HuntedWithoutAGuideAsCanadianResident = 130,
+        AllRequiredSamplesNotSubmitted = 200,
+        SomeRequiredSamplesNotSubmitted = 210,
+        SheepEyeSocketIncomplete = 220,
+        SheepYoungerThan8AndNotFullCurl = 230,
+        LateReport = 300,
+        LateBioSubmission = 310,
     }
 
     public enum SeverityType
