@@ -43,40 +43,6 @@ namespace WildlifeMortalities.App.Features.Reports
             _outfitterAreas = await MortalityService.GetOutfitterAreas();
         }
 
-        public void AddAssistantGuide()
-        {
-            var input = ViewModel.SelectedAssistantGuide;
-            if (input != null)
-            {
-                var hasErrors = false;
-                if (ViewModel.AssistantGuides.Count == _maxAssistantGuides)
-                {
-                    SnackBar.Add(
-                        $"You may add up to {_maxAssistantGuides} assistant guides",
-                        Severity.Error
-                    );
-                    hasErrors = true;
-                }
-                else if (ViewModel.AssistantGuides.Any(x => x.EnvPersonId == input.EnvPersonId))
-                {
-                    hasErrors = true;
-                    SnackBar.Add(
-                        $"{input.FirstName} {input.LastName} already added",
-                        Severity.Error
-                    );
-                }
-
-                if (hasErrors == false)
-                {
-                    ViewModel.AssistantGuides.Add(input);
-                    ViewModel.SelectedAssistantGuide = null;
-                    EditContext.NotifyFieldChanged(
-                        FieldIdentifier.Create(() => ViewModel.AssistantGuides)
-                    );
-                }
-            }
-        }
-
         private async Task Add()
         {
             var parameters = new DialogParameters
@@ -110,12 +76,6 @@ namespace WildlifeMortalities.App.Features.Reports
         private void Delete(HuntedActivityViewModel viewModel)
         {
             ViewModel.HuntedActivityViewModels.Remove(viewModel);
-        }
-
-        private void DeleteGuide(Client guide)
-        {
-            ViewModel.AssistantGuides.Remove(guide);
-            EditContext.NotifyFieldChanged(FieldIdentifier.Create(() => ViewModel.AssistantGuides));
         }
 
         private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(

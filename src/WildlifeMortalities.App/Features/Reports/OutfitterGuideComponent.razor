@@ -1,0 +1,26 @@
+﻿@using WildlifeMortalities.Data.Entities.People;
+@if (ReadOnly)
+{
+    <MudField Label="@Label" DisableUnderLine="true" Class="mb-2">@Guide.FirstName @Guide.LastName</MudField>
+}
+else
+{
+    <MudText>@Label</MudText>
+    <MudStack Row="true">
+        <MudTextField Label="First name" @bind-Value="@Guide.FirstName" For="(() => Guide.FirstName)" Class="mb-2" />
+        <MudTextField Label="Last name" @bind-Value="@Guide.LastName" For="(() => Guide.LastName)" />
+    </MudStack>
+}
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public string Label { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public OutfitterGuide Guide { get; set; } = null!;
+
+    [Parameter]
+    public bool ReadOnly { get; set; } = true;
+}

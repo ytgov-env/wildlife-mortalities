@@ -16,10 +16,8 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
     [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(HuntEndDate)}")]
     public DateTime? HuntEndDate { get; set; }
 
-    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(ChiefGuideId)}")]
-    public int ChiefGuideId { get; set; }
-    public Client ChiefGuide { get; set; } = null!;
-    public List<Client> AssistantGuides { get; set; } = null!;
+    public OutfitterGuide ChiefGuide { get; set; } = null!;
+    public List<OutfitterGuide> AssistantGuides { get; set; } = null!;
 
     [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(OutfitterAreaId)}")]
     public int OutfitterAreaId { get; set; }
@@ -56,7 +54,7 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
         var guides = string.Empty;
         foreach (var guide in AssistantGuides)
         {
-            guides += $"{guide.FirstName} {guide.LastName} ({guide.EnvPersonId}), ";
+            guides += $"{guide.FirstName} {guide.LastName}, ";
         }
 
         return guides[..^2];
@@ -79,18 +77,11 @@ public class OutfitterGuidedHuntReportConfig : IEntityTypeConfiguration<Outfitte
             .OnDelete(DeleteBehavior.NoAction);
         builder
             .HasOne(o => o.ChiefGuide)
-            .WithMany(c => c.OutfitterGuidedHuntReportsAsChiefGuide)
+            .WithOne(c => c.ReportAsChiefGuide)
             .OnDelete(DeleteBehavior.NoAction);
         builder
             .HasMany(o => o.AssistantGuides)
-            .WithMany(c => c.OutfitterGuidedHuntReportsAsAssistantGuide)
-            .UsingEntity<Dictionary<string, object>>(
-                "AssistantGuideOutfitterGuidedHuntReport",
-                j => j.HasOne<Client>().WithMany().OnDelete(DeleteBehavior.ClientCascade),
-                j =>
-                    j.HasOne<OutfitterGuidedHuntReport>()
-                        .WithMany()
-                        .OnDelete(DeleteBehavior.ClientCascade)
-            );
+            .WithOne(c => c.ReportAsAssistantGuide)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

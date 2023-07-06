@@ -23,10 +23,6 @@ public class Client : PersonWithAuthorizations
     public List<IndividualHuntedMortalityReport> IndividualHuntedMortalityReports { get; set; } =
         null!;
     public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsClient { get; set; } = null!;
-    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsChiefGuide { get; set; } =
-        null!;
-    public List<OutfitterGuidedHuntReport> OutfitterGuidedHuntReportsAsAssistantGuide { get; set; } =
-        null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsClient { get; set; } = null!;
     public List<SpecialGuidedHuntReport> SpecialGuidedHuntReportsAsGuide { get; set; } = null!;
     public List<TrappedMortalitiesReport> TrappedMortalitiesReports { get; set; } = null!;
@@ -75,12 +71,6 @@ public class Client : PersonWithAuthorizations
         );
         OutfitterGuidedHuntReportsAsClient.AddRange(
             clientToBeMerged.OutfitterGuidedHuntReportsAsClient
-        );
-        OutfitterGuidedHuntReportsAsChiefGuide.AddRange(
-            clientToBeMerged.OutfitterGuidedHuntReportsAsChiefGuide
-        );
-        OutfitterGuidedHuntReportsAsAssistantGuide.AddRange(
-            clientToBeMerged.OutfitterGuidedHuntReportsAsAssistantGuide
         );
         SpecialGuidedHuntReportsAsClient.AddRange(
             clientToBeMerged.SpecialGuidedHuntReportsAsClient

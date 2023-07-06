@@ -12,32 +12,11 @@
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
 
 <MudPaper Class="pa-4 my-4">
-    <MudAutocomplete T="Client" For="@(() => ViewModel.ChiefGuide)" Label="Chief guide" Placeholder="Search by client id or last name" MinCharacters="2"
-                     @bind-Value="ViewModel.ChiefGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvPersonId} | {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
-                     AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
-    </MudAutocomplete>
-    @if(ViewModel.AssistantGuides.Count < _maxAssistantGuides)
-    {
-        <MudAutocomplete T="Client" @key="ViewModel.AssistantGuides.Count" Label="Add assistant guide(s)" Placeholder="Search by client id or last name" MinCharacters="2"
-                         @bind-Value="ViewModel.SelectedAssistantGuide" @bind-Value:after="AddAssistantGuide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvPersonId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
-                         AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6">
-        </MudAutocomplete>
-    }
-
-    <MudList>
-        @foreach (var item in ViewModel.AssistantGuides)
-        {
-            <MudListItem>
-                <MudStack Row="true">
-                    <MudField DisableUnderLine="true" Label="Assistant guide">@item</MudField>
-                    <MudSpacer/>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteGuide(item))"/>
-                </MudStack>
-            </MudListItem>
-        }
-    </MudList>
-    <!--suppress CssUnresolvedCustomProperty -->
-    <ValidationMessage For="@(() => ViewModel.AssistantGuides)" Style="font-size: 12px; color: var(--mud-palette-error);"/>
+    <OutfitterGuideComponent Label="Chief guide" Guide="ViewModel.ChiefGuide" ReadOnly="false" />
+    <MudStack>
+        <OutfitterGuideComponent Label="Assistant guide #1" Guide="ViewModel.AssistantGuides[0]" ReadOnly="false" />
+        <OutfitterGuideComponent Label="Assistant guide #2" Guide="ViewModel.AssistantGuides[1]" ReadOnly="false" />
+    </MudStack>
 </MudPaper>
 
 <MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result" For="@(() => ViewModel.Result)">

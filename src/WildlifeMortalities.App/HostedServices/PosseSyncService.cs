@@ -29,8 +29,6 @@ public class PosseSyncService : TimerBasedHostedService
             .Include(x => x.DraftReports)
             .Include(x => ((Client)x).SpecialGuideLicencesAsClient)
             .Include(x => ((Client)x).IndividualHuntedMortalityReports)
-            .Include(x => ((Client)x).OutfitterGuidedHuntReportsAsChiefGuide)
-            .Include(x => ((Client)x).OutfitterGuidedHuntReportsAsAssistantGuide)
             .Include(x => ((Client)x).OutfitterGuidedHuntReportsAsClient)
             .Include(x => ((Client)x).SpecialGuidedHuntReportsAsGuide)
             .Include(x => ((Client)x).SpecialGuidedHuntReportsAsClient)

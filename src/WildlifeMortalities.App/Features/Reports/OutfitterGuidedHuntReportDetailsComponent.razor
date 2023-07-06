@@ -10,12 +10,12 @@
     <MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>
     <MudList Dense="true" Class="ml-n4">
         <MudListItem>
-            <GuideComponent Guide="@Report.ChiefGuide" Label="Chief guide"/>
+            <OutfitterGuideComponent Guide="@Report.ChiefGuide" Label="Chief guide"/>
         </MudListItem>
         @foreach (var item in Report.AssistantGuides)
         {
             <MudListItem>
-                <GuideComponent Guide="item" Label="Assistant guide"/>
+                <OutfitterGuideComponent Guide="item" Label="Assistant guide" />
             </MudListItem>
         }
     </MudList>

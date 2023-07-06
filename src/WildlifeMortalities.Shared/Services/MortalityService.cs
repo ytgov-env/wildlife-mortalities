@@ -83,11 +83,14 @@ public class MortalityService : IMortalityService
         OutfitterGuidedHuntReport? existingReport
     )
     {
-        var newAssistantGuideIds = report.AssistantGuides.ConvertAll(x => x.Id);
+        report.AssistantGuides = report.AssistantGuides
+            .Where(x => string.IsNullOrEmpty(x.FirstName) == false)
+            .ToList();
 
-        var assistantGuides = await context.People
-            .OfType<Client>()
-            .Where(x => newAssistantGuideIds.Contains(x.Id))
+        var inputAssistantGuideIds = report.AssistantGuides.ConvertAll(x => x.Id);
+
+        var assistantGuides = await context.OutfitterGuides
+            .Where(x => inputAssistantGuideIds.Contains(x.Id))
             .ToListAsync();
 
         if (existingReport != null)
@@ -95,8 +98,8 @@ public class MortalityService : IMortalityService
             var existingAssistantGuideIds =
                 existingReport.AssistantGuides.Select(y => y.Id) ?? new List<int>();
 
-            var idsToAdd = newAssistantGuideIds
-                .Except(newAssistantGuideIds.Intersect(existingAssistantGuideIds))
+            var idsToAdd = inputAssistantGuideIds
+                .Except(inputAssistantGuideIds.Intersect(existingAssistantGuideIds))
                 .ToArray();
 
             existingReport.AssistantGuides.AddRange(
@@ -104,7 +107,7 @@ public class MortalityService : IMortalityService
             );
 
             var idsToRemove = existingAssistantGuideIds
-                .Except(existingAssistantGuideIds.Intersect(newAssistantGuideIds))
+                .Except(existingAssistantGuideIds.Intersect(inputAssistantGuideIds))
                 .ToArray();
 
             foreach (var id in idsToRemove)
@@ -113,10 +116,6 @@ public class MortalityService : IMortalityService
                 existingReport.AssistantGuides.Remove(existingGuide);
             }
         }
-        else
-        {
-            report.AssistantGuides = assistantGuides;
-        }
 
         var area = await context.OutfitterAreas.FirstOrDefaultAsync(
             x => x.Area == report.OutfitterArea.Area
@@ -124,6 +123,7 @@ public class MortalityService : IMortalityService
         if (area != null)
         {
             report.OutfitterArea = area;
+            report.OutfitterAreaId = area.Id;
         }
         else
         {

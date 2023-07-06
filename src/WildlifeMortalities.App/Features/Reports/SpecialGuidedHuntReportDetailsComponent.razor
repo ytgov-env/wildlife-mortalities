@@ -7,7 +7,7 @@
     {
         <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" /> @Report.HuntEndDate?.ToString("D")</MudField>
     }
-    <GuideComponent Guide="@Report.Guide" Label="Guide"/>
+    <MudField Label="Guide" DisableUnderLine="true">@Report.Guide</MudField>
     <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
 </MudItem>
 

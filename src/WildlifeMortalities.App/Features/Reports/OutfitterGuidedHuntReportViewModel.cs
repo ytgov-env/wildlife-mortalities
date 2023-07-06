@@ -20,7 +20,10 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
         HuntingDateRange.Start = report.HuntStartDate;
         HuntingDateRange.End = report.HuntEndDate;
         ChiefGuide = report.ChiefGuide;
-        AssistantGuides = report.AssistantGuides;
+        AssistantGuides = report.AssistantGuides
+            .Union(Enumerable.Range(0, 2).Select(_ => new OutfitterGuide()))
+            .Take(2)
+            .ToArray();
         OutfitterArea = report.OutfitterArea;
         Result = report.Result;
         HuntedActivityViewModels = report.HuntedActivities
@@ -30,9 +33,10 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
     }
 
     public DateRange HuntingDateRange { get; set; } = new();
-    public Client? SelectedAssistantGuide { get; set; }
-    public Client? ChiefGuide { get; set; }
-    public List<Client> AssistantGuides { get; set; } = new();
+    public OutfitterGuide? SelectedAssistantGuide { get; set; }
+    public OutfitterGuide? ChiefGuide { get; set; } = new();
+    public OutfitterGuide[] AssistantGuides { get; } =
+        new[] { new OutfitterGuide(), new OutfitterGuide() };
     public OutfitterArea? OutfitterArea { get; set; }
     public GuidedHuntResult? Result { get; set; }
 
@@ -46,31 +50,45 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
             HuntedActivityViewModels.Clear();
         }
 
-        var report = Result is not GuidedHuntResult.DidNotHunt
-            ? new OutfitterGuidedHuntReport
-            {
-                HuntStartDate = (DateTime)HuntingDateRange!.Start!,
-                HuntEndDate = (DateTime)HuntingDateRange.End!,
-                ChiefGuideId = ChiefGuide!.Id,
-                AssistantGuides = AssistantGuides,
-                OutfitterArea = OutfitterArea!,
-                Result = Result!.Value,
-                ClientId = personId,
-                HuntedActivities = HuntedActivityViewModels.Select(x => x.GetActivity()).ToList(),
-                Id = _reportId,
-            }
-            : new OutfitterGuidedHuntReport
-            {
-                ChiefGuideId = ChiefGuide!.Id,
-                AssistantGuides = AssistantGuides,
-                OutfitterArea = OutfitterArea!,
-                Result = Result!.Value,
-                ClientId = personId,
-                Id = _reportId,
-            };
+        var report = new OutfitterGuidedHuntReport
+        {
+            ChiefGuide = ChiefGuide!.Id == 0 ? ChiefGuide : null!,
+            AssistantGuides = AssistantGuides.ToList(),
+            OutfitterArea = OutfitterArea!,
+            Result = Result!.Value,
+            ClientId = personId,
+            Id = _reportId,
+        };
+
+        if (Result is not GuidedHuntResult.DidNotHunt)
+        {
+            report.HuntStartDate = (DateTime)HuntingDateRange!.Start!;
+            report.HuntEndDate = (DateTime)HuntingDateRange.End!;
+            report.HuntedActivities = HuntedActivityViewModels
+                .Select(x => x.GetActivity())
+                .ToList();
+        }
 
         SetReportBaseValues(report);
         return report;
+    }
+}
+
+public class OutfitterGuideValidator : AbstractValidator<OutfitterGuide?>
+{
+    public OutfitterGuideValidator(bool? isRequired = null)
+    {
+        if (isRequired == true)
+        {
+            When(
+                x => x is not null,
+                () =>
+                {
+                    RuleFor(x => x!.FirstName).NotEmpty();
+                    RuleFor(x => x!.LastName).NotEmpty();
+                }
+            );
+        }
     }
 }
 
@@ -79,8 +97,10 @@ public class OutfitterGuidedHuntReportViewModelValidator
 {
     public OutfitterGuidedHuntReportViewModelValidator()
     {
-        RuleFor(x => x.ChiefGuide).NotNull();
-        RuleFor(x => x.AssistantGuides).NotEmpty();
+        RuleFor(x => x.ChiefGuide).NotNull().SetValidator((_) => new OutfitterGuideValidator(true));
+        RuleForEach(x => x.AssistantGuides)
+            .SetValidator((x, y) => new OutfitterGuideValidator(x.AssistantGuides.First() == y));
+
         RuleFor(x => x.OutfitterArea).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
         RuleFor(x => x.HuntingDateRange)

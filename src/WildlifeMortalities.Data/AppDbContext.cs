@@ -21,6 +21,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Person> People => Set<Person>();
+    public DbSet<OutfitterGuide> OutfitterGuides => Set<OutfitterGuide>();
     public DbSet<Season> Seasons => Set<Season>();
 
     public DbSet<Authorization> Authorizations => Set<Authorization>();

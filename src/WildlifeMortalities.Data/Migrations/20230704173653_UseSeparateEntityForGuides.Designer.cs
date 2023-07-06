@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildlifeMortalities.Data;
 
@@ -11,9 +12,11 @@ using WildlifeMortalities.Data;
 namespace WildlifeMortalities.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230704173653_UseSeparateEntityForGuides")]
+    partial class UseSeparateEntityForGuides
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -385,19 +388,12 @@ namespace WildlifeMortalities.Data.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("ReportAsAssistantGuideId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReportAsChiefGuideId")
+                    b.Property<int>("ReportAsAssistantGuideId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ReportAsAssistantGuideId");
-
-                    b.HasIndex("ReportAsChiefGuideId")
-                        .IsUnique()
-                        .HasFilter("[ReportAsChiefGuideId] IS NOT NULL");
 
                     b.ToTable("OutfitterGuides");
                 });
@@ -2267,6 +2263,10 @@ namespace WildlifeMortalities.Data.Migrations
                 {
                     b.HasBaseType("WildlifeMortalities.Data.Entities.Reports.Report");
 
+                    b.Property<int>("ChiefGuideId")
+                        .HasColumnType("int")
+                        .HasColumnName("OutfitterGuidedHuntReport_ChiefGuideId");
+
                     b.Property<int>("ClientId")
                         .HasColumnType("int")
                         .HasColumnName("OutfitterGuidedHuntReport_ClientId");
@@ -2286,6 +2286,10 @@ namespace WildlifeMortalities.Data.Migrations
                     b.Property<int>("Result")
                         .HasColumnType("int")
                         .HasColumnName("OutfitterGuidedHuntReport_Result");
+
+                    b.HasIndex("ChiefGuideId")
+                        .IsUnique()
+                        .HasFilter("[OutfitterGuidedHuntReport_ChiefGuideId] IS NOT NULL");
 
                     b.HasIndex("ClientId");
 
@@ -2804,16 +2808,10 @@ namespace WildlifeMortalities.Data.Migrations
                     b.HasOne("WildlifeMortalities.Data.Entities.Reports.MultipleMortalities.OutfitterGuidedHuntReport", "ReportAsAssistantGuide")
                         .WithMany("AssistantGuides")
                         .HasForeignKey("ReportAsAssistantGuideId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("WildlifeMortalities.Data.Entities.Reports.MultipleMortalities.OutfitterGuidedHuntReport", "ReportAsChiefGuide")
-                        .WithOne("ChiefGuide")
-                        .HasForeignKey("WildlifeMortalities.Data.Entities.People.OutfitterGuide", "ReportAsChiefGuideId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("ReportAsAssistantGuide");
-
-                    b.Navigation("ReportAsChiefGuide");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.RegisteredTrappingConcession", b =>
@@ -3185,6 +3183,12 @@ namespace WildlifeMortalities.Data.Migrations
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Reports.MultipleMortalities.OutfitterGuidedHuntReport", b =>
                 {
+                    b.HasOne("WildlifeMortalities.Data.Entities.People.OutfitterGuide", "ChiefGuide")
+                        .WithOne("ReportAsChiefGuide")
+                        .HasForeignKey("WildlifeMortalities.Data.Entities.Reports.MultipleMortalities.OutfitterGuidedHuntReport", "ChiefGuideId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("WildlifeMortalities.Data.Entities.People.Client", "Client")
                         .WithMany("OutfitterGuidedHuntReportsAsClient")
                         .HasForeignKey("ClientId")
@@ -3196,6 +3200,8 @@ namespace WildlifeMortalities.Data.Migrations
                         .HasForeignKey("OutfitterAreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ChiefGuide");
 
                     b.Navigation("Client");
 
@@ -3350,6 +3356,12 @@ namespace WildlifeMortalities.Data.Migrations
                     b.Navigation("TrappedMortalitiesReport");
                 });
 
+            modelBuilder.Entity("WildlifeMortalities.Data.Entities.People.OutfitterGuide", b =>
+                {
+                    b.Navigation("ReportAsChiefGuide")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.People.Person", b =>
                 {
                     b.Navigation("DraftReports");
@@ -3476,9 +3488,6 @@ namespace WildlifeMortalities.Data.Migrations
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Reports.MultipleMortalities.OutfitterGuidedHuntReport", b =>
                 {
                     b.Navigation("AssistantGuides");
-
-                    b.Navigation("ChiefGuide")
-                        .IsRequired();
 
                     b.Navigation("HuntedActivities");
                 });

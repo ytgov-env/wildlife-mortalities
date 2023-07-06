@@ -23,7 +23,7 @@
 
 <EditForm OnValidSubmit="SubmitReport" OnInvalidSubmit="@(() => _invalidSubmitDetected = true)" EditContext="_editContext" onkeypress="preventEnterFromSubmitting(event)">
     <ValidationSummary />
-    <FluentValidationValidator />
+    <FluentValidationValidator/>
     @if (_vm.IsUpdate == false)
     {
         <MudSelect T="ReportType" Value="_vm.ReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.ReportType)" Label="Mortality report type">
