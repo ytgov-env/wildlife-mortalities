@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.App.Features.Reports.Activities;
 using WildlifeMortalities.Data.Entities.People;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace WildlifeMortalities.App.Features.Reports
 {
@@ -19,6 +20,9 @@ namespace WildlifeMortalities.App.Features.Reports
 
         [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
         public bool EditMode { get; set; } = false;
+
+        [CascadingParameter]
+        public EditContext EditContext { get; set; } = null!;
 
         [Inject]
         private IDialogService DialogService { get; set; } = null!;
@@ -35,6 +39,11 @@ namespace WildlifeMortalities.App.Features.Reports
             {
                 ViewModel.HuntedActivityViewModels.Add(result.Data as HuntedActivityViewModel);
             }
+
+            if (EditContext.GetValidationMessages().Any())
+            {
+                EditContext.Validate();
+            }
         }
 
         private async Task Edit(HuntedActivityViewModel viewModel)
@@ -45,7 +54,13 @@ namespace WildlifeMortalities.App.Features.Reports
                 [nameof(EditActivityDialog.ReportType)] = ReportType
             };
             var dialog = DialogService.Show<EditActivityDialog>("", parameters);
-            var result = await dialog.Result;
+            await dialog.Result;
+            if (EditContext.GetValidationMessages().Any())
+            {
+                EditContext.NotifyFieldChanged(
+                    FieldIdentifier.Create(() => ViewModel.HuntingDateRange)
+                );
+            }
         }
 
         private void Delete(HuntedActivityViewModel viewModel)

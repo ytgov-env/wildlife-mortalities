@@ -70,7 +70,13 @@ namespace WildlifeMortalities.App.Features.Reports
                 [nameof(EditActivityDialog.ReportType)] = ReportType
             };
             var dialog = DialogService.Show<EditActivityDialog>("", parameters);
-            var result = await dialog.Result;
+            await dialog.Result;
+            if (EditContext.GetValidationMessages().Any())
+            {
+                EditContext.NotifyFieldChanged(
+                    FieldIdentifier.Create(() => ViewModel.HuntingDateRange)
+                );
+            }
         }
 
         private void Delete(HuntedActivityViewModel viewModel)
