@@ -1,17 +1,71 @@
-@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
-@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+@using WildlifeMortalities.Data.Extensions;
 
-@code {
-
-    [Parameter]
-    public bool IsReadOnly { get; set; } = false;
-
-    [Parameter]
-    [EditorRequired]
-    public MountainGoatBioSubmission BioSubmission { get; set; } = null!;
-
-    public class MountainGoatBioSubmissionValidator : BioSubmissionValidator<MountainGoatBioSubmission>
+<MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">
+    @foreach (var item in Enum.GetValues<HornMeasured>())
     {
+        <MudSelectItem T="HornMeasured?" Value="item">@item.GetDisplayName()</MudSelectItem>
+    }
+</MudSelect>
+@if (BioSubmission.HornMeasured is not null)
+{
+    <MudNumericField Label="Total length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+    @bind-Value="BioSubmission.HornTotalLengthMillimetres" For="() => BioSubmission.HornTotalLengthMillimetres" Disabled="IsReadOnly" />
+    <MudNumericField Label="Base circumference" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+    @bind-Value="BioSubmission.HornBaseCircumferenceMillimetres" For="() => BioSubmission.HornBaseCircumferenceMillimetres" Disabled="IsReadOnly" />
+    <MudNumericField Label="Tip spread" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+    @bind-Value="BioSubmission.HornTipSpreadMillimetres" For="() => BioSubmission.HornTipSpreadMillimetres" Disabled="IsReadOnly" />
+
+    @if (BioSubmission.HornMeasured.HasValue && IsReadOnly == false)
+    {
+
+        <MudNumericField @bind-Value="BioSubmission.Age!.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age!.Years" @bind-Value:after="AdjustAnnuliList" />
+        <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
+            @foreach (var item in Enum.GetValues<ConfidenceInAge>())
+            {
+                <MudSelectItem T="ConfidenceInAge?" Value="item">@item.GetDisplayName()</MudSelectItem>
+            }
+        </MudSelect>
     }
 
+    <MudText Typo="Typo.h6">Annuli measurements</MudText>
+    <MudSpacer />
+    <ValidationMessage For="@(() => BioSubmission.HornMeasurementEntries)" Style="font-size: 12px; color: var(--mud-palette-error);" />
+
+    if (IsReadOnly)
+    {
+        <MudTable Items="@BioSubmission.HornMeasurementEntries">
+            <HeaderContent>
+                <MudTh>Annulus #</MudTh>
+                <MudTh>Length</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Annulus">@context.Annulus</MudTd>
+                <MudTd DataLabel="Length">@(context.LengthMillimetres == 0 ? string.Empty : $"{context.LengthMillimetres}mm")</MudTd>
+                </RowTemplate>
+            </MudTable>
+    }
+    else
+    {
+        <MudList>
+            @foreach (var item in BioSubmission.HornMeasurementEntries)
+            {
+                <MudListItem>
+                    <MudStack Row="true">
+                        <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true" />
+                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Min="0" />
+                    </MudStack>
+                </MudListItem>
+            }
+        </MudList>
+    }
+
+    @if (BioSubmission.HornMeasurementEntries.Count >= 3)
+    {
+        <MudNumericField Label="Length to third annulus (short side)" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+        @bind-Value="BioSubmission.HornLengthToThirdAnnulusMillimetres" For="() => BioSubmission.HornLengthToThirdAnnulusMillimetres" Disabled="IsReadOnly" />
+    }
 }
+
+

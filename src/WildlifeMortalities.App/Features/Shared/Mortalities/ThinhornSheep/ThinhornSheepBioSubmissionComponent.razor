@@ -1,9 +1,6 @@
-@using WildlifeMortalities.App.Extensions
-@using WildlifeMortalities.Data.Entities.BiologicalSubmissions
-@using FluentValidation
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
-@using WildlifeMortalities.Shared.Extensions;
-@using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
+@using WildlifeMortalities.Data.Extensions;
 
 <MudCheckBox Label="Eye sockets complete?" @bind-Checked="BioSubmission.IsBothEyeSocketsComplete" For="() => BioSubmission.IsBothEyeSocketsComplete" Disabled="IsReadOnly" />
 <MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">
@@ -31,7 +28,7 @@
     @if (BioSubmission.HornMeasured.HasValue && IsReadOnly == false)
     {
 
-        <MudNumericField @bind-Value="BioSubmission.Age.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age.Years" @bind-Value:after="AdjustAnnuliList"/>
+        <MudNumericField @bind-Value="BioSubmission.Age!.Years" Min="0" Max="200" Label="Age" Adornment="Adornment.End" AdornmentText="years" For="() => BioSubmission.Age!.Years" @bind-Value:after="AdjustAnnuliList"/>
         <MudSelect @bind-Value="BioSubmission.Age.Confidence" Label="Confidence in age" For="() => BioSubmission.Age.Confidence">
             @foreach (var item in Enum.GetValues<ConfidenceInAge>())
             {
@@ -92,166 +89,4 @@
 
     <MudTextField Label="Plug number" @bind-Value="BioSubmission.PlugNumber" For="() => BioSubmission.PlugNumber" Disabled="IsReadOnly"
               Mask="@(new PatternMask("B0000"))" Placeholder="B" />
-}
-
-@code {
-
-    [Parameter]
-    public bool IsReadOnly { get; set; } = false;
-
-    [Parameter]
-    [EditorRequired]
-    public ThinhornSheepBioSubmission BioSubmission { get; set; } = null!;
-
-    [CascadingParameter]
-    EditContext Context { get; set; } = null!;
-
-    [CascadingParameter(Name = Constants.CascadingValues.HasAttemptedFormSubmission)]
-    public bool HasAttemptedFormSubmission { get; set; }
-
-    protected override void OnInitialized()
-    {
-        BioSubmission.HornMeasurementEntries ??= new List<HornMeasurementEntry>();
-        BioSubmission.Age ??= new Age();
-    }
-
-    private bool AnnuliCanBeBroomed(HornMeasurementEntry entry)
-    {
-        return BioSubmission.BroomedStatus is BroomedStatus.BothHornsBroomed
-               || (BioSubmission.BroomedStatus is BroomedStatus.LeftHornBroomed && BioSubmission.HornMeasured is HornMeasured.LeftHorn)
-               || (BioSubmission.BroomedStatus is BroomedStatus.RightHornBroomed && BioSubmission.HornMeasured is HornMeasured.RightHorn);
-    }
-
-    private void AdjustAnnuliList()
-    {
-        while (BioSubmission.HornMeasurementEntries.Count > BioSubmission.Age!.Years)
-        {
-            BioSubmission.HornMeasurementEntries.RemoveAt(BioSubmission.HornMeasurementEntries.Count - 1);
-        }
-
-        while (BioSubmission.HornMeasurementEntries.Count < BioSubmission.Age.Years)
-        {
-            var HornMeasurementEntry = new HornMeasurementEntry { Annulus = BioSubmission.HornMeasurementEntries.Count + 1 };
-            BioSubmission.HornMeasurementEntries.Add(HornMeasurementEntry);
-        }
-    }
-
-    private bool ShowAnnuliBroomedCheckbox(HornMeasurementEntry entry)
-    {
-        if (AnnuliCanBeBroomed(entry) == false)
-        {
-            return false;
-        }
-
-        var entries = BioSubmission.HornMeasurementEntries;
-        // Show checkbox if this is the first annulus
-        if (entries.IndexOf(entry) == 0)
-        {
-            return true;
-        }
-
-        if (entries.Last() == entry)
-        {
-            return false;
-        }
-        // Show checkbox if the previous annulus was missing AND (this is the last annulus OR the annulus was marked as missing)
-        if (entries[BioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool IsAnnuliBroomedCheckboxDisabled(HornMeasurementEntry entry)
-    {
-        var entries = BioSubmission.HornMeasurementEntries;
-
-        if (entries.First().Equals(entry))
-        {
-            return true;
-        }
-
-        var lastBroomedEntry = entries.Where(x => x.IsBroomed).Last();
-        var lastBroomedIndex = entries.IndexOf(lastBroomedEntry);
-        var currentItemIndex = entries.IndexOf(entry);
-
-        if (currentItemIndex == lastBroomedIndex && entry.IsBroomed)
-        {
-            return false;
-        }
-
-        if (currentItemIndex == lastBroomedIndex + 1)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    private void ResetHornMeasurementEntryValues(HornMeasurementEntry entry)
-    {
-        entry.LengthMillimetres = 0;
-        entry.CircumferenceMillimetres = 0;
-
-        if (HasAttemptedFormSubmission)
-        {
-            Context.Validate();
-        }
-    }
-
-    public class ThinhornSheepBioSubmissionValidator : BioSubmissionValidator<ThinhornSheepBioSubmission>
-    {
-        public ThinhornSheepBioSubmissionValidator()
-        {
-            RuleFor(x => x.IsBothEyeSocketsComplete).NotNull();
-            RuleFor(x => x.HornMeasured).NotEmpty().IsInEnum();
-            When(x => x.HornMeasured != null, () =>
-            {
-                RuleFor(x => x.Age).NotNull();
-                RuleFor(x => x.BroomedStatus).NotEmpty().IsInEnum();
-                RuleFor(x => x.PlugNumber).NotEmpty();
-                RuleFor(x => x.HornLengthToThirdAnnulusMillimetres).GreaterThan(50).LessThan(1000);
-                RuleFor(x => x.HornMeasurementEntries).NotEmpty();
-                RuleFor(x => x.Age!.Years).Equal(x => x.HornMeasurementEntries.Last().Annulus).When(x => x.Age != null && x.HornMeasurementEntries.Any())
-                .WithMessage($"Age must be equal to the number of annuli.");
-                RuleForEach(x => x.HornMeasurementEntries).SetValidator(x => new HornMeasurementEntryValidator(x));
-                RuleFor(x => x.HornTotalLengthMillimetres)
-                .Must((x, length) => length >= x.HornMeasurementEntries[x.HornMeasurementEntries.Count - 1].LengthMillimetres)
-                .When(x => x.HornMeasurementEntries.Count != 0)
-                .WithMessage("Total length must be greater than or equal to the length (from tip) of the last annulus.");
-                RuleFor(x => x.HornBaseCircumferenceMillimetres)
-                .Must((x, circumference) => circumference - x.HornMeasurementEntries[x.HornMeasurementEntries.Count - 1].CircumferenceMillimetres >= -10)
-                .When(x => x.HornMeasurementEntries.Count != 0)
-                .WithMessage("Base circumference can be max of 10mm less than the circumference of the last annulus.");
-                RuleFor(x => x.IsFullCurl).NotNull();
-            });
-        }
-
-        public class HornMeasurementEntryValidator : AbstractValidator<HornMeasurementEntry>
-        {
-            public HornMeasurementEntryValidator()
-            {
-            }
-
-            public HornMeasurementEntryValidator(ThinhornSheepBioSubmission bioSubmission)
-            {
-                When(entry => entry.IsBroomed == false, () =>
-                {
-                    RuleFor(entry => entry.LengthMillimetres)
-                        .InclusiveBetween(10, 1000)
-                        .GreaterThanOrEqualTo(entry => bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].LengthMillimetres)
-                        .When(entry => bioSubmission.HornMeasurementEntries.IndexOf(entry) != 0 && bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed == false)
-                        .WithMessage("Length must be greater than or equal to the previous annulus.");
-                    RuleFor(entry => entry.CircumferenceMillimetres)
-                        .GreaterThan(0);
-                    RuleFor(entry => entry.CircumferenceMillimetres)
-                        .Must((entry, circumference) => circumference - bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].CircumferenceMillimetres >= -10)
-                        .When((entry, circumference) => bioSubmission.HornMeasurementEntries.IndexOf(entry) != 0 && bioSubmission.HornMeasurementEntries[bioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed == false)
-                        .WithMessage("Circumference can be a max of 10mm less than the previous annulus.");
-                });
-            }
-        }
-    }
-
 }

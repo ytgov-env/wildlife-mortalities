@@ -7,9 +7,7 @@ using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
-public class MountainGoatBioSubmission
-    : BioSubmission<MountainGoatMortality>,
-        IHasHornMeasurementEntries
+public class MountainGoatBioSubmission : BioSubmission<MountainGoatMortality>
 {
     public MountainGoatBioSubmission() { }
 
@@ -26,11 +24,11 @@ public class MountainGoatBioSubmission
     [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(IsHeadProvided)}")]
     public bool? IsHeadProvided { get; set; }
 
+    [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(HornLengthToThirdAnnulusMillimetres)}")]
+    public int? HornLengthToThirdAnnulusMillimetres { get; set; }
+
     [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(HornMeasured)}")]
     public HornMeasured? HornMeasured { get; set; }
-
-    [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(BroomedStatus)}")]
-    public BroomedStatus? BroomedStatus { get; set; }
 
     [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(HornTotalLengthMillimetres)}")]
     public int? HornTotalLengthMillimetres { get; set; }
@@ -40,7 +38,7 @@ public class MountainGoatBioSubmission
 
     [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(HornTipSpreadMillimetres)}")]
     public int? HornTipSpreadMillimetres { get; set; }
-    public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
+    public List<MountainGoatHornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
 
     public override bool CanBeAnalysed => true;
 }
@@ -57,13 +55,16 @@ public class MountainGoatBioSubmissionConfig : IEntityTypeConfiguration<Mountain
         builder.OwnsMany(
             t => t.HornMeasurementEntries,
             ownedNavigationBuilder =>
-            {
-                ownedNavigationBuilder.Ignore(h => h.IsBroomed);
-                ownedNavigationBuilder.ToJson("MountainGoatBioSubmission_HornMeasurementEntries");
-            }
+                ownedNavigationBuilder.ToJson("MountainGoatBioSubmission_HornMeasurementEntries")
         );
         builder
             .Property(x => x.MortalityId)
             .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
+}
+
+public class MountainGoatHornMeasurementEntry
+{
+    public int Annulus { get; set; }
+    public int LengthMillimetres { get; set; }
 }

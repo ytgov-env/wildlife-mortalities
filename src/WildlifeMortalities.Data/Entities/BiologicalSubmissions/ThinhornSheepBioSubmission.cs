@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
@@ -7,9 +8,7 @@ using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
-public class ThinhornSheepBioSubmission
-    : BioSubmission<ThinhornSheepMortality>,
-        IHasHornMeasurementEntries
+public class ThinhornSheepBioSubmission : BioSubmission<ThinhornSheepMortality>
 {
     public ThinhornSheepBioSubmission() { }
 
@@ -53,7 +52,7 @@ public class ThinhornSheepBioSubmission
     [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsBothEyeSocketsComplete)}")]
     public bool? IsBothEyeSocketsComplete { get; set; }
 
-    public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
+    public List<ThinhornSheepHornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
 
     public override bool CanBeAnalysed => true;
 }
@@ -79,4 +78,27 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
             .Property(x => x.MortalityId)
             .HasColumnName($"{builder.Metadata.ClrType.Name}_MortalityId");
     }
+}
+
+public class ThinhornSheepHornMeasurementEntry
+{
+    public int Annulus { get; set; }
+    public int LengthMillimetres { get; set; }
+    public int CircumferenceMillimetres { get; set; }
+    public bool IsBroomed { get; set; }
+}
+
+public enum BroomedStatus
+{
+    [Display(Name = "Both horns broomed")]
+    BothHornsBroomed = 10,
+
+    [Display(Name = "Left horn broomed")]
+    LeftHornBroomed = 20,
+
+    [Display(Name = "Not broomed")]
+    NotBroomed = 30,
+
+    [Display(Name = "Right horn broomed")]
+    RightHornBroomed = 40
 }
