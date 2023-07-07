@@ -8,9 +8,10 @@ namespace WildlifeMortalities.Data.Entities.Users;
 public class User
 {
     public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
     public string EmailAddress { get; set; } = string.Empty;
-
     public string NameIdentifier { get; set; } = string.Empty;
     public UserSettings Settings { get; set; } = null!;
     public List<Report> CreatedReports { get; set; } = null!;

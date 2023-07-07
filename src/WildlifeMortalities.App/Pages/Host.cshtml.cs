@@ -45,9 +45,11 @@ namespace WildlifeMortalities.App.Pages
             {
                 user = new User
                 {
-                    NameIdentifier = nameIdentifier,
-                    Name = GetName(email),
+                    FirstName = User.GetFirstName(),
+                    LastName = User.GetLastName(),
+                    FullName = User.GetFullName(),
                     EmailAddress = email,
+                    NameIdentifier = nameIdentifier,
                     Settings = UserSettings.Default
                 };
 
@@ -55,7 +57,9 @@ namespace WildlifeMortalities.App.Pages
             }
             else
             {
-                user.Name = GetName(email);
+                user.FirstName = User.GetFirstName();
+                user.LastName = User.GetLastName();
+                user.FullName = User.GetFullName();
                 user.EmailAddress = email;
             }
             await _context.SaveChangesAsync();
@@ -70,8 +74,6 @@ namespace WildlifeMortalities.App.Pages
             Log.Information("User {Email}, {NameIdentifier} logged in", email, nameIdentifier);
 
             return Page();
-
-            static string GetName(string email) => email[..email.IndexOf('@')].Replace('.', ' ');
         }
     }
 }

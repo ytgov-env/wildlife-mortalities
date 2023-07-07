@@ -4,7 +4,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudText Class="mr-3">@context.User.GetFormattedName()</MudText>
+        <MudText Class="mr-3">@context.User.GetFullName()</MudText>
         <MudAvatar>
             <MudImage Src="@(context.User.FindFirst("picture")?.Value)" />
         </MudAvatar>

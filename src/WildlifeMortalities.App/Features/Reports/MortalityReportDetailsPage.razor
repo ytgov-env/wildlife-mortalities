@@ -41,10 +41,10 @@ else if (_reportDetail is null)
 }
 
 <MudItem Class="ml-3 mb-2">
-    <MudField Label="Created by" DisableUnderLine="true" Class="pt-2">@_reportDetail.Report.CreatedBy.Name on @_reportDetail.Report.DateCreated.ToString("D")</MudField>
+    <MudField Label="Created by" DisableUnderLine="true" Class="pt-2">@_reportDetail.Report.CreatedBy.FullName on @_reportDetail.Report.DateCreated.ToString("D")</MudField>
     @if (_reportDetail.Report.DateModified != null && _reportDetail.Report.LastModifiedBy != null)
     {
-        <MudField Label="Modified by" DisableUnderLine="true">@_reportDetail.Report.LastModifiedBy.Name on @_reportDetail.Report.DateModified?.ToString("D")</MudField>
+        <MudField Label="Modified by" DisableUnderLine="true">@_reportDetail.Report.LastModifiedBy.FullName on @_reportDetail.Report.DateModified?.ToString("D")</MudField>
     }
 </MudItem>
 
