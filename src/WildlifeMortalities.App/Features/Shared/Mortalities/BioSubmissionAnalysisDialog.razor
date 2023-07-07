@@ -23,14 +23,19 @@
         <DialogContent>
             <div class="@(BioSubmission is IHasHornMeasurementEntries ? "scrollable-dialog" : "")">
                 <CascadingValue Name="@Constants.CascadingValues.HasAttemptedFormSubmission" Value="HasAttemptedFormSubmission">
-                    @if (BioSubmission.DateSubmitted != null)
-                    {
-                        <MudField Label="Date submitted" DisableUnderLine="true">@BioSubmission.DateSubmitted?.ToString("D")</MudField>
-                    }
-                    @foreach (var item in _viewModel.RequiredOrganicMaterial)
-                    {
-                        <MudCheckBox Checked="@item.IsChecked" Label="@item.Label" Disabled="true" />
-                    }
+                    <MudPaper>
+                        <MudItem Class="ml-3">
+                            <MudText Typo="Typo.h6">Samples</MudText>
+                            @if (BioSubmission.DateSubmitted != null)
+                            {
+                                <MudField Label="Date submitted" DisableUnderLine="true">@BioSubmission.DateSubmitted?.ToString("D")</MudField>
+                            }
+                        </MudItem>
+                        @foreach (var item in _viewModel.RequiredOrganicMaterial)
+                        {
+                            <MudCheckBox Checked="@item.IsChecked" Label="@item.Label" Disabled="true" />
+                        }
+                    </MudPaper>
 
                     @switch (BioSubmission)
                     {
