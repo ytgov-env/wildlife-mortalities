@@ -50,6 +50,9 @@ public class ThinhornSheepBioSubmission
     [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornTipSpreadMillimetres)}")]
     public int? HornTipSpreadMillimetres { get; set; }
 
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsBothEyeSocketsComplete)}")]
+    public bool? IsBothEyeSocketsComplete { get; set; }
+
     public List<HornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
 
     public override bool CanBeAnalysed => true;

@@ -5,6 +5,7 @@
 @using WildlifeMortalities.Shared.Extensions;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
+<MudCheckBox Label="Eye sockets complete?" @bind-Checked="BioSubmission.IsBothEyeSocketsComplete" For="() => BioSubmission.IsBothEyeSocketsComplete" Disabled="IsReadOnly" />
 <MudSelect @bind-Value="BioSubmission.HornMeasured" Label="Horn measured?" For="() => BioSubmission.HornMeasured" Disabled="IsReadOnly">
     @foreach (var item in Enum.GetValues<HornMeasured>())
     {
@@ -203,6 +204,7 @@
     {
         public ThinhornSheepBioSubmissionValidator()
         {
+            RuleFor(x => x.IsBothEyeSocketsComplete).NotNull();
             RuleFor(x => x.HornMeasured).NotEmpty().IsInEnum();
             When(x => x.HornMeasured != null, () =>
             {

@@ -1,4 +1,5 @@
 ﻿using WildlifeMortalities.Data.Rules.Authorizations;
+using WildlifeMortalities.Data.Rules.BioSubmissions;
 using WildlifeMortalities.Data.Rules.Late;
 
 namespace WildlifeMortalities.Data.Rules;
@@ -14,6 +15,7 @@ public static class RuleEngine
             new AuthorizationRule(),
             new LateHuntReportRule(),
             new LateBioSubmissionRule(),
-            new MissingBioSubmissionRule()
+            new MissingBioSubmissionRule(),
+            new SheepBioSubmissionRule(),
         };
 }
