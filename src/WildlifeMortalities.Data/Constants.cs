@@ -8,8 +8,6 @@ public static class Constants
         public const string ActivityAuthorization = "ActivityAuthorization";
         public const string ActivityQueueItems = "ActivityQueueItems";
         public const string AppConfigurations = "AppConfigurations";
-        public const string AssistantGuideOutfitterGuidedHuntReport =
-            "AssistantGuideOutfitterGuidedHuntReport";
         public const string Authorizations = "Authorizations";
         public const string BagEntries = "BagEntries";
         public const string BagLimitEntries = "BagLimitEntries";
@@ -27,6 +25,7 @@ public static class Constants
         public const string OutfitterAreas = "OutfitterAreas";
         public const string OutfitterAreaSmallGameHuntingLicence =
             "OutfitterAreaSmallGameHuntingLicence";
+        public const string OutfitterGuides = "OutfitterGuides";
         public const string People = "People";
         public const string RegisteredTrappingConcessions = "RegisteredTrappingConcessions";
         public const string ReportPdf = "ReportPdf";

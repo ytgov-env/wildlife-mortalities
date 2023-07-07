@@ -1,4 +1,7 @@
-﻿namespace WildlifeMortalities.Data.Entities.People;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+
+namespace WildlifeMortalities.Data.Entities.People;
 
 public class Organization : PersonWithAuthorizations
 {
@@ -27,5 +30,13 @@ public class Organization : PersonWithAuthorizations
     public bool Merge(Organization organizationToBeMerged)
     {
         throw new NotImplementedException();
+    }
+}
+
+public class OrganizationConfig : IEntityTypeConfiguration<Organization>
+{
+    public void Configure(EntityTypeBuilder<Organization> builder)
+    {
+        builder.ToTable(Constants.TableNameConstants.People);
     }
 }

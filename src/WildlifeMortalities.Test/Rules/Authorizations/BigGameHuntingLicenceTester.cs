@@ -90,7 +90,7 @@ public class BigGameHuntingLicenceTester
             .BeEquivalentTo(
                 new Violation(
                     report.GetActivities().First(),
-                    RuleType.Authorization,
+                    RuleType.NoValidBigGameHuntingLicence,
                     SeverityType.Illegal,
                     "No big game hunting licence valid on 2023-04-01."
                 )
@@ -186,7 +186,7 @@ public class BigGameHuntingLicenceTester
             .BeEquivalentTo(
                 new Violation(
                     report.GetActivities().First(),
-                    RuleType.Authorization,
+                    RuleType.HuntedWithoutAGuideAsCanadianResident,
                     SeverityType.Illegal,
                     "Hunted big game as a Canadian resident without a guide."
                 )

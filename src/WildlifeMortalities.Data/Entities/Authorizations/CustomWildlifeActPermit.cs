@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using WildlifeMortalities.Data.Entities.Reports;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Authorizations;
 
@@ -21,4 +23,10 @@ public class CustomWildlifeActPermit : Authorization
 
         Conditions = customWildlifeActPermit.Conditions;
     }
+}
+
+public class CustomWildlifeActPermitConfig : IEntityTypeConfiguration<CustomWildlifeActPermit>
+{
+    public void Configure(EntityTypeBuilder<CustomWildlifeActPermit> builder) =>
+        builder.ToTable(TableNameConstants.Authorizations);
 }

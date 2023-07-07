@@ -31,7 +31,7 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
                 context.Violations.Add(
                     new Violation(
                         activity,
-                        Violation.RuleType.Authorization,
+                        Violation.RuleType.NoValidBigGameHuntingLicence,
                         Violation.SeverityType.Illegal,
                         $"No big game hunting licence valid on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
                     )
@@ -50,7 +50,7 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
                     context.Violations.Add(
                         new Violation(
                             activity,
-                            Violation.RuleType.Authorization,
+                            Violation.RuleType.SpecialGuidedWithoutValidLicence,
                             Violation.SeverityType.Illegal,
                             "Hunted big game as a Canadian resident without a valid licence."
                         )
@@ -66,7 +66,7 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
                     context.Violations.Add(
                         new Violation(
                             activity,
-                            Violation.RuleType.Authorization,
+                            Violation.RuleType.HuntedWithoutAGuideAsCanadianResident,
                             Violation.SeverityType.Illegal,
                             "Hunted big game as a Canadian resident without a guide."
                         )

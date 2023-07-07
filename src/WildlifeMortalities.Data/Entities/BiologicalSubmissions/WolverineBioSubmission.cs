@@ -19,7 +19,7 @@ public class WolverineBioSubmission : BioSubmission<WolverineMortality>, IHasFur
     [Column($"{nameof(WolverineBioSubmission)}_{nameof(IsPeltProvided)}")]
     public bool? IsPeltProvided { get; set; }
 
-    [Column($"{nameof(FurbearerSealNumber)}")]
+    [Column(nameof(FurbearerSealNumber))]
     public string? FurbearerSealNumber { get; set; }
 
     public override bool CanBeAnalysed => true;

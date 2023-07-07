@@ -12,6 +12,7 @@ public class TrappedActivity : HarvestActivity
     public int TrappedMortalitiesReportId { get; set; }
     public TrappedMortalitiesReport TrappedMortalitiesReport { get; set; } = null!;
 
+    [Column($"{nameof(TrappedActivity)}_{nameof(HarvestMethod)}")]
     public HarvestMethodType HarvestMethod { get; set; }
 
     public override string GetAreaName(Report report) =>
