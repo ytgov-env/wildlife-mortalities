@@ -25,7 +25,7 @@ public class CanadaLynxBioSubmission : BioSubmission<CanadaLynxMortality>, IHasF
     [Column($"{nameof(CanadaLynxBioSubmission)}_{nameof(PeltWidthMillimetres)}")]
     public int? PeltWidthMillimetres { get; set; }
 
-    [Column($"{nameof(FurbearerSealNumber)}")]
+    [Column(nameof(FurbearerSealNumber))]
     public string? FurbearerSealNumber { get; set; }
     public override bool CanBeAnalysed => true;
 }

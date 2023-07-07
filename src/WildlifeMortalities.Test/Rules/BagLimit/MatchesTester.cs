@@ -267,7 +267,7 @@ public class MatchesTester
 
         var entry = new NeckSnaredGreyWolfTrappingBagLimitEntry
         {
-            RegisteredTrappingConcessions = new() { concession },
+            Concessions = new() { concession },
             Season = (TrappingSeason)report.Season,
             Sex = Data.Enums.Sex.Male,
             Species = Data.Enums.Species.GreyWolf,

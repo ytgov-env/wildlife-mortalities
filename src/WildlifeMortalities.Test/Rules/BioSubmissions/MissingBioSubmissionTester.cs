@@ -6,7 +6,7 @@ using static WildlifeMortalities.Data.Entities.Violation;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Rules.BioSubmissions;
 
-namespace WildlifeMortalities.Test.Rules;
+namespace WildlifeMortalities.Test.Rules.BioSubmissions;
 
 public class MissingBioSubmissionTester
 {

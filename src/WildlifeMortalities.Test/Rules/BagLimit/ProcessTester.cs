@@ -467,7 +467,7 @@ public class ProcessTester
 
         var bagLimitEntry = new TrappingBagLimitEntry
         {
-            RegisteredTrappingConcessions = new() { concession },
+            Concessions = new() { concession },
             MaxValuePerPerson = BagLimitEntry.InfiniteMaxValuePerPerson,
             Season = season,
             Species = Data.Enums.Species.AmericanBeaver,

@@ -9,4 +9,17 @@ public static class TypeExtensions
 
     public static PropertyInfo[] GetPublicBaseOnlyProperties(this Type type) =>
         type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+    public static IEnumerable<object[]> GetAllDerivedTypesExcludingSomeTypes(
+        this Type baseType,
+        Type[] excludedDerivedTypes
+    )
+    {
+        return baseType.Assembly
+            .GetTypes()
+            .Where(
+                t => !t.IsAbstract && t.IsSubclassOf(baseType) && !excludedDerivedTypes.Contains(t)
+            )
+            .Select(t => new object[] { t });
+    }
 }
