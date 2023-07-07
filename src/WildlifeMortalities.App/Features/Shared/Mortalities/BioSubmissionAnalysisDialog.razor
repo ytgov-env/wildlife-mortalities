@@ -65,7 +65,8 @@
                     }
                 </CascadingValue>
 
-                @if (BioSubmission is not ThinhornSheepBioSubmission and not MountainGoatBioSubmission)
+                // Todo: Temporarily disabled until we implement authorizations, as only biologists should be able to add/edit an age
+                @*@if (BioSubmission is not ThinhornSheepBioSubmission and not MountainGoatBioSubmission)
                 {
                     @if (BioSubmission.Age == null)
                     {
@@ -90,7 +91,7 @@
                             }
                         </MudSelect>
                     }
-                }
+                }*@
                 <MudTextField @bind-Value="BioSubmission.Comment" For="@(() => BioSubmission.Comment)" Label="Comment" Lines="4" />
             </div>
         </DialogContent>
