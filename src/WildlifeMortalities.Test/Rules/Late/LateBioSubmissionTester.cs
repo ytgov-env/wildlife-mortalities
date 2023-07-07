@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -284,6 +284,9 @@ public class LateBioSubmissionTester
         where TBioSubmission : BioSubmission<TMortality>, new()
         where TActivity : HarvestActivity, new()
     {
+        var huntingSeason = new HuntingSeason(deadlineDate.Year);
+        var trappingSeason = new TrappingSeason(deadlineDate.Year);
+
         return new TBioSubmission()
         {
             DateSubmitted = s_bioSubmissionSubmittedDate,
@@ -297,8 +300,22 @@ public class LateBioSubmissionTester
                     {
                         BagLimitEntry =
                             typeof(TActivity) == typeof(HuntedActivity)
-                                ? new HuntingBagLimitEntry()
-                                : new TrappingBagLimitEntry() { PeriodEnd = deadlineDate }
+                                ? new HuntingBagLimitEntry(
+                                    Array.Empty<GameManagementArea>(),
+                                    Data.Enums.Species.GreyWolf,
+                                    huntingSeason,
+                                    huntingSeason.StartDate,
+                                    huntingSeason.EndDate,
+                                    int.MaxValue
+                                )
+                                : new TrappingBagLimitEntry(
+                                    Array.Empty<RegisteredTrappingConcession>(),
+                                    Data.Enums.Species.GreyWolf,
+                                    trappingSeason,
+                                    trappingSeason.StartDate,
+                                    deadlineDate,
+                                    int.MaxValue
+                                )
                     }
                 }
             }
@@ -312,6 +329,15 @@ public class LateBioSubmissionTester
     )
         where TActivity : HarvestActivity, new()
     {
+        var huntingSeason =
+            dateOfDeath.Month > 3
+                ? new HuntingSeason(dateOfDeath.Year)
+                : new HuntingSeason(dateOfDeath.Year - 1);
+        var trappingSeason =
+            dateOfDeath.Month > 6
+                ? new TrappingSeason(dateOfDeath.Year)
+                : new TrappingSeason(dateOfDeath.Year - 1);
+
         var bioSubmission = new GreyWolfBioSubmission()
         {
             DateSubmitted = dateToVerify,
@@ -325,21 +351,22 @@ public class LateBioSubmissionTester
                     {
                         BagLimitEntry =
                             typeof(TActivity) == typeof(HuntedActivity)
-                                ? new HuntingBagLimitEntry()
-                                {
-                                    Season =
-                                        dateOfDeath.Month > 3
-                                            ? new HuntingSeason(dateOfDeath.Year)
-                                            : new HuntingSeason(dateOfDeath.Year - 1)
-                                }
-                                : new TrappingBagLimitEntry()
-                                {
-                                    PeriodEnd = dateOfDeath,
-                                    Season =
-                                        dateOfDeath.Month > 3
-                                            ? new TrappingSeason(dateOfDeath.Year)
-                                            : new TrappingSeason(dateOfDeath.Year - 1)
-                                }
+                                ? new HuntingBagLimitEntry(
+                                    Array.Empty<GameManagementArea>(),
+                                    Data.Enums.Species.GreyWolf,
+                                    huntingSeason,
+                                    huntingSeason.StartDate,
+                                    dateOfDeath,
+                                    int.MaxValue
+                                )
+                                : new TrappingBagLimitEntry(
+                                    Array.Empty<RegisteredTrappingConcession>(),
+                                    Data.Enums.Species.GreyWolf,
+                                    trappingSeason,
+                                    trappingSeason.StartDate,
+                                    dateOfDeath,
+                                    int.MaxValue
+                                )
                     }
                 }
             }

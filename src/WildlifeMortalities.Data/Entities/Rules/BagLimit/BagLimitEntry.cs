@@ -10,22 +10,52 @@ public abstract class BagLimitEntry
 {
     public const int InfiniteMaxValuePerPerson = int.MaxValue;
 
+    protected BagLimitEntry() { }
+
+    protected BagLimitEntry(
+        Species species,
+        Season season,
+        DateTimeOffset periodStart,
+        DateTimeOffset periodEnd,
+        int maxValuePerPerson,
+        Sex? sex = null,
+        int? maxValueForThreshold = null
+    )
+    {
+        Species = species;
+        PeriodStart = periodStart;
+        PeriodEnd = periodEnd;
+        MaxValuePerPerson = maxValuePerPerson;
+        Sex = sex;
+        MaxValueForThreshold = maxValueForThreshold;
+
+        if (!season.IsValidSubset(periodStart, periodEnd))
+        {
+            throw new ArgumentException(
+                $"The specified {nameof(periodStart)} and {nameof(periodEnd)} are not within the {nameof(season)}."
+            );
+        }
+        SharedWithDifferentSpeciesAndOrSex = new();
+        BagEntries = new();
+        ActivityQueue = new();
+    }
+
     public abstract Season GetSeason();
 
     protected abstract bool IsWithinArea(HarvestActivity activity, Report report);
 
-    public int Id { get; set; }
-    public Species Species { get; set; }
-    public Sex? Sex { get; set; }
-    public DateTimeOffset PeriodStart { get; set; }
-    public DateTimeOffset PeriodEnd { get; set; }
+    public int Id { get; init; }
+    public Species Species { get; init; }
+    public Sex? Sex { get; init; }
+    public DateTimeOffset PeriodStart { get; init; }
+    public DateTimeOffset PeriodEnd { get; init; }
 
     // Existing use case: Different species in the same collection of areas have a combined limit (ex: spruce and ruffed grouse)
     // Hypothetical use case: A person is allowed to kill 5 moose, but only 2 females
     // Hypothetical use case: A person is allowed to kill 5 moose across the yukon, but a maximum of 2 moose in any specific area
-    public List<BagLimitEntry> SharedWithDifferentSpeciesAndOrSex { get; set; } = null!;
-    public List<BagEntry> BagEntries { get; set; } = null!;
-    public List<ActivityQueueItem> ActivityQueue { get; set; } = null!;
+    public List<BagLimitEntry> SharedWithDifferentSpeciesAndOrSex { get; init; } = null!;
+    public List<BagEntry> BagEntries { get; init; } = null!;
+    public List<ActivityQueueItem> ActivityQueue { get; init; } = null!;
     public int MaxValuePerPerson { get; set; }
 
     //Todo: create violation on threshold exceeded
@@ -44,7 +74,6 @@ public abstract class BagLimitEntry
 
     public void AddToQueue(HarvestActivity activity)
     {
-        ActivityQueue ??= new();
         ActivityQueue.Add(new ActivityQueueItem { Activity = activity, BagLimitEntry = this });
         ReorderQueue();
     }

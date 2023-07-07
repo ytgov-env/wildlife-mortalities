@@ -1,11 +1,37 @@
 ﻿using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Seasons;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 public class NeckSnaredGreyWolfTrappingBagLimitEntry : TrappingBagLimitEntry
 {
+    private NeckSnaredGreyWolfTrappingBagLimitEntry() { }
+
+    public NeckSnaredGreyWolfTrappingBagLimitEntry(
+        IEnumerable<RegisteredTrappingConcession> concessions,
+        TrappingSeason season,
+        DateTimeOffset periodStart,
+        DateTimeOffset periodEnd,
+        int maxValuePerPerson,
+        Sex? sex = null,
+        int? maxValueForThreshold = null
+    )
+        : base(
+            concessions,
+            Species.GreyWolf,
+            season,
+            periodStart,
+            periodEnd,
+            maxValuePerPerson,
+            sex,
+            maxValueForThreshold
+        ) { }
+
     override public bool Matches(HarvestActivity activity, Report report)
     {
         var baseResult = base.Matches(activity, report);
@@ -19,5 +45,14 @@ public class NeckSnaredGreyWolfTrappingBagLimitEntry : TrappingBagLimitEntry
             return false;
 
         return trappedActivity.HarvestMethod == TrappedActivity.HarvestMethodType.NeckSnare;
+    }
+}
+
+public class NeckSnaredGreyWolfTrappingBagLimitEntryConfig
+    : IEntityTypeConfiguration<NeckSnaredGreyWolfTrappingBagLimitEntry>
+{
+    public void Configure(EntityTypeBuilder<NeckSnaredGreyWolfTrappingBagLimitEntry> builder)
+    {
+        builder.ToTable(TableNameConstants.BagLimitEntries);
     }
 }

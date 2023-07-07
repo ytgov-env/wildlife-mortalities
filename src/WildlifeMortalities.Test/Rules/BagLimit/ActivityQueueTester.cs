@@ -45,17 +45,16 @@ public class ActivityQueueTester
             Id = 10,
         };
 
-        var bagLimitEntry = new CaribouBagLimitEntry
-        {
-            Areas = new() { area },
-            Herds = new() { CaribouMortality.CaribouHerd.Atlin },
-            MaxValuePerPerson = 1,
-            Season = season,
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate,
-            ActivityQueue = new(),
-            MaxValueForThreshold = 5
-        };
+        var bagLimitEntry = new CaribouBagLimitEntry(
+            new[] { area },
+            new[] { CaribouMortality.CaribouHerd.Atlin },
+            season,
+            season.StartDate,
+            season.EndDate,
+            1,
+            null,
+            5
+        );
 
         Random random = new(13245);
 

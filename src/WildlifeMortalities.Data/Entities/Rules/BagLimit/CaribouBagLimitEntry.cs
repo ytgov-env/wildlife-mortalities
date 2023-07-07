@@ -5,17 +5,39 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using static WildlifeMortalities.Data.Entities.Mortalities.CaribouMortality;
 using static WildlifeMortalities.Data.Constants;
+using WildlifeMortalities.Data.Entities.Seasons;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 public class CaribouBagLimitEntry : HuntingBagLimitEntry
 {
-    public CaribouBagLimitEntry()
+    private CaribouBagLimitEntry() { }
+
+    public CaribouBagLimitEntry(
+        IEnumerable<GameManagementArea> areas,
+        IEnumerable<CaribouHerd> herds,
+        HuntingSeason season,
+        DateTimeOffset periodStart,
+        DateTimeOffset periodEnd,
+        int maxValuePerPerson,
+        Sex? sex = null,
+        int? maxValueForThreshold = null
+    )
+        : base(
+            areas,
+            Species.Caribou,
+            season,
+            periodStart,
+            periodEnd,
+            maxValuePerPerson,
+            sex,
+            maxValueForThreshold
+        )
     {
-        Species = Species.Caribou;
+        Herds = herds.ToList();
     }
 
-    public List<CaribouHerd> Herds { get; set; } = null!;
+    public List<CaribouHerd> Herds { get; init; } = null!;
 
     override public bool Matches(HarvestActivity activity, Report report)
     {

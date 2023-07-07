@@ -5,13 +5,41 @@ using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Seasons;
 using static WildlifeMortalities.Data.Constants;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 public class TrappingBagLimitEntry : BagLimitEntry
 {
-    public List<RegisteredTrappingConcession> RegisteredTrappingConcessions { get; init; } = null!;
+    protected TrappingBagLimitEntry() { }
 
+    public TrappingBagLimitEntry(
+        IEnumerable<RegisteredTrappingConcession> concessions,
+        Species species,
+        TrappingSeason season,
+        DateTimeOffset periodStart,
+        DateTimeOffset periodEnd,
+        int maxValuePerPerson,
+        Sex? sex = null,
+        int? maxValueForThreshold = null
+    )
+        : base(
+            species,
+            season,
+            periodStart,
+            periodEnd,
+            maxValuePerPerson,
+            sex,
+            maxValueForThreshold
+        )
+    {
+        Concessions = concessions.ToList();
+        Season = season;
+    }
+
+    public List<RegisteredTrappingConcession> Concessions { get; init; } = null!;
+
+    [Column(nameof(SeasonId))]
     public int SeasonId { get; init; }
     public TrappingSeason Season { get; init; } = null!;
 
@@ -22,7 +50,7 @@ public class TrappingBagLimitEntry : BagLimitEntry
 
     protected override bool IsWithinArea(HarvestActivity activity, Report report)
     {
-        return RegisteredTrappingConcessions.Any(
+        return Concessions.Any(
             x => x.Id == ((TrappedMortalitiesReport)report).RegisteredTrappingConcession.Id
         );
     }

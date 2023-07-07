@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data.Entities.Mortalities;
+﻿using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
@@ -143,15 +144,23 @@ public class LateHuntReportTester
     )
         where T : Mortality, new()
     {
+        var season = new HuntingSeason(dateToVerify.Year);
+
         return new HuntedActivity()
         {
             Mortality = new T() { DateOfDeath = dateToVerify },
             ActivityQueueItem = new()
             {
-                BagLimitEntry = new HuntingBagLimitEntry()
-                {
-                    MaxValueForThreshold = isThreshold ? 5 : null
-                }
+                BagLimitEntry = new HuntingBagLimitEntry(
+                    Array.Empty<GameManagementArea>(),
+                    Data.Enums.Species.GreyWolf,
+                    season,
+                    season.StartDate,
+                    season.EndDate,
+                    int.MaxValue,
+                    null,
+                    isThreshold ? 5 : null
+                )
             }
         };
     }
@@ -162,18 +171,23 @@ public class LateHuntReportTester
         bool shouldBeLate
     )
     {
+        var season =
+            dateOfDeath.Month > 3
+                ? new HuntingSeason(dateOfDeath.Year)
+                : new HuntingSeason(dateOfDeath.Year - 1);
         var activity = new HuntedActivity()
         {
             Mortality = new GreyWolfMortality() { DateOfDeath = dateOfDeath },
             ActivityQueueItem = new()
             {
-                BagLimitEntry = new HuntingBagLimitEntry()
-                {
-                    Season =
-                        dateOfDeath.Month > 3
-                            ? new HuntingSeason(dateOfDeath.Year)
-                            : new HuntingSeason(dateOfDeath.Year - 1)
-                }
+                BagLimitEntry = new HuntingBagLimitEntry(
+                    Array.Empty<GameManagementArea>(),
+                    Data.Enums.Species.GreyWolf,
+                    season,
+                    season.StartDate,
+                    season.EndDate,
+                    int.MaxValue
+                )
             }
         };
         return new object[] { activity, shouldBeLate, dateToVerify };

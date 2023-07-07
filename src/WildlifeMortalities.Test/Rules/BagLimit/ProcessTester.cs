@@ -65,16 +65,14 @@ public class ProcessTester
                 Person = person,
             };
 
-        var bagLimitEntry = new CaribouBagLimitEntry
-        {
-            Areas = new() { area },
-            Herds = new() { CaribouMortality.CaribouHerd.Atlin },
-            MaxValuePerPerson = 2,
-            Season = season,
-            SharedWithDifferentSpeciesAndOrSex = new(),
-            PeriodStart = season.StartDate,
-            PeriodEnd = season.EndDate
-        };
+        var bagLimitEntry = new CaribouBagLimitEntry(
+            new[] { area },
+            new[] { CaribouMortality.CaribouHerd.Atlin },
+            season,
+            season.StartDate,
+            season.EndDate,
+            2
+        );
 
         entryModifier?.Invoke(bagLimitEntry, person, report, context);
 
@@ -197,15 +195,16 @@ public class ProcessTester
             out var report,
             entryModifier: (entry, person, report, context) =>
             {
-                var otherBagEntry = new HuntingBagLimitEntry
-                {
-                    Species = Data.Enums.Species.AmericanBlackBear,
-                    MaxValuePerPerson = 1,
-                    Sex = Data.Enums.Sex.Male,
-                    SharedWithDifferentSpeciesAndOrSex = new(),
-                    Season = (HuntingSeason)entry.GetSeason(),
-                    Areas = entry.Areas.ToList(),
-                };
+                var season = (HuntingSeason)entry.GetSeason();
+                var otherBagEntry = new HuntingBagLimitEntry(
+                    entry.Areas,
+                    Data.Enums.Species.AmericanBlackBear,
+                    season,
+                    season.StartDate,
+                    season.EndDate,
+                    1,
+                    Data.Enums.Sex.Male
+                );
 
                 var otherPersonalBagEntry = new BagEntry
                 {
@@ -219,7 +218,7 @@ public class ProcessTester
                     null!
                 );
 
-                entry.SharedWithDifferentSpeciesAndOrSex = new() { otherBagEntry };
+                entry.SharedWithDifferentSpeciesAndOrSex.Add(otherBagEntry);
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagEntries.Add(otherPersonalBagEntry);
@@ -249,13 +248,17 @@ public class ProcessTester
             out var report,
             entryModifier: (entry, _, report, context) =>
             {
-                var otherBagEntry = new HuntingBagLimitEntry
-                {
-                    Species = Data.Enums.Species.AmericanBlackBear,
-                    MaxValuePerPerson = 2,
-                    Sex = Data.Enums.Sex.Male,
-                    SharedWithDifferentSpeciesAndOrSex = new(),
-                };
+                var season = (HuntingSeason)entry.GetSeason();
+
+                var otherBagEntry = new HuntingBagLimitEntry(
+                    entry.Areas,
+                    Data.Enums.Species.AmericanBlackBear,
+                    season,
+                    season.StartDate,
+                    season.EndDate,
+                    2,
+                    Data.Enums.Sex.Male
+                );
 
                 var otherPersonalBagEntry = new BagEntry { BagLimitEntry = otherBagEntry, };
 
@@ -265,7 +268,7 @@ public class ProcessTester
                     null!
                 );
 
-                entry.SharedWithDifferentSpeciesAndOrSex = new() { otherBagEntry };
+                entry.SharedWithDifferentSpeciesAndOrSex.Add(otherBagEntry);
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagEntries.Add(otherPersonalBagEntry);
@@ -285,15 +288,19 @@ public class ProcessTester
             out var report,
             entryModifier: (entry, _, _, context) =>
             {
-                var otherBagEntry = new HuntingBagLimitEntry
-                {
-                    Species = Data.Enums.Species.AmericanBlackBear,
-                    MaxValuePerPerson = 2,
-                    Sex = Data.Enums.Sex.Male,
-                    SharedWithDifferentSpeciesAndOrSex = new(),
-                };
+                var season = (HuntingSeason)entry.GetSeason();
 
-                entry.SharedWithDifferentSpeciesAndOrSex = new() { otherBagEntry };
+                var otherBagEntry = new HuntingBagLimitEntry(
+                    entry.Areas,
+                    Data.Enums.Species.AmericanBlackBear,
+                    season,
+                    season.StartDate,
+                    season.EndDate,
+                    2,
+                    Data.Enums.Sex.Male
+                );
+
+                entry.SharedWithDifferentSpeciesAndOrSex.Add(otherBagEntry);
 
                 context.BagLimitEntries.Add(otherBagEntry);
             }
@@ -465,16 +472,14 @@ public class ProcessTester
                 TrappedActivities = new() { activity }
             };
 
-        var bagLimitEntry = new TrappingBagLimitEntry
-        {
-            Concessions = new() { concession },
-            MaxValuePerPerson = BagLimitEntry.InfiniteMaxValuePerPerson,
-            Season = season,
-            Species = Data.Enums.Species.AmericanBeaver,
-            SharedWithDifferentSpeciesAndOrSex = new(),
-            PeriodStart = season.StartDate.AddDays(2),
-            PeriodEnd = season.EndDate.AddDays(-2)
-        };
+        var bagLimitEntry = new TrappingBagLimitEntry(
+            new[] { concession },
+            Data.Enums.Species.AmericanBeaver,
+            season,
+            season.StartDate.AddDays(2),
+            season.EndDate.AddDays(-2),
+            BagLimitEntry.InfiniteMaxValuePerPerson
+        );
 
         var personalBagLimit = new BagEntry { BagLimitEntry = bagLimitEntry, Person = person, };
 

@@ -4,6 +4,7 @@ using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Test.Rules.BagLimit;
 
@@ -19,15 +20,15 @@ public class MatchesTester
             Subzone = "03",
             Id = 10,
         };
-        var entry = new HuntingBagLimitEntry
-        {
-            Areas = new() { area },
-            Season = (HuntingSeason)report.Season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose,
-            PeriodStart = report.Season.StartDate,
-            PeriodEnd = report.Season.EndDate
-        };
+        var entry = new HuntingBagLimitEntry(
+            new[] { area },
+            Species.Moose,
+            (HuntingSeason)report.Season,
+            report.Season.StartDate,
+            report.Season.EndDate,
+            int.MaxValue,
+            Sex.Male
+        );
 
         var activity = new HuntedActivity
         {
@@ -55,15 +56,14 @@ public class MatchesTester
             Subzone = "03",
             Id = 10,
         };
-        var entry = new HuntingBagLimitEntry
-        {
-            Areas = new() { area },
-            Season = (HuntingSeason)report.Season,
-            Sex = null,
-            Species = Data.Enums.Species.Moose,
-            PeriodStart = report.Season.StartDate,
-            PeriodEnd = report.Season.EndDate
-        };
+        var entry = new HuntingBagLimitEntry(
+            new[] { area },
+            Species.Moose,
+            (HuntingSeason)report.Season,
+            report.Season.StartDate,
+            report.Season.EndDate,
+            int.MaxValue
+        );
 
         var activity = new HuntedActivity
         {
@@ -88,7 +88,15 @@ public class MatchesTester
             Subzone = "03",
             Id = 10,
         };
-        var entry = new HuntingBagLimitEntry
+        var entry = new HuntingBagLimitEntry(
+            new[] { area },
+            Species.Moose,
+            (HuntingSeason)report.Season,
+            report.Season.StartDate,
+            report.Season.EndDate,
+            int.MaxValue,
+            Sex.Male
+        )
         {
             Areas = new() { area },
             Season = (HuntingSeason)report.Season,
@@ -121,13 +129,15 @@ public class MatchesTester
             Subzone = "03",
             Id = 10,
         };
-        var entry = new HuntingBagLimitEntry
-        {
-            Areas = new() { area },
-            Season = (HuntingSeason)report.Season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose
-        };
+        var entry = new HuntingBagLimitEntry(
+            new[] { area },
+            Species.Moose,
+            (HuntingSeason)report.Season,
+            report.Season.StartDate,
+            report.Season.EndDate,
+            int.MaxValue,
+            Sex.Male
+        );
 
         var activity = new HuntedActivity
         {
@@ -150,13 +160,15 @@ public class MatchesTester
             Subzone = "03",
             Id = 10,
         };
-        var entry = new HuntingBagLimitEntry
-        {
-            Areas = new() { area },
-            Season = (HuntingSeason)report2023.Season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose
-        };
+        var entry = new HuntingBagLimitEntry(
+            new[] { area },
+            Species.Moose,
+            (HuntingSeason)report2023.Season,
+            report2023.Season.StartDate,
+            report2023.Season.EndDate,
+            int.MaxValue,
+            Sex.Male
+        );
 
         var activity = new HuntedActivity
         {
@@ -178,13 +190,15 @@ public class MatchesTester
             Subzone = "03",
             Id = 10,
         };
-        var entry = new HuntingBagLimitEntry
-        {
-            Areas = new() { area },
-            Season = (HuntingSeason)report.Season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose
-        };
+        var entry = new HuntingBagLimitEntry(
+            new[] { area },
+            Species.Moose,
+            (HuntingSeason)report.Season,
+            report.Season.StartDate,
+            report.Season.EndDate,
+            int.MaxValue,
+            Sex.Male
+        );
 
         var activity = new HuntedActivity
         {
@@ -210,15 +224,15 @@ public class MatchesTester
             Subzone = "03",
             Id = 10,
         };
-        var entry = new HuntingBagLimitEntry
-        {
-            Areas = new() { area },
-            Season = (HuntingSeason)report.Season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose,
-            PeriodStart = report.Season.StartDate.AddDays(1),
-            PeriodEnd = report.Season.EndDate.AddDays(-1)
-        };
+        var entry = new HuntingBagLimitEntry(
+            new[] { area },
+            Species.Moose,
+            (HuntingSeason)report.Season,
+            report.Season.StartDate.AddDays(1),
+            report.Season.EndDate.AddDays(-1),
+            int.MaxValue,
+            Sex.Male
+        );
 
         {
             var activity = new HuntedActivity
@@ -265,15 +279,14 @@ public class MatchesTester
             RegisteredTrappingConcession = concession
         };
 
-        var entry = new NeckSnaredGreyWolfTrappingBagLimitEntry
-        {
-            Concessions = new() { concession },
-            Season = (TrappingSeason)report.Season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.GreyWolf,
-            PeriodStart = report.Season.StartDate,
-            PeriodEnd = report.Season.EndDate,
-        };
+        var entry = new NeckSnaredGreyWolfTrappingBagLimitEntry(
+            new[] { concession },
+            (TrappingSeason)report.Season,
+            report.Season.StartDate,
+            report.Season.EndDate,
+            int.MaxValue,
+            Sex.Male
+        );
 
         var activity = new TrappedActivity
         {

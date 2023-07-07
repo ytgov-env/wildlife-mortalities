@@ -40,6 +40,11 @@ public abstract class Season
                     && authorization.ValidToDateTime <= x.EndDate
             );
     }
+
+    public bool IsValidSubset(DateTimeOffset periodStart, DateTimeOffset periodEnd)
+    {
+        return periodStart >= StartDate && periodEnd <= EndDate;
+    }
 }
 
 public class SeasonConfig<T> : IEntityTypeConfiguration<T>
