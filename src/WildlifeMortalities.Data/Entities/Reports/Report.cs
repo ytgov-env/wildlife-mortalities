@@ -46,7 +46,6 @@ public abstract class Report
     public DateTimeOffset? DateModified { get; set; }
 
     public ReportPdf? Pdf { get; set; }
-    public RulesSummary RulesSummary { get; set; } = null!;
 
     [NotMapped]
     public abstract GeneralizedReportType GeneralizedReportType { get; }

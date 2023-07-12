@@ -80,7 +80,7 @@ public class MortalityService : IMortalityService
         await AddDefaultBioSubmissions(context, report);
 
         var rulesSummary = await RulesSummary.Generate(report, context);
-        context.Add(rulesSummary);
+        context.AddRange(rulesSummary.Violations);
 
         await context.SaveChangesAsync();
     }

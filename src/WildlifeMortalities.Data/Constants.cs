@@ -30,8 +30,6 @@ public static class Constants
         public const string RegisteredTrappingConcessions = "RegisteredTrappingConcessions";
         public const string ReportPdf = "ReportPdf";
         public const string Reports = "Reports";
-        public const string RulesSummaries = "RulesSummaries";
-        public const string AuthorizationRulesSummary = "AuthorizationRulesSummary";
         public const string Seasons = "Seasons";
         public const string Users = "Users";
         public const string Violations = "Violations";

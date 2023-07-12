@@ -20,7 +20,6 @@ public abstract class Authorization
     public PersonWithAuthorizations Person { get; set; } = null!;
     public bool IsCancelled { get; set; }
     public List<Activity> Activities { get; set; } = null!;
-    public List<RulesSummary> RulesSummaries { get; set; } = null!;
 
     public abstract string GetAuthorizationType();
 
