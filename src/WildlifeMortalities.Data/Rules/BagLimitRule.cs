@@ -17,6 +17,11 @@ public class BagLimitRule : Rule
     {
         return await context.BagEntries
             .Include(x => x.BagLimitEntry)
+            .ThenInclude(x => ((HuntingBagLimitEntry)x).Areas)
+            .Include(x => x.BagLimitEntry)
+            .ThenInclude(x => ((TrappingBagLimitEntry)x).Concessions)
+            .Include(x => x.BagLimitEntry)
+            .ThenInclude(x => x.SharedWithDifferentSpeciesAndOrSex)
             .ThenInclude(x => x.ActivityQueue)
             .ThenInclude(x => x.Activity)
             .ThenInclude(x => x.Mortality)
@@ -30,6 +35,7 @@ public class BagLimitRule : Rule
                             : ((TrappingBagLimitEntry)x.BagLimitEntry).Season.Id
                     )
             )
+            .AsSplitQuery()
             .ToListAsync();
     }
 
@@ -60,10 +66,12 @@ public class BagLimitRule : Rule
             {
                 var entry = (
                     await context.BagLimitEntries
+                        .Include(x => x.SharedWithDifferentSpeciesAndOrSex)
                         .Include(x => x.ActivityQueue)
                         .ThenInclude(x => x.Activity)
                         .ThenInclude(x => x.Mortality)
                         .Where(x => x.Species == activity.Mortality.Species)
+                        .AsSplitQuery()
                         .ToArrayAsync()
                 ).FirstOrDefault(x => x.Matches(activity, report));
 
