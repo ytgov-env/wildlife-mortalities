@@ -1,10 +1,10 @@
 ﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Rules.Late;
+using WildlifeMortalities.Test.Helpers;
 
 namespace WildlifeMortalities.Test.Rules.Late;
 
@@ -32,8 +32,14 @@ public class LateHuntReportTester
             DateSubmitted = reportedSubmittedDate ?? s_reportedSubmittedDate
         };
 
+        var context = TestDbContextFactory.CreateContext();
         var rule = new LateHuntReportRule();
-        var result = await rule.Process(report, null!);
+
+        report.Season = new HuntingSeason(2023);
+        context.Seasons.Add(report.Season);
+        await context.SaveChangesAsync();
+
+        var result = await rule.Process(report, context);
 
         if (shouldBeLate)
         {

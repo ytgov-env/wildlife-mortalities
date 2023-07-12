@@ -18,8 +18,10 @@ public class HuntingSeason : Season
 
     public List<HuntingBagLimitEntry> BagLimitEntries { get; set; } = null!;
 
-    public static async Task<HuntingSeason> GetSeason(Activity activity, AppDbContext context) =>
-        await GetSeason<HuntingSeason>(activity, context);
+    public static async Task<HuntingSeason> GetSeason(
+        HuntedActivity activity,
+        AppDbContext context
+    ) => await GetSeason<HuntingSeason>(activity, context);
 
     public static async Task<HuntingSeason> GetSeason(Report report, AppDbContext context) =>
         await GetSeason<HuntingSeason>(report, context);

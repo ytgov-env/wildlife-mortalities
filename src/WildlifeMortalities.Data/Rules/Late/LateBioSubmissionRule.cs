@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -15,7 +16,12 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
         AppDbContext context
     )
     {
-        var season = await HuntingSeason.GetSeason(activity, context);
+        Season season = activity switch
+        {
+            HuntedActivity hunted => await HuntingSeason.GetSeason(hunted, context),
+            TrappedActivity trapped => await TrappingSeason.GetSeason(trapped, context),
+            _ => throw new UnreachableException()
+        };
 
         return activity switch
         {

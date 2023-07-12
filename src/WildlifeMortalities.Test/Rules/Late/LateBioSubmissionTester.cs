@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
@@ -39,22 +40,57 @@ public class LateBioSubmissionTester
     )
     {
         Report report = null!;
+
+        var context = TestDbContextFactory.CreateContext();
+        context.BioSubmissions.Add(bioSubmission);
+        await context.SaveChangesAsync();
+
         if (activity is HuntedActivity huntedActivity)
         {
-            report = new IndividualHuntedMortalityReport { HuntedActivity = huntedActivity };
+            var defaultHuntingSeason = new HuntingSeason(2023);
+            var huntingSeason = await context.Seasons
+                .OfType<HuntingSeason>()
+                .FirstOrDefaultAsync(x => x.FriendlyName == defaultHuntingSeason.FriendlyName);
+            if (huntingSeason == null)
+            {
+                huntingSeason = defaultHuntingSeason;
+                context.Add(huntingSeason);
+                await context.SaveChangesAsync();
+            }
+
+            report = new IndividualHuntedMortalityReport
+            {
+                HuntedActivity = huntedActivity,
+                Season = huntingSeason
+            };
         }
         else if (activity is TrappedActivity trappedActivity)
         {
+            var defaultTrappingSeasons = new[]
+            {
+                new TrappingSeason(2023),
+                new TrappingSeason(2022)
+            };
+
+            foreach (var item in defaultTrappingSeasons)
+            {
+                var trappingSeason = await context.Seasons
+                    .OfType<TrappingSeason>()
+                    .FirstOrDefaultAsync(x => x.FriendlyName == item.FriendlyName);
+                if (trappingSeason == null)
+                {
+                    context.Add(item);
+                    await context.SaveChangesAsync();
+                }
+            }
+
             report = new TrappedMortalitiesReport
             {
-                TrappedActivities = new List<TrappedActivity> { trappedActivity }
+                TrappedActivities = new List<TrappedActivity> { trappedActivity },
             };
         }
 
         var rule = new LateBioSubmissionRule();
-        var context = TestDbContextFactory.CreateContext();
-        context.BioSubmissions.Add(bioSubmission);
-        await context.SaveChangesAsync();
         var result = await rule.Process(report, context);
 
         if (shouldBeLate)
