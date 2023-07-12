@@ -3,22 +3,20 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
-using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Rules.Late;
 
 public class LateBioSubmissionRule : LateRule<HarvestActivity>
 {
-    protected override DateTimeOffset? GetDeadlineTimestamp(HarvestActivity activity)
+    protected override async Task<DateTimeOffset?> GetDeadlineTimestamp(
+        HarvestActivity activity,
+        AppDbContext context
+    )
     {
-        if (activity?.ActivityQueueItem?.BagLimitEntry == null)
-        {
-            throw new ArgumentException(
-                $"{nameof(BagLimitEntry)} must not be null. A navigation property was not included.",
-                nameof(activity)
-            );
-        }
+        var season = await HuntingSeason.GetSeason(activity, context);
+
         return activity switch
         {
             var _
@@ -46,7 +44,7 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
                 => trappedActivity.OccuredMoreThanFifteenDaysAfterTheEndOfTheTrappingSeasonForSpecies(),
             { Mortality.Species: Species.GreyWolf }
                 => new DateTimeOffset(
-                    activity.ActivityQueueItem.BagLimitEntry.GetSeason().EndDate.Year,
+                    season.EndDate.Year,
                     4,
                     15,
                     23,
@@ -68,17 +66,19 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
         return bioSubmission?.DateSubmitted;
     }
 
-    protected override Violation GenerateViolation(
+    protected override Violation GenerateLateViolation(
         HarvestActivity activity,
         Report _,
         DateTimeOffset deadlineTimestamp
-    ) =>
-        new(
+    )
+    {
+        return new(
             activity,
             Violation.RuleType.LateBioSubmission,
             Violation.SeverityType.Illegal,
             $"Biological submission was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
         );
+    }
 
     protected override bool IsValidReportType(GeneralizedReportType type) =>
         type is GeneralizedReportType.Hunted or GeneralizedReportType.Trapped;

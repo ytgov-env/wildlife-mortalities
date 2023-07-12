@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using static WildlifeMortalities.Data.Constants;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities;
 
@@ -15,6 +16,16 @@ public abstract class Season
     public string FriendlyName { get; set; } = string.Empty;
     public List<Report> Reports { get; set; } = null!;
     public List<Authorization> Authorizations { get; set; } = null!;
+
+    public static async Task<TSeason> GetSeason<TSeason>(Activity activity, AppDbContext context)
+        where TSeason : Season
+    {
+        var date = activity.Mortality.DateOfDeath;
+
+        return await context.Seasons
+            .OfType<TSeason>()
+            .SingleAsync(x => date >= x.StartDate && date <= x.EndDate);
+    }
 
     public static async Task<TSeason> GetSeason<TSeason>(Report report, AppDbContext context)
         where TSeason : Season

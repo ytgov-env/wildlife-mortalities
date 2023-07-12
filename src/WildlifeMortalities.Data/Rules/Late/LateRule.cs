@@ -1,25 +1,26 @@
 ﻿using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Extensions;
-using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Data.Rules.Late;
 
 public abstract class LateRule<TActivity> : Rule
     where TActivity : HarvestActivity
 {
-    protected abstract DateTimeOffset? GetDeadlineTimestamp(TActivity activity);
+    protected abstract Task<DateTimeOffset?> GetDeadlineTimestamp(
+        TActivity activity,
+        AppDbContext context
+    );
     protected abstract bool IsValidReportType(GeneralizedReportType type);
     protected abstract Task<DateTimeOffset?> GetTimestampThatMustOccurBeforeTheDeadline(
         TActivity activity,
         Report report,
         AppDbContext context
     );
-    protected abstract Violation GenerateViolation(
+    protected abstract Violation GenerateLateViolation(
         TActivity activity,
         Report report,
-        DateTimeOffset latestAcceptableTimestamp
+        DateTimeOffset deadlineTimestamp
     );
 
     public override async Task<RuleResult> Process(Report report, AppDbContext context)
@@ -30,7 +31,7 @@ public abstract class LateRule<TActivity> : Rule
         }
 
         var violations = new List<Violation>();
-        var isUsed = false;
+        var isApplicable = false;
         foreach (
             var activity in report
                 .GetActivities()
@@ -38,7 +39,7 @@ public abstract class LateRule<TActivity> : Rule
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
-            var deadlineTimestamp = GetDeadlineTimestamp(activity);
+            var deadlineTimestamp = await GetDeadlineTimestamp(activity, context);
 
             if (!deadlineTimestamp.HasValue)
             {
@@ -51,14 +52,14 @@ public abstract class LateRule<TActivity> : Rule
             {
                 continue;
             }
-            isUsed = true;
+            isApplicable = true;
             if (timestampThatMustOccurBeforeTheDeadline.Value > deadlineTimestamp.Value)
             {
-                violations.Add(GenerateViolation(activity, report, deadlineTimestamp.Value));
+                violations.Add(GenerateLateViolation(activity, report, deadlineTimestamp.Value));
             }
         }
 
-        return !isUsed
+        return !isApplicable
             ? RuleResult.NotApplicable
             : (violations.Any() ? RuleResult.IsIllegal(violations) : RuleResult.IsLegal);
     }

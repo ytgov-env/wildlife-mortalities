@@ -1,5 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Entities.Seasons;
 
@@ -13,6 +14,9 @@ public class CalendarSeason : Season
         EndDate = new DateTimeOffset(startYear, 12, 31, 23, 59, 59, TimeSpan.FromHours(-7));
         FriendlyName = ToString();
     }
+
+    public static async Task<CalendarSeason> GetSeason(Activity activity, AppDbContext context) =>
+        await GetSeason<CalendarSeason>(activity, context);
 
     public static async Task<CalendarSeason> GetSeason(Report report, AppDbContext context) =>
         await GetSeason<CalendarSeason>(report, context);

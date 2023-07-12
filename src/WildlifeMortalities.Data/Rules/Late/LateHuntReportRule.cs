@@ -2,29 +2,30 @@
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
-using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Rules.Late;
 
 internal class LateHuntReportRule : LateRule<HuntedActivity>
 {
-    protected override DateTimeOffset? GetDeadlineTimestamp(HuntedActivity activity)
+    protected override async Task<DateTimeOffset?> GetDeadlineTimestamp(
+        HuntedActivity activity,
+        AppDbContext context
+    )
     {
-        if (activity?.ActivityQueueItem?.BagLimitEntry == null)
-        {
-            throw new ArgumentException(
-                $"{nameof(BagLimitEntry)} must not be null. Probably a navigation property is not included.",
-                nameof(activity)
-            );
-        }
+        var season = await HuntingSeason.GetSeason(activity, context);
         return activity switch
         {
             { Mortality.Species: Species.Moose }
             and { ActivityQueueItem.BagLimitEntry.IsThreshold: true }
                 => activity.GetTimestampAfterKill(72),
+            // Todo: test null activity queue item
             { Mortality.Species: Species.Moose }
-            and { ActivityQueueItem.BagLimitEntry.IsThreshold: false }
+            and (
+                { ActivityQueueItem: null }
+                or { ActivityQueueItem.BagLimitEntry.IsThreshold: false }
+            )
                 => activity.OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(),
             var _
                 when activity.Mortality
@@ -50,7 +51,7 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
             { Mortality.Species: Species.Elk } => activity.GetTimestampAfterKill(72),
             { Mortality.Species: Species.GreyWolf }
                 => new DateTimeOffset(
-                    activity.ActivityQueueItem.BagLimitEntry.GetSeason().EndDate.Year,
+                    season.EndDate.Year,
                     4,
                     15,
                     23,
@@ -68,7 +69,7 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
         AppDbContext __
     ) => Task.FromResult<DateTimeOffset?>(report.DateSubmitted);
 
-    protected override Violation GenerateViolation(
+    protected override Violation GenerateLateViolation(
         HuntedActivity activity,
         Report report,
         DateTimeOffset deadlineTimestamp

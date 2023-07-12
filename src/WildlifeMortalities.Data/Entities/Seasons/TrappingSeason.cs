@@ -1,5 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 namespace WildlifeMortalities.Data.Entities.Seasons;
@@ -16,6 +17,11 @@ public class TrappingSeason : Season
     }
 
     public List<TrappingBagLimitEntry> BagLimitEntries { get; set; } = null!;
+
+    public static async Task<TrappingSeason> GetSeason(
+        TrappedActivity activity,
+        AppDbContext context
+    ) => await GetSeason<TrappingSeason>(activity, context);
 
     public static async Task<TrappingSeason> GetSeason(Report report, AppDbContext context) =>
         await GetSeason<TrappingSeason>(report, context);
