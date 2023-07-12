@@ -61,22 +61,45 @@ public static class ReportSelect
 
             if (bioSubmission != null)
             {
-                if (bioSubmission is IHasHornMeasurementEntries submission)
+                if (bioSubmission is ThinhornSheepBioSubmission sheepSubmission)
                 {
-                    submission.HornMeasurementEntries ??= new();
+                    sheepSubmission.HornMeasurementEntries ??= new();
 
                     var firstAnnulusFound =
-                        submission.HornMeasurementEntries.FirstOrDefault()?.Annulus ?? 1;
+                        sheepSubmission.HornMeasurementEntries.FirstOrDefault()?.Annulus ?? 1;
 
                     for (var annulus = 1; annulus < firstAnnulusFound; annulus++)
                     {
-                        submission.HornMeasurementEntries.Insert(
+                        sheepSubmission.HornMeasurementEntries.Insert(
                             annulus - 1,
-                            new HornMeasurementEntry { IsBroomed = true, Annulus = annulus }
+                            new ThinhornSheepHornMeasurementEntry
+                            {
+                                IsBroomed = true,
+                                Annulus = annulus
+                            }
                         );
                     }
 
-                    submission.HornMeasurementEntries = submission.HornMeasurementEntries.ToList();
+                    sheepSubmission.HornMeasurementEntries =
+                        sheepSubmission.HornMeasurementEntries.ToList();
+                }
+                else if (bioSubmission is MountainGoatBioSubmission goatSubmission)
+                {
+                    goatSubmission.HornMeasurementEntries ??= new();
+
+                    var firstAnnulusFound =
+                        goatSubmission.HornMeasurementEntries.FirstOrDefault()?.Annulus ?? 1;
+
+                    for (var annulus = 1; annulus < firstAnnulusFound; annulus++)
+                    {
+                        goatSubmission.HornMeasurementEntries.Insert(
+                            annulus - 1,
+                            new MountainGoatHornMeasurementEntry { Annulus = annulus }
+                        );
+                    }
+
+                    goatSubmission.HornMeasurementEntries =
+                        goatSubmission.HornMeasurementEntries.ToList();
                 }
 
                 bioSubmissions.Add((item.Id, bioSubmission));
