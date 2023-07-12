@@ -32,6 +32,7 @@ public class AppDbContext : DbContext
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<DraftReport> DraftReports => Set<DraftReport>();
     public DbSet<Violation> Violations => Set<Violation>();
+    public DbSet<RulesSummary> RulesSummaries => Set<RulesSummary>();
 
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 

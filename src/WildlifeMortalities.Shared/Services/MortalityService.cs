@@ -7,7 +7,9 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Entities.Rules;
 using WildlifeMortalities.Data.Entities.Seasons;
+using WildlifeMortalities.Data.Rules;
 using WildlifeMortalities.Shared.Services.Reports.Single;
 
 namespace WildlifeMortalities.Shared.Services;
@@ -64,8 +66,22 @@ public class MortalityService : IMortalityService
             report.GenerateHumanReadableId();
         } while (await context.Reports.AnyAsync(x => x.HumanReadableId == report.HumanReadableId));
 
+        foreach (var item in report.GetActivities())
+        {
+            if (item is HuntedActivity huntedActivity)
+            {
+                huntedActivity.GameManagementArea ??= await context.GameManagementAreas.FirstAsync(
+                    x => x.Id == huntedActivity.GameManagementAreaId
+                )!;
+            }
+        }
+
         context.Add(report);
         await AddDefaultBioSubmissions(context, report);
+
+        var rulesSummary = await RulesSummary.Generate(report, context);
+        context.Add(rulesSummary);
+
         await context.SaveChangesAsync();
     }
 
@@ -75,6 +91,10 @@ public class MortalityService : IMortalityService
     )
     {
         report.Season ??= await HuntingSeason.GetSeason(report, context);
+        report.Person = await context.People
+            .OfType<PersonWithAuthorizations>()
+            .Include(x => x.Authorizations)
+            .FirstAsync(x => x.Id == report.PersonId);
     }
 
     private static async Task CreateOrUpdateReport(
@@ -83,6 +103,9 @@ public class MortalityService : IMortalityService
         OutfitterGuidedHuntReport? existingReport
     )
     {
+        report.Client = await context.People
+            .OfType<Client>()
+            .FirstAsync(x => x.Id == report.ClientId);
         report.AssistantGuides = report.AssistantGuides
             .Where(x => string.IsNullOrEmpty(x.FirstName) == false)
             .ToList();
@@ -140,6 +163,9 @@ public class MortalityService : IMortalityService
     )
     {
         report.Season ??= await HuntingSeason.GetSeason(report, context);
+        report.Client = await context.People
+            .OfType<Client>()
+            .FirstAsync(x => x.Id == report.ClientId);
     }
 
     private static async Task CreateOrUpdateReport(
@@ -150,6 +176,9 @@ public class MortalityService : IMortalityService
         report.Season ??=
             await CalendarSeason.GetSeason(report, context)
             ?? throw new ArgumentException("Unable to resolve season.", nameof(report));
+        report.ConservationOfficer = await context.People
+            .OfType<ConservationOfficer>()
+            .FirstAsync(x => x.Id == report.ConservationOfficerId);
     }
 
     private static async Task CreateOrUpdateReport(
@@ -158,6 +187,9 @@ public class MortalityService : IMortalityService
     )
     {
         report.Season ??= await TrappingSeason.GetSeason(report, context);
+        report.Client = await context.People
+            .OfType<Client>()
+            .FirstAsync(x => x.Id == report.ClientId);
 
         var concession = await context.RegisteredTrappingConcessions.FirstOrDefaultAsync(
             x => x.Area == report.RegisteredTrappingConcession.Area
