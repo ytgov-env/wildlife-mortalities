@@ -1,8 +1,9 @@
-﻿using Bogus;
-using WildlifeMortalities.Data;
+﻿using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
+using WildlifeMortalities.Data.Entities.Mortalities;
+using Microsoft.EntityFrameworkCore;
 
 Console.WriteLine("Starting data seeding...");
 Console.WriteLine("-----------------------");
@@ -11,9 +12,8 @@ using (var context = new AppDbContext())
     AddAllSeasons(context);
     AddAllGameManagementAreas(context);
     AddAllOutfitterAreas(context);
-    // AddAllGameManagementAreaSpecies(context);
-    //AddFakeClients(context);
     AddAllRegisteredTrappingConcessions(context);
+    await AddAllBagLimitEntries(context);
 }
 
 Console.WriteLine("---------------------");
@@ -635,7 +635,7 @@ void AddAllRegisteredTrappingConcessions(AppDbContext context)
         foreach (var area in registeredTrappingConcessions)
         {
             context.RegisteredTrappingConcessions.Add(
-                new RegisteredTrappingConcession { Area = area.ToString() }
+                new RegisteredTrappingConcession { Concession = area.ToString() }
             );
         }
 
@@ -648,86 +648,33 @@ void AddAllRegisteredTrappingConcessions(AppDbContext context)
     }
 }
 
-// void AddAllGameManagementAreaSpecies(AppDbContext context)
-// {
-//     if (!context.GameManagementAreaSpecies.Any())
-//     {
-//         foreach (
-//             HuntedSpeciesWithGameManagementArea species in Enum.GetValues(
-//                 typeof(HuntedSpeciesWithGameManagementArea)
-//             )
-//         )
-//         {
-//             if (species != HuntedSpeciesWithGameManagementArea.Uninitialized)
-//             {
-//                 var gameManagementAreas = context.GameManagementAreas.ToList();
-//                 foreach (var area in gameManagementAreas)
-//                 {
-//                     context.GameManagementAreaSpecies.Add(
-//                         new GameManagementAreaSpecies { Species = species, GameManagementArea = area }
-//                     );
-//                 }
-//             }
-//         }
-//
-//         context.SaveChanges();
-//         Console.WriteLine("Added GameManagementAreaSpecies");
-//     }
-//     else
-//     {
-//         Console.WriteLine("GameManagementAreaSpecies already exist");
-//     }
-// }
-
-void AddFakeClients(AppDbContext context)
+async Task AddAllBagLimitEntries(AppDbContext context)
 {
-    if (!context.People.OfType<Client>().Any())
+    if (!context.BagLimitEntries.Any())
     {
-        var fakerClients = new Faker<Client>()
-            .RuleFor(c => c.EnvPersonId, f => f.Random.Replace("######"))
-            .RuleFor(c => c.FirstName, f => f.Name.FirstName())
-            .RuleFor(c => c.LastName, f => f.Name.LastName())
-            .RuleFor(c => c.BirthDate, f => f.Date.Past(70, DateTime.Today));
+        var areas = await context.GameManagementAreas.ToDictionaryAsync(x => x.Area, x => x);
+        var concessions = await context.RegisteredTrappingConcessions.ToDictionaryAsync(
+            x => x.Concession,
+            x => x
+        );
+        var huntingSeasons = await context.Seasons
+            .OfType<HuntingSeason>()
+            .ToDictionaryAsync(x => x.FriendlyName, x => x);
+        var trappingSeasons = await context.Seasons
+            .OfType<TrappingSeason>()
+            .ToDictionaryAsync(x => x.FriendlyName, x => x);
 
-        var clients = fakerClients.Generate(50);
-
-        // foreach (var client in clients)
-        // {
-        //     AddLicences(client);
-        // }
-        //
-        //
-        // void AddLicences(Client client)
-        // {
-        //     client.Authorizations = new List<Authorization>();
-        //     var rand = new Random();
-        //     for (var i = 0; i < rand.Next(0, 4); i++)
-        //     {
-        //         client.Authorizations.Add(new HuntingLicence { Number = $"EHL-{rand.Next(1000, 99999)}"});
-        //     }
-        //
-        //     foreach (var licence in client.Authorizations.OfType<HuntingLicence>())
-        //     {
-        //         licence.ValidFromDate = new DateTime(rand.Next(2019, 2022), 04, 01);
-        //         licence.ValidToDate = new DateTime(licence.ValidFromDate.Year + 1, 03, 31);
-        //         AddSeals(licence);
-        //     }
-        //
-        //     void AddSeals(HuntingLicence licence)
-        //     {
-        //         licence.Seals = new List<Seal>();
-        //         for (var i = 0; i < rand.Next(0, 5); i++)
-        //         {
-        //             licence.Seals.Add(new Seal { Number = $"EHS-{rand.Next(1000, 99999)}", Species = HuntedSpecies.WoodBison });
-        //         }
-        //     }
-        // }
-        context.AddRange(clients);
+        context.BagLimitEntries.Add(
+            new CaribouBagLimitEntry(
+                new[] { areas["1-04"], areas["1-05"] },
+                new[] { CaribouMortality.CaribouHerd.Porcupine },
+                huntingSeasons["23/24"],
+                huntingSeasons["23/24"].StartDate,
+                huntingSeasons["23/24"].EndDate,
+                1
+            )
+        );
         context.SaveChanges();
-        Console.WriteLine("Added fake Clients");
-    }
-    else
-    {
-        Console.WriteLine("Fake Clients already exist");
+        Console.WriteLine("Added BagLimitEntries");
     }
 }
