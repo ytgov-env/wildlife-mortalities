@@ -16,7 +16,7 @@ internal class SheepBioSubmissionRule : Rule
         }
 
         var violations = new List<Violation>();
-        var isUsed = false;
+        var isApplicable = false;
         foreach (
             var activity in report.GetActivities().Where(x => x.Mortality is ThinhornSheepMortality)
         )
@@ -36,7 +36,7 @@ internal class SheepBioSubmissionRule : Rule
                 continue;
             }
 
-            isUsed = true;
+            isApplicable = true;
 
             if (bioSubmission.Age!.Years < 8 && bioSubmission.IsFullCurl == false)
             {
@@ -63,7 +63,7 @@ internal class SheepBioSubmissionRule : Rule
             }
         }
 
-        return !isUsed
+        return !isApplicable
             ? RuleResult.NotApplicable
             : violations.Any()
                 ? RuleResult.IsIllegal(violations)

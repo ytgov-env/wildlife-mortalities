@@ -41,6 +41,7 @@ public static class DbContextExtensions
             MountainGoatMortality
                 => await bioSubmissions
                     .OfType<MountainGoatBioSubmission>()
+                    .Include(x => x.HornMeasurementEntries)
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             MuleDeerMortality
                 => await bioSubmissions
@@ -63,6 +64,65 @@ public static class DbContextExtensions
                 => await bioSubmissions
                     .OfType<WoodBisonBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
+            _ => throw new InvalidOperationException()
+        };
+    }
+
+    public static BioSubmission? GetBioSubmissionFromMortality(
+        this IEnumerable<BioSubmission> bioSubmissions,
+        IHasBioSubmission item
+    )
+    {
+        return item switch
+        {
+            AmericanBlackBearMortality
+                => bioSubmissions
+                    .OfType<AmericanBlackBearBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            CanadaLynxMortality
+                => bioSubmissions
+                    .OfType<CanadaLynxBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            CaribouMortality
+                => bioSubmissions
+                    .OfType<CaribouBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            ElkMortality
+                => bioSubmissions
+                    .OfType<ElkBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            GreyWolfMortality
+                => bioSubmissions
+                    .OfType<GreyWolfBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            GrizzlyBearMortality
+                => bioSubmissions
+                    .OfType<GrizzlyBearBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            MountainGoatMortality
+                => bioSubmissions
+                    .OfType<MountainGoatBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            MuleDeerMortality
+                => bioSubmissions
+                    .OfType<MuleDeerBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            ThinhornSheepMortality
+                => bioSubmissions
+                    .OfType<ThinhornSheepBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            WhiteTailedDeerMortality
+                => bioSubmissions
+                    .OfType<WhiteTailedDeerBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            WolverineMortality
+                => bioSubmissions
+                    .OfType<WolverineBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
+            WoodBisonMortality
+                => bioSubmissions
+                    .OfType<WoodBisonBioSubmission>()
+                    .FirstOrDefault(x => x.MortalityId == item.Id),
             _ => throw new InvalidOperationException()
         };
     }

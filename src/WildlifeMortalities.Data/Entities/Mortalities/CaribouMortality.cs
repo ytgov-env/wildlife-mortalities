@@ -111,9 +111,11 @@ public class CaribouMortality : Mortality, IHasBioSubmission
     public CaribouBioSubmission? BioSubmission { get; set; }
 
     public BioSubmission? CreateDefaultBioSubmission() =>
-        Herd == CaribouHerd.Fortymile || Herd == CaribouHerd.Nelchina
-            ? new CaribouBioSubmission(this)
-            : null;
+        HerdHasBioSubmission() ? new CaribouBioSubmission(this) : null;
+
+    bool IHasBioSubmission.SubTypeHasBioSubmission() => HerdHasBioSubmission();
+
+    private bool HerdHasBioSubmission() => Herd is CaribouHerd.Fortymile or CaribouHerd.Nelchina;
 }
 
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>

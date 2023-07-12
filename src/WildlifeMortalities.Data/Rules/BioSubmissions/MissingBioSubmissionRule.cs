@@ -20,7 +20,7 @@ internal class MissingBioSubmissionRule : Rule
         }
 
         var violations = new List<Violation>();
-        var isUsed = false;
+        var isApplicable = false;
         foreach (
             var activity in report
                 .GetActivities()
@@ -28,15 +28,25 @@ internal class MissingBioSubmissionRule : Rule
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
+            var mortality = (IHasBioSubmission)activity.Mortality;
+            if (!mortality.SubTypeHasBioSubmission())
+            {
+                continue;
+            }
+
             var bioSubmission =
-                await context.BioSubmissions.GetBioSubmissionFromMortality(
-                    (IHasBioSubmission)activity.Mortality
-                )
-                ?? throw new Exception(
-                    "Expected mortality to have bio submission, but no bio submission found."
+                await context.BioSubmissions.GetBioSubmissionFromMortality(mortality)
+                ?? (
+                    context.ChangeTracker
+                        .Entries<BioSubmission>()
+                        .Select(x => x.Entity)
+                        .GetBioSubmissionFromMortality(mortality)
+                    ?? throw new Exception(
+                        "Expected mortality to have bio submission, but no bio submission found."
+                    )
                 );
 
-            isUsed = true;
+            isApplicable = true;
 
             if (
                 bioSubmission.RequiredOrganicMaterialsStatus
@@ -57,35 +67,18 @@ internal class MissingBioSubmissionRule : Rule
                 is BioSubmissionRequiredOrganicMaterialsStatus.PartiallySubmitted
             )
             {
-                //var type = bioSubmission.GetType();
-                //var missingOrganicMaterial = type.GetProperties()
-                //    .Select(
-                //        x =>
-                //            new
-                //            {
-                //                info = x,
-                //                attribute = x.GetCustomAttributes(false)
-                //                    .OfType<IsRequiredOrganicMaterialForBioSubmissionAttribute>()
-                //                    .FirstOrDefault()
-                //            }
-                //    )
-                //    .Where(x => x.attribute != null && !(bool)x.info.GetValue(bioSubmission)!)
-                //    .Select(x => x.attribute!.DisplayName.ToLower())
-                //    .ToArray();
-
                 violations.Add(
                     new Violation(
                         activity,
                         Violation.RuleType.SomeRequiredSamplesNotSubmitted,
                         Violation.SeverityType.Illegal,
                         $"Some of the required samples for {activity.Mortality.Species.GetDisplayName().ToLower()} were not submitted."
-                    //$"Some of the required samples for {activity.Mortality.Species.GetDisplayName().ToLower()} were not submitted. These are: {string.Join(", and ", missingOrganicMaterial)}"
                     )
                 );
             }
         }
 
-        return !isUsed
+        return !isApplicable
             ? RuleResult.NotApplicable
             : violations.Any()
                 ? RuleResult.IsIllegal(violations)

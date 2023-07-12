@@ -4,5 +4,10 @@ public interface IHasBioSubmission
 {
     int Id { get; }
 
+    public bool SubTypeHasBioSubmission()
+    {
+        return true;
+    }
+
     BioSubmission? CreateDefaultBioSubmission();
 }
