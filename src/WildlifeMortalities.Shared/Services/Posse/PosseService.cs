@@ -476,7 +476,9 @@ public class PosseService : IPosseService
                             {
                                 var item = Array.Find(
                                     registeredTrappingConcessions,
-                                    r => r.Area == posseAuthorization.RegisteredTrappingConcession
+                                    r =>
+                                        r.Concession
+                                        == posseAuthorization.RegisteredTrappingConcession
                                 );
                                 if (item == null)
                                 {

@@ -16,7 +16,7 @@ public class TrappedActivity : HarvestActivity
     public HarvestMethodType HarvestMethod { get; set; }
 
     public override string GetAreaName(Report report) =>
-        (report as TrappedMortalitiesReport)?.RegisteredTrappingConcession.Area
+        (report as TrappedMortalitiesReport)?.RegisteredTrappingConcession.Concession
         ?? "<error invalid concession>";
 
     public enum HarvestMethodType

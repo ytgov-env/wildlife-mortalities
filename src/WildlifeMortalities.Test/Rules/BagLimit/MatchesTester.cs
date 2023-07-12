@@ -272,7 +272,7 @@ public class MatchesTester
         bool shouldMatch
     )
     {
-        var concession = new RegisteredTrappingConcession { Id = 10, Area = "09" };
+        var concession = new RegisteredTrappingConcession { Id = 10, Concession = "09" };
         var report = new TrappedMortalitiesReport()
         {
             Season = new TrappingSeason(2023),

@@ -192,7 +192,7 @@ public class MortalityService : IMortalityService
             .FirstAsync(x => x.Id == report.ClientId);
 
         var concession = await context.RegisteredTrappingConcessions.FirstOrDefaultAsync(
-            x => x.Area == report.RegisteredTrappingConcession.Area
+            x => x.Concession == report.RegisteredTrappingConcession.Concession
         );
         if (concession != null)
         {
@@ -466,8 +466,8 @@ public class MortalityService : IMortalityService
         using var context = _dbContextFactory.CreateDbContext();
 
         return await context.RegisteredTrappingConcessions
-            .OrderBy(o => o.Area.Length)
-            .ThenBy(o => o.Area)
+            .OrderBy(o => o.Concession.Length)
+            .ThenBy(o => o.Concession)
             .ToArrayAsync();
     }
 

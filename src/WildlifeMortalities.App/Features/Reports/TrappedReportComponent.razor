@@ -2,7 +2,7 @@
 @using WildlifeMortalities.Shared.Services
 @using WildlifeMortalities.App.Features.Reports.Activities
 <MudAutocomplete T="RegisteredTrappingConcession" Label="Registered Trapping Concession" @bind-Value="ViewModel.RegisteredTrappingConcession" SearchFunc="SearchRegisteredTrappingConcessions"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a RTC" For="@(() => ViewModel.RegisteredTrappingConcession)"/>
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Concession)" MaxItems="null" Placeholder="Select a RTC" For="@(() => ViewModel.RegisteredTrappingConcession)"/>
 
 <MudGrid Class="my-3">
     @foreach (var item in ViewModel.TrappedActivityViewModels)
@@ -83,7 +83,7 @@
     {
         if (string.IsNullOrEmpty(value))
             return _registeredTrappingConcessions;
-        return await Task.FromResult(_registeredTrappingConcessions.Where(y => y.Area.StartsWith(value)));
+        return await Task.FromResult(_registeredTrappingConcessions.Where(y => y.Concession.StartsWith(value)));
     }
 
 }

@@ -27,7 +27,7 @@
         }
         @if (Authorization is TrappingLicence trappingLicence)
         {
-            <MudField Label="Registered trapping concession" DisableUnderLine="true">@trappingLicence.RegisteredTrappingConcession.Area</MudField>
+            <MudField Label="Registered trapping concession" DisableUnderLine="true">@trappingLicence.RegisteredTrappingConcession.Concession</MudField>
         }
         <MudField Label="Validity" DisableUnderLine="true">
             @Authorization.ValidFromDateTime.ToString("M") - @Authorization.ValidToDateTime.ToString("M")

@@ -461,7 +461,7 @@ public class ProcessTester
         };
 
         var person = new Client { Id = 4 };
-        var concession = new RegisteredTrappingConcession { Id = 10, Area = "15" };
+        var concession = new RegisteredTrappingConcession { Id = 10, Concession = "15" };
         report =
             reportModifier?.Invoke(concession, season, person)
             ?? new TrappedMortalitiesReport
