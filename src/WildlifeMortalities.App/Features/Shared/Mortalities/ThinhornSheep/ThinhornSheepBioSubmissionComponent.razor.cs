@@ -131,7 +131,10 @@ public class ThinhornSheepBioSubmissionValidator
                 RuleFor(x => x.Age).NotNull();
                 RuleFor(x => x.BroomedStatus).NotEmpty().IsInEnum();
                 RuleFor(x => x.PlugNumber).NotEmpty();
-                RuleFor(x => x.HornLengthToThirdAnnulusMillimetres).GreaterThan(50).LessThan(1000);
+                RuleFor(x => x.HornLengthToThirdAnnulusOnShorterHornMillimetres)
+                    .NotNull()
+                    .GreaterThan(50)
+                    .LessThan(1000);
                 RuleFor(x => x.HornMeasurementEntries).NotEmpty();
                 RuleFor(x => x.Age!.Years)
                     .Equal(x => x.HornMeasurementEntries.Last().Annulus)

@@ -39,13 +39,13 @@
             {
                 RuleFor(x => x.SkullLengthMillimetres)
                     .NotNull();
-                RuleFor(x => x.SkullWidthMillimetres).NotNull().GreaterThan(50).LessThan(1000);
+                RuleFor(x => x.SkullWidthMillimetres).NotNull().GreaterThan(50).LessThan(450);
                 // Simple workaround to prevent the error message from appearing before the user has entered the width value (which is below length in the UI)
                 When(x => x.SkullWidthMillimetres != null, () =>
                 {
                     RuleFor(x => x.SkullLengthMillimetres)
                     .GreaterThan(x => x.SkullWidthMillimetres).WithMessage("Skull length must be greater than skull width.")
-                    .LessThan(1000);
+                    .LessThan(600);
                 });
             });
         }

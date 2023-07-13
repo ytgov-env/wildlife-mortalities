@@ -25,8 +25,10 @@ public class ThinhornSheepBioSubmission : BioSubmission<ThinhornSheepMortality>
     [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsHeadProvided)}")]
     public bool? IsHeadProvided { get; set; }
 
-    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornLengthToThirdAnnulusMillimetres)}")]
-    public int? HornLengthToThirdAnnulusMillimetres { get; set; }
+    [Column(
+        $"{nameof(ThinhornSheepBioSubmission)}_{nameof(HornLengthToThirdAnnulusOnShorterHornMillimetres)}"
+    )]
+    public int? HornLengthToThirdAnnulusOnShorterHornMillimetres { get; set; }
 
     [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsFullCurl)}")]
     public bool? IsFullCurl { get; set; }

@@ -24,8 +24,10 @@ public class MountainGoatBioSubmission : BioSubmission<MountainGoatMortality>
     [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(IsHeadProvided)}")]
     public bool? IsHeadProvided { get; set; }
 
-    [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(HornLengthToThirdAnnulusMillimetres)}")]
-    public int? HornLengthToThirdAnnulusMillimetres { get; set; }
+    [Column(
+        $"{nameof(MountainGoatBioSubmission)}_{nameof(HornLengthToThirdAnnulusOnShorterHornMillimetres)}"
+    )]
+    public int? HornLengthToThirdAnnulusOnShorterHornMillimetres { get; set; }
 
     [Column($"{nameof(MountainGoatBioSubmission)}_{nameof(HornMeasured)}")]
     public HornMeasured? HornMeasured { get; set; }

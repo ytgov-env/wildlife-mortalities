@@ -19,7 +19,7 @@
     {
         public WolverineBioSubmissionValidator()
         {
-            RuleFor(x => x.FurbearerSealNumber).NotEmpty();
+            RuleFor(x => x.FurbearerSealNumber).NotEmpty().Length(5);
         }
     }
 }

@@ -22,10 +22,9 @@
     {
         public CanadaLynxBioSubmissionValidator()
         {
-    //Todo get correct min/max
-            RuleFor(x => x.PeltLengthMillimetres).GreaterThan(50).LessThan(1000);
-            RuleFor(x => x.PeltWidthMillimetres).GreaterThan(50).LessThan(1000);
-            RuleFor(x => x.FurbearerSealNumber).NotEmpty();
+            RuleFor(x => x.PeltLengthMillimetres).NotNull().GreaterThan(400).LessThan(2000);
+            RuleFor(x => x.PeltWidthMillimetres).NotNull().GreaterThan(100).LessThan(1000);
+            RuleFor(x => x.FurbearerSealNumber).NotEmpty().Length(5);
         }
     }
 

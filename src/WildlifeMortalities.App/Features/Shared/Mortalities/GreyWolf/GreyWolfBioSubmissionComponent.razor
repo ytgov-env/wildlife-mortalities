@@ -32,7 +32,7 @@
         public GreyWolfBioSubmissionValidator()
         {
             RuleFor(x => x.PeltColour).NotNull().IsInEnum();
-            RuleFor(x => x.FurbearerSealNumber).NotEmpty();
+            RuleFor(x => x.FurbearerSealNumber).NotEmpty().Length(5);
             //RuleFor(x => x.FurbearerSealNumber).NotEmpty().MustAsync(BeUnique).WithMessage("This furbearer seal is already associated with a different mortality.");
         }
 
@@ -43,5 +43,4 @@
         //    return result;
         //}
     }
-
 }
