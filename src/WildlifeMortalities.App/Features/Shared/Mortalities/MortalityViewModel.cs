@@ -19,6 +19,9 @@ public class MortalityViewModel
 
     private readonly Mortality? _existingMortality;
 
+    // This parameterless constructor is required for serializing this model when creating draft reports.
+    public MortalityViewModel() { }
+
     static MortalityViewModel()
     {
         var mortalityType = typeof(Mortality);
