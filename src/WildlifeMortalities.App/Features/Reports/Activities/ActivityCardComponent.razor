@@ -6,8 +6,10 @@
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services
+@using static WildlifeMortalities.Data.Entities.Violation;
+
 <MudCard Elevation="3" Class="flex-column d-flex" Style="height: 100%; min-width: 250px; width: 350px;">
-    <MudCardHeader>
+    <MudCardHeader Class="mb-n3">
         <CardHeaderContent>
             @{
                 var mortalityName = MortalityViewModel.Species?.GetDisplayName();
@@ -21,15 +23,48 @@
                 <MudText Typo="Typo.h6">@mortalityName</MudText>
             }
         </CardHeaderContent>
+        <CardHeaderActions>
+            @if (ActivityViewModel.Activity != null && ActivityViewModel.Activity.Authorizations.Any())
+            {
+                <MudMenu Icon="@Icons.Material.Filled.Key">
+                    @foreach (var authorization in ActivityViewModel.Activity.Authorizations)
+                    {
+                        <MudMenuItem>@authorization.Number</MudMenuItem>
+                    }
+                </MudMenu>
+            }
+        </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent Class="flex-column d-flex" Style="height: 100%">
+        @if (ActivityViewModel.Activity != null)
+        {
+            <MudText Typo="Typo.body1">Violations</MudText>
+            @if (ActivityViewModel.HasNoViolations == false)
+            {
+                @foreach (var violations in ActivityViewModel.Activity.Violations.GroupBy(x => x.Severity))
+                {
+                    <MudAlert Severity="@GetAlertSeverity(violations.Key)" Class="my-1">
+                        @foreach (var violation in violations)
+                        {
+                            <MudText Typo="Typo.body2" Class="my-1">@violation.Description</MudText>
+                        }
+                    </MudAlert>
+                }
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Success" Class="my-1">
+                    <MudText Typo="Typo.body2" Class="my-1">None</MudText>
+                </MudAlert>
+            }
+        }
         <MudStack Row="false">
             @foreach (var property in MortalityViewModel.GetProperties())
             {
                 var normalizedValue = (property.Value ?? string.Empty).ToLower();
                 @if (bool.TryParse(property.Value, out var value))
                 {
-                    <MudCheckBox T="bool" ReadOnly="true" Checked="value" Label="@property.Key"/>
+                    <MudCheckBox T="bool" ReadOnly="true" Checked="value" Label="@property.Key" />
                 }
                 else if (DateTime.TryParse(property.Value, out var dateValue))
                 {
@@ -57,22 +92,22 @@
                 <MudField Style="white-space: pre-wrap" DisableUnderLine="true" Label="Comment">@ActivityViewModel.Comment</MudField>
             }
         </MudStack>
-        <MudSpacer/>
+        <MudSpacer />
         @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
         {
-            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report"/>
+            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report" />
         }
     </MudCardContent>
     <MudCardActions>
         <MudStack Row="true" Class="justify-right">
-            <MudSpacer/>
+            <MudSpacer />
             @if (EnableEdit)
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OnEditClicked" Color="Color.Primary"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="OnEditClicked" Color="Color.Primary" />
             }
             @if (EnableDelete)
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="OnDeleteClicked" Color="Color.Error"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="OnDeleteClicked" Color="Color.Error" />
             }
         </MudStack>
     </MudCardActions>
@@ -105,4 +140,12 @@
 
     [Parameter]
     public EventCallback OnDeleteClicked { get; set; }
+
+    private Severity GetAlertSeverity(SeverityType type) => type switch
+    {
+        SeverityType.InternalError => Severity.Error,
+        SeverityType.Illegal => Severity.Error,
+        SeverityType.PotentiallyIllegal => Severity.Warning,
+        _ => throw new System.Diagnostics.UnreachableException()
+    };
 }

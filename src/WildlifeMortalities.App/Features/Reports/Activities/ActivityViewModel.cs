@@ -12,8 +12,16 @@ public abstract class ActivityViewModel
     protected ActivityViewModel() =>
         MortalityWithSpeciesSelectionViewModel = new MortalityWithSpeciesSelectionViewModel();
 
+    public bool HasNoViolations { get; }
+    public bool HasOnlyPotentiallyIllegalViolations { get; }
+    public bool HasIllegalViolations { get; }
+
+    public Activity? Activity { get; }
+
     protected ActivityViewModel(Activity activity, ReportDetail? reportDetail = null)
     {
+        Activity = activity;
+
         MortalityWithSpeciesSelectionViewModel = new MortalityWithSpeciesSelectionViewModel
         {
             Species = activity.Mortality.Species,
@@ -21,6 +29,14 @@ public abstract class ActivityViewModel
         };
 
         Comment = activity.Comment;
+
+        HasNoViolations = activity.Violations.Count == 0;
+        HasOnlyPotentiallyIllegalViolations = activity.Violations.All(
+            x => x.Severity == Data.Entities.Violation.SeverityType.PotentiallyIllegal
+        );
+        HasIllegalViolations = activity.Violations.Any(
+            x => x.Severity == Data.Entities.Violation.SeverityType.Illegal
+        );
     }
 
     public bool IsCompleted { get; set; }
