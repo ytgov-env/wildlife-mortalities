@@ -63,6 +63,7 @@ public class Client : PersonWithAuthorizations
             return false;
         }
 
+        BagEntries.AddRange(clientToBeMerged.BagEntries);
         Authorizations.AddRange(clientToBeMerged.Authorizations);
         SpecialGuideLicencesAsClient.AddRange(clientToBeMerged.SpecialGuideLicencesAsClient);
 
