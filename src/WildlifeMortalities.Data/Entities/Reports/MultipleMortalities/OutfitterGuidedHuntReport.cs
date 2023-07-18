@@ -60,7 +60,7 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
         return guides[..^2];
     }
 
-    internal override PersonWithAuthorizations GetPerson()
+    public override PersonWithAuthorizations GetPerson()
     {
         return Client;
     }

@@ -43,7 +43,7 @@ public class HumanWildlifeConflictMortalityReport
 
     public override bool HasHuntingActivity() => false;
 
-    internal override PersonWithAuthorizations GetPerson()
+    public override PersonWithAuthorizations GetPerson()
     {
         throw new Exception("This report type cannot have a PersonWithAuthorizations");
     }

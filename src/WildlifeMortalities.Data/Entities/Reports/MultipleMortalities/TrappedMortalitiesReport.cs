@@ -30,7 +30,7 @@ public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport
 
     public override bool HasHuntingActivity() => false;
 
-    internal override PersonWithAuthorizations GetPerson()
+    public override PersonWithAuthorizations GetPerson()
     {
         return Client;
     }

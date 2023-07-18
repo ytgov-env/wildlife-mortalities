@@ -17,6 +17,11 @@ public abstract class Activity
     public List<Violation> Violations { get; set; } = null!;
     public string Comment { get; set; } = string.Empty;
     public DateTimeOffset CreatedTimestamp { get; set; }
+
+    public void PreserveImmutableValues(Activity existingActivity)
+    {
+        CreatedTimestamp = existingActivity.CreatedTimestamp;
+    }
 }
 
 public class ActivityConfig : IEntityTypeConfiguration<Activity>

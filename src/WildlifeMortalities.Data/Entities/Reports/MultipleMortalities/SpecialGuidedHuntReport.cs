@@ -46,7 +46,7 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport
 
     public override bool HasHuntingActivity() => true;
 
-    internal override PersonWithAuthorizations GetPerson()
+    public override PersonWithAuthorizations GetPerson()
     {
         return Client;
     }

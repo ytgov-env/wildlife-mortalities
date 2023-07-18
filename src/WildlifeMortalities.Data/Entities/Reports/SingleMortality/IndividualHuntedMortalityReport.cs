@@ -24,7 +24,7 @@ public class IndividualHuntedMortalityReport : Report, ISingleMortalityReport
     [NotMapped]
     public override GeneralizedReportType GeneralizedReportType => GeneralizedReportType.Hunted;
 
-    internal override PersonWithAuthorizations GetPerson()
+    public override PersonWithAuthorizations GetPerson()
     {
         return Person;
     }

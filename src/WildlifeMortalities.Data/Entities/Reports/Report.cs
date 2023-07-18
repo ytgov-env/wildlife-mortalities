@@ -125,7 +125,15 @@ public abstract class Report
 
     public abstract bool HasHuntingActivity();
 
-    internal abstract PersonWithAuthorizations GetPerson();
+    public abstract PersonWithAuthorizations GetPerson();
+
+    public void PreserveImmutableValues(Report existingReport)
+    {
+        Discriminator = existingReport.Discriminator;
+        HumanReadableId = existingReport.HumanReadableId;
+        CreatedById = existingReport.CreatedById;
+        DateCreated = existingReport.DateCreated;
+    }
 }
 
 public class ReportConfig : IEntityTypeConfiguration<Report>

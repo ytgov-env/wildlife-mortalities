@@ -24,7 +24,7 @@ public class CollaredMortalityReport : Report, ISingleMortalityReport
     [NotMapped]
     public override GeneralizedReportType GeneralizedReportType => GeneralizedReportType.Collared;
 
-    internal override PersonWithAuthorizations GetPerson()
+    public override PersonWithAuthorizations GetPerson()
     {
         throw new Exception("This report type cannot have a PersonWithAuthorizations");
     }

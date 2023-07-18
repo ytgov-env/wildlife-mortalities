@@ -78,8 +78,7 @@ public class MortalityService : IMortalityService
         context.Add(report);
         await AddDefaultBioSubmissions(context, report);
 
-        var rulesSummary = await RulesSummary.Generate(report, context);
-        context.AddRange(rulesSummary.Violations);
+        await RulesSummary.Generate(report, null, context);
 
         await context.SaveChangesAsync();
     }
@@ -241,26 +240,23 @@ public class MortalityService : IMortalityService
                 throw new NotImplementedException();
         }
 
-        var now = DateTimeOffset.Now;
-
-        report.Discriminator = existingReport.Discriminator;
-        report.HumanReadableId = existingReport.HumanReadableId;
-        report.CreatedById = existingReport.CreatedById;
+        report.PreserveImmutableValues(existingReport);
         report.LastModifiedById =
             (await context.Users.SingleOrDefaultAsync(x => x.Id == userId))?.Id
             ?? throw new Exception($"User {userId} not found.");
-        report.DateCreated = existingReport.DateCreated;
-        report.DateSubmitted = existingReport.DateSubmitted;
+        var now = DateTimeOffset.Now;
         report.DateModified = now;
 
         context.Entry(existingReport).CurrentValues.SetValues(report);
 
         await AddDefaultBioSubmissions(context, report);
-        UpdateActivities(context, report, existingReport, now);
+        await UpdateActivities(context, report, existingReport, now);
+
+        await RulesSummary.Generate(report, existingReport, context);
 
         await context.SaveChangesAsync();
 
-        static void UpdateActivities(
+        static async Task UpdateActivities(
             AppDbContext context,
             Report report,
             Report existingReport,
@@ -307,14 +303,19 @@ public class MortalityService : IMortalityService
 
             foreach (var activity in report.GetActivities())
             {
+                await SetArea(activity, context);
+
                 if (activity.Id > 0)
                 {
                     var existingActivity = existingReport
                         .GetActivities()
                         .First(x => x.Id == activity.Id);
 
+                    activity.PreserveImmutableValues(existingActivity);
+
                     context.Entry(existingActivity).CurrentValues.SetValues(activity);
 
+                    existingActivity.Authorizations.Clear();
                     activityIdsToDelete.Remove(activity.Id);
                 }
                 else
@@ -331,6 +332,20 @@ public class MortalityService : IMortalityService
                     .First(x => x.Id == activityId);
                 context.Activities.Remove(existingActivity);
             }
+        }
+    }
+
+    private static async Task SetArea(Activity activity, AppDbContext context)
+    {
+        switch (activity)
+        {
+            case HuntedActivity huntedActivity:
+                huntedActivity.GameManagementArea = await context.GameManagementAreas.FirstAsync(
+                    x => x.Id == huntedActivity.GameManagementAreaId
+                );
+                break;
+            default:
+                throw new System.Diagnostics.UnreachableException();
         }
     }
 
