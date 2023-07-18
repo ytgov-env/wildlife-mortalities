@@ -1,42 +1,55 @@
-﻿using System;
-using System.IO;
-using WildlifeMortalities.Data.Entities;
+﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 using WildlifeMortalities.Test.Helpers;
-using Xunit;
 using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Test.Rules.BioSubmissions;
 
 public class SheepBioSubmissionTester
 {
-    //public static IEnumerable<object[]> GetAllNonSheepMortalityTypes() =>
-    //    typeof(Mortality).GetAllDerivedTypesExcludingSomeTypes(
-    //        new Type[] { typeof(ThinhornSheepMortality) }
-    //    );
+    public static IEnumerable<object[]> GetAllNonSheepMortalityTypes() =>
+        typeof(Mortality).GetAllDerivedTypesExcludingSomeTypes(
+            new Type[] { typeof(ThinhornSheepMortality) }
+        );
 
-    //[Theory]
-    //[MemberData(nameof(GetAllNonSheepMortalityTypes))]
-    //public async Task Process_WithNonSheepMortality_ReturnsNotApplicable(object type)
-    //{
-    //    var mortality = Activator.CreateInstance((Type)type) as Mortality;
-    //    var report = new IndividualHuntedMortalityReport()
-    //    {
-    //        HuntedActivity = new() { Mortality = mortality! }
-    //    };
+    [Theory]
+    [MemberData(nameof(GetAllNonSheepMortalityTypes))]
+    public async Task Process_WithNonSheepMortality_ReturnsNotApplicable(object type1)
+    {
+        var context = TestDbContextFactory.CreateContext();
 
-    //    // Todo: create bio submission
+        var type = (Type)type1;
+        var mortality = Activator.CreateInstance(type) as Mortality;
+        mortality!.Sex = Data.Enums.Sex.Female;
+        var report = new IndividualHuntedMortalityReport()
+        {
+            HuntedActivity = new() { Mortality = mortality! }
+        };
+        var abstractBioSubmissionType = typeof(BioSubmission<>).MakeGenericType(new[] { type });
 
-    //    var context = TestDbContextFactory.CreateContext();
-    //    var rule = new SheepBioSubmissionRule();
+        var types = abstractBioSubmissionType.GetAllDerivedTypes();
+        if (types.Any())
+        {
+            var bioSubmissionConstructor = types.First().GetConstructor(new Type[] { type });
+            var instance =
+                bioSubmissionConstructor.Invoke(new object[] { mortality }) as BioSubmission;
 
-    //    var result = await rule.Process(report, context);
-    //    result.IsApplicable.Should().BeFalse();
-    //    result.Violations.Should().BeEmpty();
-    //}
+            context.Mortalities.Add(mortality);
+            context.BioSubmissions.Add(instance!);
+            context.SaveChanges();
+        }
+
+        // Todo: create bio submission
+
+        var rule = new SheepBioSubmissionRule();
+
+        var result = await rule.Process(report, context);
+        result.IsApplicable.Should().BeFalse();
+        result.Violations.Should().BeEmpty();
+    }
 
     [Fact]
     public async Task Process_WithCompleteEyeSocketsAnd8YearsOld_ReturnsNoViolations()
