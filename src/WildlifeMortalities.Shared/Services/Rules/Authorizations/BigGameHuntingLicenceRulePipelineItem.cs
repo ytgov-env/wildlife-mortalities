@@ -4,8 +4,9 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Extensions;
+using WildlifeMortalities.Shared.Extensions;
 
-namespace WildlifeMortalities.Data.Rules.Authorizations;
+namespace WildlifeMortalities.Shared.Services.Rules.Authorizations;
 
 public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineItem
 {
@@ -33,7 +34,7 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
                         activity,
                         Violation.RuleType.NoValidBigGameHuntingLicence,
                         Violation.SeverityType.Illegal,
-                        $"No big game hunting licence valid on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+                        $"Does not have a valid big game hunting licence on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
                     )
                 );
             }

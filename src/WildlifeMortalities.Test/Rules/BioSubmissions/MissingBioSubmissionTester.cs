@@ -4,7 +4,7 @@ using WildlifeMortalities.Test.Helpers;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using static WildlifeMortalities.Data.Entities.Violation;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Rules.BioSubmissions;
+using WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 
 namespace WildlifeMortalities.Test.Rules.BioSubmissions;
 

@@ -1,6 +1,7 @@
-﻿using WildlifeMortalities.Data.Entities.Reports;
+﻿using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities.Reports;
 
-namespace WildlifeMortalities.Data.Rules.Authorizations;
+namespace WildlifeMortalities.Shared.Services.Rules.Authorizations;
 
 public class AuthorizationRule : Rule
 {

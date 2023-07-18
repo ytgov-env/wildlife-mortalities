@@ -1,8 +1,9 @@
 ﻿using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data;
 
-namespace WildlifeMortalities.Data.Rules.Late;
+namespace WildlifeMortalities.Shared.Services.Rules.Late;
 
 public abstract class LateRule<TActivity> : Rule
     where TActivity : HarvestActivity

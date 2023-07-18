@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using WildlifeMortalities.Data;
+﻿using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.People;
@@ -10,9 +7,8 @@ using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
-using WildlifeMortalities.Data.Rules;
+using WildlifeMortalities.Shared.Services.Rules;
 using WildlifeMortalities.Test.Helpers;
-using Xunit;
 using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Test.Rules.BagLimit;
@@ -184,7 +180,7 @@ public class ProcessTester
             .BeEquivalentTo("Bag limit exceeded for Caribou in 4-03 for 23/24 season.");
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
-        violation.Rule.Should().Be(RuleType.BagLimit);
+        violation.Rule.Should().Be(RuleType.BagLimitExceeded);
     }
 
     [Fact]
@@ -237,7 +233,7 @@ public class ProcessTester
             );
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
-        violation.Rule.Should().Be(RuleType.BagLimit);
+        violation.Rule.Should().Be(RuleType.BagLimitExceeded);
     }
 
     [Fact]
@@ -421,7 +417,7 @@ public class ProcessTester
                 .BeEquivalentTo("Bag limit exceeded for caribou in 4-03 for 23/24 season.");
             violation.Activity.Should().Be(report.GetActivities().ElementAt(1));
             violation.Severity.Should().Be(SeverityType.Illegal);
-            violation.Rule.Should().Be(RuleType.BagLimit);
+            violation.Rule.Should().Be(RuleType.BagLimitExceeded);
         }
         {
             var violation = result.Violations.Last();
@@ -431,7 +427,7 @@ public class ProcessTester
                 .BeEquivalentTo("Bag limit exceeded for caribou in 4-03 for 23/24 season.");
             violation.Activity.Should().Be(report.GetActivities().Last());
             violation.Severity.Should().Be(SeverityType.Illegal);
-            violation.Rule.Should().Be(RuleType.BagLimit);
+            violation.Rule.Should().Be(RuleType.BagLimitExceeded);
         }
 
         context.BagLimitEntries.First().ActivityQueue.Should().HaveCount(4);
@@ -538,9 +534,7 @@ public class ProcessTester
 
         violation.Description
             .Should()
-            .BeEquivalentTo(
-                "Concession 15 is closed to trapping for beaver of male sex on 2023-07-01."
-            );
+            .BeEquivalentTo("Concession 15 is closed to trapping for male beaver on 2023-07-01.");
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
         violation.Rule.Should().Be(RuleType.HarvestPeriod);

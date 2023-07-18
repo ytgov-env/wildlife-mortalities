@@ -1,13 +1,12 @@
 ﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 
-namespace WildlifeMortalities.Data.Rules;
+namespace WildlifeMortalities.Shared.Services.Rules;
 
 public class RuleResult
 {
     public IEnumerable<Violation> Violations { get; private set; } = Array.Empty<Violation>();
-    public IEnumerable<Authorization> Authorizations { get; private set; } =
-        Array.Empty<Authorization>();
+    public IEnumerable<Authorization> Authorizations { get; } = Array.Empty<Authorization>();
 
     public bool IsApplicable { get; private set; } = true;
 

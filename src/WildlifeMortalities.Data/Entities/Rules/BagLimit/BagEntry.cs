@@ -18,7 +18,7 @@ public class BagEntry
     public int BagLimitEntryId { get; init; }
     public BagLimitEntry BagLimitEntry { get; init; } = null!;
 
-    internal string[] GetSpeciesDescriptions()
+    public string[] GetSpeciesDescriptions()
     {
         var species = new List<Species> { BagLimitEntry.Species };
 
@@ -27,10 +27,10 @@ public class BagEntry
         return species.Select(x => x.GetDisplayName().ToLower()).ToArray();
     }
 
-    internal bool Increase(
+    public bool Increase(
         AppDbContext context,
         HarvestActivity activity,
-        ICollection<BagEntry> personalEntries
+        ICollection<BagEntry> bagEntries
     )
     {
         var hasExceeded = false;
@@ -42,29 +42,51 @@ public class BagEntry
 
         BagLimitEntry.AddToQueue(activity);
 
-        foreach (var shared in BagLimitEntry.SharedWithDifferentSpeciesAndOrSex)
+        foreach (var sharedBagLimitEntries in BagLimitEntry.SharedWithDifferentSpeciesAndOrSex)
         {
-            var sharedPersonalEntry = personalEntries.FirstOrDefault(
-                x => x.BagLimitEntry == shared
+            var sharedBagEntry = bagEntries.FirstOrDefault(
+                x => x.BagLimitEntry == sharedBagLimitEntries
             );
-            if (sharedPersonalEntry == null)
+            if (sharedBagEntry == null)
             {
-                sharedPersonalEntry = new BagEntry { BagLimitEntry = shared, Person = Person, };
+                sharedBagEntry = new BagEntry
+                {
+                    BagLimitEntry = sharedBagLimitEntries,
+                    Person = Person,
+                };
 
-                personalEntries.Add(sharedPersonalEntry);
-                context.BagEntries.Add(sharedPersonalEntry);
+                bagEntries.Add(sharedBagEntry);
+                context.BagEntries.Add(sharedBagEntry);
             }
 
-            sharedPersonalEntry.SharedValue++;
-            if (
-                sharedPersonalEntry.TotalValue > sharedPersonalEntry.BagLimitEntry.MaxValuePerPerson
-            )
+            sharedBagEntry.SharedValue++;
+            if (sharedBagEntry.TotalValue > sharedBagEntry.BagLimitEntry.MaxValuePerPerson)
             {
                 hasExceeded = true;
             }
         }
 
         return hasExceeded;
+    }
+
+    public void Decrease(HarvestActivity activity, ICollection<BagEntry> bagEntries)
+    {
+        CurrentValue--;
+        BagLimitEntry.AddToQueue(activity);
+
+        foreach (var sharedBagLimitEntries in BagLimitEntry.SharedWithDifferentSpeciesAndOrSex)
+        {
+            var sharedBagEntry = bagEntries.FirstOrDefault(
+                x => x.BagLimitEntry == sharedBagLimitEntries
+            );
+
+            if (sharedBagEntry == null)
+            {
+                continue;
+            }
+
+            sharedBagEntry.SharedValue--;
+        }
     }
 }
 

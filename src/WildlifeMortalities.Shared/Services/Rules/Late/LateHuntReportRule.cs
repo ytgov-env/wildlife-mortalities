@@ -1,11 +1,13 @@
-﻿using WildlifeMortalities.Data.Entities;
+﻿using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Seasons;
+using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Data.Extensions;
 
-namespace WildlifeMortalities.Data.Rules.Late;
+namespace WildlifeMortalities.Shared.Services.Rules.Late;
 
 internal class LateHuntReportRule : LateRule<HuntedActivity>
 {

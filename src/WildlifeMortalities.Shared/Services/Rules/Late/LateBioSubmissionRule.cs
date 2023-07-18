@@ -1,13 +1,17 @@
 ﻿using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Seasons;
+using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Data.Extensions;
 
-namespace WildlifeMortalities.Data.Rules.Late;
+namespace WildlifeMortalities.Shared.Services.Rules.Late;
 
 public class LateBioSubmissionRule : LateRule<HarvestActivity>
 {
@@ -68,8 +72,21 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
         AppDbContext context
     )
     {
-        var bioSubmission = await context.BioSubmissions.FirstAsync(x => x.Id == activity.Id);
-        return bioSubmission?.DateSubmitted;
+        if (activity.Mortality is IHasBioSubmission mortality)
+        {
+            var bioSubmission =
+                await context.BioSubmissions.GetBioSubmissionFromMortality(mortality)
+                ?? context.ChangeTracker
+                    .Entries<BioSubmission>()
+                    .Select(x => x.Entity)
+                    .GetBioSubmissionFromMortality(mortality)
+                ?? throw new Exception(
+                    "Expected mortality to have a bio submission, but no bio submission found."
+                );
+            return bioSubmission.DateSubmitted;
+        }
+
+        return null;
     }
 
     protected override Violation GenerateLateViolation(

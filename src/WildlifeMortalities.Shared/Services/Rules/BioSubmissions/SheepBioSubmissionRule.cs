@@ -3,8 +3,9 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Extensions;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data;
 
-namespace WildlifeMortalities.Data.Rules.BioSubmissions;
+namespace WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 
 internal class SheepBioSubmissionRule : Rule
 {

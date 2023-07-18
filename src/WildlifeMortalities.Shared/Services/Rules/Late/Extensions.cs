@@ -1,6 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-namespace WildlifeMortalities.Data.Rules.Late;
+namespace WildlifeMortalities.Shared.Services.Rules.Late;
 
 public static class Extensions
 {

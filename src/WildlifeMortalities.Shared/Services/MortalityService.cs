@@ -7,10 +7,9 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
-using WildlifeMortalities.Data.Entities.Rules;
 using WildlifeMortalities.Data.Entities.Seasons;
-using WildlifeMortalities.Data.Rules;
 using WildlifeMortalities.Shared.Services.Reports.Single;
+using WildlifeMortalities.Shared.Services.Rules;
 
 namespace WildlifeMortalities.Shared.Services;
 

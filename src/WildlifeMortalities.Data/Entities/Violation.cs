@@ -27,7 +27,7 @@ public class Violation
     }
 
     public int Id { get; set; }
-    public Activity Activity { get; init; } = null!;
+    public Activity Activity { get; set; } = null!;
     public RuleType Rule { get; init; }
     public SeverityType Severity { get; init; }
     public string Description { get; set; } = string.Empty;
@@ -39,8 +39,8 @@ public class Violation
     // 400-499 Other
     public enum RuleType
     {
-        BagLimit = 10,
-        HarvestPeriod = 20,
+        BagLimitExceeded = 10,
+        KilledMoreThanOneGrizzlyBearInThreeYearSpan = 20,
         Authorization = 100,
         NoValidBigGameHuntingLicence = 110,
         SpecialGuidedWithoutValidLicence = 120,
@@ -51,6 +51,7 @@ public class Violation
         SheepYoungerThan8AndNotFullCurl = 230,
         LateReport = 300,
         LateBioSubmission = 310,
+        HarvestPeriod = 400,
     }
 
     public enum SeverityType
@@ -62,22 +63,24 @@ public class Violation
 
     #region Violations
 
-    internal static Violation IllegalHarvestPeriod(HarvestActivity activity, Report report) =>
+    public static Violation IllegalHarvestPeriod(HarvestActivity activity, Report report) =>
         new(
             activity,
             RuleType.HarvestPeriod,
             SeverityType.Illegal,
-            $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Species.GetDisplayName().ToLower()} of {activity.Mortality.Sex!.GetDisplayName().ToLower()} sex on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+            activity.Mortality.Sex is Sex.Unknown
+                ? $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Species.GetDisplayName().ToLower()} of {activity.Mortality.Sex!.GetDisplayName().ToLower()} sex on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+                : $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Sex!.GetDisplayName().ToLower()} {activity.Mortality.Species.GetDisplayName().ToLower()} on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
         );
 
-    internal static Violation BagLimitExceeded(
+    public static Violation BagLimitExceeded(
         HarvestActivity activity,
         Report report,
         BagEntry entry
     ) =>
         new(
             activity,
-            RuleType.BagLimit,
+            RuleType.BagLimitExceeded,
             SeverityType.Illegal,
             $"Bag limit exceeded for {string.Join(" and ", entry.GetSpeciesDescriptions())} in {activity.GetAreaName(report)} for {entry.BagLimitEntry.GetSeason()} season."
         );

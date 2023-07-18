@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
-namespace WildlifeMortalities.Data.Rules;
+namespace WildlifeMortalities.Shared.Services.Rules;
 
 public class BagLimitRule : Rule
 {
@@ -100,5 +101,37 @@ public class BagLimitRule : Rule
         }
 
         return violations.Count == 0 ? RuleResult.IsLegal : RuleResult.IsIllegal(violations);
+    }
+
+    public override async Task Reset(Report report, AppDbContext context)
+    {
+        if (
+            report.GeneralizedReportType
+            is not GeneralizedReportType.Hunted
+                and not GeneralizedReportType.Trapped
+        )
+        {
+            return;
+        }
+
+        var personalEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
+        foreach (
+            var activity in report
+                .GetActivities()
+                .OfType<HarvestActivity>()
+                .OrderBy(x => x.Mortality.DateOfDeath)
+        )
+        {
+            var personalEntry = personalEntries.FirstOrDefault(
+                x => x.BagLimitEntry.Matches(activity, report)
+            );
+
+            if (personalEntry == null)
+            {
+                continue;
+            }
+
+            personalEntry.Decrease(activity, personalEntries);
+        }
     }
 }

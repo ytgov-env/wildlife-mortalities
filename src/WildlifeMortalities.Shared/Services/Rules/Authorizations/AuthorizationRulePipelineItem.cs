@@ -1,6 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities.Reports;
 
-namespace WildlifeMortalities.Data.Rules.Authorizations;
+namespace WildlifeMortalities.Shared.Services.Rules.Authorizations;
 
 public abstract class AuthorizationRulePipelineItem
 {

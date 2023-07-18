@@ -3,8 +3,9 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Extensions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data;
 
-namespace WildlifeMortalities.Data.Rules.BioSubmissions;
+namespace WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 
 internal class MissingBioSubmissionRule : Rule
 {
@@ -42,7 +43,7 @@ internal class MissingBioSubmissionRule : Rule
                         .Select(x => x.Entity)
                         .GetBioSubmissionFromMortality(mortality)
                     ?? throw new Exception(
-                        "Expected mortality to have bio submission, but no bio submission found."
+                        "Expected mortality to have a bio submission, but no bio submission found."
                     )
                 );
 

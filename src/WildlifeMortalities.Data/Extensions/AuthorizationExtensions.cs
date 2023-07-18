@@ -3,7 +3,7 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Data.Extensions;
 
-internal static class AuthorizationExtensions
+public static class AuthorizationExtensions
 {
     public static T? GetValidAuthorization<T>(
         this IEnumerable<Authorization> authorizations,

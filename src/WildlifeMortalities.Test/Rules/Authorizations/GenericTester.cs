@@ -1,12 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using WildlifeMortalities.Data;
+﻿using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
-using WildlifeMortalities.Data.Rules.Authorizations;
-using Xunit;
+using WildlifeMortalities.Shared.Services.Rules.Authorizations;
 
 namespace WildlifeMortalities.Test.Rules.Authorizations;
 

@@ -7,7 +7,7 @@ using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
-using WildlifeMortalities.Data.Rules.Late;
+using WildlifeMortalities.Shared.Services.Rules.Late;
 using WildlifeMortalities.Test.Helpers;
 
 namespace WildlifeMortalities.Test.Rules.Late;

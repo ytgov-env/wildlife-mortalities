@@ -1,8 +1,5 @@
-﻿using System;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+﻿using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data;
-using Xunit;
-using WildlifeMortalities.Data.Rules.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.People;
@@ -11,6 +8,7 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Entities.Reports;
+using WildlifeMortalities.Shared.Services.Rules.Authorizations;
 
 namespace WildlifeMortalities.Test.Rules.Authorizations;
 
@@ -92,7 +90,7 @@ public class BigGameHuntingLicenceTester
                     report.GetActivities().First(),
                     RuleType.NoValidBigGameHuntingLicence,
                     SeverityType.Illegal,
-                    "No big game hunting licence valid on 2023-04-01."
+                    "Does not have a valid big game hunting licence on 2023-04-01."
                 )
             );
 

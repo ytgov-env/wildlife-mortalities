@@ -1,8 +1,8 @@
-﻿using WildlifeMortalities.Data.Rules.Authorizations;
-using WildlifeMortalities.Data.Rules.BioSubmissions;
-using WildlifeMortalities.Data.Rules.Late;
+﻿using WildlifeMortalities.Shared.Services.Rules.Authorizations;
+using WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
+using WildlifeMortalities.Shared.Services.Rules.Late;
 
-namespace WildlifeMortalities.Data.Rules;
+namespace WildlifeMortalities.Shared.Services.Rules;
 
 public static class RulesEngine
 {
@@ -16,6 +16,8 @@ public static class RulesEngine
             new LateHuntReportRule(),
             new LateBioSubmissionRule(),
             new MissingBioSubmissionRule(),
+            // Todo: need to run this rule when the bio submission is updated, not just when the report is updated
             new SheepBioSubmissionRule(),
+            //new MaxOneGrizzlyBearEveryThreeYearsRule(),
         };
 }
