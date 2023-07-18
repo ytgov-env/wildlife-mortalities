@@ -178,7 +178,7 @@ public enum BioSubmissionRequiredOrganicMaterialsStatus
 
 public enum BioSubmissionAnalysisStatus
 {
-    [Display(Name = "Not applicable")]
+    [Display(Name = "N/A")]
     NotApplicable = 10,
 
     [Display(Name = "Not started")]

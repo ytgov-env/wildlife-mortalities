@@ -8,12 +8,15 @@
 @using WildlifeMortalities.Shared.Services.Reports;
 @inherits DbContextAwareComponent
 
-<MudTable ServerData="ServerReload" T="ReportListDto" OnRowClick="GotoDetails" @key="@EnvClientId" RowClass="cursor-pointer" Hover="true">
+<MudTable ServerData="ServerReload" @ref="_table" T="ReportListDto" OnRowClick="GotoDetails" @key="@EnvClientId" RowClass="cursor-pointer" Hover="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Reports</MudText>
+        <MudSpacer />
+        <MudTextField T="string" @bind-Value="@_searchTerm" @bind-Value:after="@SearchByReportHumanReadableId" Placeholder="Search by Id" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Immediate="true" DebounceInterval="50"/>
+        <MudSpacer/>
         @if (EnvClientId != null)
         {
-            <MudSpacer/>
             <MudButton Color="Color.Tertiary" Variant="Variant.Outlined" Href="@Constants.Routes.GetCreateReportPageLink(EnvClientId)" Class="flex-shrink-0">Report a mortality</MudButton>
         }
     </ToolBarContent>
@@ -23,7 +26,9 @@
         <MudTh>@Species</MudTh>
         <MudTh><MudTableSortLabel SortLabel="@Season" T="ReportListDto">@Season</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortLabel="@DateSubmitted" T="ReportListDto">@DateSubmitted</MudTableSortLabel></MudTh>
-        <MudTh>@Status</MudTh>
+        <MudTh>@Samples</MudTh>
+        <MudTh>@Analysis</MudTh>
+        <MudTh>@Violations</MudTh>
 
     </HeaderContent>
     <RowTemplate>
@@ -61,17 +66,15 @@
                     <span>@huntingSeason.FriendlyName</span>
                     break;
                 case CalendarSeason calendarSeason:
-                @*const string calendarIcon = @"<svg xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke-width=""1.5"" stroke=""currentColor"" class=""w-6 h-6"">
-                                              <path stroke-linecap=""round"" stroke-linejoin=""round"" d=""M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"" />
-                                            </svg>
-                                            ";
-                <MudIcon Icon="@calendarIcon"/>*@
                     <span>@calendarSeason.FriendlyName</span>
                     break;
             }
         </MudTd>
         <MudTd DataLabel="@DateSubmitted">@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
-        <MudTd DataLabel="@Status"></MudTd>
+        <BioSubmissionStatusComponent ReportId="context.Id" @key="context.Id" />
+        <MudTd DataLabel="@Violations">
+            <ViolationSummaryComponent ReportId="context.Id" @key="context.Id"/>
+        </MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

@@ -1,0 +1,30 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+@using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+@using WildlifeMortalities.Shared.Services.Reports.Single;
+@using WildlifeMortalities.Data.Extensions;
+@inherits DbContextAwareComponent
+
+
+@if(!_isLoading)
+{
+    if (_bioSubmissions.Count == 0)
+    {
+        <MudTd>
+            <MudChip Text="N/A" Size="Size.Small" Color="Color.Default" />
+        </MudTd>
+        <MudTd>
+            <MudChip Text="N/A" Size="Size.Small" Color="Color.Default" />
+        </MudTd>
+    } else
+    {
+        <MudTd>
+            <MudChip Text="@_requiredOrganicMaterialsStatus.GetDisplayName()" Size="Size.Small" Color="_requiredOrganicMaterialsStatus.GetChipColor()" />
+        </MudTd>
+        <MudTd>
+            <MudChip Text="@_analysisStatus.GetDisplayName()" Size="Size.Small" Color="_analysisStatus.GetChipColor()" />
+        </MudTd>
+    }
+}
+

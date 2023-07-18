@@ -33,10 +33,10 @@
     }
 </MudStack>
 <MudStack Row="true">
-    <MudText>Samples: <MudChip Color="GetOrganicMaterialsChipColor()">@BioSubmission.RequiredOrganicMaterialsStatus.GetDisplayName().ToLower()</MudChip></MudText>
+    <MudText>Samples: <MudChip Color="@BioSubmission.RequiredOrganicMaterialsStatus.GetChipColor()">@BioSubmission.RequiredOrganicMaterialsStatus.GetDisplayName().ToLower()</MudChip></MudText>
     @if (BioSubmission.CanBeAnalysed)
     {
-        <MudText>Analysis: <MudChip Color="GetAnalysisChipColor()">@BioSubmission.AnalysisStatus.GetDisplayName().ToLower()</MudChip></MudText>
+        <MudText>Analysis: <MudChip Color="@BioSubmission.AnalysisStatus.GetChipColor()">@BioSubmission.AnalysisStatus.GetDisplayName().ToLower()</MudChip></MudText>
     }
 </MudStack>
 @if(BioSubmission.DateSubmitted != null)
@@ -101,37 +101,6 @@
 
     [Inject]
     IMortalityService MortalityService { get; set; } = null!;
-
-    private Color GetOrganicMaterialsChipColor()
-    {
-        var organicMaterialsStatus = BioSubmission.RequiredOrganicMaterialsStatus;
-        if (organicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.Submitted)
-        {
-            return Color.Success;
-        }
-        else if (organicMaterialsStatus == BioSubmissionRequiredOrganicMaterialsStatus.DidNotSubmit)
-        {
-            return Color.Error;
-        }
-        else
-        {
-            return Color.Warning;
-        }
-    }
-
-    private Color GetAnalysisChipColor()
-    {
-        var analysisStatus = BioSubmission.AnalysisStatus;
-        if (analysisStatus == BioSubmissionAnalysisStatus.Complete)
-        {
-            return Color.Success;
-        }
-        else
-        {
-            return Color.Warning;
-        }
-    }
-
 
     private async Task OpenBioSubmissionAnalysisDialog()
     {

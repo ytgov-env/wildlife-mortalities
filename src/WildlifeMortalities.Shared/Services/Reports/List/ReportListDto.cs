@@ -1,4 +1,5 @@
 ﻿using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.Shared.Services.Reports;

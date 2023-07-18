@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.App.Features.Reports;
+using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Shared.Extensions;
+using WildlifeMortalities.Shared.Services.Reports.Single;
 
 namespace WildlifeMortalities.App.Extensions;
 
@@ -28,4 +31,10 @@ public static class ReportExtensions
 
     public static bool IsCreatable(this ReportType enumValue) =>
         enumValue.GetEnumValueCustomAttribute<IsCreatable>() != null;
+
+    public static async Task<int[]> GetActivityIds(this DbSet<Report> reports, int reportId)
+    {
+        var report = await reports.WithActivities().FirstAsync(x => x.Id == reportId);
+        return report.GetActivities().Select(x => x.Id).ToArray();
+    }
 }

@@ -1,0 +1,35 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.App.Extensions;
+@using WildlifeMortalities.Data.Entities;
+@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+@using WildlifeMortalities.Shared.Services.Reports.Single;
+@inherits DbContextAwareComponent
+
+@if (_illegalViolations > 0)
+{
+    <MudChip Color="Color.Error" Text="@_illegalViolations.ToString()" Size="Size.Small"/>
+}
+@if (_potentiallyIllegalViolations > 0)
+{
+    <MudChip Color="Color.Warning" Text="@_potentiallyIllegalViolations.ToString()" Size="Size.Small" />
+}
+
+@code {
+    private IEnumerable<Violation> Violations { get; set; } = Array.Empty<Violation>();
+
+    private int _illegalViolations;
+    private int _potentiallyIllegalViolations;
+
+    [Parameter]
+    [EditorRequired]
+    public int ReportId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var activityIds = await Context.Reports.GetActivityIds(ReportId);
+        Violations = await Context.Violations.Where(x => activityIds.Contains(x.Activity.Id)).ToArrayAsync();
+        _illegalViolations = Violations.Count(x => x.Severity == Violation.SeverityType.Illegal);
+        _potentiallyIllegalViolations = Violations.Count(x => x.Severity == Violation.SeverityType.PotentiallyIllegal);
+
+        base.Dispose();
+    }
+}

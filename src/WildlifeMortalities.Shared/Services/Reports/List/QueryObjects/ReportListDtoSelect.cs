@@ -39,6 +39,7 @@ public static class ReportListDtoSelect
                                 .ConservationOfficer
                                 .BadgeNumber
                             : null,
+                    Season = report.Season,
                     SpeciesCollection =
                         report is IndividualHuntedMortalityReport
                             ? new Species[]
@@ -61,7 +62,6 @@ public static class ReportListDtoSelect
                                             (TrappedMortalitiesReport)report
                                         ).TrappedActivities.Select(x => x.Mortality.Species)
                                         : new Species[] { },
-                    Season = report.Season,
                     DateSubmitted = report.DateSubmitted
                 }
         );

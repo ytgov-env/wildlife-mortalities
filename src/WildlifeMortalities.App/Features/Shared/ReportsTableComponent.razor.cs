@@ -5,16 +5,21 @@ using MudBlazor;
 using WildlifeMortalities.Shared.Services.Reports;
 using WildlifeMortalities.Shared.Services.Reports.QueryObjects;
 
-namespace WildlifeMortalities.App.Features.Shared.Mortalities;
+namespace WildlifeMortalities.App.Features.Shared;
 
 public partial class ReportsTableComponent : DbContextAwareComponent
 {
+    private string _searchTerm = string.Empty;
+    private MudTable<ReportListDto>? _table = null;
+
     private const string Id = "Id";
     private const string Type = "Type";
     private const string Species = "Species";
     private const string Season = "Season";
     private const string DateSubmitted = "Date Submitted";
-    private const string Status = "Status";
+    private const string Samples = "Sample(s)";
+    private const string Analysis = "Analysis";
+    private const string Violations = "Violations";
     public SortFilterPageOptions Options { get; set; } = new();
 
     [Parameter]
@@ -39,8 +44,13 @@ public partial class ReportsTableComponent : DbContextAwareComponent
 
         var (reportDtos, totalItems) =
             EnvClientId == null
-                ? await GetAllReports(state.Page + 1, state.PageSize)
-                : await GetReportsByEnvClientId(EnvClientId, state.Page + 1, state.PageSize);
+                ? await GetAllReports(state.Page + 1, state.PageSize, _searchTerm)
+                : await GetReportsByEnvClientId(
+                    EnvClientId,
+                    state.Page + 1,
+                    state.PageSize,
+                    _searchTerm
+                );
         return new TableData<ReportListDto> { Items = reportDtos, TotalItems = totalItems };
     }
 
@@ -57,12 +67,24 @@ public partial class ReportsTableComponent : DbContextAwareComponent
     public async Task<(IEnumerable<ReportListDto>, int totalItems)> GetReports(
         string? envClientId,
         int pageNum = 0,
-        int pageSize = 10
+        int pageSize = 10,
+        string searchTerm = ""
     )
     {
         Options.PageNumber = pageNum;
         Options.PageSize = pageSize;
         Options.EnvClientId = envClientId;
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            Options.FilterBy = FilterByOptions.ByHumanReadableId;
+            Options.FilterValue = searchTerm;
+        }
+        else
+        {
+            Options.FilterBy = FilterByOptions.NoFilter;
+            Options.FilterValue = searchTerm;
+        }
 
         var context = Context;
         var query = ReportService.SortFilterPage(Options, context);
@@ -78,18 +100,30 @@ public partial class ReportsTableComponent : DbContextAwareComponent
 
     public async Task<(IEnumerable<ReportListDto>, int totalItems)> GetAllReports(
         int pageNum = 0,
-        int pageSize = 10
+        int pageSize = 10,
+        string searchTerm = ""
     )
     {
-        return await GetReports(null, pageNum, pageSize);
+        return await GetReports(null, pageNum, pageSize, searchTerm);
     }
 
     public async Task<(IEnumerable<ReportListDto>, int totalItems)> GetReportsByEnvClientId(
         string envClientId,
         int pageNum = 0,
-        int pageSize = 10
+        int pageSize = 10,
+        string searchTerm = ""
     )
     {
-        return await GetReports(envClientId, pageNum, pageSize);
+        return await GetReports(envClientId, pageNum, pageSize, searchTerm);
+    }
+
+    private async Task SearchByReportHumanReadableId()
+    {
+        if (_table == null)
+        {
+            return;
+        }
+
+        await _table.ReloadServerData();
     }
 }

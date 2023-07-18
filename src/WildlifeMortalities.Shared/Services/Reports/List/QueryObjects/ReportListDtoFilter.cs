@@ -8,7 +8,8 @@ public enum FilterByOptions
     NoFilter = 0,
     BySpecies,
     ByType,
-    BySeason
+    BySeason,
+    ByHumanReadableId
 }
 
 public static class ReportListDtoFilter
@@ -27,8 +28,6 @@ public static class ReportListDtoFilter
 
         if (string.IsNullOrEmpty(filterValue))
             return reports;
-        //filterByOptions = FilterByOptions.BySpecies;
-        //filterValue = "GrizzlyBear";
 
         return filterByOptions switch
         {
@@ -40,6 +39,8 @@ public static class ReportListDtoFilter
                     .Where(x => x.SpeciesCollection.Contains(Enum.Parse<Species>(filterValue)))
                     .AsQueryable(),
             FilterByOptions.ByType => reports.Where(x => x.Type == filterValue),
+            FilterByOptions.ByHumanReadableId
+                => reports.Where(x => x.HumanReadableId.StartsWith(filterValue)),
             _
                 => throw new ArgumentOutOfRangeException(
                     nameof(filterByOptions),

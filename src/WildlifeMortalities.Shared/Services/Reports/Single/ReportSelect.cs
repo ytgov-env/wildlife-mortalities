@@ -11,6 +11,16 @@ namespace WildlifeMortalities.Shared.Services.Reports.Single;
 
 public static class ReportSelect
 {
+    public static IQueryable<Report> WithActivities(this IQueryable<Report> reports)
+    {
+        return reports
+            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity)
+            .Include(x => ((SpecialGuidedHuntReport)x).HuntedActivities)
+            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
+            .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
+            .AsSingleQuery();
+    }
+
     public static IQueryable<Report> WithEntireGraph(this IQueryable<Report> reports)
     {
         return reports
@@ -33,6 +43,20 @@ public static class ReportSelect
             .ThenInclude(x => x.Mortality)
             .Include(x => x.CreatedBy)
             .Include(x => x.LastModifiedBy)
+            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Violations)
+            .Include(x => ((IndividualHuntedMortalityReport)x).HuntedActivity.Authorizations)
+            .Include(x => ((SpecialGuidedHuntReport)x).HuntedActivities)
+            .ThenInclude(x => x.Violations)
+            .Include(x => ((SpecialGuidedHuntReport)x).HuntedActivities)
+            .ThenInclude(x => x.Authorizations)
+            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
+            .ThenInclude(x => x.Violations)
+            .Include(x => ((OutfitterGuidedHuntReport)x).HuntedActivities)
+            .ThenInclude(x => x.Authorizations)
+            .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
+            .ThenInclude(x => x.Violations)
+            .Include(x => ((TrappedMortalitiesReport)x).TrappedActivities)
+            .ThenInclude(x => x.Authorizations)
             .AsSplitQuery();
     }
 
