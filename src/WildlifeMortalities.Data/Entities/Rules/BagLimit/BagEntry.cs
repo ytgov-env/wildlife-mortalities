@@ -22,9 +22,9 @@ public class BagEntry
     {
         var species = new List<Species> { BagLimitEntry.Species };
 
-        species.AddRange(BagLimitEntry.SharedWithDifferentSpeciesAndOrSex.Select(x => x.Species));
+        species.AddRange(BagLimitEntry.MaxValuePerPersonSharedWith.Select(x => x.Species));
 
-        return species.Select(x => x.GetDisplayName().ToLower()).ToArray();
+        return species.Select(x => x.GetDisplayName().ToLower()).Distinct().ToArray();
     }
 
     public bool Increase(
@@ -42,7 +42,7 @@ public class BagEntry
 
         BagLimitEntry.AddToQueue(activity);
 
-        foreach (var sharedBagLimitEntries in BagLimitEntry.SharedWithDifferentSpeciesAndOrSex)
+        foreach (var sharedBagLimitEntries in BagLimitEntry.MaxValuePerPersonSharedWith)
         {
             var sharedBagEntry = bagEntries.FirstOrDefault(
                 x => x.BagLimitEntry == sharedBagLimitEntries
@@ -59,7 +59,11 @@ public class BagEntry
                 context.BagEntries.Add(sharedBagEntry);
             }
 
-            sharedBagEntry.SharedValue++;
+            if (sharedBagEntry.BagLimitEntry.ShouldMutateBagValue(activity))
+            {
+                sharedBagEntry.SharedValue++;
+            }
+
             if (sharedBagEntry.TotalValue > sharedBagEntry.BagLimitEntry.MaxValuePerPerson)
             {
                 hasExceeded = true;
@@ -74,7 +78,7 @@ public class BagEntry
         CurrentValue--;
         BagLimitEntry.AddToQueue(activity);
 
-        foreach (var sharedBagLimitEntries in BagLimitEntry.SharedWithDifferentSpeciesAndOrSex)
+        foreach (var sharedBagLimitEntries in BagLimitEntry.MaxValuePerPersonSharedWith)
         {
             var sharedBagEntry = bagEntries.FirstOrDefault(
                 x => x.BagLimitEntry == sharedBagLimitEntries
@@ -85,7 +89,10 @@ public class BagEntry
                 continue;
             }
 
-            sharedBagEntry.SharedValue--;
+            if (sharedBagEntry.BagLimitEntry.ShouldMutateBagValue(activity))
+            {
+                sharedBagEntry.SharedValue--;
+            }
         }
     }
 }

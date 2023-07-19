@@ -22,7 +22,7 @@ public class BagLimitRule : Rule
             .Include(x => x.BagLimitEntry)
             .ThenInclude(x => ((TrappingBagLimitEntry)x).Concessions)
             .Include(x => x.BagLimitEntry)
-            .ThenInclude(x => x.SharedWithDifferentSpeciesAndOrSex)
+            .ThenInclude(x => x.MaxValuePerPersonSharedWith)
             .ThenInclude(x => x.ActivityQueue)
             .ThenInclude(x => x.Activity)
             .ThenInclude(x => x.Mortality)
@@ -52,7 +52,7 @@ public class BagLimitRule : Rule
         }
 
         var violations = new List<Violation>();
-        var personalEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
+        var bagEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
         foreach (
             var activity in report
                 .GetActivities()
@@ -60,17 +60,19 @@ public class BagLimitRule : Rule
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
-            var personalEntry = personalEntries.FirstOrDefault(
+            var bagEntry = bagEntries.FirstOrDefault(
                 x => x.BagLimitEntry.Matches(activity, report)
             );
-            if (personalEntry == null)
+            if (bagEntry == null)
             {
                 var entry = (
                     await context.BagLimitEntries
-                        .Include(x => x.SharedWithDifferentSpeciesAndOrSex)
+                        .Include(x => x.MaxValuePerPersonSharedWith)
                         .Include(x => x.ActivityQueue)
                         .ThenInclude(x => x.Activity)
                         .ThenInclude(x => x.Mortality)
+                        .Include(x => ((HuntingBagLimitEntry)x).Areas)
+                        .Include(x => ((TrappingBagLimitEntry)x).Concessions)
                         .Where(x => x.Species == activity.Mortality.Species)
                         .AsSplitQuery()
                         .ToArrayAsync()
@@ -82,21 +84,17 @@ public class BagLimitRule : Rule
                     continue;
                 }
 
-                personalEntry = new BagEntry
-                {
-                    BagLimitEntry = entry,
-                    Person = report.GetPerson(),
-                };
+                bagEntry = new BagEntry { BagLimitEntry = entry, Person = report.GetPerson(), };
 
-                context.BagEntries.Add(personalEntry);
-                personalEntries.Add(personalEntry);
+                context.BagEntries.Add(bagEntry);
+                bagEntries.Add(bagEntry);
             }
 
-            var isLimitExceeded = personalEntry.Increase(context, activity, personalEntries);
+            var isLimitExceeded = bagEntry.Increase(context, activity, bagEntries);
 
             if (isLimitExceeded)
             {
-                violations.Add(Violation.BagLimitExceeded(activity, report, personalEntry));
+                violations.Add(Violation.BagLimitExceeded(activity, report, bagEntry));
             }
         }
 
@@ -114,7 +112,7 @@ public class BagLimitRule : Rule
             return;
         }
 
-        var personalEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
+        var bagEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
         foreach (
             var activity in report
                 .GetActivities()
@@ -122,16 +120,16 @@ public class BagLimitRule : Rule
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
-            var personalEntry = personalEntries.FirstOrDefault(
+            var bagEntry = bagEntries.FirstOrDefault(
                 x => x.BagLimitEntry.Matches(activity, report)
             );
 
-            if (personalEntry == null)
+            if (bagEntry == null)
             {
                 continue;
             }
 
-            personalEntry.Decrease(activity, personalEntries);
+            bagEntry.Decrease(activity, bagEntries);
         }
     }
 }

@@ -11,6 +11,7 @@ public static class Constants
         public const string Authorizations = "Authorizations";
         public const string BagEntries = "BagEntries";
         public const string BagLimitEntries = "BagLimitEntries";
+        public const string BagLimitEntryBagLimitEntry = "BagLimitEntryBagLimitEntry";
         public const string BigGameHuntingLicenceOutfitterArea =
             "BigGameHuntingLicenceOutfitterArea";
         public const string BioSubmissions = "BioSubmissions";

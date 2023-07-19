@@ -214,7 +214,7 @@ public class ProcessTester
                     null!
                 );
 
-                entry.SharedWithDifferentSpeciesAndOrSex.Add(otherBagEntry);
+                entry.MaxValuePerPersonSharedWith.Add(otherBagEntry);
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagEntries.Add(otherPersonalBagEntry);
@@ -264,7 +264,7 @@ public class ProcessTester
                     null!
                 );
 
-                entry.SharedWithDifferentSpeciesAndOrSex.Add(otherBagEntry);
+                entry.MaxValuePerPersonSharedWith.Add(otherBagEntry);
 
                 context.BagLimitEntries.Add(otherBagEntry);
                 context.BagEntries.Add(otherPersonalBagEntry);
@@ -296,7 +296,7 @@ public class ProcessTester
                     Data.Enums.Sex.Male
                 );
 
-                entry.SharedWithDifferentSpeciesAndOrSex.Add(otherBagEntry);
+                entry.MaxValuePerPersonSharedWith.Add(otherBagEntry);
 
                 context.BagLimitEntries.Add(otherBagEntry);
             }

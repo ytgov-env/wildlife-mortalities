@@ -6,6 +6,7 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using static WildlifeMortalities.Data.Entities.Mortalities.CaribouMortality;
 using static WildlifeMortalities.Data.Constants;
 using WildlifeMortalities.Data.Entities.Seasons;
+using System.Diagnostics;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
@@ -49,6 +50,21 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
             return false;
 
         return Herds.Contains(caribouMortality.Herd);
+    }
+
+    public override bool ShouldMutateBagValue(HarvestActivity activity)
+    {
+        if (activity.Mortality is not CaribouMortality caribouMortality)
+        {
+            throw new UnreachableException();
+        }
+
+        if (caribouMortality.Herd is CaribouHerd.Porcupine)
+        {
+            return Herds.Contains(CaribouHerd.Porcupine);
+        }
+
+        return true;
     }
 }
 

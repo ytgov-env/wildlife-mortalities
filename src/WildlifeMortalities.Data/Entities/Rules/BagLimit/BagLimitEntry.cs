@@ -35,7 +35,7 @@ public abstract class BagLimitEntry
                 $"The specified {nameof(periodStart)} and {nameof(periodEnd)} are not within the {nameof(season)}."
             );
         }
-        SharedWithDifferentSpeciesAndOrSex = new();
+        MaxValuePerPersonSharedWith = new();
         BagEntries = new();
         ActivityQueue = new();
     }
@@ -53,7 +53,7 @@ public abstract class BagLimitEntry
     // Existing use case: Different species in the same collection of areas have a combined limit (ex: spruce and ruffed grouse)
     // Hypothetical use case: A person is allowed to kill 5 moose, but only 2 females
     // Hypothetical use case: A person is allowed to kill 5 moose across the yukon, but a maximum of 2 moose in any specific area
-    public List<BagLimitEntry> SharedWithDifferentSpeciesAndOrSex { get; init; } = null!;
+    public List<BagLimitEntry> MaxValuePerPersonSharedWith { get; init; } = null!;
     public List<BagEntry> BagEntries { get; init; } = null!;
     public List<ActivityQueueItem> ActivityQueue { get; init; } = null!;
     public int MaxValuePerPerson { get; set; }
@@ -96,6 +96,8 @@ public abstract class BagLimitEntry
             item.Position = index++;
         }
     }
+
+    public virtual bool ShouldMutateBagValue(HarvestActivity activity) => true;
 }
 
 public class BagLimitEntryConfig : IEntityTypeConfiguration<BagLimitEntry>
@@ -103,18 +105,7 @@ public class BagLimitEntryConfig : IEntityTypeConfiguration<BagLimitEntry>
     public void Configure(EntityTypeBuilder<BagLimitEntry> builder)
     {
         builder.ToTable(TableNameConstants.BagLimitEntries);
-        builder
-            .HasIndex(
-                x =>
-                    new
-                    {
-                        x.Species,
-                        x.Sex,
-                        x.PeriodStart,
-                        x.PeriodEnd
-                    }
-            )
-            .IsUnique();
+        builder.HasMany(x => x.MaxValuePerPersonSharedWith).WithMany();
     }
 }
 
