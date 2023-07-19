@@ -16,6 +16,8 @@ public static class Constants
         public const string BioSubmissions = "BioSubmissions";
         public const string DraftReports = "DraftReports";
         public const string GameManagementAreas = "GameManagementAreas";
+        public const string GameManagementAreaHuntingBagLimitEntry =
+            "GameManagementAreaHuntingBagLimitEntry";
         public const string InvalidAuthorizations = "InvalidAuthorizations";
         public const string Mortalities = "Mortalities";
         public const string OutfitterAreaOutfitterAssistantGuideLicence =
@@ -28,6 +30,8 @@ public static class Constants
         public const string OutfitterGuides = "OutfitterGuides";
         public const string People = "People";
         public const string RegisteredTrappingConcessions = "RegisteredTrappingConcessions";
+        public const string RegisteredTrappingConcessionTrappingBagLimitEntry =
+            "RegisteredTrappingConcessionTrappingBagLimitEntry";
         public const string ReportPdf = "ReportPdf";
         public const string Reports = "Reports";
         public const string Seasons = "Seasons";

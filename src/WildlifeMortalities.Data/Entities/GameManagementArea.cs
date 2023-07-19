@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
 namespace WildlifeMortalities.Data.Entities;
 
@@ -9,6 +10,8 @@ public class GameManagementArea
     public string Zone { get; set; } = string.Empty;
     public string Subzone { get; set; } = string.Empty;
     public string Area { get; } = string.Empty;
+
+    public List<HuntingBagLimitEntry> HuntingBagLimitEntries { get; set; } = null!;
 
     public static Species ResolveSubType(Species species) =>
         // Todo implement herd/group resolution logic
