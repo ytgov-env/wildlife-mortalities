@@ -1,22 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Mortalities;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using static WildlifeMortalities.Data.Entities.Mortalities.CaribouMortality;
 using static WildlifeMortalities.Data.Constants;
 using WildlifeMortalities.Data.Entities.Seasons;
 using System.Diagnostics;
+using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
+//public static class CaribouIsPorcupineResolver
+//{
+//    public static bool IsPorcupine(DateTimeOffset data, GameManagementArea area) => false;
+//}
+
 public class CaribouBagLimitEntry : HuntingBagLimitEntry
 {
+    //private bool _isPorcupineHerd = false;
+    public bool IsPorcupineHerd => MaxValuePerPerson == 2;
+
     private CaribouBagLimitEntry() { }
 
     public CaribouBagLimitEntry(
         IEnumerable<GameManagementArea> areas,
-        IEnumerable<CaribouHerd> herds,
         HuntingSeason season,
         DateTimeOffset periodStart,
         DateTimeOffset periodEnd,
@@ -35,36 +42,66 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
             maxValueForThreshold
         )
     {
-        Herds = herds.ToList();
-    }
+        //bool? currentPorcupineValue = null;
+        //foreach (var item in areas)
+        //{
+        //    var startIsPorcupineHerd = CaribouIsPorcupineResolver.IsPorcupine(PeriodStart, item);
+        //    var endIsPorcupineHerd = CaribouIsPorcupineResolver.IsPorcupine(PeriodEnd, item);
 
-    public List<CaribouHerd> Herds { get; init; } = null!;
+        //    if (startIsPorcupineHerd != endIsPorcupineHerd)
+        //    {
+        //        throw new Exception();
+        //    }
 
-    override public bool Matches(HarvestActivity activity, Report report)
-    {
-        var baseResult = base.Matches(activity, report);
-        if (!baseResult)
-            return false;
+        //    if (currentPorcupineValue != null)
+        //    {
+        //        if (startIsPorcupineHerd != currentPorcupineValue)
+        //        {
+        //            throw new Exception();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        currentPorcupineValue = startIsPorcupineHerd;
+        //    }
+        //}
+        //if (currentPorcupineValue == null)
+        //{
+        //    throw new UnreachableException();
+        //}
 
-        if (activity.Mortality is not CaribouMortality caribouMortality)
-            return false;
-
-        return Herds.Contains(caribouMortality.Herd);
+        //_isPorcupineHerd = currentPorcupineValue.Value;
     }
 
     public override bool ShouldMutateBagValue(HarvestActivity activity)
     {
+        if (activity is not HuntedActivity huntedActivity)
+        {
+            throw new UnreachableException();
+        }
+
         if (activity.Mortality is not CaribouMortality caribouMortality)
         {
             throw new UnreachableException();
         }
 
-        if (caribouMortality.Herd is CaribouHerd.Porcupine)
+        //var mortalityIsPorcupine = CaribouIsPorcupineResolver.IsPorcupine(
+        //    caribouMortality.DateOfDeath!.Value,
+        //    huntedActivity.GameManagementArea
+        //);
+        var isCaribouMortalityPorcupine = huntedActivity.GetLegalHerd() == CaribouHerd.Porcupine;
+        if (isCaribouMortalityPorcupine)
         {
-            return Herds.Contains(CaribouHerd.Porcupine);
+            return IsPorcupineHerd;
         }
-
-        return true;
+        //if (mortalityIsPorcupine)
+        //{
+        //    return _isPorcupineHerd;
+        //}
+        else
+        {
+            return true;
+        }
     }
 }
 
@@ -73,16 +110,5 @@ public class CaribouBagLimitEntryConfig : IEntityTypeConfiguration<CaribouBagLim
     public void Configure(EntityTypeBuilder<CaribouBagLimitEntry> builder)
     {
         builder.ToTable(TableNameConstants.BagLimitEntries);
-        builder
-            .Property(x => x.Herds)
-            .HasConversion(
-                v => string.Join(",", v.Select(e => e.ToString("D")).ToArray()),
-                v =>
-                    v.Split(new[] { ',' })
-                        .Select(e => Enum.Parse(typeof(CaribouHerd), e))
-                        .Cast<CaribouHerd>()
-                        .ToList()
-            )
-            .HasMaxLength(200);
     }
 }

@@ -60,7 +60,7 @@ public class BagLimitRule : Rule
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
-            var bagEntry = bagEntries.FirstOrDefault(
+            var bagEntry = bagEntries.SingleOrDefault(
                 x => x.BagLimitEntry.Matches(activity, report)
             );
             if (bagEntry == null)
@@ -76,7 +76,7 @@ public class BagLimitRule : Rule
                         .Where(x => x.Species == activity.Mortality.Species)
                         .AsSplitQuery()
                         .ToArrayAsync()
-                ).FirstOrDefault(x => x.Matches(activity, report));
+                ).SingleOrDefault(x => x.Matches(activity, report));
 
                 if (entry == null)
                 {
@@ -120,7 +120,7 @@ public class BagLimitRule : Rule
                 .OrderBy(x => x.Mortality.DateOfDeath)
         )
         {
-            var bagEntry = bagEntries.FirstOrDefault(
+            var bagEntry = bagEntries.SingleOrDefault(
                 x => x.BagLimitEntry.Matches(activity, report)
             );
 
