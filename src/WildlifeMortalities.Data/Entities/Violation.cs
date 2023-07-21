@@ -49,6 +49,7 @@ public class Violation
         SomeRequiredSamplesNotSubmitted = 210,
         SheepEyeSocketIncomplete = 220,
         SheepYoungerThan8AndNotFullCurl = 230,
+        BearCub = 240,
         LateReport = 300,
         LateBioSubmission = 310,
         HarvestPeriod = 400,

@@ -18,6 +18,7 @@ public static class RulesEngine
             new MissingBioSubmissionRule(),
             // Todo: need to run this rule when the bio submission is updated, not just when the report is updated
             new SheepBioSubmissionRule(),
+            new BearBioSubmissionRule(),
             //new MaxOneGrizzlyBearEveryThreeYearsRule(),
         };
 }
