@@ -12,6 +12,9 @@ public class CaribouMortality : Mortality, IHasBioSubmission
 {
     public enum CaribouHerd
     {
+        [Display(Name = "Unknown")]
+        Unknown = -1,
+
         [Display(Name = "Aishihik")]
         Aishihik = 10,
 
@@ -103,9 +106,11 @@ public class CaribouMortality : Mortality, IHasBioSubmission
         WolfLake = 300
     }
 
-    // Todo: herd resolution logic
-    [Column($"{nameof(CaribouMortality)}_{nameof(Herd)}")]
-    public CaribouHerd Herd { get; set; }
+    [Column($"{nameof(CaribouMortality)}_{nameof(LegalHerd)}")]
+    public CaribouHerd LegalHerd { get; set; }
+
+    [Column($"{nameof(CaribouMortality)}_{nameof(ActualHerd)}")]
+    public CaribouHerd ActualHerd { get; set; }
 
     public override Species Species => Species.Caribou;
     public CaribouBioSubmission? BioSubmission { get; set; }
@@ -115,7 +120,8 @@ public class CaribouMortality : Mortality, IHasBioSubmission
 
     bool IHasBioSubmission.SubTypeHasBioSubmission() => HerdHasBioSubmission();
 
-    private bool HerdHasBioSubmission() => Herd is CaribouHerd.Fortymile or CaribouHerd.Nelchina;
+    private bool HerdHasBioSubmission() =>
+        LegalHerd is CaribouHerd.Fortymile or CaribouHerd.Nelchina;
 }
 
 public class CaribouMortalityConfig : IEntityTypeConfiguration<CaribouMortality>
