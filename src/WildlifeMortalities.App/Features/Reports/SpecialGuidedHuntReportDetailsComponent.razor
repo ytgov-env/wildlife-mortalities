@@ -7,7 +7,13 @@
     {
         <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" /> @Report.HuntEndDate?.ToString("D")</MudField>
     }
-    <MudField Label="Guide" DisableUnderLine="true">@Report.Guide</MudField>
+    <MudStack Row="true">
+        <MudField Label="Guide" DisableUnderLine="true">@Report.Guide</MudField>
+        <MudTooltip Text="View client">
+            <MudIconButton Class="mt-2" Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" Href="@Constants.Routes.GetClientOverviewPageLink(Report.Guide.EnvPersonId)" />
+        </MudTooltip>
+        <MudSpacer />
+    </MudStack>
     <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
 </MudItem>
 
