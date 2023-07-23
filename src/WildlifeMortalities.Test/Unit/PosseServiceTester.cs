@@ -24,7 +24,7 @@ public class PosseServiceTester
             GetClients_With22ApplicableAuthorizations_ShouldReturn22Authorizations
         );
         // Arrange
-        var storedClientResponse = await File.ReadAllTextAsync($"TestData/{TestName}.json");
+        var storedClientResponse = await File.ReadAllTextAsync($"Unit/TestData/{TestName}.json");
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
@@ -53,7 +53,7 @@ public class PosseServiceTester
             GetAuthorizations_WithInvalidEnvClientId_ShouldDiscardAuthorization
         );
         // Arrange
-        var storedClientResponse = await File.ReadAllTextAsync($"TestData/{TestName}.json");
+        var storedClientResponse = await File.ReadAllTextAsync($"Unit/TestData/{TestName}.json");
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp.When(AuthorizationsUri).Respond("application/json", storedClientResponse);
