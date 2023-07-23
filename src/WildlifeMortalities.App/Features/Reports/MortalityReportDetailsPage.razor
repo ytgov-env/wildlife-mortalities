@@ -41,6 +41,7 @@ else if (_reportDetail is null)
 }
 
 <MudItem Class="mb-2">
+    <MudField Label="Date submitted" DisableUnderLine="true">@_reportDetail.Report.DateSubmitted.ToString("D")</MudField>
     <MudField Label="Created by" DisableUnderLine="true" Class="pt-2">@_reportDetail.Report.CreatedBy.FullName on @_reportDetail.Report.DateCreated.ToString("D")</MudField>
     @if (_reportDetail.Report.DateModified != null && _reportDetail.Report.LastModifiedBy != null)
     {
