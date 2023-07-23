@@ -101,9 +101,21 @@ public class OutfitterGuideValidator : AbstractValidator<OutfitterGuide?>
                 x => x is not null,
                 () =>
                 {
+                if (isRequired == true)
+                {
                     RuleFor(x => x!.FirstName).NotEmpty();
                     RuleFor(x => x!.LastName).NotEmpty();
                 }
+                RuleFor(x => x!.FirstName)
+                    .NotEmpty()
+                    .When(x => !string.IsNullOrWhiteSpace(x!.LastName))
+                    .WithMessage("First name cannot be empty when last name is not empty.");
+                RuleFor(x => x!.LastName)
+                    .NotEmpty()
+                    .When(x => !string.IsNullOrWhiteSpace(x!.FirstName))
+                    .WithMessage("Last name cannot be empty when first name is not empty.");
+                ;
+            }
             );
         }
     }
