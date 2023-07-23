@@ -1,5 +1,4 @@
-﻿using static WildlifeMortalities.Data.Entities.Mortalities.CaribouMortality;
-using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+﻿using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Enums;
@@ -23,6 +22,12 @@ internal class BagLimitSeeder
     {
         //if (!context.BagLimitEntries.Any())
         //{
+        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE BagLimitEntryBagLimitEntry");
+        _context.BagEntries.RemoveRange(await _context.BagEntries.ToListAsync());
+        _context.BagLimitEntries.RemoveRange(await _context.BagLimitEntries.ToListAsync());
+
+        _context.SaveChanges();
+
         _areas = await _context.GameManagementAreas.ToDictionaryAsync(x => x.Area, x => x);
         _huntingSeasons = await _context.Seasons
             .OfType<HuntingSeason>()
@@ -173,6 +178,8 @@ internal class BagLimitSeeder
             GetSeasonEnd(season, 3, 31),
             BagLimitEntry.InfiniteMaxValuePerPerson);
 
+        context.Add(coyote);
+
         var caribou = new HuntingBagLimitEntry(
             GetGameManagementAreasFromIntegerArray(
                 new int[]
@@ -264,6 +271,9 @@ internal class BagLimitSeeder
             caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
             caribouFortymileSummerThreshold, caribou
         });
+
+        context.AddRange(caribou, caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold);
     }
 
     private static DateTimeOffset GetSeasonStart(Season season, int month, int day)
