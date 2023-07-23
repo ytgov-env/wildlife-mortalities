@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.Validators;
 using WildlifeMortalities.App.Features.Shared.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports;
@@ -37,6 +38,22 @@ public abstract class ActivityViewModel
         HasIllegalViolations = activity.Violations.Any(
             x => x.Severity == Data.Entities.Violation.SeverityType.Illegal
         );
+    }
+
+    protected ActivityViewModel(ActivityViewModel viewModel, Species species)
+    {
+        Activity = viewModel.Activity;
+        Comment = viewModel.Comment;
+
+        IsCompleted = viewModel.IsCompleted;
+        MortalityWithSpeciesSelectionViewModel = new MortalityWithSpeciesSelectionViewModel
+        {
+            Species = species,
+            MortalityViewModel = MortalityViewModel.Create(
+                species,
+                viewModel.MortalityWithSpeciesSelectionViewModel!.MortalityViewModel
+            )
+        };
     }
 
     public bool IsCompleted { get; set; }

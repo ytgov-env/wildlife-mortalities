@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
@@ -12,7 +13,7 @@ public class IndividualHuntedMortalityReportViewModel : MortalityReportViewModel
     public IndividualHuntedMortalityReportViewModel(IndividualHuntedMortalityReport report)
         : base(report)
     {
-        HuntedActivityViewModel = new HuntedActivityViewModel(report.HuntedActivity, report);
+        HuntedActivityViewModel = new HuntedActivityViewModel(report.Activity, report);
         _reportId = report.Id;
     }
 
@@ -24,12 +25,17 @@ public class IndividualHuntedMortalityReportViewModel : MortalityReportViewModel
         {
             Id = _reportId,
             PersonId = personId,
-            HuntedActivity = HuntedActivityViewModel.GetActivity(),
+            Activity = HuntedActivityViewModel.GetActivity(),
         };
 
         SetReportBaseValues(report);
         return report;
     }
+
+    internal override void SpeciesChanged(int id, Species species)
+    {
+        HuntedActivityViewModel = new HuntedActivityViewModel(HuntedActivityViewModel, species);
+}
 }
 
 public class IndividualHuntedMortalityReportViewModelValidator

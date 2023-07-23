@@ -2,9 +2,12 @@
 using WildlifeMortalities.App.Features.Shared.Mortalities;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Data.Extensions;
 using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports;
@@ -30,6 +33,13 @@ public class HuntedActivityViewModel : ActivityViewModel
     public HuntedActivityViewModel(HuntedActivity activity, Report report)
         : this(activity, new ReportDetail(report, Array.Empty<(int, BioSubmission)>())) { }
 
+    public HuntedActivityViewModel(HuntedActivityViewModel huntedActivityViewModel, Species species)
+        : base(huntedActivityViewModel, species)
+    {
+        Landmark = huntedActivityViewModel.Landmark;
+        GameManagementArea = huntedActivityViewModel.GameManagementArea;
+    }
+
     public string Landmark { get; set; } = string.Empty;
     public GameManagementArea? GameManagementArea { get; set; }
 
@@ -43,6 +53,13 @@ public class HuntedActivityViewModel : ActivityViewModel
             Comment = Comment,
             Id = _id,
         };
+
+        if (activity.Mortality is CaribouMortality caribouMortality)
+        {
+            caribouMortality.LegalHerd =
+                GameManagementArea?.GetLegalHerd(caribouMortality.DateOfDeath!.Value)
+                ?? CaribouMortality.CaribouHerd.Unknown;
+        }
 
         if (_reportDetail != null)
         {

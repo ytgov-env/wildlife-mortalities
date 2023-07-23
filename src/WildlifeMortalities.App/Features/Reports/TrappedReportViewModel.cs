@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+using WildlifeMortalities.Data.Enums;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
@@ -36,6 +36,23 @@ public class TrappedReportViewModel : MortalityReportViewModel
 
         SetReportBaseValues(report);
         return report;
+    }
+
+    internal override void SpeciesChanged(int id, Species species)
+    {
+        var activity = TrappedActivityViewModels.FirstOrDefault(
+            x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.Id == id
+        );
+        if (activity == null)
+        {
+            return;
+        }
+
+        var index = TrappedActivityViewModels.IndexOf(activity);
+        TrappedActivityViewModels[index] = new TrappedActivityViewModel(
+            TrappedActivityViewModels[index],
+            species
+        );
     }
 }
 

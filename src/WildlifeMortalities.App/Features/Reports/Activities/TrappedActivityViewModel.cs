@@ -2,6 +2,7 @@
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports;
@@ -22,6 +23,12 @@ public class TrappedActivityViewModel : ActivityViewModel
 
     public TrappedActivityViewModel(TrappedActivity activity, TrappedMortalitiesReport report)
         : this(activity, new ReportDetail(report, Array.Empty<(int, BioSubmission)>())) { }
+
+    public TrappedActivityViewModel(
+        TrappedActivityViewModel trappedActivityViewModel,
+        Species species
+    )
+        : base(trappedActivityViewModel, species) { }
 
     public TrappedActivity GetActivity() =>
         new()

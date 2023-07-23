@@ -55,7 +55,7 @@ else if (_reportDetail is null)
 <MudGrid>
     <MudItem xs="12" sm="8">
         <MudStack Row="true" Class="flex-wrap">
-            @foreach (var item in _reportDetail.Report.GetActivities())
+            @foreach (var item in _reportDetail.Report.GetActivities().OrderBy(x => x.Mortality.Species))
             {
                     <ActivityCardComponent ActivityViewModel="@GetActivityVm(item)" Report="_reportDetail.Report" />
             }

@@ -61,6 +61,23 @@ public class SpecialGuidedHuntReportViewModel : MortalityReportViewModel
         SetReportBaseValues(report);
         return report;
     }
+
+    internal override void SpeciesChanged(int id, Species species)
+    {
+        var activity = HuntedActivityViewModels.FirstOrDefault(
+            x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.Id == id
+        );
+        if (activity == null)
+        {
+            return;
+}
+
+        var index = HuntedActivityViewModels.IndexOf(activity);
+        HuntedActivityViewModels[index] = new HuntedActivityViewModel(
+            HuntedActivityViewModels[index],
+            species
+        );
+    }
 }
 
 public class SpecialGuidedHuntReportViewModelValidator
