@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using WildlifeMortalities.Data.Entities.Mortalities;
+﻿using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Shared.Extensions;
 using WildlifeMortalities.Shared.Services;
 using static WildlifeMortalities.Data.Entities.Mortalities.CaribouMortality;
@@ -14,15 +13,14 @@ public class CaribouMortalityViewModel : MortalityViewModel
     public CaribouMortalityViewModel(CaribouMortality mortality, ReportDetail? reportDetail = null)
         : base(mortality, reportDetail)
     {
-        Herd = mortality.Herd;
+        LegalHerd = mortality.LegalHerd;
     }
 
-    public CaribouHerd? Herd { get; set; }
+    public CaribouHerd? LegalHerd { get; set; }
 
     public override Mortality GetMortality()
     {
-        // Todo: remove default porcupine value and add herd resolution logic
-        var mortality = new CaribouMortality { Herd = Herd ?? CaribouHerd.Porcupine };
+        var mortality = new CaribouMortality();
         SetBaseValues(mortality);
 
         return mortality;
@@ -31,7 +29,7 @@ public class CaribouMortalityViewModel : MortalityViewModel
     public override Dictionary<string, string?> GetProperties()
     {
         var result = base.GetProperties();
-        result.Add("Herd", Herd?.GetDisplayName());
+        result.Add("Herd", LegalHerd?.GetDisplayName());
 
         return result;
     }

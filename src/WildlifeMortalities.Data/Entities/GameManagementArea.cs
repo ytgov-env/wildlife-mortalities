@@ -13,10 +13,6 @@ public class GameManagementArea
 
     public List<HuntingBagLimitEntry> HuntingBagLimitEntries { get; set; } = null!;
 
-    public static Species ResolveSubType(Species species) =>
-        // Todo implement herd/group resolution logic
-        species;
-
     public override string ToString() =>
         string.IsNullOrWhiteSpace(Area) ? $"{Zone}-{Subzone}" : Area;
 }

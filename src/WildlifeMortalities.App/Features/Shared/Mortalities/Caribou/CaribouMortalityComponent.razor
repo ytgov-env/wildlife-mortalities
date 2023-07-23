@@ -1,15 +1,15 @@
 ﻿@using WildlifeMortalities.Shared.Extensions;
 @using static WildlifeMortalities.Data.Entities.Mortalities.CaribouMortality;
 
-@if(ViewModel.Id != null)
+@*@if(ViewModel.Id != null)
 {
-    <MudSelect T="CaribouHerd?" Value="@ViewModel.Herd" Label="Herd" For="() => ViewModel.Herd" Disabled="true">
+    <MudSelect T="CaribouHerd?" Value="@ViewModel.LegalHerd" Label="Herd" For="() => ViewModel.LegalHerd" Disabled="true">
         @foreach (var item in Enum.GetValues<CaribouHerd>())
         {
             <MudSelectItem T="CaribouHerd?" Value="@item">@item.GetDisplayName()</MudSelectItem>
         }
     </MudSelect>
-}
+}*@
 
 @code {
     [Parameter]

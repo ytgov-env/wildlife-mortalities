@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildlifeMortalities.Data;
 
@@ -11,9 +12,11 @@ using WildlifeMortalities.Data;
 namespace WildlifeMortalities.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230721091500_SplitCaribouHerdIntoTwoProperties")]
+    partial class SplitCaribouHerdIntoTwoProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("AuthorizationsId");
 
-                    b.ToTable("ActivityAuthorization", (string)null);
+                    b.ToTable("ActivityAuthorization");
                 });
 
             modelBuilder.Entity("BagLimitEntryBagLimitEntry", b =>
@@ -49,7 +52,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("MaxValuePerPersonSharedWithId");
 
-                    b.ToTable("BagLimitEntryBagLimitEntry", (string)null);
+                    b.ToTable("BagLimitEntryBagLimitEntry");
                 });
 
             modelBuilder.Entity("BigGameHuntingLicenceOutfitterArea", b =>
@@ -64,7 +67,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("OutfitterAreasId");
 
-                    b.ToTable("BigGameHuntingLicenceOutfitterArea", (string)null);
+                    b.ToTable("BigGameHuntingLicenceOutfitterArea");
                 });
 
             modelBuilder.Entity("GameManagementAreaHuntingBagLimitEntry", b =>
@@ -79,7 +82,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("HuntingBagLimitEntriesId");
 
-                    b.ToTable("GameManagementAreaHuntingBagLimitEntry", (string)null);
+                    b.ToTable("GameManagementAreaHuntingBagLimitEntry");
                 });
 
             modelBuilder.Entity("OutfitterAreaOutfitterAssistantGuideLicence", b =>
@@ -94,7 +97,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("OutfitterAssistantGuideLicencesId");
 
-                    b.ToTable("OutfitterAreaOutfitterAssistantGuideLicence", (string)null);
+                    b.ToTable("OutfitterAreaOutfitterAssistantGuideLicence");
                 });
 
             modelBuilder.Entity("OutfitterAreaOutfitterChiefGuideLicence", b =>
@@ -109,7 +112,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("OutfitterChiefGuideLicencesId");
 
-                    b.ToTable("OutfitterAreaOutfitterChiefGuideLicence", (string)null);
+                    b.ToTable("OutfitterAreaOutfitterChiefGuideLicence");
                 });
 
             modelBuilder.Entity("OutfitterAreaSmallGameHuntingLicence", b =>
@@ -124,7 +127,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("SmallGameHuntingLicencesId");
 
-                    b.ToTable("OutfitterAreaSmallGameHuntingLicence", (string)null);
+                    b.ToTable("OutfitterAreaSmallGameHuntingLicence");
                 });
 
             modelBuilder.Entity("RegisteredTrappingConcessionTrappingBagLimitEntry", b =>
@@ -139,7 +142,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("TrappingBagLimitEntriesId");
 
-                    b.ToTable("RegisteredTrappingConcessionTrappingBagLimitEntry", (string)null);
+                    b.ToTable("RegisteredTrappingConcessionTrappingBagLimitEntry");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.AppConfiguration", b =>
@@ -155,7 +158,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("AppConfigurations", (string)null);
+                    b.ToTable("AppConfigurations");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Authorizations.Authorization", b =>
@@ -204,7 +207,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.ToTable("Authorizations", (string)null);
+                    b.ToTable("Authorizations");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Authorization");
 
@@ -259,7 +262,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.ToTable("InvalidAuthorizations", (string)null);
+                    b.ToTable("InvalidAuthorizations");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.BiologicalSubmissions.BioSubmission", b =>
@@ -294,7 +297,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BioSubmissions", null, t =>
+                    b.ToTable("BioSubmissions", t =>
                         {
                             t.HasCheckConstraint("CK_BioSubmissions_AnalysisStatus_Enum", "[AnalysisStatus] IN (10, 20, 30)");
 
@@ -333,7 +336,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameManagementAreas", (string)null);
+                    b.ToTable("GameManagementAreas");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Mortalities.Mortality", b =>
@@ -404,7 +407,7 @@ namespace WildlifeMortalities.Data.Migrations
                     b.HasIndex("Area")
                         .IsUnique();
 
-                    b.ToTable("OutfitterAreas", (string)null);
+                    b.ToTable("OutfitterAreas");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.People.OutfitterGuide", b =>
@@ -482,7 +485,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RegisteredTrappingConcessions", (string)null);
+                    b.ToTable("RegisteredTrappingConcessions");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Reports.DraftReport", b =>
@@ -516,7 +519,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("DraftReports", (string)null);
+                    b.ToTable("DraftReports");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Reports.Report", b =>
@@ -566,7 +569,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("SeasonId");
 
-                    b.ToTable("Reports", (string)null);
+                    b.ToTable("Reports");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Report");
 
@@ -597,7 +600,7 @@ namespace WildlifeMortalities.Data.Migrations
                     b.HasIndex("ReportId")
                         .IsUnique();
 
-                    b.ToTable("ReportPdf", (string)null);
+                    b.ToTable("ReportPdf");
                 });
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Reports.SingleMortality.Activity", b =>
@@ -758,7 +761,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Seasons", (string)null);
+                    b.ToTable("Seasons");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Season");
 
@@ -829,7 +832,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("Violations", null, t =>
+                    b.ToTable("Violations", t =>
                         {
                             t.HasCheckConstraint("CK_Violations_Rule_Enum", "[Rule] IN (10, 20, 100, 110, 120, 130, 200, 210, 220, 230, 240, 300, 310, 400)");
 
@@ -2880,7 +2883,7 @@ namespace WildlifeMortalities.Data.Migrations
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.BiologicalSubmissions.BioSubmission", b =>
                 {
-                    b.OwnsOne("WildlifeMortalities.Data.Entities.BiologicalSubmissions.BioSubmission.Age#WildlifeMortalities.Data.Entities.BiologicalSubmissions.Age", "Age", b1 =>
+                    b.OwnsOne("WildlifeMortalities.Data.Entities.BiologicalSubmissions.Age", "Age", b1 =>
                         {
                             b1.Property<int>("BioSubmissionId")
                                 .HasColumnType("int");
@@ -2893,7 +2896,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                             b1.HasKey("BioSubmissionId");
 
-                            b1.ToTable("BioSubmissions", null, t =>
+                            b1.ToTable("BioSubmissions", t =>
                                 {
                                     t.HasCheckConstraint("CK_BioSubmissions_Age_Confidence_Enum", "[Age_Confidence] IN (10, 20, 30)");
                                 });
@@ -3021,7 +3024,7 @@ namespace WildlifeMortalities.Data.Migrations
 
             modelBuilder.Entity("WildlifeMortalities.Data.Entities.Users.User", b =>
                 {
-                    b.OwnsOne("WildlifeMortalities.Data.Entities.Users.User.Settings#WildlifeMortalities.Data.Entities.Users.UserSettings", "Settings", b1 =>
+                    b.OwnsOne("WildlifeMortalities.Data.Entities.Users.UserSettings", "Settings", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("int");
@@ -3031,7 +3034,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users", (string)null);
+                            b1.ToTable("Users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
@@ -3157,7 +3160,7 @@ namespace WildlifeMortalities.Data.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.OwnsMany("WildlifeMortalities.Data.Entities.BiologicalSubmissions.MountainGoatBioSubmission.HornMeasurementEntries#WildlifeMortalities.Data.Entities.BiologicalSubmissions.MountainGoatHornMeasurementEntry", "HornMeasurementEntries", b1 =>
+                    b.OwnsMany("WildlifeMortalities.Data.Entities.BiologicalSubmissions.MountainGoatHornMeasurementEntry", "HornMeasurementEntries", b1 =>
                         {
                             b1.Property<int>("MountainGoatBioSubmissionId")
                                 .HasColumnType("int");
@@ -3174,7 +3177,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                             b1.HasKey("MountainGoatBioSubmissionId", "Id");
 
-                            b1.ToTable("BioSubmissions", (string)null);
+                            b1.ToTable("BioSubmissions");
 
                             b1.ToJson("MountainGoatBioSubmission_HornMeasurementEntries");
 
@@ -3206,7 +3209,7 @@ namespace WildlifeMortalities.Data.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.OwnsMany("WildlifeMortalities.Data.Entities.BiologicalSubmissions.ThinhornSheepBioSubmission.HornMeasurementEntries#WildlifeMortalities.Data.Entities.BiologicalSubmissions.ThinhornSheepHornMeasurementEntry", "HornMeasurementEntries", b1 =>
+                    b.OwnsMany("WildlifeMortalities.Data.Entities.BiologicalSubmissions.ThinhornSheepHornMeasurementEntry", "HornMeasurementEntries", b1 =>
                         {
                             b1.Property<int>("ThinhornSheepBioSubmissionId")
                                 .HasColumnType("int");
@@ -3226,7 +3229,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                             b1.HasKey("ThinhornSheepBioSubmissionId", "Id");
 
-                            b1.ToTable("BioSubmissions", (string)null);
+                            b1.ToTable("BioSubmissions");
 
                             b1.ToJson("ThinhornSheepBioSubmission_HornMeasurementEntries");
 

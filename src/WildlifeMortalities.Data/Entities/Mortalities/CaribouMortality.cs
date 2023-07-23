@@ -110,7 +110,7 @@ public class CaribouMortality : Mortality, IHasBioSubmission
     public CaribouHerd LegalHerd { get; set; }
 
     [Column($"{nameof(CaribouMortality)}_{nameof(ActualHerd)}")]
-    public CaribouHerd ActualHerd { get; set; }
+    public CaribouHerd? ActualHerd { get; set; }
 
     public override Species Species => Species.Caribou;
     public CaribouBioSubmission? BioSubmission { get; set; }
