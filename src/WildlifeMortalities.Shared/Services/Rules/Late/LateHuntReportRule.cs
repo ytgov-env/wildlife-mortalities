@@ -33,11 +33,11 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
                 when activity.Mortality
                     is CaribouMortality
                         and {
-                            Herd: CaribouMortality.CaribouHerd.Fortymile
+                            LegalHerd: CaribouMortality.CaribouHerd.Fortymile
                                 or CaribouMortality.CaribouHerd.Nelchina
                         }
                 => activity.GetTimestampAfterKill(72),
-            var _ when activity.Mortality is CaribouMortality and { Herd: _ }
+            var _ when activity.Mortality is CaribouMortality and { LegalHerd: _ }
                 => activity.OccuredMoreThanFifteenDaysAfterTheEndOfTheMonthInWhichTheAnimalWasKilled(),
             { Mortality.Species: Species.WoodBison } => activity.GetTimestampAfterKill(240),
             {

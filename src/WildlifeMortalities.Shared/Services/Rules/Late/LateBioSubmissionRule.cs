@@ -33,7 +33,7 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
                 when activity.Mortality
                     is CaribouMortality
                         and {
-                            Herd: CaribouMortality.CaribouHerd.Fortymile
+                            LegalHerd: CaribouMortality.CaribouHerd.Fortymile
                                 or CaribouMortality.CaribouHerd.Nelchina
                         }
                 => activity.GetTimestampAfterKill(72),
