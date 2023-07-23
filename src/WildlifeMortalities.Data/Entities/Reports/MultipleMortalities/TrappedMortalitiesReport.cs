@@ -34,6 +34,13 @@ public class TrappedMortalitiesReport : Report, IMultipleMortalitiesReport
     {
         return Client;
     }
+
+    public override void OverrideActivity(IDictionary<Activity, Activity> replacements)
+    {
+        TrappedActivities = TrappedActivities.ConvertAll(
+            x => replacements.TryGetValue(x, out var activity) ? (TrappedActivity)activity : x
+        );
+    }
 }
 
 public class TrappedMortalitiesReportConfig : IEntityTypeConfiguration<TrappedMortalitiesReport>

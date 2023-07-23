@@ -47,6 +47,16 @@ public class HumanWildlifeConflictMortalityReport
     {
         throw new Exception("This report type cannot have a PersonWithAuthorizations");
     }
+
+    public override void OverrideActivity(IDictionary<Activity, Activity> replacements)
+    {
+        ConflictActivities = ConflictActivities.ConvertAll(
+            x =>
+                replacements.TryGetValue(x, out var activity)
+                    ? (HumanWildlifeConflictActivity)activity
+                    : x
+        );
+    }
 }
 
 public class HumanWildlifeConflictMortalityReportConfig

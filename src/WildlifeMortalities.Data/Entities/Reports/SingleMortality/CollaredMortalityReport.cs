@@ -28,6 +28,14 @@ public class CollaredMortalityReport : Report, ISingleMortalityReport
     {
         throw new Exception("This report type cannot have a PersonWithAuthorizations");
     }
+
+    public override void OverrideActivity(IDictionary<Activity, Activity> replacements)
+    {
+        if (replacements.TryGetValue(Activity, out var activity))
+        {
+            Activity = (CollaredActivity)activity;
+        }
+    }
 }
 
 public class CollaredMortalityReportConfig : IEntityTypeConfiguration<CollaredMortalityReport>

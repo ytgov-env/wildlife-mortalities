@@ -78,7 +78,7 @@ public class MortalityService : IMortalityService
         context.Add(report);
         await AddDefaultBioSubmissions(context, report);
 
-        await RulesSummary.Generate(report, null, context);
+        await RulesSummary.Generate(report, context);
 
         await context.SaveChangesAsync();
     }
@@ -209,6 +209,8 @@ public class MortalityService : IMortalityService
             .WithEntireGraph()
             .FirstAsync(x => x.Id == report.Id);
 
+        await RulesSummary.ResetRules(existingReport, context);
+
         SetReportNavigationPropertyForActivities(report, existingReport);
 
         switch (report)
@@ -252,7 +254,7 @@ public class MortalityService : IMortalityService
         await AddDefaultBioSubmissions(context, report);
         await UpdateActivities(context, report, existingReport, now);
 
-        await RulesSummary.Generate(report, existingReport, context);
+        await RulesSummary.Generate(report, context);
 
         await context.SaveChangesAsync();
 
@@ -301,6 +303,7 @@ public class MortalityService : IMortalityService
 
             var activityIdsToDelete = existingReport.GetActivities().Select(x => x.Id).ToList();
 
+            Dictionary<Activity, Activity> replacements = new();
             foreach (var activity in report.GetActivities())
             {
                 await SetArea(activity, context);
@@ -317,6 +320,7 @@ public class MortalityService : IMortalityService
 
                     existingActivity.Authorizations.Clear();
                     activityIdsToDelete.Remove(activity.Id);
+                    replacements.Add(activity, existingActivity);
                 }
                 else
                 {
@@ -327,11 +331,14 @@ public class MortalityService : IMortalityService
 
             foreach (var activityId in activityIdsToDelete)
             {
-                var existingActivity = existingReport
-                    .GetActivities()
-                    .First(x => x.Id == activityId);
-                context.Activities.Remove(existingActivity);
+                var existingActivity = await context.Activities.FindAsync(activityId);
+                if (existingActivity is not null)
+                {
+                    context.Activities.Remove(existingActivity);
+                }
             }
+
+            report.OverrideActivity(replacements);
         }
     }
 

@@ -134,6 +134,8 @@ public abstract class Report
         CreatedById = existingReport.CreatedById;
         DateCreated = existingReport.DateCreated;
     }
+
+    public abstract void OverrideActivity(IDictionary<Activity, Activity> replacements);
 }
 
 public class ReportConfig : IEntityTypeConfiguration<Report>

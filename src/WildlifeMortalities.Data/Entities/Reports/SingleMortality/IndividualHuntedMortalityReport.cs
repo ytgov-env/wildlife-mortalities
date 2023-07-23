@@ -9,15 +9,15 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 public class IndividualHuntedMortalityReport : Report, ISingleMortalityReport
 {
-    public HuntedActivity HuntedActivity { get; set; } = null!;
+    public HuntedActivity Activity { get; set; } = null!;
 
     [Column($"{nameof(IndividualHuntedMortalityReport)}_{nameof(PersonId)}")]
     public int PersonId { get; set; }
     public PersonWithAuthorizations Person { get; set; } = null!;
 
-    public Mortality GetMortality() => HuntedActivity.Mortality;
+    public Mortality GetMortality() => Activity.Mortality;
 
-    public Activity GetActivity() => HuntedActivity;
+    public Activity GetActivity() => Activity;
 
     public override bool HasHuntingActivity() => true;
 
@@ -28,6 +28,14 @@ public class IndividualHuntedMortalityReport : Report, ISingleMortalityReport
     {
         return Person;
     }
+
+    public override void OverrideActivity(IDictionary<Activity, Activity> replacements)
+    {
+        if (replacements.TryGetValue(Activity, out var activity))
+        {
+            Activity = (HuntedActivity)activity;
+        }
+    }
 }
 
 public class IndividualHuntedMortalityReportConfig
@@ -36,6 +44,6 @@ public class IndividualHuntedMortalityReportConfig
     public void Configure(EntityTypeBuilder<IndividualHuntedMortalityReport> builder)
     {
         builder.ToTable(TableNameConstants.Reports);
-        builder.HasOne(h => h.HuntedActivity).WithOne(i => i.IndividualHuntedMortalityReport);
+        builder.HasOne(h => h.Activity).WithOne(i => i.IndividualHuntedMortalityReport);
     }
 }

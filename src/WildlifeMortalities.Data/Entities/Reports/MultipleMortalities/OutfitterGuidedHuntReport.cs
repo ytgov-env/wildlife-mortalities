@@ -64,6 +64,13 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
     {
         return Client;
     }
+
+    public override void OverrideActivity(IDictionary<Activity, Activity> replacements)
+    {
+        HuntedActivities = HuntedActivities.ConvertAll(
+            x => replacements.TryGetValue(x, out var activity) ? (HuntedActivity)activity : x
+        );
+    }
 }
 
 public class OutfitterGuidedHuntReportConfig : IEntityTypeConfiguration<OutfitterGuidedHuntReport>

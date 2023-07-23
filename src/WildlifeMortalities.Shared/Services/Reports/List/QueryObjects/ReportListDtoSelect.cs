@@ -44,10 +44,7 @@ public static class ReportListDtoSelect
                         report is IndividualHuntedMortalityReport
                             ? new Species[]
                             {
-                                ((IndividualHuntedMortalityReport)report)
-                                    .HuntedActivity
-                                    .Mortality
-                                    .Species
+                                ((IndividualHuntedMortalityReport)report).Activity.Mortality.Species
                             }
                             : report is SpecialGuidedHuntReport
                                 ? ((SpecialGuidedHuntReport)report).HuntedActivities.Select(
