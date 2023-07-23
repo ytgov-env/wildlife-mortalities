@@ -51,6 +51,7 @@ public abstract class BagLimitEntry
     public DateTimeOffset PeriodEnd { get; init; }
 
     // Existing use case: Different species in the same collection of areas have a combined limit (ex: spruce and ruffed grouse)
+    // Existing use case: Caribou have a combined limit across the yukon
     // Hypothetical use case: A person is allowed to kill 5 moose, but only 2 females
     // Hypothetical use case: A person is allowed to kill 5 moose across the yukon, but a maximum of 2 moose in any specific area
     public List<BagLimitEntry> MaxValuePerPersonSharedWith { get; init; } = null!;

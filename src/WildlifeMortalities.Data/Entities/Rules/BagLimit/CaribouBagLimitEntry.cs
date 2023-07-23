@@ -10,15 +10,9 @@ using WildlifeMortalities.Data.Extensions;
 
 namespace WildlifeMortalities.Data.Entities.Rules.BagLimit;
 
-//public static class CaribouIsPorcupineResolver
-//{
-//    public static bool IsPorcupine(DateTimeOffset data, GameManagementArea area) => false;
-//}
-
 public class CaribouBagLimitEntry : HuntingBagLimitEntry
 {
-    //private bool _isPorcupineHerd = false;
-    public bool IsPorcupineHerd => MaxValuePerPerson == 2;
+    private readonly bool _isPorcupineHerd;
 
     private CaribouBagLimitEntry() { }
 
@@ -42,35 +36,35 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
             maxValueForThreshold
         )
     {
-        //bool? currentPorcupineValue = null;
-        //foreach (var item in areas)
-        //{
-        //    var startIsPorcupineHerd = CaribouIsPorcupineResolver.IsPorcupine(PeriodStart, item);
-        //    var endIsPorcupineHerd = CaribouIsPorcupineResolver.IsPorcupine(PeriodEnd, item);
+        bool? isPorcupineHerd = null;
+        foreach (var area in areas)
+        {
+            var startIsPorcupineHerd = area.IsPorcupineCaribou(PeriodStart);
+            var endIsPorcupineHerd = area.IsPorcupineCaribou(PeriodEnd);
 
-        //    if (startIsPorcupineHerd != endIsPorcupineHerd)
-        //    {
-        //        throw new Exception();
-        //    }
+            if (startIsPorcupineHerd != endIsPorcupineHerd)
+            {
+                throw new Exception();
+            }
 
-        //    if (currentPorcupineValue != null)
-        //    {
-        //        if (startIsPorcupineHerd != currentPorcupineValue)
-        //        {
-        //            throw new Exception();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        currentPorcupineValue = startIsPorcupineHerd;
-        //    }
-        //}
-        //if (currentPorcupineValue == null)
-        //{
-        //    throw new UnreachableException();
-        //}
+            if (isPorcupineHerd != null)
+            {
+                if (startIsPorcupineHerd != isPorcupineHerd)
+                {
+                    throw new Exception();
+                }
+            }
+            else
+            {
+                isPorcupineHerd = startIsPorcupineHerd;
+            }
+        }
+        if (isPorcupineHerd == null)
+        {
+            throw new UnreachableException();
+        }
 
-        //_isPorcupineHerd = currentPorcupineValue.Value;
+        _isPorcupineHerd = isPorcupineHerd.Value;
     }
 
     public override bool ShouldMutateBagValue(HarvestActivity activity)
@@ -80,24 +74,16 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
             throw new UnreachableException();
         }
 
-        if (activity.Mortality is not CaribouMortality caribouMortality)
+        if (activity.Mortality is not CaribouMortality)
         {
             throw new UnreachableException();
         }
 
-        //var mortalityIsPorcupine = CaribouIsPorcupineResolver.IsPorcupine(
-        //    caribouMortality.DateOfDeath!.Value,
-        //    huntedActivity.GameManagementArea
-        //);
-        var isCaribouMortalityPorcupine = huntedActivity.GetLegalHerd() == CaribouHerd.Porcupine;
-        if (isCaribouMortalityPorcupine)
+        var mortalityIsPorcupine = huntedActivity.IsPorcupineCaribou();
+        if (mortalityIsPorcupine)
         {
-            return IsPorcupineHerd;
+            return _isPorcupineHerd;
         }
-        //if (mortalityIsPorcupine)
-        //{
-        //    return _isPorcupineHerd;
-        //}
         else
         {
             return true;

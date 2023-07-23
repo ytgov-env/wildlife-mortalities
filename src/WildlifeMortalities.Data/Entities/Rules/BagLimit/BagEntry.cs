@@ -76,7 +76,7 @@ public class BagEntry
     public void Decrease(HarvestActivity activity, ICollection<BagEntry> bagEntries)
     {
         CurrentValue--;
-        BagLimitEntry.AddToQueue(activity);
+        BagLimitEntry.RemoveFromQueue(activity);
 
         foreach (var sharedBagLimitEntries in BagLimitEntry.MaxValuePerPersonSharedWith)
         {
