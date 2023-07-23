@@ -5,7 +5,7 @@ using WildlifeMortalities.Data;
 using Xunit;
 using static WildlifeMortalities.Data.Constants;
 
-namespace WildlifeMortalities.Test;
+namespace WildlifeMortalities.Test.Unit;
 
 public class ConstantTester
 {

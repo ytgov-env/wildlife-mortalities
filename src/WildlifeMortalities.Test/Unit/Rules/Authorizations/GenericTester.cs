@@ -5,7 +5,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services.Rules.Authorizations;
 
-namespace WildlifeMortalities.Test.Rules.Authorizations;
+namespace WildlifeMortalities.Test.Unit.Rules.Authorizations;
 
 public class GenericTester
 {

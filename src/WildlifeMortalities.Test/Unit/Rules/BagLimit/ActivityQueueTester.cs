@@ -4,7 +4,7 @@ using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
-namespace WildlifeMortalities.Test.Rules.BagLimit;
+namespace WildlifeMortalities.Test.Unit.Rules.BagLimit;
 
 public class ActivityQueueTester
 {
@@ -13,13 +13,9 @@ public class ActivityQueueTester
         public int Compare(HuntedActivity? x, HuntedActivity? y)
         {
             if (x == null || y == null)
-            {
                 throw new InvalidOperationException();
-            }
             if (x.Mortality.DateOfDeath > y.Mortality.DateOfDeath)
-            {
                 return 1;
-            }
             else if (x.Mortality.DateOfDeath < y.Mortality.DateOfDeath)
             {
                 return -1;
@@ -47,7 +43,6 @@ public class ActivityQueueTester
 
         var bagLimitEntry = new CaribouBagLimitEntry(
             new[] { area },
-            new[] { CaribouMortality.CaribouHerd.Atlin },
             season,
             season.StartDate,
             season.EndDate,
@@ -74,7 +69,7 @@ public class ActivityQueueTester
                 Mortality = new CaribouMortality()
                 {
                     DateOfDeath = new DateTimeOffset(dateOfDeath, TimeSpan.FromHours(-7)),
-                    Herd = CaribouMortality.CaribouHerd.Atlin,
+                    LegalHerd = CaribouMortality.CaribouHerd.Atlin,
                     Sex = Data.Enums.Sex.Male
                 },
                 GameManagementArea = area,

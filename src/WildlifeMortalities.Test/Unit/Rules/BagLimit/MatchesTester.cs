@@ -6,7 +6,7 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Enums;
 
-namespace WildlifeMortalities.Test.Rules.BagLimit;
+namespace WildlifeMortalities.Test.Unit.Rules.BagLimit;
 
 public class MatchesTester
 {
@@ -34,7 +34,7 @@ public class MatchesTester
         {
             Mortality = new MooseMortality
             {
-                Sex = Data.Enums.Sex.Male,
+                Sex = Sex.Male,
                 DateOfDeath = report.Season.StartDate.AddDays(2)
             },
             GameManagementArea = area,
@@ -44,10 +44,10 @@ public class MatchesTester
     }
 
     [Theory]
-    [InlineData(Data.Enums.Sex.Male)]
-    [InlineData(Data.Enums.Sex.Female)]
-    [InlineData(Data.Enums.Sex.Unknown)]
-    public void Matches_WithMatching_NoSexSpecified_ReturnsTrue(Data.Enums.Sex sex)
+    [InlineData(Sex.Male)]
+    [InlineData(Sex.Female)]
+    [InlineData(Sex.Unknown)]
+    public void Matches_WithMatching_NoSexSpecified_ReturnsTrue(Sex sex)
     {
         var report = new IndividualHuntedMortalityReport() { Season = new HuntingSeason(2023) };
         var area = new GameManagementArea
@@ -100,8 +100,8 @@ public class MatchesTester
         {
             Areas = new() { area },
             Season = (HuntingSeason)report.Season,
-            Sex = Data.Enums.Sex.Male,
-            Species = Data.Enums.Species.Moose,
+            Sex = Sex.Male,
+            Species = Species.Moose,
             PeriodStart = report.Season.StartDate,
             PeriodEnd = report.Season.EndDate
         };
@@ -110,7 +110,7 @@ public class MatchesTester
         {
             Mortality = new MooseMortality
             {
-                Sex = Data.Enums.Sex.Female,
+                Sex = Sex.Female,
                 DateOfDeath = report.Season.StartDate.AddDays(2)
             },
             GameManagementArea = area,
@@ -141,7 +141,7 @@ public class MatchesTester
 
         var activity = new HuntedActivity
         {
-            Mortality = new CaribouMortality { Sex = Data.Enums.Sex.Male },
+            Mortality = new CaribouMortality { Sex = Sex.Male },
             GameManagementArea = area,
         };
 
@@ -172,7 +172,7 @@ public class MatchesTester
 
         var activity = new HuntedActivity
         {
-            Mortality = new MooseMortality { Sex = Data.Enums.Sex.Male },
+            Mortality = new MooseMortality { Sex = Sex.Male },
             GameManagementArea = area,
         };
 
@@ -202,7 +202,7 @@ public class MatchesTester
 
         var activity = new HuntedActivity
         {
-            Mortality = new MooseMortality { Sex = Data.Enums.Sex.Male },
+            Mortality = new MooseMortality { Sex = Sex.Male },
             GameManagementArea = new GameManagementArea
             {
                 Zone = "4",
@@ -239,7 +239,7 @@ public class MatchesTester
             {
                 Mortality = new MooseMortality
                 {
-                    Sex = Data.Enums.Sex.Male,
+                    Sex = Sex.Male,
                     DateOfDeath = entry.PeriodStart.AddDays(-1)
                 },
                 GameManagementArea = area,
@@ -252,7 +252,7 @@ public class MatchesTester
             {
                 Mortality = new MooseMortality
                 {
-                    Sex = Data.Enums.Sex.Male,
+                    Sex = Sex.Male,
                     DateOfDeath = entry.PeriodEnd.AddDays(1)
                 },
                 GameManagementArea = area,
@@ -292,7 +292,7 @@ public class MatchesTester
         {
             Mortality = new GreyWolfMortality
             {
-                Sex = Data.Enums.Sex.Male,
+                Sex = Sex.Male,
                 DateOfDeath = report.Season.StartDate.AddDays(2)
             },
             HarvestMethod = type

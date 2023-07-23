@@ -6,7 +6,7 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Test.Helpers;
 
-namespace WildlifeMortalities.Test;
+namespace WildlifeMortalities.Test.Unit;
 
 public class EntityConfigTester
 {
@@ -95,9 +95,7 @@ public class EntityConfigTester
                     property.Should().NotBeNull();
 
                     if (excludedProperties.Contains(item.Name))
-                    {
                         continue;
-                    }
 
                     property!.GetColumnName().Should().Be($"{item.Name}");
 

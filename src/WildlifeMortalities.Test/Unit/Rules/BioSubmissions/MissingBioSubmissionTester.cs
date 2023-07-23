@@ -6,7 +6,7 @@ using static WildlifeMortalities.Data.Entities.Violation;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 
-namespace WildlifeMortalities.Test.Rules.BioSubmissions;
+namespace WildlifeMortalities.Test.Unit.Rules.BioSubmissions;
 
 public class MissingBioSubmissionTester
 {
@@ -15,7 +15,7 @@ public class MissingBioSubmissionTester
     {
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new() { Mortality = new CoyoteMortality() }
+            Activity = new() { Mortality = new CoyoteMortality() }
         };
         var context = TestDbContextFactory.CreateContext();
         var rule = new MissingBioSubmissionRule();
@@ -37,7 +37,7 @@ public class MissingBioSubmissionTester
 
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new()
+            Activity = new()
             {
                 Mortality = new GrizzlyBearMortality()
                 {
@@ -81,7 +81,7 @@ public class MissingBioSubmissionTester
 
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new()
+            Activity = new()
             {
                 Mortality = new GrizzlyBearMortality()
                 {
@@ -125,7 +125,7 @@ public class MissingBioSubmissionTester
 
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new()
+            Activity = new()
             {
                 Mortality = new GrizzlyBearMortality()
                 {
@@ -150,7 +150,7 @@ public class MissingBioSubmissionTester
     {
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new()
+            Activity = new()
             {
                 Mortality = new GrizzlyBearMortality()
                 {

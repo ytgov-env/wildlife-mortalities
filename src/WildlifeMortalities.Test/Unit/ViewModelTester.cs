@@ -3,7 +3,7 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Shared.Services;
 using WildlifeMortalities.Test.Helpers;
 
-namespace WildlifeMortalities.Test;
+namespace WildlifeMortalities.Test.Unit;
 
 public class ViewModelTester
 {
@@ -15,9 +15,7 @@ public class ViewModelTester
         foreach (var type in relevantAssembly.GetTypes())
         {
             if (!type.IsSubclassOf(mortalityType))
-            {
                 continue;
-            }
 
             var ownProperties = type.GetPublicNoneBaseProperties()
                 .Where(
@@ -28,9 +26,7 @@ public class ViewModelTester
                 .ToArray();
 
             if (ownProperties.Length == 0)
-            {
                 continue;
-            }
 
             mortalityTypesWithAdditionalProperties.Add(type);
         }
@@ -50,9 +46,7 @@ public class ViewModelTester
         foreach (var type in relevantAssembly.GetTypes())
         {
             if (!type.IsSubclassOf(mortalityViewModelType))
-            {
                 continue;
-            }
 
             viewModelTypes.Add(type);
         }

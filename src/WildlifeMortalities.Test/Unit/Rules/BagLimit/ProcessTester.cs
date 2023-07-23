@@ -11,7 +11,7 @@ using WildlifeMortalities.Shared.Services.Rules;
 using WildlifeMortalities.Test.Helpers;
 using static WildlifeMortalities.Data.Entities.Violation;
 
-namespace WildlifeMortalities.Test.Rules.BagLimit;
+namespace WildlifeMortalities.Test.Unit.Rules.BagLimit;
 
 public class ProcessTester
 {
@@ -46,7 +46,7 @@ public class ProcessTester
             Mortality = new CaribouMortality()
             {
                 DateOfDeath = season.StartDate.AddDays(2),
-                Herd = CaribouMortality.CaribouHerd.Atlin,
+                LegalHerd = CaribouMortality.CaribouHerd.Atlin,
                 Sex = Data.Enums.Sex.Male
             },
             GameManagementArea = area,
@@ -56,14 +56,13 @@ public class ProcessTester
             reportModifier?.Invoke(area, season, person)
             ?? new IndividualHuntedMortalityReport
             {
-                HuntedActivity = activity,
+                Activity = activity,
                 Season = season,
                 Person = person,
             };
 
         var bagLimitEntry = new CaribouBagLimitEntry(
             new[] { area },
-            new[] { CaribouMortality.CaribouHerd.Atlin },
             season,
             season.StartDate,
             season.EndDate,
@@ -116,12 +115,12 @@ public class ProcessTester
     {
         var report = new IndividualHuntedMortalityReport
         {
-            HuntedActivity = new HuntedActivity()
+            Activity = new HuntedActivity()
             {
                 Mortality = new CaribouMortality()
                 {
                     DateOfDeath = new DateTimeOffset(2023, 4, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
-                    Herd = CaribouMortality.CaribouHerd.Atlin,
+                    LegalHerd = CaribouMortality.CaribouHerd.Atlin,
                     Sex = Data.Enums.Sex.Unknown
                 },
                 GameManagementArea = new GameManagementArea
@@ -146,7 +145,7 @@ public class ProcessTester
             .BeEquivalentTo(
                 "Area 4-03 is closed to hunting for caribou of unknown sex on 2023-04-01."
             );
-        violation.Activity.Should().Be(report.HuntedActivity);
+        violation.Activity.Should().Be(report.Activity);
         violation.Severity.Should().Be(SeverityType.Illegal);
         violation.Rule.Should().Be(RuleType.HarvestPeriod);
     }
@@ -342,7 +341,7 @@ public class ProcessTester
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                LegalHerd = CaribouMortality.CaribouHerd.Atlin,
                                 Sex = Data.Enums.Sex.Male
                             },
                             GameManagementArea = area,
@@ -360,7 +359,7 @@ public class ProcessTester
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                LegalHerd = CaribouMortality.CaribouHerd.Atlin,
                                 Sex = Data.Enums.Sex.Male
                             },
                             GameManagementArea = area,
@@ -378,7 +377,7 @@ public class ProcessTester
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                LegalHerd = CaribouMortality.CaribouHerd.Atlin,
                                 Sex = Data.Enums.Sex.Male
                             },
                             GameManagementArea = area,
@@ -396,7 +395,7 @@ public class ProcessTester
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Herd = CaribouMortality.CaribouHerd.Atlin,
+                                LegalHerd = CaribouMortality.CaribouHerd.Atlin,
                                 Sex = Data.Enums.Sex.Male
                             },
                             GameManagementArea = area,

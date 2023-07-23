@@ -3,7 +3,7 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
 
-namespace WildlifeMortalities.Test;
+namespace WildlifeMortalities.Test.Unit;
 
 public class BioSubmissionTester
 {
@@ -16,9 +16,7 @@ public class BioSubmissionTester
         foreach (var type in relevantAssembly.GetTypes())
         {
             if (!type.IsSubclassOf(bioSubmissionType))
-            {
                 continue;
-            }
 
             var properties = type.GetProperties()
                 .Where(

@@ -7,7 +7,7 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Shared.Services.Posse;
 
-namespace WildlifeMortalities.Test;
+namespace WildlifeMortalities.Test.Unit;
 
 public class PosseServiceTester
 {

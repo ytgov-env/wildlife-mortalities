@@ -10,7 +10,7 @@ using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Shared.Services.Rules.Authorizations;
 
-namespace WildlifeMortalities.Test.Rules.Authorizations;
+namespace WildlifeMortalities.Test.Unit.Rules.Authorizations;
 
 public class BigGameHuntingLicenceTester
 {
@@ -21,10 +21,7 @@ public class BigGameHuntingLicenceTester
 
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new HuntedActivity()
-            {
-                Mortality = new ArcticGroundSquirrelMortality()
-            }
+            Activity = new HuntedActivity() { Mortality = new ArcticGroundSquirrelMortality() }
         };
 
         var item = new BigGameHuntingLicenceRulePipelineItem();
@@ -64,7 +61,7 @@ public class BigGameHuntingLicenceTester
         var report = new IndividualHuntedMortalityReport()
         {
             Person = new Client() { Authorizations = new() },
-            HuntedActivity = new HuntedActivity()
+            Activity = new HuntedActivity()
             {
                 Mortality = new AmericanBlackBearMortality()
                 {
@@ -119,7 +116,7 @@ public class BigGameHuntingLicenceTester
                     }
                 }
             },
-            HuntedActivity = new HuntedActivity()
+            Activity = new HuntedActivity()
             {
                 Mortality = new AmericanBlackBearMortality() { DateOfDeath = dateOfDeath }
             }
@@ -163,7 +160,7 @@ public class BigGameHuntingLicenceTester
                     }
                 }
             },
-            HuntedActivity = new HuntedActivity()
+            Activity = new HuntedActivity()
             {
                 Mortality = new AmericanBlackBearMortality() { DateOfDeath = dateOfDeath }
             }

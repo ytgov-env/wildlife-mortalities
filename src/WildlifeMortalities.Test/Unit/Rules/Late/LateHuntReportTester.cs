@@ -6,7 +6,7 @@ using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Shared.Services.Rules.Late;
 using WildlifeMortalities.Test.Helpers;
 
-namespace WildlifeMortalities.Test.Rules.Late;
+namespace WildlifeMortalities.Test.Unit.Rules.Late;
 
 public class LateHuntReportTester
 {
@@ -28,7 +28,7 @@ public class LateHuntReportTester
     {
         var report = new IndividualHuntedMortalityReport
         {
-            HuntedActivity = activity,
+            Activity = activity,
             DateSubmitted = reportedSubmittedDate ?? s_reportedSubmittedDate
         };
 
@@ -42,9 +42,7 @@ public class LateHuntReportTester
         var result = await rule.Process(report, context);
 
         if (shouldBeLate)
-        {
             result.Violations.Should().ContainSingle();
-        }
         else
         {
             result.Violations.Should().BeEmpty();
@@ -140,7 +138,7 @@ public class LateHuntReportTester
     )
     {
         var activity = GetHuntedActivity<CaribouMortality>(dateOfDeath);
-        (activity.Mortality as CaribouMortality)!.Herd = herd;
+        (activity.Mortality as CaribouMortality)!.LegalHerd = herd;
         return new object[] { activity, shouldBeLate, null! };
     }
 

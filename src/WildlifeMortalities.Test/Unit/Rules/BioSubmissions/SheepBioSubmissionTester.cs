@@ -6,7 +6,7 @@ using WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 using WildlifeMortalities.Test.Helpers;
 using static WildlifeMortalities.Data.Entities.Violation;
 
-namespace WildlifeMortalities.Test.Rules.BioSubmissions;
+namespace WildlifeMortalities.Test.Unit.Rules.BioSubmissions;
 
 public class SheepBioSubmissionTester
 {
@@ -26,7 +26,7 @@ public class SheepBioSubmissionTester
         mortality!.Sex = Data.Enums.Sex.Female;
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new() { Mortality = mortality! }
+            Activity = new() { Mortality = mortality! }
         };
         var abstractBioSubmissionType = typeof(BioSubmission<>).MakeGenericType(new[] { type });
 
@@ -65,7 +65,7 @@ public class SheepBioSubmissionTester
         bioSubmission.UpdateAnalysisStatus();
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new()
+            Activity = new()
             {
                 Mortality = new ThinhornSheepMortality()
                 {
@@ -98,7 +98,7 @@ public class SheepBioSubmissionTester
         bioSubmission.UpdateAnalysisStatus();
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new()
+            Activity = new()
             {
                 Mortality = new ThinhornSheepMortality()
                 {
@@ -144,7 +144,7 @@ public class SheepBioSubmissionTester
         bioSubmission.UpdateAnalysisStatus();
         var report = new IndividualHuntedMortalityReport()
         {
-            HuntedActivity = new()
+            Activity = new()
             {
                 Mortality = new ThinhornSheepMortality()
                 {
