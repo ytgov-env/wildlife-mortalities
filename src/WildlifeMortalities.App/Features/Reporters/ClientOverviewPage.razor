@@ -15,7 +15,7 @@
             <MudItem>
                 <MudPaper Class="pa-4 mb-4">
                     <MudAutocomplete T="Client" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by client id or last name"
-                                     Value="_selectedClientViewModel.SelectedClient" ValueChanged="ClientSelected" ToStringFunc="@(x => x is null ? "" : $"{x.EnvPersonId} | {x.LastName}")"
+                                     Value="_selectedClientViewModel.SelectedClient" ValueChanged="ClientSelected" ToStringFunc="@(x => x is null ? "" : $"{x.EnvPersonId} | {x.FirstName} {x.LastName}")"
                                      SearchFunc="@SearchClientByEnvClientIdOrLastName" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" Class="mb-6" MinCharacters="2">
                     </MudAutocomplete>
                 </MudPaper>
