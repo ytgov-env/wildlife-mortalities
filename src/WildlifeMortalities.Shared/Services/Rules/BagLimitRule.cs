@@ -5,6 +5,9 @@ using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Extensions;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Shared.Services.Rules;
 
@@ -53,6 +56,7 @@ public class BagLimitRule : Rule
 
         var violations = new List<Violation>();
         var bagEntries = await GetCurrentBagCount(context, report.Season, report.GetPerson());
+
         foreach (
             var activity in report
                 .GetActivities()
@@ -65,7 +69,7 @@ public class BagLimitRule : Rule
             );
             if (bagEntry == null)
             {
-                var entry = (
+                var bagLimitEntry = (
                     await context.BagLimitEntries
                         .Include(x => x.MaxValuePerPersonSharedWith)
                         .Include(x => x.ActivityQueue)
@@ -78,13 +82,26 @@ public class BagLimitRule : Rule
                         .ToArrayAsync()
                 ).SingleOrDefault(x => x.Matches(activity, report));
 
-                if (entry == null)
+                if (bagLimitEntry == null)
                 {
-                    violations.Add(Violation.IllegalHarvestPeriod(activity, report));
+                    violations.Add(
+                        new(
+                            activity,
+                            RuleType.HarvestPeriod,
+                            SeverityType.Illegal,
+                            activity.Mortality.Sex is Sex.Unknown
+                                ? $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Species.GetDisplayName().ToLower()} of {activity.Mortality.Sex!.GetDisplayName().ToLower()} sex on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+                                : $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Sex!.GetDisplayName().ToLower()} {activity.Mortality.Species.GetDisplayName().ToLower()} on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+                        )
+                    );
                     continue;
                 }
 
-                bagEntry = new BagEntry { BagLimitEntry = entry, Person = report.GetPerson(), };
+                bagEntry = new BagEntry
+                {
+                    BagLimitEntry = bagLimitEntry,
+                    Person = report.GetPerson(),
+                };
 
                 context.BagEntries.Add(bagEntry);
                 bagEntries.Add(bagEntry);
@@ -94,7 +111,14 @@ public class BagLimitRule : Rule
 
             if (isLimitExceeded)
             {
-                violations.Add(Violation.BagLimitExceeded(activity, report, bagEntry));
+                violations.Add(
+                    new(
+                        activity,
+                        RuleType.BagLimitExceeded,
+                        SeverityType.Illegal,
+                        $"Bag limit exceeded for {string.Join(" and ", bagEntry.GetSpeciesDescriptions())} in {activity.GetAreaName(report)} for {bagEntry.BagLimitEntry.GetSeason()} season."
+                    )
+                );
             }
         }
 

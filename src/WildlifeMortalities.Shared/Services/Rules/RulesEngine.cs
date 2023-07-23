@@ -12,7 +12,7 @@ public static class RulesEngine
         new List<Rule>
         {
             new BagLimitRule(),
-            new AuthorizationRule(),
+            //new AuthorizationRule(),
             new LateHuntReportRule(),
             new LateBioSubmissionRule(),
             new MissingBioSubmissionRule(),
