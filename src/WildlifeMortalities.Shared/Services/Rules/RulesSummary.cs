@@ -12,18 +12,8 @@ public class RulesSummary
     public List<Violation> Violations { get; set; } = null!;
     public List<Authorization> Authorizations { get; set; } = null!;
 
-    public static async Task Generate(Report report, Report? existingReport, AppDbContext context)
+    public static async Task Generate(Report report, AppDbContext context)
     {
-        if (existingReport != null)
-        {
-            var existingViolation = existingReport
-                .GetActivities()
-                .SelectMany(x => x.Violations)
-                .ToArray();
-            context.RemoveRange(existingViolation);
-            await ResetRules(existingReport, context);
-        }
-
         var rulesSummary = new RulesSummary
         {
             Report = report,
@@ -38,23 +28,15 @@ public class RulesSummary
             rulesSummary.Authorizations.AddRange(result.Authorizations);
         }
 
-        // Ensure uniqueness of activities when adding or updating
-        var modifiedActivities = context.ChangeTracker
-            .Entries<Activity>()
-            .ToDictionary(x => x.Entity.Id, x => x.Entity);
-        foreach (var item in rulesSummary.Violations)
-        {
-            if (modifiedActivities.TryGetValue(item.Activity.Id, out var activity))
-            {
-                item.Activity = activity;
-            }
-        }
-
         context.AddRange(rulesSummary.Violations);
     }
 
-    private static async Task ResetRules(Report report, AppDbContext context)
+    public static async Task ResetRules(Report report, AppDbContext context)
     {
+        var existingViolation = report.GetActivities().SelectMany(x => x.Violations).ToArray();
+
+        context.RemoveRange(existingViolation);
+
         foreach (var item in RulesEngine.Rules)
         {
             await item.Reset(report, context);
