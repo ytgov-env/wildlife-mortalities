@@ -34,21 +34,24 @@ internal class BearBioSubmissionRule : Rule
                 continue;
             }
 
-            if (bioSubmission.AnalysisStatus is not BioSubmissionAnalysisStatus.Complete)
+            if (
+                bioSubmission.AnalysisStatus is not BioSubmissionAnalysisStatus.Complete
+                || bioSubmission.Age is null
+            )
             {
                 continue;
             }
 
             isApplicable = true;
 
-            if (bioSubmission.Age!.Years < 3)
+            if (bioSubmission.Age.Years < 3)
             {
                 violations.Add(
                     new Violation(
                         activity,
                         Violation.RuleType.BearCub,
                         Violation.SeverityType.Illegal,
-                        "Bear is less than 3 years old."
+                        $"{activity.Mortality.Species.GetDisplayName()} is less than 3 years old."
                     )
                 );
             }
