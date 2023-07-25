@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.App.Features.Shared;
-using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
-using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
@@ -42,22 +40,4 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
             TrappedActivity activity => new TrappedActivityViewModel(activity, _reportDetail),
             _ => throw new Exception($"no viewmodel mapping found for type {item.GetType().Name}")
         };
-
-    private bool HasIncompleteBioSubmissions()
-    {
-        var mortalitiesThatRequireABioSubmission = _reportDetail.Report
-            .GetMortalities()
-            .OfType<IHasBioSubmission>()
-            .Count();
-        return mortalitiesThatRequireABioSubmission
-            != _reportDetail.BioSubmissions.Count(
-                x =>
-                    x.submission.RequiredOrganicMaterialsStatus
-                        == BioSubmissionRequiredOrganicMaterialsStatus.Submitted
-                    && (
-                        x.submission.AnalysisStatus == BioSubmissionAnalysisStatus.NotApplicable
-                        || x.submission.AnalysisStatus == BioSubmissionAnalysisStatus.Complete
-                    )
-            );
-    }
 }
