@@ -458,7 +458,7 @@ public static class GameManagementAreaExtensions
 
     private static readonly Dictionary<
         string,
-        IEnumerable<(CaribouHerd Herd, DateTime Start, DateTime End)>
+        IEnumerable<(CaribouHerd Herd, DateTimeOffset Start, DateTimeOffset End)>
     > s_complexHerdMapper =
         new()
         {
@@ -466,64 +466,128 @@ public static class GameManagementAreaExtensions
                 "2-16",
                 new[]
                 {
-                    (CaribouHerd.HartRiver, new DateTime(2023, 8, 1), new DateTime(2023, 10, 30)),
-                    (CaribouHerd.Porcupine, new DateTime(2023, 11, 1), new DateTime(2024, 1, 31))
+                    (
+                        CaribouHerd.HartRiver,
+                        new DateTimeOffset(2023, 8, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 10, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Porcupine,
+                        new DateTimeOffset(2023, 11, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 1, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
             {
                 "2-23",
                 new[]
                 {
-                    (CaribouHerd.HartRiver, new DateTime(2023, 8, 1), new DateTime(2023, 10, 30)),
-                    (CaribouHerd.Porcupine, new DateTime(2023, 11, 1), new DateTime(2024, 1, 31))
+                    (
+                        CaribouHerd.HartRiver,
+                        new DateTimeOffset(2023, 8, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 10, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Porcupine,
+                        new DateTimeOffset(2023, 11, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 1, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
             {
                 "2-27",
                 new[]
                 {
-                    (CaribouHerd.HartRiver, new DateTime(2023, 8, 1), new DateTime(2023, 10, 30)),
-                    (CaribouHerd.Porcupine, new DateTime(2023, 11, 1), new DateTime(2024, 1, 31))
+                    (
+                        CaribouHerd.HartRiver,
+                        new DateTimeOffset(2023, 8, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 10, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Porcupine,
+                        new DateTimeOffset(2023, 11, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 1, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
             {
                 "2-28",
                 new[]
                 {
-                    (CaribouHerd.HartRiver, new DateTime(2023, 8, 1), new DateTime(2023, 10, 30)),
-                    (CaribouHerd.Porcupine, new DateTime(2023, 11, 1), new DateTime(2024, 1, 31))
+                    (
+                        CaribouHerd.HartRiver,
+                        new DateTimeOffset(2023, 8, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 10, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Porcupine,
+                        new DateTimeOffset(2023, 11, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 1, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
             {
                 "2-39",
                 new[]
                 {
-                    (CaribouHerd.HartRiver, new DateTime(2023, 8, 1), new DateTime(2023, 10, 30)),
-                    (CaribouHerd.Porcupine, new DateTime(2023, 11, 1), new DateTime(2024, 1, 31))
+                    (
+                        CaribouHerd.HartRiver,
+                        new DateTimeOffset(2023, 8, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 10, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Porcupine,
+                        new DateTimeOffset(2023, 11, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 1, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
             {
                 "5-04",
                 new[]
                 {
-                    (CaribouHerd.Chisana, new DateTime(2023, 4, 1), new DateTime(2023, 11, 30)),
-                    (CaribouHerd.Nelchina, new DateTime(2023, 12, 1), new DateTime(2024, 3, 31))
+                    (
+                        CaribouHerd.Chisana,
+                        new DateTimeOffset(2023, 4, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 11, 30, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Nelchina,
+                        new DateTimeOffset(2023, 12, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 3, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
             {
                 "5-05",
                 new[]
                 {
-                    (CaribouHerd.Chisana, new DateTime(2023, 4, 1), new DateTime(2023, 11, 30)),
-                    (CaribouHerd.Nelchina, new DateTime(2023, 12, 1), new DateTime(2024, 3, 31))
+                    (
+                        CaribouHerd.Chisana,
+                        new DateTimeOffset(2023, 4, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 11, 30, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Nelchina,
+                        new DateTimeOffset(2023, 12, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 3, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
             {
                 "5-06",
                 new[]
                 {
-                    (CaribouHerd.Chisana, new DateTime(2023, 4, 1), new DateTime(2023, 11, 30)),
-                    (CaribouHerd.Nelchina, new DateTime(2023, 12, 1), new DateTime(2024, 3, 31))
+                    (
+                        CaribouHerd.Chisana,
+                        new DateTimeOffset(2023, 4, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2023, 11, 30, 23, 59, 59, TimeSpan.FromHours(-7))
+                    ),
+                    (
+                        CaribouHerd.Nelchina,
+                        new DateTimeOffset(2023, 12, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                        new DateTimeOffset(2024, 3, 31, 23, 59, 59, TimeSpan.FromHours(-7))
+                    )
                 }
             },
         };
