@@ -13,6 +13,8 @@ using WildlifeMortalities.Shared.Services.Reports.Single;
 using WildlifeMortalities.App.Features.Reports;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 
 namespace WildlifeMortalities.Test.Integration;
 
@@ -63,7 +65,7 @@ public class ContainerizedTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task MyTest()
+    public async Task UpdateReport_WithSameValues_NoChangeInViolations()
     {
         var hunter = new Client
         {
@@ -84,7 +86,7 @@ public class ContainerizedTests : IAsyncLifetime
                 {
                     DateOfDeath = new DateTimeOffset(2023, 10, 12, 0, 0, 0, TimeSpan.FromHours(-7)),
                     LegalHerd = CaribouMortality.CaribouHerd.Porcupine,
-                    Sex = Data.Enums.Sex.Male
+                    Sex = Sex.Male
                 },
                 GameManagementAreaId = gma.Id,
             },
@@ -117,6 +119,104 @@ public class ContainerizedTests : IAsyncLifetime
         violationsBeforeUpdate
             .Should()
             .BeEquivalentTo(violationsAfterUpdate, config => config.Excluding(y => y.Id));
+    }
+
+    [Fact]
+    public async Task SpecialGuidedReport_DeleteMortality_BioSubmissionIsDeleted()
+    {
+        var hunter = new Client
+        {
+            BirthDate = new DateTime(1990, 1, 1, 0, 0, 0),
+            FirstName = "Test",
+            LastName = "User",
+            EnvPersonId = "410302"
+        };
+
+        var guide = new Client
+        {
+            BirthDate = new DateTime(1990, 1, 1, 0, 0, 0),
+            FirstName = "Test",
+            LastName = "User",
+            EnvPersonId = "323123"
+        };
+
+        await _context.People.AddRangeAsync(hunter, guide);
+        await _context.SaveChangesAsync();
+
+        var gma = await _context.GameManagementAreas.SingleAsync(gma => gma.Area == "5-01");
+        var report = new SpecialGuidedHuntReport
+        {
+            HuntStartDate = new DateTime(2023, 10, 11, 0, 0, 0),
+            HuntEndDate = new DateTime(2023, 10, 13, 0, 0, 0),
+            HuntedActivities = new()
+            {
+                new HuntedActivity()
+                {
+                    Mortality = new CaribouMortality()
+                    {
+                        DateOfDeath = new DateTimeOffset(
+                            2023,
+                            10,
+                            12,
+                            0,
+                            0,
+                            0,
+                            TimeSpan.FromHours(-7)
+                        ),
+                        LegalHerd = CaribouMortality.CaribouHerd.Fortymile,
+                        Sex = Sex.Male
+                    },
+                    GameManagementAreaId = gma.Id,
+                },
+                new HuntedActivity()
+                {
+                    Mortality = new CoyoteMortality()
+                    {
+                        DateOfDeath = new DateTimeOffset(
+                            2023,
+                            10,
+                            12,
+                            0,
+                            0,
+                            0,
+                            TimeSpan.FromHours(-7)
+                        ),
+                        Sex = Sex.Male
+                    },
+                    GameManagementAreaId = gma.Id,
+                }
+            },
+            ClientId = hunter.Id,
+            Result = GuidedHuntResult.WentHuntingAndKilledWildlife,
+            GuideId = guide.Id
+        };
+
+        var contextFactory = new Mock<IDbContextFactory<AppDbContext>>();
+        contextFactory
+            .Setup(contextFactory => contextFactory.CreateDbContext())
+            .Returns(GetContext);
+        var service = new MortalityService(contextFactory.Object);
+
+        await service.CreateReport(report, _seedUser.Id);
+
+        var reportFromDb = await _context.Reports
+            .WithEntireGraph()
+            .FirstAsync(x => x.Id == report.Id);
+
+        _context.Activities.Should().HaveCount(2);
+        _context.BioSubmissions.Should().HaveCount(1);
+
+        var secondReportViewModel = new SpecialGuidedHuntReportViewModel(
+            (SpecialGuidedHuntReport)reportFromDb
+        );
+        secondReportViewModel.HuntedActivityViewModels.RemoveAt(0);
+
+        var secondReport = secondReportViewModel.GetReport(hunter.Id);
+
+        await service.UpdateReport(secondReport, _seedUser.Id);
+
+        _context.Activities.Should().HaveCount(1);
+        _context.BioSubmissions.Should().BeEmpty();
     }
 
     [Fact]
@@ -163,6 +263,59 @@ public class ContainerizedTests : IAsyncLifetime
         mortality!.LegalHerd = CaribouMortality.CaribouHerd.Fortymile;
 
         await service.UpdateReport(report, _seedUser.Id);
+
+        var bioSubmission = await _context.BioSubmissions.SingleOrDefaultAsync();
+        bioSubmission.Should().BeAssignableTo<CaribouBioSubmission>();
+    }
+
+    [Fact]
+    public async Task Caribou_ChangeFromHerdWithBioSubToHerdWithoutBioSub_NoExceptions()
+    {
+        var hunter = new Client
+        {
+            BirthDate = new DateTime(1990, 1, 1, 0, 0, 0),
+            FirstName = "Test",
+            LastName = "User",
+        };
+
+        await _context.People.AddAsync(hunter);
+        await _context.SaveChangesAsync();
+
+        var fortyMileGma = await _context.GameManagementAreas.SingleAsync(x => x.Area == "5-01");
+        var porcupineGma = await _context.GameManagementAreas.SingleAsync(x => x.Area == "1-60");
+        var report = new IndividualHuntedMortalityReport
+        {
+            Activity = new HuntedActivity()
+            {
+                Mortality = new CaribouMortality()
+                {
+                    DateOfDeath = new DateTimeOffset(2023, 10, 12, 0, 0, 0, TimeSpan.FromHours(-7)),
+                    LegalHerd = CaribouMortality.CaribouHerd.Fortymile,
+                    Sex = Sex.Male
+                },
+                GameManagementAreaId = fortyMileGma.Id,
+            },
+            PersonId = hunter.Id,
+        };
+
+        var contextFactory = new Mock<IDbContextFactory<AppDbContext>>();
+        contextFactory
+            .Setup(contextFactory => contextFactory.CreateDbContext())
+            .Returns(GetContext);
+        var service = new MortalityService(contextFactory.Object);
+
+        await service.CreateReport(report, _seedUser.Id);
+
+        var bioSubmission = await _context.BioSubmissions.AsNoTracking().SingleOrDefaultAsync();
+
+        var mortality = report.Activity.Mortality as CaribouMortality;
+        mortality!.LegalHerd = CaribouMortality.CaribouHerd.Porcupine;
+        report.Activity.GameManagementAreaId = porcupineGma.Id;
+
+        await service.UpdateReport(report, _seedUser.Id);
+
+        var bioSubmissions = await _context.BioSubmissions.AsNoTracking().ToListAsync();
+        bioSubmissions.Should().BeEmpty();
     }
 
     [Fact]
@@ -178,7 +331,7 @@ public class ContainerizedTests : IAsyncLifetime
         await _context.People.AddAsync(hunter);
         await _context.SaveChangesAsync();
 
-        var gma = await _context.GameManagementAreas.SingleAsync(gma => gma.Area == "1-60");
+        var area = await _context.GameManagementAreas.SingleAsync(gma => gma.Area == "1-60");
         var report = new IndividualHuntedMortalityReport
         {
             Activity = new HuntedActivity()
@@ -187,9 +340,9 @@ public class ContainerizedTests : IAsyncLifetime
                 {
                     DateOfDeath = new DateTimeOffset(2023, 10, 12, 0, 0, 0, TimeSpan.FromHours(-7)),
                     LegalHerd = CaribouMortality.CaribouHerd.Porcupine,
-                    Sex = Data.Enums.Sex.Male
+                    Sex = Sex.Male
                 },
-                GameManagementAreaId = gma.Id,
+                GameManagementAreaId = area.Id,
             },
             PersonId = hunter.Id,
         };
@@ -203,7 +356,7 @@ public class ContainerizedTests : IAsyncLifetime
         await service.CreateReport(report, _seedUser.Id);
 
         var bagLimitEntry = await _context.BagEntries.FirstAsync(
-            x => ((HuntingBagLimitEntry)x.BagLimitEntry).Areas.Any(y => y.Id == gma.Id)
+            x => ((HuntingBagLimitEntry)x.BagLimitEntry).Areas.Any(y => y.Id == area.Id)
         );
 
         bagLimitEntry.CurrentValue.Should().Be(1);
@@ -232,9 +385,76 @@ public class ContainerizedTests : IAsyncLifetime
 
         var violationsAfterUpdate = await _context.Violations.ToListAsync();
 
-        foreach (var item in await _context.BagEntries.AsNoTracking().ToListAsync())
+        foreach (
+            var bagEntry in await _context.BagEntries
+                .AsNoTracking()
+                .Where(x => x.BagLimitEntry.Species == Species.Caribou)
+                .ToListAsync()
+        )
         {
-            item.TotalValue.Should().Be(0);
+            bagEntry.TotalValue.Should().Be(0);
         }
+    }
+
+    [Fact]
+    public async Task UpdateBioSubmission_ProvideAllRequiredSamples_ShouldRemoveBioSubmissionMissingViolation()
+    {
+        var hunter = new Client
+        {
+            BirthDate = new DateTime(1990, 1, 1, 0, 0, 0),
+            FirstName = "Test",
+            LastName = "User",
+        };
+
+        await _context.People.AddAsync(hunter);
+        await _context.SaveChangesAsync();
+
+        var fortyMileGma = await _context.GameManagementAreas.SingleAsync(x => x.Area == "5-01");
+        var report = new IndividualHuntedMortalityReport
+        {
+            Activity = new HuntedActivity()
+            {
+                Mortality = new CaribouMortality()
+                {
+                    DateOfDeath = new DateTimeOffset(2023, 5, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
+                    LegalHerd = CaribouMortality.CaribouHerd.Fortymile,
+                    Sex = Sex.Male
+                },
+                GameManagementAreaId = fortyMileGma.Id,
+            },
+            PersonId = hunter.Id,
+        };
+
+        var contextFactory = new Mock<IDbContextFactory<AppDbContext>>();
+        contextFactory
+            .Setup(contextFactory => contextFactory.CreateDbContext())
+            .Returns(GetContext);
+        var service = new MortalityService(contextFactory.Object);
+
+        await service.CreateReport(report, _seedUser.Id);
+
+        var bioSubmission = await _context.BioSubmissions
+            .OfType<CaribouBioSubmission>()
+            .AsNoTracking()
+            .SingleAsync();
+        bioSubmission.IsIncisorBarProvided = false;
+        bioSubmission.UpdateRequiredOrganicMaterialsStatus();
+        await service.UpdateOrganicMaterialForBioSubmission(bioSubmission, report.Id);
+
+        _context.Violations
+            .Should()
+            .ContainSingle(
+                x => x.Rule == Data.Entities.Violation.RuleType.AllRequiredSamplesNotSubmitted
+            );
+
+        bioSubmission.IsIncisorBarProvided = true;
+        bioSubmission.UpdateRequiredOrganicMaterialsStatus();
+        await service.UpdateOrganicMaterialForBioSubmission(bioSubmission, report.Id);
+
+        _context.Violations
+            .Should()
+            .NotContain(
+                x => x.Rule == Data.Entities.Violation.RuleType.AllRequiredSamplesNotSubmitted
+            );
     }
 }

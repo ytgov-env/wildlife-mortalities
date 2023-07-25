@@ -1,12 +1,16 @@
-﻿@using WildlifeMortalities.App.Extensions
+﻿@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 @using WildlifeMortalities.Data.Entities.Reports;
+@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Extensions;
 @using WildlifeMortalities.Shared.Services
 @using static WildlifeMortalities.Data.Entities.Violation;
+@using WildlifeMortalities.Shared.Services.Reports.Single;
+@inherits DbContextAwareComponent
 
 <MudCard Elevation="3" Class="flex-column d-flex" Style="height: 100%; min-width: 250px; width: 350px;">
     <MudCardHeader Class="mb-n3">
@@ -23,7 +27,7 @@
                 <MudText Typo="Typo.h6">@mortalityName</MudText>
             }
         </CardHeaderContent>
-        <CardHeaderActions>
+        @*<CardHeaderActions>
             @if (ActivityViewModel.Activity != null && ActivityViewModel.Activity.Authorizations.Any())
             {
                 <MudMenu Icon="@Icons.Material.Filled.Key">
@@ -33,7 +37,7 @@
                     }
                 </MudMenu>
             }
-        </CardHeaderActions>
+        </CardHeaderActions>*@
     </MudCardHeader>
     <MudCardContent Class="flex-column d-flex" Style="height: 100%">
         @if (ActivityViewModel.Activity != null)
@@ -95,7 +99,7 @@
         <MudSpacer />
         @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
         {
-            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report" />
+            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report" BioSubmissionUpdated="@RefreshViolations"/>
         }
     </MudCardContent>
     <MudCardActions>
@@ -148,4 +152,17 @@
         SeverityType.PotentiallyIllegal => Severity.Warning,
         _ => throw new System.Diagnostics.UnreachableException()
     };
+
+    private async Task RefreshViolations()
+    {
+        var reportDetail = await Context.Reports.GetDetails(Report.Id, Context);
+        var activity = await Context.Activities.Include(x => ((HuntedActivity)x).GameManagementArea).Include(x => x.Mortality).Include(x => x.Violations).SingleAsync(x => x.Id == ActivityViewModel.Activity.Id);
+        ActivityViewModel viewModel = ActivityViewModel switch
+        {
+            HuntedActivityViewModel => new HuntedActivityViewModel((HuntedActivity)activity, reportDetail),
+            TrappedActivityViewModel => new TrappedActivityViewModel((TrappedActivity)activity, reportDetail),
+            _ => throw new System.Diagnostics.UnreachableException()
+        };
+        ActivityViewModel = viewModel;
+    }
 }

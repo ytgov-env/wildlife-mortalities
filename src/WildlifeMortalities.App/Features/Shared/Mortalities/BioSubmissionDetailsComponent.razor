@@ -102,6 +102,9 @@
     [Inject]
     IMortalityService MortalityService { get; set; } = null!;
 
+    [Parameter]
+    public EventCallback BioSubmissionUpdated { get; set; }
+
     private async Task OpenBioSubmissionAnalysisDialog()
     {
 
@@ -115,8 +118,9 @@
         if (result.Canceled == false)
         {
             Log.Information("Updating bio submission analysis {@BioSubmission}", BioSubmission);
-            await MortalityService.UpdateBioSubmissionAnalysis(BioSubmission);
+            await MortalityService.UpdateBioSubmissionAnalysis(BioSubmission, Report.Id);
             Log.Information("Updated bio submission analysis");
+            await BioSubmissionUpdated.InvokeAsync();
         }
     }
 
@@ -139,8 +143,9 @@
             }
 
             Log.Information("Updating bio submission organic materials {@BioSubmission}", BioSubmission);
-            await MortalityService.UpdateOrganicMaterialForBioSubmission(BioSubmission);
+            await MortalityService.UpdateOrganicMaterialForBioSubmission(BioSubmission, Report.Id);
             Log.Information("Updated bio submission organic materials");
+            await BioSubmissionUpdated.InvokeAsync();
 
             if (dialogResult == BioSubmissionDialogResult.SubmitAndProceedToAnalysis)
             {

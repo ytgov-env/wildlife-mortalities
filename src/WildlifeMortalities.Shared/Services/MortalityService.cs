@@ -251,8 +251,8 @@ public class MortalityService : IMortalityService
 
         context.Entry(existingReport).CurrentValues.SetValues(report);
 
-        await AddDefaultBioSubmissions(context, report);
         await UpdateActivities(context, report, existingReport, now);
+        await AddDefaultBioSubmissions(context, report);
 
         await RulesSummary.Generate(report, context);
 
@@ -393,21 +393,35 @@ public class MortalityService : IMortalityService
 
         reportDetails ??= new ReportDetail(null!, Array.Empty<(int, BioSubmission)>());
 
-        foreach (var item in report.GetMortalities().OfType<IHasBioSubmission>())
+        foreach (var mortality in report.GetMortalities().OfType<IHasBioSubmission>())
         {
-            if (!reportDetails.BioSubmissions.Any(x => x.mortalityId == item.Id))
+            var existingBioSubmission = reportDetails.BioSubmissions.FirstOrDefault(
+                x => x.mortalityId == mortality.Id
+            );
+
+            if (!mortality.SubTypeHasBioSubmission() && existingBioSubmission != default)
             {
-                var bioSubmission = item.CreateDefaultBioSubmission();
+                context.BioSubmissions.Remove(existingBioSubmission.submission);
+            }
+
+            if (existingBioSubmission == default)
+            {
+                var bioSubmission = mortality.CreateDefaultBioSubmission();
                 if (bioSubmission == null)
                 {
                     continue;
                 }
+
                 context.BioSubmissions.Add(bioSubmission);
             }
         }
     }
 
-    private async Task UpdateBioSubmission(BioSubmission bioSubmission, Action updater)
+    private async Task UpdateBioSubmission(
+        BioSubmission bioSubmission,
+        int reportId,
+        Action updater
+    )
     {
         updater();
         bioSubmission.DateModified = DateTimeOffset.Now;
@@ -436,11 +450,20 @@ public class MortalityService : IMortalityService
 
             await transaction.CommitAsync();
         });
+
+        var report = await context.Reports.WithEntireGraph().SingleAsync(x => x.Id == reportId);
+        await RulesSummary.ResetRules(report, context);
+        await RulesSummary.Generate(report, context);
+        await context.SaveChangesAsync();
     }
 
-    public async Task UpdateOrganicMaterialForBioSubmission(BioSubmission bioSubmission) =>
+    public async Task UpdateOrganicMaterialForBioSubmission(
+        BioSubmission bioSubmission,
+        int reportId
+    ) =>
         await UpdateBioSubmission(
             bioSubmission,
+            reportId,
             () =>
             {
                 bioSubmission.UpdateRequiredOrganicMaterialsStatus();
@@ -456,14 +479,12 @@ public class MortalityService : IMortalityService
                     bioSubmission.DateSubmitted = null;
                 }
 
-                //Todo: raise violation for other statuses
-
                 bioSubmission.DateModified = DateTimeOffset.Now;
             }
         );
 
-    public async Task UpdateBioSubmissionAnalysis(BioSubmission bioSubmission) =>
-        await UpdateBioSubmission(bioSubmission, bioSubmission.UpdateAnalysisStatus);
+    public async Task UpdateBioSubmissionAnalysis(BioSubmission bioSubmission, int reportId) =>
+        await UpdateBioSubmission(bioSubmission, reportId, bioSubmission.UpdateAnalysisStatus);
 
     public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
     {
@@ -498,9 +519,9 @@ public class MortalityService : IMortalityService
         Report destinationReport
     )
     {
-        foreach (var item in sourceReport.GetActivities())
+        foreach (var activity in sourceReport.GetActivities())
         {
-            switch (item)
+            switch (activity)
             {
                 case TrappedActivity trappedActivity:
                     trappedActivity.TrappedMortalitiesReport =

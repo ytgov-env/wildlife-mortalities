@@ -22,23 +22,29 @@ public partial class MortalityComponent
     [Inject]
     public IDialogService DialogService { get; set; } = null!;
 
-    private void SpeciesChanged(Species? value)
+    private void SpeciesChanged(Species? species)
     {
-        if (!value.HasValue)
+        if (!species.HasValue)
         {
             return;
         }
 
-        if (ViewModel.Species == value)
+        if (ViewModel.Species == species)
         {
             return;
         }
 
-        ViewModel.Species = value;
+        ViewModel.Species = species;
         ViewModel.MortalityViewModel = MortalityViewModel.Create(
-            value.Value,
+            species.Value,
             ViewModel.MortalityViewModel
         );
+
+        var id = ViewModel.MortalityViewModel.Id;
+        if (id.HasValue && species.HasValue)
+        {
+            Report.SpeciesChanged(id.Value, species.Value);
+        }
     }
 
     private async Task ChangeSpeciesClicked()

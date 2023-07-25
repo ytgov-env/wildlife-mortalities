@@ -23,7 +23,7 @@ internal class MaxOneGrizzlyBearEveryThreeYearsRule : Rule
 
     public override async Task Reset(Report report, AppDbContext context)
     {
-        var activitiesInViolation = await GetRelevantReportsWithGrizzluActivites(report, context);
+        var activitiesInViolation = await GetRelevantReportsWithGrizzlyActivities(report, context);
         Reset(activitiesInViolation);
     }
 
@@ -36,7 +36,7 @@ internal class MaxOneGrizzlyBearEveryThreeYearsRule : Rule
 
         var violations = new List<Violation>();
         var isApplicable = false;
-        var activitiesInViolation = await GetRelevantReportsWithGrizzluActivites(report, context);
+        var activitiesInViolation = await GetRelevantReportsWithGrizzlyActivities(report, context);
 
         foreach (var (report2, activity) in activitiesInViolation.Skip(1))
         {
@@ -68,7 +68,7 @@ internal class MaxOneGrizzlyBearEveryThreeYearsRule : Rule
     private static async Task<(
         Report report,
         Activity activity
-    )[]> GetRelevantReportsWithGrizzluActivites(Report report, AppDbContext context)
+    )[]> GetRelevantReportsWithGrizzlyActivities(Report report, AppDbContext context)
     {
         var personId = report.GetPerson().Id;
         var currentSeason = (HuntingSeason)report.Season;

@@ -2,7 +2,6 @@
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Reports;
-using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
 namespace WildlifeMortalities.Shared.Services.Rules;
 
@@ -37,9 +36,9 @@ public class RulesSummary
 
         context.RemoveRange(existingViolation);
 
-        foreach (var item in RulesEngine.Rules)
+        foreach (var rule in RulesEngine.Rules)
         {
-            await item.Reset(report, context);
+            await rule.Reset(report, context);
         }
     }
 }
