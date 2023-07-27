@@ -28,7 +28,7 @@ public enum ReportType
     [ReportType(typeof(HumanWildlifeConflictMortalityReport))]
     HumanWildlifeConflictMortalityReport,
 
-    [Display(Name = "Hunting (individual)")]
+    [Display(Name = "Hunting (resident)")]
     [IsCreatable]
     [ReportType(typeof(IndividualHuntedMortalityReport))]
     IndividualHuntedMortalityReport,
