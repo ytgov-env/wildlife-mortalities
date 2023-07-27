@@ -49,7 +49,7 @@ public class PosseSyncService : TimerBasedHostedService
             .ToDictionary(x => x.EnvPersonId, x => x);
 
         var lastSuccessfulClientsSync = await appConfiguration.TryGetValue(
-            Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
+            Shared.Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
             new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7))
         );
         var clientsSyncInitiatedTimestamp = await SyncClients(
@@ -59,12 +59,12 @@ public class PosseSyncService : TimerBasedHostedService
             lastSuccessfulClientsSync
         );
         await appConfiguration.SetValue(
-            Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
+            Shared.Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
             clientsSyncInitiatedTimestamp
         );
 
         var lastSuccessfulAuthorizationsSync = await appConfiguration.TryGetValue(
-            Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
+            Shared.Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
             new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7))
         );
         var authorizationsSyncInitiatedTimestamp = await SyncAuthorizations(
@@ -74,7 +74,7 @@ public class PosseSyncService : TimerBasedHostedService
             lastSuccessfulAuthorizationsSync
         );
         await appConfiguration.SetValue(
-            Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
+            Shared.Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
             authorizationsSyncInitiatedTimestamp
         );
         Log.Information("Finished posse sync");

@@ -80,10 +80,10 @@
         AuthState = await AuthenticationStateTask;
         _isTestEnvironment = await IsTestEnvironment();
         _lastSuccessfulClientsSync = await AppConfigurationService.GetValue<DateTimeOffset>(
-            Constants.AppConfigurationService.LastSuccessfulClientsSyncKey
+            WildlifeMortalities.Shared.Constants.AppConfigurationService.LastSuccessfulClientsSyncKey
         );
         _lastSuccessfulAuthorizationsSync = await AppConfigurationService.GetValue<DateTimeOffset>(
-            Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey
+            WildlifeMortalities.Shared.Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey
         );
     }
 

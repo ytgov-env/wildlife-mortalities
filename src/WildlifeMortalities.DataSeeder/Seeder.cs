@@ -1,11 +1,15 @@
 ﻿using WildlifeMortalities.Data;
+using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Seasons;
+using Constants = WildlifeMortalities.Shared.Constants;
 
 namespace WildlifeMortalities.DataSeeder;
+
 public static class Seeder
 {
     public static async Task Seed(AppDbContext context)
     {
+        AddPosseSyncKeys(context);
         AddAllSeasons(context);
         AreaSeeder.AddAllGameManagementAreas(context);
         AreaSeeder.AddAllOutfitterAreas(context);
@@ -30,6 +34,30 @@ public static class Seeder
         else
         {
             Console.WriteLine("Seasons already exist");
+        }
+    }
+
+    private static void AddPosseSyncKeys(AppDbContext context)
+    {
+        if (!context.AppConfigurations.Any())
+        {
+            context.AppConfigurations.AddRange(
+                new AppConfiguration()
+                {
+                    Key = Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
+                    Value = new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero).ToString()
+                },
+                new AppConfiguration()
+                {
+                    Key = Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
+                    Value = new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero).ToString()
+                });
+            context.SaveChanges();
+            Console.WriteLine("Added posse sync k/v pairs");
+        }
+        else
+        {
+            Console.WriteLine("Posse sync k/v pairs already exist");
         }
     }
 }
