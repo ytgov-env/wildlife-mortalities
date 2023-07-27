@@ -8,6 +8,7 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Seasons;
+using WildlifeMortalities.Shared.Extensions;
 using WildlifeMortalities.Shared.Services.Reports.Single;
 using WildlifeMortalities.Shared.Services.Rules;
 
@@ -417,15 +418,12 @@ public class MortalityService : IMortalityService
         }
     }
 
-    private async Task UpdateBioSubmission(
+    private async Task<ReportDetail> UpdateBioSubmission(
         BioSubmission bioSubmission,
         int reportId,
         Action updater
     )
     {
-        updater();
-        bioSubmission.DateModified = DateTimeOffset.Now;
-
         var context = _dbContextFactory.CreateDbContext();
 
         var biosubmissionId = bioSubmission.Id;
@@ -434,9 +432,15 @@ public class MortalityService : IMortalityService
             x => x.Id == biosubmissionId
         );
         var strategy = context.Database.CreateExecutionStrategy();
+        var report = await context.Reports.WithEntireGraph().SingleAsync(x => x.Id == reportId);
+
         await strategy.Execute(async () =>
         {
             using var transaction = context.Database.BeginTransaction();
+
+            await RulesSummary.ResetRules(report, context);
+            updater();
+            bioSubmission.DateModified = DateTimeOffset.Now;
 
             if (submissionFromDb != null)
             {
@@ -446,18 +450,17 @@ public class MortalityService : IMortalityService
 
             bioSubmission.ClearDependencies();
             context.BioSubmissions.Add(bioSubmission);
+
+            await RulesSummary.Generate(report, context);
             await context.SaveChangesAsync();
 
             await transaction.CommitAsync();
         });
 
-        var report = await context.Reports.WithEntireGraph().SingleAsync(x => x.Id == reportId);
-        await RulesSummary.ResetRules(report, context);
-        await RulesSummary.Generate(report, context);
-        await context.SaveChangesAsync();
+        return await report.GetDetails(context);
     }
 
-    public async Task UpdateOrganicMaterialForBioSubmission(
+    public async Task<ReportDetail> UpdateOrganicMaterialForBioSubmission(
         BioSubmission bioSubmission,
         int reportId
     ) =>
@@ -478,13 +481,13 @@ public class MortalityService : IMortalityService
                 {
                     bioSubmission.DateSubmitted = null;
                 }
-
-                bioSubmission.DateModified = DateTimeOffset.Now;
             }
         );
 
-    public async Task UpdateBioSubmissionAnalysis(BioSubmission bioSubmission, int reportId) =>
-        await UpdateBioSubmission(bioSubmission, reportId, bioSubmission.UpdateAnalysisStatus);
+    public async Task<ReportDetail> UpdateBioSubmissionAnalysis(
+        BioSubmission bioSubmission,
+        int reportId
+    ) => await UpdateBioSubmission(bioSubmission, reportId, bioSubmission.UpdateAnalysisStatus);
 
     public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
     {

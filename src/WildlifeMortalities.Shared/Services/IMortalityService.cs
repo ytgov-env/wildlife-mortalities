@@ -16,8 +16,11 @@ public interface IMortalityService
     Task CreateDraftReport(string reportType, string reportContent, int personId);
     Task UpdateDraftReport(string report, int reportId);
 
-    Task UpdateBioSubmissionAnalysis(BioSubmission bioSubmission, int reportId);
-    Task UpdateOrganicMaterialForBioSubmission(BioSubmission bioSubmission, int reportId);
+    Task<ReportDetail> UpdateBioSubmissionAnalysis(BioSubmission bioSubmission, int reportId);
+    Task<ReportDetail> UpdateOrganicMaterialForBioSubmission(
+        BioSubmission bioSubmission,
+        int reportId
+    );
     Task<IEnumerable<GameManagementArea>> GetGameManagementAreas();
     Task<IEnumerable<OutfitterArea>> GetOutfitterAreas();
     Task<IEnumerable<RegisteredTrappingConcession>> GetRegisteredTrappingConcessions();

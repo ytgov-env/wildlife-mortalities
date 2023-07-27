@@ -28,15 +28,15 @@
             }
         </CardHeaderContent>
         @*<CardHeaderActions>
-            @if (ActivityViewModel.Activity != null && ActivityViewModel.Activity.Authorizations.Any())
-            {
-                <MudMenu Icon="@Icons.Material.Filled.Key">
-                    @foreach (var authorization in ActivityViewModel.Activity.Authorizations)
-                    {
-                        <MudMenuItem>@authorization.Number</MudMenuItem>
-                    }
-                </MudMenu>
-            }
+        @if (ActivityViewModel.Activity != null && ActivityViewModel.Activity.Authorizations.Any())
+        {
+        <MudMenu Icon="@Icons.Material.Filled.Key">
+        @foreach (var authorization in ActivityViewModel.Activity.Authorizations)
+        {
+        <MudMenuItem>@authorization.Number</MudMenuItem>
+        }
+        </MudMenu>
+        }
         </CardHeaderActions>*@
     </MudCardHeader>
     <MudCardContent Class="flex-column d-flex" Style="height: 100%">
@@ -99,7 +99,7 @@
         <MudSpacer />
         @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
         {
-            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report" BioSubmissionUpdated="@RefreshViolations"/>
+            <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report" BioSubmissionUpdated="@RefreshViolations" />
         }
     </MudCardContent>
     <MudCardActions>
@@ -153,16 +153,9 @@
         _ => throw new System.Diagnostics.UnreachableException()
     };
 
-    private async Task RefreshViolations()
+    private void RefreshViolations(ReportDetail reportDetail)
     {
-        var reportDetail = await Context.Reports.GetDetails(Report.Id, Context);
-        var activity = await Context.Activities.Include(x => ((HuntedActivity)x).GameManagementArea).Include(x => x.Mortality).Include(x => x.Violations).SingleAsync(x => x.Id == ActivityViewModel.Activity.Id);
-        ActivityViewModel viewModel = ActivityViewModel switch
-        {
-            HuntedActivityViewModel => new HuntedActivityViewModel((HuntedActivity)activity, reportDetail),
-            TrappedActivityViewModel => new TrappedActivityViewModel((TrappedActivity)activity, reportDetail),
-            _ => throw new System.Diagnostics.UnreachableException()
-        };
-        ActivityViewModel = viewModel;
+        if (ActivityViewModel.Activity?.Id == null) { return; }
+        ActivityViewModel = ActivityViewModel.Create(ActivityViewModel.Activity.Id, reportDetail);
     }
 }

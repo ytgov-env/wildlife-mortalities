@@ -56,6 +56,19 @@ public abstract class ActivityViewModel
         };
     }
 
+    public static ActivityViewModel Create(int activityId, ReportDetail reportDetail)
+    {
+        var activity = reportDetail.Report.GetActivities().First(x => x.Id == activityId);
+        return activity switch
+        {
+            HuntedActivity huntedActivity
+                => new HuntedActivityViewModel(huntedActivity, reportDetail),
+            TrappedActivity trappedActivity
+                => new TrappedActivityViewModel(trappedActivity, reportDetail),
+            _ => throw new System.Diagnostics.UnreachableException()
+        };
+    }
+
     public bool IsCompleted { get; set; }
     public string Comment { get; set; } = string.Empty;
 
