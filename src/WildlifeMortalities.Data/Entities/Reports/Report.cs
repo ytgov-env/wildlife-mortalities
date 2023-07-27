@@ -9,28 +9,8 @@ using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.Data.Entities.Reports;
 
-[Flags]
-public enum ReportStatus
-{
-    None = 0,
-    BioMissing = 1,
-    Violation = 2,
-    Done = 4
-}
-
 public abstract class Report
 {
-    // Todo: Implement report status
-    //public ReportStatus Status { get; set; }
-
-    //public bool IsDone() => HasStatusFlag(ReportStatus.Done);
-
-    //public bool HasStatusFlag(ReportStatus flag) => (Status & flag) == flag;
-
-    //public void RemoveStatusFlag(ReportStatus flag) => Status &= ~flag;
-
-    //public void AddStatusFlag(ReportStatus flag) => Status |= flag;
-
     public int Id { get; set; }
     public string Discriminator { get; set; } = null!;
     public string HumanReadableId { get; set; } = string.Empty;
