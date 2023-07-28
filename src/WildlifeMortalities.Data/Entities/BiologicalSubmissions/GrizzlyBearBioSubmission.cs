@@ -24,6 +24,9 @@ public class GrizzlyBearBioSubmission : BioSubmission<GrizzlyBearMortality>
     [Column($"{nameof(GrizzlyBearBioSubmission)}_{nameof(SkullWidthMillimetres)}")]
     public int? SkullWidthMillimetres { get; set; }
 
+    [Column($"{nameof(GrizzlyBearBioSubmission)}_{nameof(IsToothExtracted)}")]
+    public bool? IsToothExtracted { get; set; }
+
     [IsRequiredOrganicMaterialForBioSubmission("Evidence of sex is attached")]
     [Column($"{nameof(GrizzlyBearBioSubmission)}_{nameof(IsEvidenceOfSexAttached)}")]
     public bool? IsEvidenceOfSexAttached { get; set; }

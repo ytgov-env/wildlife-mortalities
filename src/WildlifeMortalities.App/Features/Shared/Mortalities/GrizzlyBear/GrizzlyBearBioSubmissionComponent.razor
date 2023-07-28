@@ -18,6 +18,8 @@
     <MudNumericField Label="Skull width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm" @bind-Value="BioSubmission.SkullWidthMillimetres"
         For="() => BioSubmission.SkullWidthMillimetres" Disabled="IsReadOnly" HideSpinButtons="IsReadOnly" />
 }
+<MudCheckBox Label="Tooth extracted?" @bind-Checked="BioSubmission.IsToothExtracted" For="() => BioSubmission.IsToothExtracted" Disabled="IsReadOnly" />
+
 
 @code {
 
@@ -33,6 +35,7 @@
         public GrizzlyBearBioSubmissionValidator()
         {
             RuleFor(x => x.SkullCondition).NotEmpty().IsInEnum();
+            RuleFor(x => x.IsToothExtracted).NotNull();
             When(x => x.SkullCondition != null && x.SkullCondition != GrizzlyBearSkullCondition.Destroyed, () =>
             {
                 RuleFor(x => x.SkullLengthMillimetres)

@@ -89,4 +89,7 @@
 
     <MudTextField Label="Plug number" @bind-Value="BioSubmission.PlugNumber" For="() => BioSubmission.PlugNumber" Disabled="IsReadOnly"
               Mask="@(new PatternMask("B0000"))" Placeholder="B" />
+
+    <MudCheckBox Label="Pictures taken?" @bind-Checked="BioSubmission.IsPicturesTaken" For="() => BioSubmission.IsPicturesTaken" Disabled="IsReadOnly" />
+    <MudCheckBox Label="DNA sample extracted?" @bind-Checked="BioSubmission.IsDnaSampleExtracted" For="() => BioSubmission.IsDnaSampleExtracted" Disabled="IsReadOnly" />
 }

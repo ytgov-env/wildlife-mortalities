@@ -123,6 +123,8 @@ public class ThinhornSheepBioSubmissionValidator
     public ThinhornSheepBioSubmissionValidator()
     {
         RuleFor(x => x.IsBothEyeSocketsComplete).NotNull();
+        RuleFor(x => x.IsPicturesTaken).NotNull();
+        RuleFor(x => x.IsDnaSampleExtracted).NotNull();
         RuleFor(x => x.HornMeasured).NotEmpty().IsInEnum();
         When(
             x => x.HornMeasured != null,

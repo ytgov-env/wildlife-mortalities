@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildlifeMortalities.Data;
 
@@ -11,9 +12,11 @@ using WildlifeMortalities.Data;
 namespace WildlifeMortalities.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230727224148_AddBoolPropertiesForSheepPicturesAndDnaSample")]
+    partial class AddBoolPropertiesForSheepPicturesAndDnaSample
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1007,10 +1010,6 @@ namespace WildlifeMortalities.Data.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("AmericanBlackBearBioSubmission_IsSkullProvided");
 
-                    b.Property<bool?>("IsToothExtracted")
-                        .HasColumnType("bit")
-                        .HasColumnName("AmericanBlackBearBioSubmission_IsToothExtracted");
-
                     b.Property<int>("MortalityId")
                         .HasColumnType("int")
                         .HasColumnName("AmericanBlackBearBioSubmission_MortalityId");
@@ -1193,10 +1192,6 @@ namespace WildlifeMortalities.Data.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("GrizzlyBearBioSubmission_IsSkullProvided");
 
-                    b.Property<bool?>("IsToothExtracted")
-                        .HasColumnType("bit")
-                        .HasColumnName("GrizzlyBearBioSubmission_IsToothExtracted");
-
                     b.Property<int>("MortalityId")
                         .HasColumnType("int")
                         .HasColumnName("GrizzlyBearBioSubmission_MortalityId");
@@ -1347,9 +1342,9 @@ namespace WildlifeMortalities.Data.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("ThinhornSheepBioSubmission_IsBothEyeSocketsComplete");
 
-                    b.Property<bool?>("IsDnaSampleExtracted")
+                    b.Property<bool?>("IsDnaSampleTaken")
                         .HasColumnType("bit")
-                        .HasColumnName("ThinhornSheepBioSubmission_IsDnaSampleExtracted");
+                        .HasColumnName("ThinhornSheepBioSubmission_IsDnaSampleTaken");
 
                     b.Property<bool?>("IsFullCurl")
                         .HasColumnType("bit")

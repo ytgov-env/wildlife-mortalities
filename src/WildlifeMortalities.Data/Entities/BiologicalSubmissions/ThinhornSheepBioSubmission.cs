@@ -54,6 +54,12 @@ public class ThinhornSheepBioSubmission : BioSubmission<ThinhornSheepMortality>
     [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsBothEyeSocketsComplete)}")]
     public bool? IsBothEyeSocketsComplete { get; set; }
 
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsPicturesTaken)}")]
+    public bool? IsPicturesTaken { get; set; }
+
+    [Column($"{nameof(ThinhornSheepBioSubmission)}_{nameof(IsDnaSampleExtracted)}")]
+    public bool? IsDnaSampleExtracted { get; set; }
+
     public List<ThinhornSheepHornMeasurementEntry> HornMeasurementEntries { get; set; } = null!;
 
     public override bool CanBeAnalysed => true;

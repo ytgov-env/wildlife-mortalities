@@ -24,6 +24,9 @@ public class AmericanBlackBearBioSubmission : BioSubmission<AmericanBlackBearMor
     [Column($"{nameof(AmericanBlackBearBioSubmission)}_{nameof(SkullWidthMillimetres)}")]
     public int? SkullWidthMillimetres { get; set; }
 
+    [Column($"{nameof(AmericanBlackBearBioSubmission)}_{nameof(IsToothExtracted)}")]
+    public bool? IsToothExtracted { get; set; }
+
     [IsRequiredOrganicMaterialForBioSubmission("Skull")]
     [IsPrerequisiteOrganicMaterialForBioSubmissionAnalysis]
     [Column($"{nameof(AmericanBlackBearBioSubmission)}_{nameof(IsSkullProvided)}")]
