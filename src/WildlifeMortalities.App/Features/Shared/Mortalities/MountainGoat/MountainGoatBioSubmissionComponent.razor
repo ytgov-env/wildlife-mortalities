@@ -60,12 +60,6 @@
             }
         </MudList>
     }
-
-    @if (BioSubmission.HornMeasurementEntries.Count >= 3)
-    {
-        <MudNumericField Label="Length to third annulus (short side)" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
-        @bind-Value="BioSubmission.HornLengthToThirdAnnulusOnShorterHornMillimetres" For="() => BioSubmission.HornLengthToThirdAnnulusOnShorterHornMillimetres" Disabled="IsReadOnly" />
-    }
 }
 
 
