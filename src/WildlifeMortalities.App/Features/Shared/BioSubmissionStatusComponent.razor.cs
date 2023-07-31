@@ -21,9 +21,11 @@ namespace WildlifeMortalities.App.Features.Shared
 
         protected override async Task OnInitializedAsync()
         {
+            using var context = GetContext();
+
             _isLoading = true;
-            var activityIds = await Context.Reports.GetActivityIds(ReportId);
-            var mortalities = await Context.Mortalities
+            var activityIds = await context.Reports.GetActivityIds(ReportId);
+            var mortalities = await context.Mortalities
                 .Where(x => activityIds.Contains(x.ActivityId))
                 .ToArrayAsync();
             foreach (
@@ -33,7 +35,7 @@ namespace WildlifeMortalities.App.Features.Shared
             )
             {
                 var bioSubmission =
-                    await Context.BioSubmissions.GetBioSubmissionFromMortality(mortality)
+                    await context.BioSubmissions.GetBioSubmissionFromMortality(mortality)
                     ?? throw new Exception(
                         "Expected mortality to have bio submission, but no bio submission found."
                     );
@@ -49,7 +51,6 @@ namespace WildlifeMortalities.App.Features.Shared
             }
 
             _isLoading = false;
-            Dispose();
         }
 
         private static BioSubmissionRequiredOrganicMaterialsStatus GetRequiredOrganicMaterialsStatus(

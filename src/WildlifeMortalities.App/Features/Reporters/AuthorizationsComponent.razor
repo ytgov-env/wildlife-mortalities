@@ -223,12 +223,13 @@
     protected override async Task OnParametersSetAsync()
     {
         _isLoading = true;
+        using var context = GetContext();
 
         cancellationTokenSource.Cancel();
         await _semaphoreSlim.WaitAsync();
         cancellationTokenSource = new();
         var cancellationToken = cancellationTokenSource.Token;
-        var authorizations = await Context.Authorizations.Where(a => a.PersonId == PersonId)
+        var authorizations = await context.Authorizations.Where(a => a.PersonId == PersonId)
         .Include(x => ((BigGameHuntingLicence)x).OutfitterAreas)
         .Include(x => ((TrappingLicence)x).RegisteredTrappingConcession)
         .Include(x => ((SpecialGuideLicence)x).GuidedClient)
@@ -242,7 +243,7 @@
         cancellationTokenSource = new();
         cancellationToken = cancellationTokenSource.Token;
         //Todo: Display invalid authorizations that don't have a season
-        var invalidAuthorizations = await Context.InvalidAuthorizations.Where(a => a.PersonId == PersonId)
+        var invalidAuthorizations = await context.InvalidAuthorizations.Where(a => a.PersonId == PersonId)
         .Include(x => x.Season)
         .ToArrayAsync(cancellationToken);
         _authorizationsViewModel.InvalidAuthorizations = invalidAuthorizations;

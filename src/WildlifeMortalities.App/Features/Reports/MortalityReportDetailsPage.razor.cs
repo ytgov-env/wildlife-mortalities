@@ -26,9 +26,10 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
 
     protected override async Task OnInitializedAsync()
     {
-        _reportDetail = await Context.Reports.GetDetails(ReportId, Context);
+        using var context = GetContext();
+        _reportDetail = await context.Reports.GetDetails(ReportId, context);
         _isLoading = false;
-        Client = await Context.People
+        Client = await context.People
             .OfType<Client>()
             .SingleOrDefaultAsync(x => x.EnvPersonId == HumanReadablePersonId);
     }

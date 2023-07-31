@@ -86,7 +86,8 @@ public partial class ReportsTableComponent : DbContextAwareComponent
             Options.FilterValue = searchTerm;
         }
 
-        var context = Context;
+        using var context = GetContext();
+
         var query = ReportService.SortFilterPage(Options, context);
 
         var preResult = await query;

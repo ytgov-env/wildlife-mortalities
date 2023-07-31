@@ -7,7 +7,7 @@ using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.App.Features.Reporters;
 
-public partial class ConservationOfficerOverviewPage : DbContextAwareComponent
+public partial class ConservationOfficerOverviewPage : DbContextAwareComponent, IDisposable
 {
     private EditContext _context = default!;
 
@@ -26,8 +26,10 @@ public partial class ConservationOfficerOverviewPage : DbContextAwareComponent
     {
         if (BadgeNumber != null)
         {
+            using var context = GetContext();
+
             _selectedConservationOfficerViewModel.SelectedConservationOfficer ??=
-                await Context.People
+                await context.People
                     .OfType<ConservationOfficer>()
                     .Where(c => c.BadgeNumber.StartsWith(BadgeNumber))
                     .FirstOrDefaultAsync();
@@ -61,18 +63,21 @@ public partial class ConservationOfficerOverviewPage : DbContextAwareComponent
 
     private async Task<
         IEnumerable<ConservationOfficer>
-    > SearchConservationOfficerByBadgeNumberOrLastName(string searchTerm) =>
-        await Context.People
+    > SearchConservationOfficerByBadgeNumberOrLastName(string searchTerm)
+    {
+        using var context = GetContext();
+
+        return await context.People
             .OfType<ConservationOfficer>()
             .SearchByBadgeNumberOrLastName(searchTerm)
             .ToArrayAsync();
+    }
 
-    protected override void Dispose(bool disposing)
+    public void Dispose()
     {
         if (_context is not null)
         {
             _context.OnFieldChanged -= Context_OnFieldChanged;
         }
-        base.Dispose(disposing);
     }
 }

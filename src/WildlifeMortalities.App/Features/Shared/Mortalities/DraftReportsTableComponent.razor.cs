@@ -18,16 +18,18 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
 
     protected override async Task OnParametersSetAsync()
     {
+        using var context = GetContext();
+
         if (EnvClientId != null)
         {
-            var client = await Context.People
+            var client = await context.People
                 .OfType<Client>()
                 .FirstOrDefaultAsync(x => x.EnvPersonId == EnvClientId);
             if (client == null)
             {
                 throw new ArgumentException($"Client {EnvClientId} not found.", nameof(client));
             }
-            DraftReports = await Context.DraftReports
+            DraftReports = await context.DraftReports
                 .Where(x => x.PersonId == client.Id)
                 .Select(
                     x =>
@@ -45,7 +47,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
         }
         else
         {
-            DraftReports = await Context.DraftReports
+            DraftReports = await context.DraftReports
                 .Select(
                     x =>
                         new DraftReportDto()

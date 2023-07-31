@@ -25,11 +25,10 @@
     public int ReportId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        var activityIds = await Context.Reports.GetActivityIds(ReportId);
-        Violations = await Context.Violations.Where(x => activityIds.Contains(x.Activity.Id)).ToArrayAsync();
+        using var context = GetContext();
+        var activityIds = await context.Reports.GetActivityIds(ReportId);
+        Violations = await context.Violations.Where(x => activityIds.Contains(x.Activity.Id)).ToArrayAsync();
         _illegalViolations = Violations.Count(x => x.Severity == Violation.SeverityType.Illegal);
         _potentiallyIllegalViolations = Violations.Count(x => x.Severity == Violation.SeverityType.PotentiallyIllegal);
-
-        base.Dispose();
     }
 }

@@ -86,11 +86,15 @@ namespace WildlifeMortalities.App.Features.Reports
 
         private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(
             string searchTerm
-        ) =>
-            await Context.People
+        )
+        {
+            using var context = GetContext();
+
+            return await context.People
                 .OfType<Client>()
                 .SearchByEnvClientIdOrLastName(searchTerm)
                 .ToArrayAsync();
+        }
 
         private async Task<IEnumerable<OutfitterArea>> SearchOutfitterAreas(string input)
         {

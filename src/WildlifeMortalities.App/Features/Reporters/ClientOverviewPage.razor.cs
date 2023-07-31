@@ -7,7 +7,7 @@ using WildlifeMortalities.Data.Entities.People;
 
 namespace WildlifeMortalities.App.Features.Reporters;
 
-public partial class ClientOverviewPage : DbContextAwareComponent
+public partial class ClientOverviewPage : DbContextAwareComponent, IDisposable
 {
     private EditContext _editContext = default!;
 
@@ -26,7 +26,9 @@ public partial class ClientOverviewPage : DbContextAwareComponent
     {
         if (EnvClientId != null)
         {
-            _selectedClientViewModel.SelectedClient ??= await Context.People
+            using var context = GetContext();
+
+            _selectedClientViewModel.SelectedClient ??= await context.People
                 .OfType<Client>()
                 .Where(c => c.EnvPersonId.StartsWith(EnvClientId))
                 .FirstOrDefaultAsync();
@@ -58,20 +60,21 @@ public partial class ClientOverviewPage : DbContextAwareComponent
         EnvClientId = _selectedClientViewModel.SelectedClient.EnvPersonId;
     }
 
-    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(
-        string searchTerm
-    ) =>
-        await Context.People
+    private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(string searchTerm)
+    {
+        using var context = GetContext();
+
+        return await context.People
             .OfType<Client>()
             .SearchByEnvClientIdOrLastName(searchTerm)
             .ToArrayAsync();
+    }
 
-    protected override void Dispose(bool disposing)
+    public void Dispose()
     {
         if (_editContext is not null)
         {
             _editContext.OnFieldChanged -= Context_OnFieldChanged;
         }
-        base.Dispose(disposing);
     }
 }

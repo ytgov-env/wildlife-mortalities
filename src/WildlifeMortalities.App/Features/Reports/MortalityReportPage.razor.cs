@@ -65,13 +65,15 @@ public partial class MortalityReportPage : DbContextAwareComponent
 
     protected override async Task OnInitializedAsync()
     {
-        _personId = await Context.People
+        using var context = GetContext();
+
+        _personId = await context.People
             .OfType<Client>()
             .Where(c => c.EnvPersonId == HumanReadablePersonId)
             .Select(x => x.Id)
             .SingleOrDefaultAsync();
 
-        _personId ??= await Context.People
+        _personId ??= await context.People
             .OfType<ConservationOfficer>()
             .Where(c => c.BadgeNumber == HumanReadablePersonId)
             .Select(x => x.Id)
@@ -79,7 +81,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
 
         if (DraftId != null)
         {
-            var draft = await Context.DraftReports.FirstOrDefaultAsync(x => x.Id == DraftId.Value);
+            var draft = await context.DraftReports.FirstOrDefaultAsync(x => x.Id == DraftId.Value);
             if (draft == null)
             {
                 return;
@@ -90,7 +92,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
         }
         else if (ReportId != null)
         {
-            var report = await Context.Reports
+            var report = await context.Reports
                 .WithEntireGraph()
                 .FirstOrDefaultAsync(x => x.Id == ReportId.Value);
             if (report == null)
