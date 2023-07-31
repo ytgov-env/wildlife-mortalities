@@ -1,4 +1,5 @@
-﻿using WildlifeMortalities.Data;
+﻿using System.Text.Json;
+using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Seasons;
 using Constants = WildlifeMortalities.Shared.Constants;
@@ -45,12 +46,12 @@ public static class Seeder
                 new AppConfiguration()
                 {
                     Key = Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
-                    Value = new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero).ToString()
+                    Value = JsonSerializer.Serialize(new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero))
                 },
                 new AppConfiguration()
                 {
                     Key = Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
-                    Value = new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero).ToString()
+                    Value = JsonSerializer.Serialize(new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero))
                 });
             context.SaveChanges();
             Console.WriteLine("Added posse sync k/v pairs");

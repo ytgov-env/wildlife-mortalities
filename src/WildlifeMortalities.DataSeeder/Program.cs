@@ -7,5 +7,3 @@ using var context = new AppDbContext();
 await Seeder.Seed(context);
 Console.WriteLine("---------------------");
 Console.WriteLine("Data seeding complete");
-
-
