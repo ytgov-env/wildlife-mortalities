@@ -6,7 +6,6 @@ using MudBlazor;
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Shared.Services;
 using WildlifeMortalities.Shared.Services.Reports.Single;
 

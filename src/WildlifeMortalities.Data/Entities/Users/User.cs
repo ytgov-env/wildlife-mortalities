@@ -16,6 +16,8 @@ public class User
     public UserSettings Settings { get; set; } = null!;
     public List<Report> CreatedReports { get; set; } = null!;
     public List<Report> ModifiedReports { get; set; } = null!;
+
+    public List<Permission> Permissions { get; set; } = null!;
 }
 
 public class UserConfig : IEntityTypeConfiguration<User>

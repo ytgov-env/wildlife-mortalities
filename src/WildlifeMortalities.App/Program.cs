@@ -1,9 +1,11 @@
+﻿using Microsoft.AspNetCore.Authentication;
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using MudBlazor.Services;
 using Serilog.Events;
+using WildlifeMortalities.App;
 using WildlifeMortalities.App.Features.Auth;
 using WildlifeMortalities.App.HostedServices;
 using WildlifeMortalities.Data;
@@ -52,6 +54,7 @@ try
     builder.Services.AddScoped<PdfService>();
     builder.Services.AddScoped<ReportService>();
     builder.Services.AddSingleton<IAppConfigurationService, AppConfigurationService>();
+    builder.Services.AddScoped<IClaimsTransformation, AddRoleClaimsTransformation>();
 
     // Add authentication services
     var isAuthConfigurationMissingValues = configuration

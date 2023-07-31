@@ -41,6 +41,19 @@ namespace WildlifeMortalities.App.Pages
             var user = await _context.Users.FirstOrDefaultAsync(
                 x => x.NameIdentifier == nameIdentifier
             );
+
+            if (user == null)
+            {
+                user = await _context.Users.FirstOrDefaultAsync(
+                    x => x.EmailAddress == email && string.IsNullOrWhiteSpace(x.NameIdentifier)
+                );
+                if (user != null)
+                {
+                    user.NameIdentifier = nameIdentifier;
+                    user.Settings = UserSettings.Default;
+                }
+            }
+
             if (user == null)
             {
                 user = new User
@@ -62,6 +75,7 @@ namespace WildlifeMortalities.App.Pages
                 user.FullName = User.GetFullName();
                 user.EmailAddress = email;
             }
+
             await _context.SaveChangesAsync();
 
             AppParameters = new AppParameters
