@@ -13,6 +13,21 @@ public abstract class TimerBasedHostedService : IHostedService
         _period = period;
     }
 
+    protected TimerBasedHostedService(TimeOnly startTime, TimeSpan period)
+    {
+        var timeNow = TimeOnly.FromDateTime(DateTime.Now);
+        if (startTime >= timeNow)
+        {
+            _dueTime = startTime - TimeOnly.FromDateTime(DateTime.Now);
+        }
+        else
+        {
+            _dueTime = DateTime.Now.AddDays(1).Date.Add(startTime.ToTimeSpan()) - DateTime.Now;
+        }
+
+        _period = period;
+    }
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _timer = new Timer(DoWorkInternal, null, _dueTime, _period);

@@ -50,6 +50,7 @@ try
         client.BaseAddress = new Uri(configuration["Posse:ClientService:BaseAddress"]!);
         client.DefaultRequestHeaders.Add("api_key", configuration["Posse:ClientService:ApiKey"]);
     });
+    builder.Services.AddHostedService<PeriodicRuleService>();
     builder.Services.AddScoped<IMortalityService, MortalityService>();
     builder.Services.AddScoped<PdfService>();
     builder.Services.AddScoped<ReportService>();
