@@ -204,8 +204,9 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
     protected MortalityViewModelBaseValidator()
     {
         RuleFor(m => m.Latitude)
-            .Must(latitude => latitude is null or > 58 and < 71)
+            .Must(latitude => latitude is null or >= 58 and <= 71)
             .WithMessage("Latitude must be between 58 and 71");
+        //RuleFor(m => m.Latitude).PrecisionScale(5, 3, true).When(x => x.Latitude is not null);
         RuleFor(m => m.Latitude)
             .Null()
             .When(m => m.Longitude is null)
@@ -216,8 +217,10 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
             .WithMessage("Latitude must be set if longitude is set.");
 
         RuleFor(m => m.Longitude)
-            .Must(longitude => longitude is null or > -143 and < -121)
+            .Must(longitude => longitude is null or >= -143 and <= -121)
             .WithMessage("Longitude must be between -121 and -143");
+        //RuleFor(m => m.Longitude).PrecisionScale(6, 3, true).When(x => x.Longitude is not null);
+
         RuleFor(m => m.Longitude)
             .Null()
             .When(m => m.Latitude is null)
