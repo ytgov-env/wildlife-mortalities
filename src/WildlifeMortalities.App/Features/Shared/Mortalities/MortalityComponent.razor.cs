@@ -10,6 +10,9 @@ public partial class MortalityComponent
     [CascadingParameter(Name = Constants.CascadingValues.ReportType)]
     public ReportType ReportType { get; set; }
 
+    [CascadingParameter(Name = Constants.CascadingValues.ReportViewModel)]
+    public MortalityReportViewModel Report { get; set; } = null!;
+
     [Parameter]
     public bool DisableSpeciesSelection { get; set; }
 

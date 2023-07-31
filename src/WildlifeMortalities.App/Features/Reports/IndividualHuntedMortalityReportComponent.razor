@@ -1,6 +1,8 @@
 @using WildlifeMortalities.App.Features.Reports.Activities
 
-<ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel"/>
+<CascadingValue Name="@Constants.CascadingValues.ReportViewModel" Value="ViewModel">
+    <ActivityComponent ViewModel="ViewModel.HuntedActivityViewModel"/>
+</CascadingValue>
 
 @code {
 
