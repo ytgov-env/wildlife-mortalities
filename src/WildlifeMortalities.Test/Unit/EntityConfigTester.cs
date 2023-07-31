@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
+using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Test.Helpers;
 
@@ -33,7 +34,11 @@ public class EntityConfigTester
             (nameof(TrappingBagLimitEntry.SeasonId), typeof(TrappingBagLimitEntry))
         };
 
-        var excludedProperties = new[] { nameof(AmericanBlackBearBioSubmission.MortalityId) };
+        var excludedProperties = new[]
+        {
+            nameof(AmericanBlackBearBioSubmission.MortalityId),
+            nameof(HarvestActivity.HrbsNumber)
+        };
 
         var context = new AppDbContext();
 

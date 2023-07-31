@@ -45,7 +45,6 @@ public class IndividualHuntedMortalityReportViewModelValidator
     {
         RuleFor(x => x.HuntedActivityViewModel)
             .SetValidator(new HuntedActivityViewModelValidator());
-        // Todo: attach validation message
         RuleFor(x => x.DateSubmitted)
             .Must(
                 (model, dateSubmitted) =>

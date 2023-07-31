@@ -26,6 +26,12 @@ public abstract class Activity
 
 public class ActivityConfig : IEntityTypeConfiguration<Activity>
 {
-    public void Configure(EntityTypeBuilder<Activity> builder) =>
+    public void Configure(EntityTypeBuilder<Activity> builder)
+    {
         builder.ToTable(TableNameConstants.Activities);
+        builder
+            .HasMany(x => x.Violations)
+            .WithOne(x => x.Activity)
+            .HasForeignKey(x => x.ActivityId);
+    }
 }

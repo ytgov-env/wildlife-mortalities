@@ -87,6 +87,10 @@
                         <MudField DisableUnderLine="true" Label="Landmark">@vm.Landmark</MudField>
                     }
                     <MudField DisableUnderLine="true" Label="Game management area">@vm.GameManagementArea?.Area</MudField>
+                    @if (!string.IsNullOrWhiteSpace(vm.HrbsNumber))
+                    {
+                        <MudField DisableUnderLine="true" Label="HRBS number">@vm.HrbsNumber</MudField>
+                    }
                     break;
                 case TrappedActivityViewModel vm:
                     break;

@@ -22,6 +22,7 @@ public class HuntedActivityViewModel : ActivityViewModel
     public HuntedActivityViewModel(HuntedActivity activity, ReportDetail? reportDetail = null)
         : base(activity, reportDetail)
     {
+        HrbsNumber = activity.HrbsNumber;
         Landmark = activity.Landmark;
         Comment = activity.Comment;
         IsCompleted = true;
@@ -36,10 +37,12 @@ public class HuntedActivityViewModel : ActivityViewModel
     public HuntedActivityViewModel(HuntedActivityViewModel huntedActivityViewModel, Species species)
         : base(huntedActivityViewModel, species)
     {
+        HrbsNumber = huntedActivityViewModel.HrbsNumber;
         Landmark = huntedActivityViewModel.Landmark;
         GameManagementArea = huntedActivityViewModel.GameManagementArea;
     }
 
+    public string HrbsNumber { get; set; } = string.Empty;
     public string Landmark { get; set; } = string.Empty;
     public GameManagementArea? GameManagementArea { get; set; }
 
@@ -48,6 +51,7 @@ public class HuntedActivityViewModel : ActivityViewModel
         var activity = new HuntedActivity()
         {
             Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
+            HrbsNumber = HrbsNumber,
             Landmark = Landmark,
             GameManagementAreaId = GameManagementArea?.Id ?? 0,
             Comment = Comment,
@@ -87,6 +91,7 @@ public class HuntedActivityViewModelValidator : ActivityViewModelValidator<Hunte
 {
     public HuntedActivityViewModelValidator()
     {
+        RuleFor(x => x.HrbsNumber).NotEmpty().Length(5);
         RuleFor(x => x.Landmark).NotNull();
         RuleFor(x => x.GameManagementArea).NotNull();
     }

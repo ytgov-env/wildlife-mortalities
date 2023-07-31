@@ -37,6 +37,7 @@ public static class Constants
         public const string Reports = "Reports";
         public const string Seasons = "Seasons";
         public const string Users = "Users";
+        public const string Permissions = "Permissions";
         public const string Violations = "Violations";
     }
 
