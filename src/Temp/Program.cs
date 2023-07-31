@@ -39,16 +39,8 @@ foreach (var item in reports)
                 blackBearMortality.BioSubmission.RequiredOrganicMaterialsStatus =
                     BioSubmissionRequiredOrganicMaterialsStatus.Submitted;
 
-                if (blackBearMortality.BioSubmission.SkullCondition.HasValue)
-                {
-                    blackBearMortality.BioSubmission.AnalysisStatus =
-                        BioSubmissionAnalysisStatus.Complete;
-                }
-                else
-                {
-                    blackBearMortality.BioSubmission.AnalysisStatus =
-                        BioSubmissionAnalysisStatus.NotStarted;
-                }
+                blackBearMortality.BioSubmission.AnalysisStatus =
+                    BioSubmissionAnalysisStatus.NotStarted;
             }
             else
             {
@@ -67,17 +59,8 @@ foreach (var item in reports)
             {
                 grizzlyBearMortality.BioSubmission.RequiredOrganicMaterialsStatus =
                     BioSubmissionRequiredOrganicMaterialsStatus.Submitted;
-
-                if (grizzlyBearMortality.BioSubmission.SkullCondition.HasValue)
-                {
-                    grizzlyBearMortality.BioSubmission.AnalysisStatus =
-                        BioSubmissionAnalysisStatus.Complete;
-                }
-                else
-                {
-                    grizzlyBearMortality.BioSubmission.AnalysisStatus =
-                        BioSubmissionAnalysisStatus.NotStarted;
-                }
+                grizzlyBearMortality.BioSubmission.AnalysisStatus =
+                    BioSubmissionAnalysisStatus.NotStarted;
             }
             else if (
                 grizzlyBearMortality.BioSubmission.IsSkullProvided == true
