@@ -135,7 +135,6 @@ public class MortalityViewModel
         var result = Create(value, null, null);
         if (previous != null)
         {
-            result.Id = previous.Id;
             result.DateOfDeath = previous.DateOfDeath;
             result.Latitude = previous.Latitude;
             result.Longitude = previous.Longitude;
