@@ -7,7 +7,7 @@ namespace WildlifeMortalities.Data.Entities.Seasons;
 
 public class HuntingSeason : Season
 {
-    private HuntingSeason() { }
+    public HuntingSeason() { }
 
     public HuntingSeason(int startYear)
     {

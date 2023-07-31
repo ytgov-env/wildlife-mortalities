@@ -6,14 +6,17 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Users;
 using System.ComponentModel.DataAnnotations.Schema;
 using WildlifeMortalities.Data.Entities.People;
+using System.Text.Json.Serialization;
 
 namespace WildlifeMortalities.Data.Entities.Reports;
 
+[JsonDerivedType(typeof(IndividualHuntedMortalityReport), 1)]
 public abstract class Report
 {
     public int Id { get; set; }
     public string Discriminator { get; set; } = null!;
     public string HumanReadableId { get; set; } = string.Empty;
+    public int SeasonId { get; set; }
     public Season Season { get; set; } = null!;
     public DateTimeOffset DateSubmitted { get; set; }
 

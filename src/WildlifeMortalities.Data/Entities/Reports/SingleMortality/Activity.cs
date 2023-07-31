@@ -7,6 +7,7 @@ using static WildlifeMortalities.Data.Constants;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
+[JsonDerivedType(typeof(HuntedActivity), 1)]
 public abstract class Activity
 {
     public int Id { get; set; }

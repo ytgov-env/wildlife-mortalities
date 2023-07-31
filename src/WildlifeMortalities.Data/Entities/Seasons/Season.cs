@@ -4,9 +4,12 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Authorizations;
 using static WildlifeMortalities.Data.Constants;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using System.Text.Json.Serialization;
+using WildlifeMortalities.Data.Entities.Seasons;
 
 namespace WildlifeMortalities.Data.Entities;
 
+[JsonDerivedType(typeof(HuntingSeason), 1)]
 public abstract class Season
 {
     public int Id { get; set; }

@@ -11,12 +11,8 @@ namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 public abstract class BioSubmission
 {
     public int Id { get; set; }
-    public BioSubmissionRequiredOrganicMaterialsStatus RequiredOrganicMaterialsStatus
-    {
-        get;
-        protected set;
-    }
-    public BioSubmissionAnalysisStatus AnalysisStatus { get; protected set; }
+    public BioSubmissionRequiredOrganicMaterialsStatus RequiredOrganicMaterialsStatus { get; set; }
+    public BioSubmissionAnalysisStatus AnalysisStatus { get; set; }
     public DateTimeOffset? DateSubmitted { get; set; }
     public DateTimeOffset? DateModified { get; set; }
     public string Comment { get; set; } = string.Empty;
