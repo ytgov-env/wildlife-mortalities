@@ -35,7 +35,7 @@ public class IndividualHuntedMortalityReportViewModel : MortalityReportViewModel
     internal override void SpeciesChanged(int id, Species species)
     {
         HuntedActivityViewModel = new HuntedActivityViewModel(HuntedActivityViewModel, species);
-}
+    }
 }
 
 public class IndividualHuntedMortalityReportViewModelValidator

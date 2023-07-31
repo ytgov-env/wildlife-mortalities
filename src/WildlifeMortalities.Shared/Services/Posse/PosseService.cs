@@ -448,10 +448,10 @@ public class PosseService : IPosseService
                                 if (person == null)
                                 {
                                     Log.Error(
-                                        "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}: {@authorization}",
+                                        "A {type} has an unrecognized guidedHunterEnvClientId {guidedHunterEnvClientId}: {posseId}",
                                         posseAuthorization.Type,
                                         posseAuthorization.SpecialGuideLicenceGuidedHunterEnvClientId,
-                                        authorization
+                                        authorization.PosseId
                                     );
                                     return (
                                         false,
@@ -483,11 +483,11 @@ public class PosseService : IPosseService
                                 if (item == null)
                                 {
                                     Log.Error(
-                                        "An authorization of type {type} has an unrecognized {property} value of {unrecognizedValue}: {@authorization}",
+                                        "An authorization of type {type} has an unrecognized {property} value of {unrecognizedValue}: {posseId}",
                                         posseAuthorization.Type,
                                         nameof(trappingLicence.RegisteredTrappingConcession),
                                         posseAuthorization.RegisteredTrappingConcession,
-                                        authorization
+                                        authorization.PosseId
                                     );
                                     return (
                                         false,
@@ -664,9 +664,9 @@ public class PosseService : IPosseService
         else
         {
             Log.Error(
-                "An authorization is associated with EnvClientId {EnvClientId}, which doesn't exist. The authorization was rejected: {@authorization}",
+                "An authorization is associated with EnvClientId {EnvClientId}, which doesn't exist. The authorization was rejected: {posseId}",
                 posseAuthorization.EnvClientId,
-                authorization
+                authorization.PosseId
             );
             return (false, string.Empty);
         }
