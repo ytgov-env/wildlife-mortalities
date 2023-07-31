@@ -27,20 +27,23 @@ public class Violation
     }
 
     public int Id { get; set; }
+    public int ActivityId { get; set; }
     public Activity Activity { get; set; } = null!;
     public RuleType Rule { get; init; }
     public SeverityType Severity { get; init; }
     public string Description { get; set; } = string.Empty;
 
-    // 0-99 Bag Limits
+    // 0-99 Harvest periods, bag limits & thresholds
     // 100-199 Authorizations
     // 200-299 Biological Submissions
     // 300-399 Late
     // 400-499 Other
     public enum RuleType
     {
-        BagLimitExceeded = 10,
-        KilledMoreThanOneGrizzlyBearInThreeYearSpan = 20,
+        HarvestPeriod = 10,
+        BagLimitExceeded = 20,
+        ThresholdExceeded = 30,
+        KilledMoreThanOneGrizzlyBearInThreeYearSpan = 40,
         Authorization = 100,
         NoValidBigGameHuntingLicence = 110,
         SpecialGuidedWithoutValidLicence = 120,
@@ -49,10 +52,9 @@ public class Violation
         SomeRequiredSamplesNotSubmitted = 210,
         SheepEyeSocketIncomplete = 220,
         SheepYoungerThan8AndNotFullCurl = 230,
-        BearCub = 240,
-        LateReport = 300,
-        LateBioSubmission = 310,
-        HarvestPeriod = 400,
+        KilledBearCub = 240,
+        LateHuntReport = 300,
+        LateBioSubmission = 310
     }
 
     public enum SeverityType

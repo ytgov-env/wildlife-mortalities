@@ -13,6 +13,9 @@ namespace WildlifeMortalities.Shared.Services.Rules;
 
 public class BagLimitRule : Rule
 {
+    public override IEnumerable<RuleType> ApplicableRuleTypes =>
+        new[] { RuleType.BagLimitExceeded, RuleType.HarvestPeriod };
+
     private static async Task<IList<BagEntry>> GetCurrentBagCount(
         AppDbContext context,
         Season season,
@@ -23,7 +26,11 @@ public class BagLimitRule : Rule
             .Include(x => x.BagLimitEntry)
             .ThenInclude(x => ((HuntingBagLimitEntry)x).Areas)
             .Include(x => x.BagLimitEntry)
+            .ThenInclude(x => ((HuntingBagLimitEntry)x).Season)
+            .Include(x => x.BagLimitEntry)
             .ThenInclude(x => ((TrappingBagLimitEntry)x).Concessions)
+            .Include(x => x.BagLimitEntry)
+            .ThenInclude(x => ((TrappingBagLimitEntry)x).Season)
             .Include(x => x.BagLimitEntry)
             .ThenInclude(x => x.ActivityQueue)
             .ThenInclude(x => x.Activity)

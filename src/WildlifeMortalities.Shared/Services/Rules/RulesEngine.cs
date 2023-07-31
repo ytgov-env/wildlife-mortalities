@@ -12,13 +12,16 @@ public static class RulesEngine
         new List<Rule>
         {
             new BagLimitRule(),
+            new ThresholdRule(),
             //new AuthorizationRule(),
             new LateHuntReportRule(),
             new LateBioSubmissionRule(),
             new MissingBioSubmissionRule(),
-            // Todo: need to run this rule when the bio submission is updated, not just when the report is updated
             new SheepBioSubmissionRule(),
             new BearBioSubmissionRule(),
             //new MaxOneGrizzlyBearEveryThreeYearsRule(),
         };
+
+    public static IEnumerable<Rule> PeriodicRules { get; } =
+        new List<Rule> { new LateHuntReportRule(), new LateBioSubmissionRule(), };
 }

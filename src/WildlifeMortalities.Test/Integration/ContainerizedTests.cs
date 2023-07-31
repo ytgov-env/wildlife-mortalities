@@ -15,6 +15,9 @@ using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
+using WildlifeMortalities.Data.Entities.Reports;
+using static WildlifeMortalities.Data.Entities.Violation;
+using WildlifeMortalities.Data.Entities;
 
 namespace WildlifeMortalities.Test.Integration;
 
@@ -443,9 +446,7 @@ public class ContainerizedTests : IAsyncLifetime
 
         _context.Violations
             .Should()
-            .ContainSingle(
-                x => x.Rule == Data.Entities.Violation.RuleType.AllRequiredSamplesNotSubmitted
-            );
+            .ContainSingle(x => x.Rule == RuleType.AllRequiredSamplesNotSubmitted);
 
         bioSubmission.IsIncisorBarProvided = true;
         bioSubmission.UpdateRequiredOrganicMaterialsStatus();
@@ -453,8 +454,208 @@ public class ContainerizedTests : IAsyncLifetime
 
         _context.Violations
             .Should()
-            .NotContain(
-                x => x.Rule == Data.Entities.Violation.RuleType.AllRequiredSamplesNotSubmitted
-            );
+            .NotContain(x => x.Rule == RuleType.AllRequiredSamplesNotSubmitted);
+    }
+
+    [Fact]
+    public async Task ThresholdRuleProcess_WithThreshold_And_ThresholdExceeded_GeneratesViolations()
+    {
+        var hunter = new Client
+        {
+            BirthDate = new DateTime(1990, 1, 1, 0, 0, 0),
+            FirstName = "Test",
+            LastName = "User",
+        };
+
+        await _context.People.AddAsync(hunter);
+        await _context.SaveChangesAsync();
+
+        var gma = await _context.GameManagementAreas.SingleAsync(x => x.Area == "2-59");
+
+        var activitiesBeforeThresholdMet = Enumerable
+            .Range(0, 5)
+            .Select(
+                _ =>
+                    new IndividualHuntedMortalityReport
+                    {
+                        Activity = new HuntedActivity()
+                        {
+                            Mortality = new MooseMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    10,
+                                    12,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Sex = Sex.Male
+                            },
+                            GameManagementAreaId = gma.Id
+                        },
+                        PersonId = hunter.Id,
+                    }
+            )
+            .ToList();
+
+        var activitiesOnDayThresholdMet = Enumerable
+            .Range(0, 6)
+            .Select(
+                _ =>
+                    new IndividualHuntedMortalityReport
+                    {
+                        Activity = new HuntedActivity()
+                        {
+                            Mortality = new MooseMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    10,
+                                    13,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Sex = Sex.Male
+                            },
+                            GameManagementAreaId = gma.Id
+                        },
+                        PersonId = hunter.Id,
+                    }
+            )
+            .ToList();
+
+        var activitiesTwoDaysAfterThresholdMet = Enumerable
+            .Range(0, 3)
+            .Select(
+                _ =>
+                    new IndividualHuntedMortalityReport
+                    {
+                        Activity = new HuntedActivity()
+                        {
+                            Mortality = new MooseMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    10,
+                                    15,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Sex = Sex.Male
+                            },
+                            GameManagementAreaId = gma.Id
+                        },
+                        PersonId = hunter.Id,
+                    }
+            )
+            .ToList();
+
+        var activitiesThreeDaysAfterThresholdMet = Enumerable
+            .Range(0, 2)
+            .Select(
+                _ =>
+                    new IndividualHuntedMortalityReport
+                    {
+                        Activity = new HuntedActivity()
+                        {
+                            Mortality = new MooseMortality()
+                            {
+                                DateOfDeath = new DateTimeOffset(
+                                    2023,
+                                    10,
+                                    16,
+                                    0,
+                                    0,
+                                    0,
+                                    TimeSpan.FromHours(-7)
+                                ),
+                                Sex = Sex.Male
+                            },
+                            GameManagementAreaId = gma.Id
+                        },
+                        PersonId = hunter.Id,
+                    }
+            )
+            .ToList();
+
+        foreach (
+            var item in activitiesBeforeThresholdMet
+                .Union(activitiesThreeDaysAfterThresholdMet)
+                .Union(activitiesOnDayThresholdMet)
+                .Union(activitiesTwoDaysAfterThresholdMet)
+        )
+        {
+            var contextFactory = new Mock<IDbContextFactory<AppDbContext>>();
+            contextFactory
+                .Setup(contextFactory => contextFactory.CreateDbContext())
+                .Returns(GetContext);
+            var service = new MortalityService(contextFactory.Object);
+
+            await service.CreateReport(item, _seedUser.Id);
+        }
+
+        foreach (var item in activitiesBeforeThresholdMet)
+        {
+            _context.Violations
+                .Where(
+                    x => x.Activity.Id == item.Activity.Id && x.Rule == RuleType.ThresholdExceeded
+                )
+                .Should()
+                .BeEmpty();
+        }
+
+        foreach (
+            var item in activitiesOnDayThresholdMet
+                .Union(activitiesTwoDaysAfterThresholdMet)
+                .ToList()
+        )
+        {
+            var violations = await _context.Violations
+                .Where(
+                    x => x.Activity.Id == item.Activity.Id && x.Rule == RuleType.ThresholdExceeded
+                )
+                .ToListAsync();
+
+            violations.Should().ContainSingle();
+
+            var violation = violations[0];
+
+            violation.Rule.Should().Be(RuleType.ThresholdExceeded);
+            violation.Severity.Should().Be(SeverityType.PotentiallyIllegal);
+            violation.ActivityId.Should().Be(item.Activity.Id);
+            violation.Description
+                .Should()
+                .Be(
+                    "Threshold exceeded for moose in 2-56, 2-58, 2-59, 2-62, 2-63, 4-04, 4-05, 4-06. Threshold of 11 was reached on 2023-10-13."
+                );
+        }
+
+        foreach (var item in activitiesThreeDaysAfterThresholdMet)
+        {
+            var violations = await _context.Violations
+                .Where(
+                    x => x.Activity.Id == item.Activity.Id && x.Rule == RuleType.ThresholdExceeded
+                )
+                .ToListAsync();
+
+            violations.Should().ContainSingle();
+
+            var violation = violations[0];
+
+            violation.Rule.Should().Be(RuleType.ThresholdExceeded);
+            violation.Severity.Should().Be(SeverityType.Illegal);
+            violation.ActivityId.Should().Be(item.Activity.Id);
+            violation.Description
+                .Should()
+                .Be(
+                    "Threshold exceeded for moose in 2-56, 2-58, 2-59, 2-62, 2-63, 4-04, 4-05, 4-06. Threshold of 11 was reached on 2023-10-13."
+                );
+        }
     }
 }

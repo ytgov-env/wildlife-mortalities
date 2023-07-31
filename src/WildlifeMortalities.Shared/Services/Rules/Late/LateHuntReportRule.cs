@@ -6,11 +6,14 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Data.Extensions;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Shared.Services.Rules.Late;
 
 internal class LateHuntReportRule : LateRule<HuntedActivity>
 {
+    public override IEnumerable<RuleType> ApplicableRuleTypes => new[] { RuleType.LateHuntReport };
+
     protected override async Task<DateTimeOffset?> GetDeadlineTimestamp(
         HuntedActivity activity,
         AppDbContext context
@@ -22,7 +25,6 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
             { Mortality.Species: Species.Moose }
             and { ActivityQueueItem.BagLimitEntry.IsThreshold: true }
                 => activity.GetTimestampAfterKill(72),
-            // Todo: test null activity queue item
             { Mortality.Species: Species.Moose }
             and (
                 { ActivityQueueItem: null }
@@ -79,9 +81,9 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
     {
         return new Violation(
             activity,
-            Violation.RuleType.LateReport,
-            Violation.SeverityType.Illegal,
-            $"Report submitted after deadline for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
+            RuleType.LateHuntReport,
+            SeverityType.Illegal,
+            $"Report was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
         );
     }
 

@@ -5,11 +5,14 @@ using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 
 internal class BearBioSubmissionRule : Rule
 {
+    public override IEnumerable<RuleType> ApplicableRuleTypes => new[] { RuleType.KilledBearCub };
+
     public override async Task<RuleResult> Process(Report report, AppDbContext context)
     {
         if (report.GeneralizedReportType is not GeneralizedReportType.Hunted)
@@ -49,8 +52,8 @@ internal class BearBioSubmissionRule : Rule
                 violations.Add(
                     new Violation(
                         activity,
-                        Violation.RuleType.BearCub,
-                        Violation.SeverityType.Illegal,
+                        RuleType.KilledBearCub,
+                        SeverityType.Illegal,
                         $"{activity.Mortality.Species.GetDisplayName()} is less than 3 years old."
                     )
                 );

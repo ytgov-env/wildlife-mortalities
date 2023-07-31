@@ -4,11 +4,15 @@ using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Extensions;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 
 internal class MissingBioSubmissionRule : Rule
 {
+    public override IEnumerable<RuleType> ApplicableRuleTypes =>
+        new[] { RuleType.SomeRequiredSamplesNotSubmitted, RuleType.AllRequiredSamplesNotSubmitted };
+
     public override async Task<RuleResult> Process(Report report, AppDbContext context)
     {
         if (
@@ -57,8 +61,8 @@ internal class MissingBioSubmissionRule : Rule
                 violations.Add(
                     new Violation(
                         activity,
-                        Violation.RuleType.AllRequiredSamplesNotSubmitted,
-                        Violation.SeverityType.Illegal,
+                        RuleType.AllRequiredSamplesNotSubmitted,
+                        SeverityType.Illegal,
                         $"All of the required samples for {activity.Mortality.Species.GetDisplayName().ToLower()} were not submitted."
                     )
                 );
@@ -71,8 +75,8 @@ internal class MissingBioSubmissionRule : Rule
                 violations.Add(
                     new Violation(
                         activity,
-                        Violation.RuleType.SomeRequiredSamplesNotSubmitted,
-                        Violation.SeverityType.Illegal,
+                        RuleType.SomeRequiredSamplesNotSubmitted,
+                        SeverityType.Illegal,
                         $"Some of the required samples for {activity.Mortality.Species.GetDisplayName().ToLower()} were not submitted."
                     )
                 );

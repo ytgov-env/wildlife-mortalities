@@ -79,7 +79,7 @@ public class MortalityService : IMortalityService
         context.Add(report);
         await AddDefaultBioSubmissions(context, report);
 
-        await RulesSummary.Generate(report, context);
+        await RulesSummary.GenerateAll(report, context);
 
         await context.SaveChangesAsync();
     }
@@ -210,7 +210,7 @@ public class MortalityService : IMortalityService
             .WithEntireGraph()
             .FirstAsync(x => x.Id == report.Id);
 
-        await RulesSummary.ResetRules(existingReport, context);
+        await RulesSummary.ResetAllRules(existingReport, context);
 
         SetReportNavigationPropertyForActivities(report, existingReport);
 
@@ -255,7 +255,7 @@ public class MortalityService : IMortalityService
         await UpdateActivities(context, report, existingReport, now);
         await AddDefaultBioSubmissions(context, report);
 
-        await RulesSummary.Generate(report, context);
+        await RulesSummary.GenerateAll(report, context);
 
         await context.SaveChangesAsync();
 
@@ -438,7 +438,7 @@ public class MortalityService : IMortalityService
         {
             using var transaction = context.Database.BeginTransaction();
 
-            await RulesSummary.ResetRules(report, context);
+            await RulesSummary.ResetAllRules(report, context);
             updater();
             bioSubmission.DateModified = DateTimeOffset.Now;
 
@@ -451,7 +451,7 @@ public class MortalityService : IMortalityService
             bioSubmission.ClearDependencies();
             context.BioSubmissions.Add(bioSubmission);
 
-            await RulesSummary.Generate(report, context);
+            await RulesSummary.GenerateAll(report, context);
             await context.SaveChangesAsync();
 
             await transaction.CommitAsync();

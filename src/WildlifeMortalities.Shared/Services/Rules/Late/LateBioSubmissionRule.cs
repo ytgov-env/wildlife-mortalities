@@ -10,11 +10,15 @@ using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Data.Extensions;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Shared.Services.Rules.Late;
 
 public class LateBioSubmissionRule : LateRule<HarvestActivity>
 {
+    public override IEnumerable<RuleType> ApplicableRuleTypes =>
+        new[] { RuleType.LateBioSubmission };
+
     protected override async Task<DateTimeOffset?> GetDeadlineTimestamp(
         HarvestActivity activity,
         AppDbContext context
@@ -97,8 +101,8 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
     {
         return new(
             activity,
-            Violation.RuleType.LateBioSubmission,
-            Violation.SeverityType.Illegal,
+            RuleType.LateBioSubmission,
+            SeverityType.Illegal,
             $"Biological submission was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
         );
     }

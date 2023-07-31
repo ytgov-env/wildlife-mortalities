@@ -58,8 +58,6 @@ public abstract class BagLimitEntry
     public List<BagEntry> BagEntries { get; init; } = null!;
     public List<ActivityQueueItem> ActivityQueue { get; init; } = null!;
     public int MaxValuePerPerson { get; set; }
-
-    //Todo: create violation on threshold exceeded
     public int? MaxValueForThreshold { get; set; }
     public bool IsThreshold => MaxValueForThreshold.HasValue;
 

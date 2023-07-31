@@ -425,13 +425,13 @@ public static class GameManagementAreaExtensions
             { "11-15", CaribouHerd.Finlayson },
             { "11-16", CaribouHerd.Finlayson },
             { "11-17", CaribouHerd.Finlayson },
-            { "11-18", CaribouHerd.Finlayson },
-            { "11-19", CaribouHerd.SouthNahanni },
+            { "11-18", CaribouHerd.SouthNahanni },
+            { "11-19", CaribouHerd.CoalRiver },
             { "11-20", CaribouHerd.Finlayson },
             { "11-21", CaribouHerd.Finlayson },
             { "11-22", CaribouHerd.Finlayson },
             { "11-23", CaribouHerd.Finlayson },
-            { "11-24", CaribouHerd.SouthNahanni },
+            { "11-24", CaribouHerd.CoalRiver },
             { "11-25", CaribouHerd.CoalRiver },
             { "11-26", CaribouHerd.CoalRiver },
             { "11-27", CaribouHerd.CoalRiver },
@@ -627,5 +627,13 @@ public static class GameManagementAreaExtensions
         }
 
         throw new UnreachableException();
+    }
+
+    public static string AreasToString(this IEnumerable<GameManagementArea> areas)
+    {
+        return string.Join(
+            ", ",
+            areas.OrderBy(x => x.Zone).ThenBy(x => x.Subzone).Select(x => x.Area).Distinct()
+        );
     }
 }

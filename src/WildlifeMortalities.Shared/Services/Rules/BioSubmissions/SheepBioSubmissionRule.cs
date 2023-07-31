@@ -4,11 +4,15 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Extensions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Shared.Services.Rules.BioSubmissions;
 
 internal class SheepBioSubmissionRule : Rule
 {
+    public override IEnumerable<RuleType> ApplicableRuleTypes =>
+        new[] { RuleType.SheepEyeSocketIncomplete, RuleType.SheepYoungerThan8AndNotFullCurl };
+
     public override async Task<RuleResult> Process(Report report, AppDbContext context)
     {
         if (report.GeneralizedReportType is not GeneralizedReportType.Hunted)
@@ -44,8 +48,8 @@ internal class SheepBioSubmissionRule : Rule
                 violations.Add(
                     new Violation(
                         activity,
-                        Violation.RuleType.SheepYoungerThan8AndNotFullCurl,
-                        Violation.SeverityType.Illegal,
+                        RuleType.SheepYoungerThan8AndNotFullCurl,
+                        SeverityType.Illegal,
                         "Sheep is under 8 years old and not full curl."
                     )
                 );
@@ -56,8 +60,8 @@ internal class SheepBioSubmissionRule : Rule
                 violations.Add(
                     new Violation(
                         activity,
-                        Violation.RuleType.SheepEyeSocketIncomplete,
-                        Violation.SeverityType.PotentiallyIllegal,
+                        RuleType.SheepEyeSocketIncomplete,
+                        SeverityType.PotentiallyIllegal,
                         "Sheep has incomplete eye socket(s)."
                     )
                 );

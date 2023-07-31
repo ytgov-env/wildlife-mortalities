@@ -6,17 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Seasons;
 using WildlifeMortalities.Data;
+using static WildlifeMortalities.Data.Entities.Violation;
 
 namespace WildlifeMortalities.Shared.Services.Rules;
 
 internal class MaxOneGrizzlyBearEveryThreeYearsRule : Rule
 {
+    public override IEnumerable<RuleType> ApplicableRuleTypes =>
+        new[] { RuleType.KilledMoreThanOneGrizzlyBearInThreeYearSpan };
+
     public static void Reset((Report report, Activity activity)[] activitiesInViolation)
     {
         foreach (var (_, activity) in activitiesInViolation)
         {
             activity.Violations.RemoveAll(
-                x => x.Rule == Violation.RuleType.KilledMoreThanOneGrizzlyBearInThreeYearSpan
+                x => x.Rule == RuleType.KilledMoreThanOneGrizzlyBearInThreeYearSpan
             );
         }
     }
@@ -42,8 +46,8 @@ internal class MaxOneGrizzlyBearEveryThreeYearsRule : Rule
         {
             var violation = new Violation(
                 activity,
-                Violation.RuleType.KilledMoreThanOneGrizzlyBearInThreeYearSpan,
-                Violation.SeverityType.Illegal,
+                RuleType.KilledMoreThanOneGrizzlyBearInThreeYearSpan,
+                SeverityType.Illegal,
                 "Already killed a grizzly bear within the last three years."
             );
             activity.Violations.Add(violation);
