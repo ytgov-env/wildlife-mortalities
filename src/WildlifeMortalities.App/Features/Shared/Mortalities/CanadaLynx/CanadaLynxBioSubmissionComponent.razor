@@ -7,7 +7,8 @@
 <MudNumericField Label="Pelt width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.PeltWidthMillimetres" For="() => BioSubmission.PeltWidthMillimetres" Disabled="IsReadOnly"/>
 
-<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly" />
+<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"
+    Mask="@(new PatternMask("00000"))" />
 
 @code {
 

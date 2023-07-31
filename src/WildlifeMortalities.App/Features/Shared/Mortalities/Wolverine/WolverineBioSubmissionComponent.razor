@@ -4,7 +4,8 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
-<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"/>
+<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"
+              Mask="@(new PatternMask("00000"))" />
 
 @code {
 
