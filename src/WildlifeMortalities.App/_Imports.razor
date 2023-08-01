@@ -12,4 +12,5 @@
 @using WildlifeMortalities.App.Features.Layout
 @using MudBlazor
 @using Blazored.FluentValidation
-@attribute [Authorize]
+@using WildlifeMortalities.Data.Entities.Users;
+@attribute [Authorize(Roles = "IsKnownUser")]
