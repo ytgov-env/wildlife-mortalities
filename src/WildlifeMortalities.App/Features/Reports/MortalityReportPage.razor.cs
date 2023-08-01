@@ -180,7 +180,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
     {
         var personId = _personId!.Value;
         var report = _vm.ReportViewModel.GetReport(personId);
-        Log.Information("Creating report {@Report}", report);
+        Log.Information("Creating report");
         await MortalityService.CreateReport(report, AppParameters.UserId);
         Log.Information("Created report");
         NavigationManager.NavigateTo(
@@ -192,7 +192,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
     {
         var personId = _personId!.Value;
         var report = _vm.ReportViewModel.GetReport(personId);
-        Log.Information("Updating report {@Report}", report);
+        Log.Information("Updating report");
         await MortalityService.UpdateReport(report, AppParameters.UserId);
         Log.Information("Updated report");
         NavigationManager.NavigateTo(
