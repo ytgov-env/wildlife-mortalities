@@ -54,8 +54,11 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
         );
 
         if (
-            _reportDetail.Report.DateModified > submission.DateModified
-            && _reportDetail.Report.LastModifiedBy is not null
+            (_reportDetail.Report.LastModifiedBy is not null && submission.LastModifiedBy is null)
+            || (
+                _reportDetail.Report.DateModified > submission.DateModified
+                && _reportDetail.Report.LastModifiedBy is not null
+            )
         )
         {
             return $"{_reportDetail.Report.LastModifiedBy.FullName} on {_reportDetail.Report.DateModified?.ToString("D")}";
