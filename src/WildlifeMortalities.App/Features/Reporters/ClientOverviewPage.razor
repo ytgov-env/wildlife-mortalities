@@ -24,10 +24,7 @@
             @if (_selectedClientViewModel.SelectedClient is not null)
             {
                 <MudPaper Class="pa-4">
-                    <MudField Label="ENV Client ID">@_selectedClientViewModel.SelectedClient.EnvPersonId</MudField>
-                    <MudField Label="First Name">@_selectedClientViewModel.SelectedClient.FirstName</MudField>
-                    <MudField Label="Last Name">@_selectedClientViewModel.SelectedClient.LastName</MudField>
-                    <MudField Label="Birth Date">@_selectedClientViewModel.SelectedClient.BirthDate.ToString("yyyy-MM-dd")</MudField>
+                    <ClientDetails Client="_selectedClientViewModel.SelectedClient" />
                 </MudPaper>
             }
         </EditForm>

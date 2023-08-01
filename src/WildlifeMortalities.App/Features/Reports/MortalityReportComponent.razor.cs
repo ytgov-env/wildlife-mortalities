@@ -11,7 +11,7 @@ using WildlifeMortalities.Shared.Services.Reports.Single;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
-public partial class MortalityReportPage : DbContextAwareComponent
+public partial class MortalityReportComponent : DbContextAwareComponent
 {
     private readonly IList<IBrowserFile> _files = new List<IBrowserFile>();
     private EditContext _editContext;
@@ -19,6 +19,8 @@ public partial class MortalityReportPage : DbContextAwareComponent
     private int? _personId;
     private SignaturePadComponent _signaturePad = null!;
     private MortalityReportPageViewModel _vm;
+    private bool _isSaving;
+    private Client? _client;
 
     [Parameter]
     public int? DraftId { get; set; }
@@ -67,11 +69,12 @@ public partial class MortalityReportPage : DbContextAwareComponent
     {
         using var context = GetContext();
 
-        _personId = await context.People
+        _client = await context.People
             .OfType<Client>()
             .Where(c => c.EnvPersonId == HumanReadablePersonId)
-            .Select(x => x.Id)
             .SingleOrDefaultAsync();
+
+        _personId = _client?.Id;
 
         _personId ??= await context.People
             .OfType<ConservationOfficer>()
@@ -134,6 +137,12 @@ public partial class MortalityReportPage : DbContextAwareComponent
 
     private async Task SubmitReport()
     {
+        if (_isSaving)
+        {
+            return;
+        }
+
+        _isSaving = true;
         if (ReportId == null)
         {
             await CreateReport();
@@ -142,11 +151,18 @@ public partial class MortalityReportPage : DbContextAwareComponent
         {
             await UpdateReport();
         }
+        _isSaving = false;
     }
 
     // Todo: should allow user to save as draft if exception thrown by rule engine
     private async Task CreateDraftReport()
     {
+        if (_isSaving)
+        {
+            return;
+        }
+
+        _isSaving = true;
         if (_editContext.GetValidationMessages().Any())
         {
             var personId = _personId!.Value;
@@ -174,13 +190,14 @@ public partial class MortalityReportPage : DbContextAwareComponent
                 Constants.Routes.GetClientOverviewPageLink(HumanReadablePersonId)
             );
         }
+        _isSaving = false;
     }
 
     private async Task CreateReport()
     {
         var personId = _personId!.Value;
         var report = _vm.ReportViewModel.GetReport(personId);
-        Log.Information("Creating report {@Report}", report);
+        Log.Information("Creating report");
         await MortalityService.CreateReport(report, AppParameters.UserId);
         Log.Information("Created report");
         NavigationManager.NavigateTo(
@@ -192,7 +209,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
     {
         var personId = _personId!.Value;
         var report = _vm.ReportViewModel.GetReport(personId);
-        Log.Information("Updating report {@Report}", report);
+        Log.Information("Updating report");
         await MortalityService.UpdateReport(report, AppParameters.UserId);
         Log.Information("Updated report");
         NavigationManager.NavigateTo(

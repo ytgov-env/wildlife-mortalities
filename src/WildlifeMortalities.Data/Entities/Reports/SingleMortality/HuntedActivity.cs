@@ -16,6 +16,9 @@ public class HuntedActivity : HarvestActivity
     [Column($"{nameof(HuntedActivity)}_{nameof(Landmark)}")]
     public string Landmark { get; set; } = string.Empty;
 
+    [Column($"{nameof(HuntedActivity)}_{nameof(Seal)}")]
+    public string Seal { get; set; } = string.Empty;
+
     [Column($"{nameof(HuntedActivity)}_{nameof(IndividualHuntedMortalityReportId)}")]
     public int? IndividualHuntedMortalityReportId { get; set; }
     public IndividualHuntedMortalityReport? IndividualHuntedMortalityReport { get; set; }

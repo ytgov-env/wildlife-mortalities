@@ -15,8 +15,7 @@
     }
 </MudSelect>
 
-<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"
-              Mask="@(new PatternMask("00000"))"/>
+<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"/>
 
 @code {
     [Parameter]
@@ -33,7 +32,10 @@
         public GreyWolfBioSubmissionValidator()
         {
             RuleFor(x => x.PeltColour).NotNull().IsInEnum();
-            RuleFor(x => x.FurbearerSealNumber).NotEmpty().Length(5);
+            RuleFor(x => x.FurbearerSealNumber)
+                .NotNull()
+                .Matches(@"^\d{5}$")
+                .WithMessage("Furbearer seal must be exactly 5 digits.");
             //RuleFor(x => x.FurbearerSealNumber).NotEmpty().MustAsync(BeUnique).WithMessage("This furbearer seal is already associated with a different mortality.");
         }
 

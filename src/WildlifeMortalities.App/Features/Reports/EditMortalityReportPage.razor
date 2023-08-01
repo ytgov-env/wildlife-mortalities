@@ -1,0 +1,20 @@
+﻿@attribute [Route(Constants.Routes.EditReportPage)]
+@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.Users;
+@using WildlifeMortalities.Shared.Extensions;
+
+@attribute [Authorize(Roles = @PermissionConstants.Reports.EditHarvest)]
+
+<MortalityReportComponent DraftId="@DraftId" ReportId="@ReportId" HumanReadablePersonId="@HumanReadablePersonId" />
+
+@code {
+
+    [Parameter]
+    public int? DraftId { get; set; }
+
+    [Parameter]
+    public int? ReportId { get; set; }
+
+    [Parameter]
+    public string HumanReadablePersonId { get; set; } = null!;
+}

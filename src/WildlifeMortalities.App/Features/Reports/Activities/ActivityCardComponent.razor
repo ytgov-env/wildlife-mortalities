@@ -91,6 +91,10 @@
                     {
                         <MudField DisableUnderLine="true" Label="HRBS number">@vm.HrbsNumber</MudField>
                     }
+                    @if (!string.IsNullOrWhiteSpace(vm.Seal))
+                    {
+                        <MudField DisableUnderLine="true" Label="Seal">@vm.Seal</MudField>
+                    }
                     break;
                 case TrappedActivityViewModel vm:
                     break;

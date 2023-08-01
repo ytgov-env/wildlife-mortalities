@@ -20,8 +20,8 @@ namespace WildlifeMortalities.App.Features.Reports
         [EditorRequired]
         public OutfitterGuidedHuntReportViewModel ViewModel { get; set; } = null!;
 
-        [CascadingParameter(Name = Constants.CascadingValues.ReportType)]
-        public ReportType ReportType { get; set; }
+        [CascadingParameter(Name = Constants.CascadingValues.ReportViewModel)]
+        public MortalityReportViewModel ReportViewModel { get; set; } = null!;
 
         [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
         public bool EditMode { get; set; } = false;
@@ -47,8 +47,9 @@ namespace WildlifeMortalities.App.Features.Reports
         {
             var parameters = new DialogParameters
             {
-                [nameof(AddActivityDialog.ReportType)] = ReportType
+                [nameof(AddActivityDialog.ReportViewModel)] = ReportViewModel
             };
+
             var dialog = DialogService.Show<AddActivityDialog>("", parameters);
             var result = await dialog.Result;
             if (!result.Canceled)
@@ -67,7 +68,7 @@ namespace WildlifeMortalities.App.Features.Reports
             var parameters = new DialogParameters
             {
                 [nameof(EditActivityDialog.ViewModel)] = viewModel,
-                [nameof(EditActivityDialog.ReportType)] = ReportType
+                [nameof(EditActivityDialog.ReportViewModel)] = ReportViewModel
             };
             var dialog = DialogService.Show<EditActivityDialog>("", parameters);
             await dialog.Result;

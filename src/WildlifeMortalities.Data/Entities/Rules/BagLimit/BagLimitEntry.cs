@@ -79,7 +79,14 @@ public abstract class BagLimitEntry
 
     public void RemoveFromQueue(HarvestActivity activity)
     {
-        ActivityQueue.Remove(ActivityQueue.First(x => x.Activity.Id == activity.Id));
+        var queueItem = ActivityQueue.Find(x => x.Activity.Id == activity.Id);
+
+        if (queueItem == null)
+        {
+            return;
+        }
+
+        ActivityQueue.Remove(queueItem);
         ReorderQueue();
     }
 

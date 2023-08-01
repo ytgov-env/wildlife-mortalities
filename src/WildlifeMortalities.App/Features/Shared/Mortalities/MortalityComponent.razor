@@ -5,20 +5,23 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
+@using WildlifeMortalities.Data.Entities.Users;
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Extensions;
 @namespace WildlifeMortalities.App.Features.Shared.Mortalities
 
 <MudStack Row="true">
-    <MudSelect Disabled="@(DisableSpeciesSelection)" Placeholder="Select a species" T="Species?" Value="ViewModel.Species" ValueChanged="SpeciesChanged" For="@(() => ViewModel.Species)">
-        @foreach (var species in Enum.GetValues<Species>().Where(x => x.IsSelectable(ReportType)).OrderBy(x => x.GetDisplayName()))
+    <MudSelect Disabled="@(DisableSpeciesSelection)" Placeholder="Select a species" T="Species?" Value="ViewModel.Species" ValueChanged="SpeciesHasChanged" For="@(() => ViewModel.Species)">
+        @foreach (var species in Enum.GetValues<Species>().Where(x => x.IsSelectable(ReportViewModel)).OrderBy(x => x.GetDisplayName()))
         {
             <MudSelectItem Value="@species" T="Species?">@species.GetDisplayName()</MudSelectItem>
         }
     </MudSelect>
     @if (DisableSpeciesSelection)
     {
-        <MudIconButton Icon="@Icons.Material.Filled.ChangeCircle" Color="Color.Info" Title="Change species" OnClick="ChangeSpeciesClicked" />
+        <AuthorizeView Roles="@PermissionConstants.Reports.ChangeSpecies">
+            <MudIconButton Icon="@Icons.Material.Filled.ChangeCircle" Color="Color.Info" Title="Change species" OnClick="ChangeSpeciesClicked" />
+        </AuthorizeView>
     }
 </MudStack>
 

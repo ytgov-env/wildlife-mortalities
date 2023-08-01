@@ -1,7 +1,8 @@
 ﻿@attribute [Route(Constants.Routes.ReportDetailsPage)]
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
-@using WildlifeMortalities.App.Features.Reports.Activities
+@using WildlifeMortalities.App.Features.Reports
+@attribute [Authorize(Roles = PermissionConstants.Reports.ViewHarvest)]
 @inherits DbContextAwareComponent
 
 @if (_isLoading)
@@ -43,9 +44,10 @@ else if (_reportDetail is null)
 <MudItem Class="mb-2">
     <MudField Label="Date submitted" DisableUnderLine="true">@_reportDetail.Report.DateSubmitted.ToString("D")</MudField>
     <MudField Label="Created by" DisableUnderLine="true" Class="pt-2">@_reportDetail.Report.CreatedBy.FullName on @_reportDetail.Report.DateCreated.ToString("D")</MudField>
-    @if (_reportDetail.Report.DateModified != null && _reportDetail.Report.LastModifiedBy != null)
+    @{var lastModifiedBy = GetLastModifiedBy();}
+    @if (lastModifiedBy != null)
     {
-        <MudField Label="Modified by" DisableUnderLine="true">@_reportDetail.Report.LastModifiedBy.FullName on @_reportDetail.Report.DateModified?.ToString("D")</MudField>
+        <MudField Label="Modified by" DisableUnderLine="true">@lastModifiedBy</MudField>
     }
 </MudItem>
 
@@ -68,10 +70,7 @@ else if (_reportDetail is null)
         <MudItem xs="12" sm="4">
             <MudPaper Class="pa-4 flex-auto">
                 <MudText Typo="Typo.h6">Client</MudText>
-                <MudField Label="ENV Client ID">@Client.EnvPersonId</MudField>
-                <MudField Label="First Name">@Client.FirstName</MudField>
-                <MudField Label="Last Name">@Client.LastName</MudField>
-                <MudField Label="Birth Date">@Client.BirthDate.ToString("yyyy-MM-dd")</MudField>
+                <ClientDetails Client="@Client" />
             </MudPaper>
         </MudItem>
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildlifeMortalities.Data;
 
@@ -11,9 +12,11 @@ using WildlifeMortalities.Data;
 namespace WildlifeMortalities.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230731235946_AddLastModifiedByToBioSubmission")]
+    partial class AddLastModifiedByToBioSubmission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2708,12 +2711,6 @@ namespace WildlifeMortalities.Data.Migrations
                     b.Property<int?>("OutfitterGuidedHuntReportId")
                         .HasColumnType("int")
                         .HasColumnName("HuntedActivity_OutfitterGuidedHuntReportId");
-
-                    b.Property<string>("Seal")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
-                        .HasColumnName("HuntedActivity_Seal");
 
                     b.Property<int?>("SpecialGuidedHuntReportId")
                         .HasColumnType("int")

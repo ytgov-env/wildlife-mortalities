@@ -38,6 +38,11 @@ public class AddRoleClaimsTransformation : IClaimsTransformation
             claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, permission.Value));
         }
 
+        if (permissions.Any())
+        {
+            claimsIdentity.AddClaim(new Claim(claimsIdentity.RoleClaimType, "IsKnownUser"));
+        }
+
         principal.AddIdentity(claimsIdentity);
         return principal;
     }
