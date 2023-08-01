@@ -23,6 +23,7 @@ public class HuntedActivityViewModel : ActivityViewModel
         : base(activity, reportDetail)
     {
         HrbsNumber = activity.HrbsNumber;
+        Seal = activity.Seal;
         Landmark = activity.Landmark;
         Comment = activity.Comment;
         IsCompleted = true;
@@ -38,11 +39,13 @@ public class HuntedActivityViewModel : ActivityViewModel
         : base(huntedActivityViewModel, species)
     {
         HrbsNumber = huntedActivityViewModel.HrbsNumber;
+        Seal = huntedActivityViewModel.Seal;
         Landmark = huntedActivityViewModel.Landmark;
         GameManagementArea = huntedActivityViewModel.GameManagementArea;
     }
 
     public string HrbsNumber { get; set; } = string.Empty;
+    public string Seal { get; set; } = string.Empty;
     public string Landmark { get; set; } = string.Empty;
     public GameManagementArea? GameManagementArea { get; set; }
 
@@ -52,6 +55,7 @@ public class HuntedActivityViewModel : ActivityViewModel
         {
             Mortality = MortalityWithSpeciesSelectionViewModel.MortalityViewModel.GetMortality(),
             HrbsNumber = HrbsNumber,
+            Seal = Seal,
             Landmark = Landmark,
             GameManagementAreaId = GameManagementArea?.Id ?? 0,
             Comment = Comment,
@@ -91,7 +95,25 @@ public class HuntedActivityViewModelValidator : ActivityViewModelValidator<Hunte
 {
     public HuntedActivityViewModelValidator()
     {
-        RuleFor(x => x.HrbsNumber).NotEmpty().Length(5);
+        RuleFor(x => x.HrbsNumber)
+            .Matches(@"^\d{5}$")
+            .WithMessage("HRBS number must be exactly 5 digits.");
+        RuleFor(x => x.Seal)
+            .Matches(@"^\d{4}$")
+            .When(
+                x =>
+                    x.MortalityWithSpeciesSelectionViewModel.Species
+                        is Species.AmericanBlackBear
+                            or Species.Caribou
+                            or Species.MuleDeer
+                            or Species.Elk
+                            or Species.GrizzlyBear
+                            or Species.Moose
+                            or Species.MountainGoat
+                            or Species.ThinhornSheep
+                            or Species.WoodBison
+            )
+            .WithMessage("Seal must be exactly 4 digits.");
         RuleFor(x => x.Landmark).NotNull();
         RuleFor(x => x.GameManagementArea).NotNull();
     }

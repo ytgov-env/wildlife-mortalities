@@ -1,9 +1,15 @@
 @using WildlifeMortalities.Data.Entities
 @using WildlifeMortalities.Shared.Services
+@using WildlifeMortalities.Data.Enums;
 <MudTextField @bind-Value="ViewModel.Landmark" For="(() => ViewModel.Landmark)" Label="Landmark"/>
 <MudAutocomplete T="GameManagementArea" Label="Game Management Area" @bind-Value="ViewModel.GameManagementArea" SearchFunc="SearchGameManagementAreas"
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select a GMA" For="@(() => ViewModel.GameManagementArea)"/>
-<MudTextField @bind-Value="ViewModel.HrbsNumber" For="(() => ViewModel.HrbsNumber)" Label="HRBS number" Mask="@(new PatternMask("00000"))"/>
+<MudTextField @bind-Value="ViewModel.HrbsNumber" For="(() => ViewModel.HrbsNumber)" Label="HRBS number"/>
+@if (ViewModel.MortalityWithSpeciesSelectionViewModel.Species is Species.AmericanBlackBear or Species.Caribou 
+    or Species.MuleDeer or Species.Elk or Species.GrizzlyBear or Species.Moose or Species.MountainGoat or Species.ThinhornSheep or Species.WoodBison)
+{
+    <MudTextField @bind-Value="ViewModel.Seal" For="(() => ViewModel.Seal)" Label="Seal"/>
+}
 
 @code {
     private IEnumerable<GameManagementArea> _gameManagementAreas = Array.Empty<GameManagementArea>();
