@@ -5,6 +5,7 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear
 @using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep
 @using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison
+@using WildlifeMortalities.Data.Entities.Users;
 @using WildlifeMortalities.Data.Enums
 @using WildlifeMortalities.Shared.Extensions;
 @namespace WildlifeMortalities.App.Features.Shared.Mortalities
@@ -18,7 +19,9 @@
     </MudSelect>
     @if (DisableSpeciesSelection)
     {
-        <MudIconButton Icon="@Icons.Material.Filled.ChangeCircle" Color="Color.Info" Title="Change species" OnClick="ChangeSpeciesClicked" />
+        <AuthorizeView Roles="@PermissionConstants.Reports.ChangeSpecies">
+            <MudIconButton Icon="@Icons.Material.Filled.ChangeCircle" Color="Color.Info" Title="Change species" OnClick="ChangeSpeciesClicked" />
+        </AuthorizeView>
     }
 </MudStack>
 

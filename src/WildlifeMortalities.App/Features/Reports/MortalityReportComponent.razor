@@ -1,8 +1,4 @@
-﻿@attribute [Route(Constants.Routes.CreateReportPage)]
-@attribute [Route(Constants.Routes.EditDraftReportPage)]
-@attribute [Route(Constants.Routes.EditReportPage)]
-@*@attribute [Authorize(Roles = PermissionConstants.CreateReport)]*@
-@using WildlifeMortalities.App.Extensions
+﻿@using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.Data.Entities.Users;
 @using WildlifeMortalities.Shared.Extensions;
 @inherits DbContextAwareComponent
@@ -19,6 +15,7 @@
 
     return;
 }
+
 
 <MudText Typo="Typo.h3" Class="mb-8">@_vm.ReportType.GetDisplayName() report</MudText>
 

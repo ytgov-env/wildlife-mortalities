@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+
     public DbSet<Person> People => Set<Person>();
     public DbSet<OutfitterGuide> OutfitterGuides => Set<OutfitterGuide>();
     public DbSet<Season> Seasons => Set<Season>();

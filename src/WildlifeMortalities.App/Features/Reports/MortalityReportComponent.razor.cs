@@ -11,7 +11,7 @@ using WildlifeMortalities.Shared.Services.Reports.Single;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
-public partial class MortalityReportPage : DbContextAwareComponent
+public partial class MortalityReportComponent : DbContextAwareComponent
 {
     private readonly IList<IBrowserFile> _files = new List<IBrowserFile>();
     private EditContext _editContext;
