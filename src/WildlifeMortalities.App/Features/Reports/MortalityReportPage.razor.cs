@@ -19,6 +19,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
     private int? _personId;
     private SignaturePadComponent _signaturePad = null!;
     private MortalityReportPageViewModel _vm;
+    private bool _isSaving;
 
     [Parameter]
     public int? DraftId { get; set; }
@@ -134,6 +135,12 @@ public partial class MortalityReportPage : DbContextAwareComponent
 
     private async Task SubmitReport()
     {
+        if (_isSaving)
+        {
+            return;
+        }
+
+        _isSaving = true;
         if (ReportId == null)
         {
             await CreateReport();
@@ -142,11 +149,18 @@ public partial class MortalityReportPage : DbContextAwareComponent
         {
             await UpdateReport();
         }
+        _isSaving = false;
     }
 
     // Todo: should allow user to save as draft if exception thrown by rule engine
     private async Task CreateDraftReport()
     {
+        if (_isSaving)
+        {
+            return;
+        }
+
+        _isSaving = true;
         if (_editContext.GetValidationMessages().Any())
         {
             var personId = _personId!.Value;
@@ -174,6 +188,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
                 Constants.Routes.GetClientOverviewPageLink(HumanReadablePersonId)
             );
         }
+        _isSaving = false;
     }
 
     private async Task CreateReport()

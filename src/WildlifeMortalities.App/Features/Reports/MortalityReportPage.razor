@@ -91,11 +91,25 @@
         <MudSpacer />
         @if (_editContext.GetValidationMessages().Any() && ReportId == null)
         {
-            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="CreateDraftReport" Color="Color.Primary">Save as draft</MudButton>
+            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" OnClick="CreateDraftReport" Color="Color.Primary">
+                @if (_isSaving)
+                {
+                    <MudProgressCircular Indeterminate="true" Size="Size.Small" />
+                } else
+                {
+                    <span>Save as draft</span>
+                }
+                </MudButton>
         }
 
         <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Disabled="@(_editContext.GetValidationMessages().Any())">
-            @((ReportId == null ? "Create report" : "Update report"))
+            @if (_isSaving)
+            {
+                <MudProgressCircular Indeterminate="true" Size="Size.Small" />
+            } else
+            {
+                @((ReportId == null ? "Create report" : "Update report"))
+            }
         </MudButton>
     </MudStack>
 </EditForm>
