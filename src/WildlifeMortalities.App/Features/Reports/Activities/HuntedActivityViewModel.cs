@@ -94,9 +94,11 @@ public class HuntedActivityViewModelValidator : ActivityViewModelValidator<Hunte
     public HuntedActivityViewModelValidator()
     {
         RuleFor(x => x.HrbsNumber)
+            .NotNull()
             .Matches(@"^\d{5}$")
             .WithMessage("HRBS number must be exactly 5 digits.");
         RuleFor(x => x.Seal)
+            .NotNull()
             .Matches(@"^\d{4}$")
             .When(
                 x =>

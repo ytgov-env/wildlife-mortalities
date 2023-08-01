@@ -20,6 +20,7 @@
         public WolverineBioSubmissionValidator()
         {
             RuleFor(x => x.FurbearerSealNumber)
+                .NotNull()
                 .Matches(@"^\d{5}$")
                 .WithMessage("Furbearer seal must be exactly 5 digits.");
         }

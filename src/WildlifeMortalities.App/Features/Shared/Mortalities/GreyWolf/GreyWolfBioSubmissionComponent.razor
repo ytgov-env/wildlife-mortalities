@@ -33,6 +33,7 @@
         {
             RuleFor(x => x.PeltColour).NotNull().IsInEnum();
             RuleFor(x => x.FurbearerSealNumber)
+                .NotNull()
                 .Matches(@"^\d{5}$")
                 .WithMessage("Furbearer seal must be exactly 5 digits.");
             //RuleFor(x => x.FurbearerSealNumber).NotEmpty().MustAsync(BeUnique).WithMessage("This furbearer seal is already associated with a different mortality.");
