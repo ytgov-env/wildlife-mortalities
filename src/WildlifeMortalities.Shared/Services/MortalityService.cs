@@ -245,7 +245,7 @@ public class MortalityService : IMortalityService
 
         report.PreserveImmutableValues(existingReport);
         report.LastModifiedById =
-            (await context.Users.SingleOrDefaultAsync(x => x.Id == userId))?.Id
+            (await context.Users.FindAsync(userId))?.Id
             ?? throw new Exception($"User {userId} not found.");
         var now = DateTimeOffset.Now;
         report.DateModified = now;
@@ -421,6 +421,7 @@ public class MortalityService : IMortalityService
     private async Task<ReportDetail> UpdateBioSubmission(
         BioSubmission bioSubmission,
         int reportId,
+        int userId,
         Action updater
     )
     {
@@ -440,6 +441,10 @@ public class MortalityService : IMortalityService
 
             await RulesSummary.ResetAllRules(report, context);
             updater();
+
+            bioSubmission.LastModifiedById =
+                (await context.Users.FindAsync(userId))?.Id
+                ?? throw new Exception($"User {userId} not found.");
             bioSubmission.DateModified = DateTimeOffset.Now;
 
             if (submissionFromDb != null)
@@ -462,11 +467,13 @@ public class MortalityService : IMortalityService
 
     public async Task<ReportDetail> UpdateOrganicMaterialForBioSubmission(
         BioSubmission bioSubmission,
-        int reportId
+        int reportId,
+        int userId
     ) =>
         await UpdateBioSubmission(
             bioSubmission,
             reportId,
+            userId,
             () =>
             {
                 bioSubmission.UpdateRequiredOrganicMaterialsStatus();
@@ -486,8 +493,15 @@ public class MortalityService : IMortalityService
 
     public async Task<ReportDetail> UpdateBioSubmissionAnalysis(
         BioSubmission bioSubmission,
-        int reportId
-    ) => await UpdateBioSubmission(bioSubmission, reportId, bioSubmission.UpdateAnalysisStatus);
+        int reportId,
+        int userId
+    ) =>
+        await UpdateBioSubmission(
+            bioSubmission,
+            reportId,
+            userId,
+            bioSubmission.UpdateAnalysisStatus
+        );
 
     public async Task<IEnumerable<GameManagementArea>> GetGameManagementAreas()
     {

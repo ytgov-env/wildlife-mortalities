@@ -442,7 +442,7 @@ public class ContainerizedTests : IAsyncLifetime
             .SingleAsync();
         bioSubmission.IsIncisorBarProvided = false;
         bioSubmission.UpdateRequiredOrganicMaterialsStatus();
-        await service.UpdateOrganicMaterialForBioSubmission(bioSubmission, report.Id);
+        await service.UpdateOrganicMaterialForBioSubmission(bioSubmission, report.Id, _seedUser.Id);
 
         _context.Violations
             .Should()
@@ -450,7 +450,7 @@ public class ContainerizedTests : IAsyncLifetime
 
         bioSubmission.IsIncisorBarProvided = true;
         bioSubmission.UpdateRequiredOrganicMaterialsStatus();
-        await service.UpdateOrganicMaterialForBioSubmission(bioSubmission, report.Id);
+        await service.UpdateOrganicMaterialForBioSubmission(bioSubmission, report.Id, _seedUser.Id);
 
         _context.Violations
             .Should()

@@ -105,6 +105,9 @@
     [Parameter]
     public EventCallback<ReportDetail> BioSubmissionUpdated { get; set; }
 
+    [CascadingParameter]
+    public AppParameters AppParameters { get; set; } = null!;
+
     private async Task OpenBioSubmissionAnalysisDialog()
     {
 
@@ -118,7 +121,7 @@
         if (result.Canceled == false)
         {
             Log.Information("Updating bio submission analysis {@BioSubmission}", BioSubmission);
-            var reportDetail = await MortalityService.UpdateBioSubmissionAnalysis(BioSubmission, Report.Id);
+            var reportDetail = await MortalityService.UpdateBioSubmissionAnalysis(BioSubmission, Report.Id, AppParameters.UserId);
             Log.Information("Updated bio submission analysis");
             await BioSubmissionUpdated.InvokeAsync(reportDetail);
         }
@@ -143,7 +146,7 @@
             }
 
             Log.Information("Updating bio submission organic materials {@BioSubmission}", BioSubmission);
-            var reportDetail =  await MortalityService.UpdateOrganicMaterialForBioSubmission(BioSubmission, Report.Id);
+            var reportDetail =  await MortalityService.UpdateOrganicMaterialForBioSubmission(BioSubmission, Report.Id, AppParameters.UserId);
             Log.Information("Updated bio submission organic materials");
             await BioSubmissionUpdated.InvokeAsync(reportDetail);
 

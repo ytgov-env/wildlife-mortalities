@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 using WildlifeMortalities.Data.Entities.Mortalities;
+using WildlifeMortalities.Data.Entities.Users;
 
 namespace WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 
@@ -18,6 +19,8 @@ public abstract class BioSubmission
     }
     public BioSubmissionAnalysisStatus AnalysisStatus { get; protected set; }
     public DateTimeOffset? DateSubmitted { get; set; }
+    public int? LastModifiedById { get; set; }
+    public User? LastModifiedBy { get; set; }
     public DateTimeOffset? DateModified { get; set; }
     public string Comment { get; set; } = string.Empty;
     public Age? Age { get; set; }
