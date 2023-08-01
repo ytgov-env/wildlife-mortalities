@@ -46,11 +46,13 @@ public class IndividualHuntedMortalityReportViewModelValidator
             .Must(
                 (model, dateSubmitted) =>
                     (dateSubmitted ?? DateTimeOffset.Now)
-                    >= model
-                        .HuntedActivityViewModel
-                        .MortalityWithSpeciesSelectionViewModel
-                        .MortalityViewModel
-                        .DateOfDeath
+                    >= (
+                        model
+                            .HuntedActivityViewModel
+                            .MortalityWithSpeciesSelectionViewModel
+                            ?.MortalityViewModel
+                            ?.DateOfDeath ?? DateTimeOffset.MaxValue
+                    )
             )
             .WithMessage("Date submitted cannot occur before date of death.");
     }
