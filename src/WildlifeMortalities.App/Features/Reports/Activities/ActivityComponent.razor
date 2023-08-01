@@ -1,5 +1,5 @@
 @using WildlifeMortalities.App.Features.Shared.Mortalities
-<MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" DisableSpeciesSelection="@(EditMode)"/>
+<MortalityComponent ViewModel="ViewModel.MortalityWithSpeciesSelectionViewModel" SpeciesChanged="DoNothing" DisableSpeciesSelection="@(EditMode)" />
 
 @switch (ViewModel)
 {
@@ -22,4 +22,8 @@
     [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
     public bool EditMode { get; set; } = false;
 
+    private void DoNothing()
+    {
+        
+    }
 }

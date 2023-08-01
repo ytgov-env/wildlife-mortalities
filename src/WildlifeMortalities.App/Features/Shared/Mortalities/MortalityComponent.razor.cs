@@ -7,11 +7,8 @@ namespace WildlifeMortalities.App.Features.Shared.Mortalities;
 
 public partial class MortalityComponent
 {
-    [CascadingParameter(Name = Constants.CascadingValues.ReportType)]
-    public ReportType ReportType { get; set; }
-
     [CascadingParameter(Name = Constants.CascadingValues.ReportViewModel)]
-    public MortalityReportViewModel Report { get; set; } = null!;
+    public MortalityReportViewModel ReportViewModel { get; set; } = null!;
 
     [Parameter]
     public bool DisableSpeciesSelection { get; set; }
@@ -20,12 +17,15 @@ public partial class MortalityComponent
     [EditorRequired]
     public MortalityWithSpeciesSelectionViewModel ViewModel { get; set; } = null!;
 
+    [Parameter]
+    public EventCallback SpeciesChanged { get; set; }
+
     public MortalityViewModel GetViewModel() => ViewModel.MortalityViewModel;
 
     [Inject]
     public IDialogService DialogService { get; set; } = null!;
 
-    private void SpeciesChanged(Species? species)
+    private void SpeciesHasChanged(Species? species)
     {
         if (!species.HasValue)
         {
@@ -37,17 +37,22 @@ public partial class MortalityComponent
             return;
         }
 
-        ViewModel.Species = species;
-        ViewModel.MortalityViewModel = MortalityViewModel.Create(
-            species.Value,
-            ViewModel.MortalityViewModel
-        );
+        var id = ViewModel.MortalityViewModel?.Id;
 
-        var id = ViewModel.MortalityViewModel.Id;
         if (id.HasValue && species.HasValue)
         {
-            Report.SpeciesChanged(id.Value, species.Value);
+            ReportViewModel.SpeciesChanged(id.Value, species.Value);
         }
+        else
+        {
+            ViewModel.Species = species;
+            ViewModel.MortalityViewModel = MortalityViewModel.Create(
+                species.Value,
+                ViewModel.MortalityViewModel
+            );
+        }
+
+        SpeciesChanged.InvokeAsync();
     }
 
     private async Task ChangeSpeciesClicked()

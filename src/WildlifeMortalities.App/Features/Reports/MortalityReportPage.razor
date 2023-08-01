@@ -37,7 +37,7 @@
         <MudDatePicker @bind-Date="_vm.DateSubmitted" Label="Date submitted" For="(() => _vm.DateSubmitted)"/>
     }
     <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="@_vm.IsUpdate" IsFixed="true">
-        <CascadingValue Name="@Constants.CascadingValues.ReportType" Value="_vm.ReportType">
+        <CascadingValue Name="@Constants.CascadingValues.ReportViewModel" Value="_vm.ReportViewModel">
             @switch (_vm.ReportType)
             {
                 case ReportType.IndividualHuntedMortalityReport:

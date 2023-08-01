@@ -2,7 +2,7 @@
 @namespace WildlifeMortalities.App.Features.Shared.Mortalities
 
 <MudDatePicker @bind-Date="ViewModel.DateOfDeath" For="@(() => ViewModel.DateOfDeath)" Label="Date of death"
-               Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="yyyy-MM-dd"/>
+               DateFormat="yyyy-MM-dd" Placeholder="Select a date of death" />
 <MudSelect T="Sex?" @bind-Value="@ViewModel.Sex" Label="Sex" Placeholder="Select a sex" For="@(() => ViewModel.Sex)">
     @foreach (var item in Enum.GetValues<Sex>())
     {
