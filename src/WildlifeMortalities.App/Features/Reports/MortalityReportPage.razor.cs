@@ -20,6 +20,7 @@ public partial class MortalityReportPage : DbContextAwareComponent
     private SignaturePadComponent _signaturePad = null!;
     private MortalityReportPageViewModel _vm;
     private bool _isSaving;
+    private Client? _client;
 
     [Parameter]
     public int? DraftId { get; set; }
@@ -68,11 +69,12 @@ public partial class MortalityReportPage : DbContextAwareComponent
     {
         using var context = GetContext();
 
-        _personId = await context.People
+        _client = await context.People
             .OfType<Client>()
             .Where(c => c.EnvPersonId == HumanReadablePersonId)
-            .Select(x => x.Id)
             .SingleOrDefaultAsync();
+
+        _personId = _client?.Id;
 
         _personId ??= await context.People
             .OfType<ConservationOfficer>()

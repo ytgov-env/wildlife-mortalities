@@ -1,0 +1,11 @@
+﻿@using WildlifeMortalities.Data.Entities.People;
+<MudField Label="ENV Client ID">@Client.EnvPersonId</MudField>
+<MudField Label="First Name">@Client.FirstName</MudField>
+<MudField Label="Last Name">@Client.LastName</MudField>
+<MudField Label="Birth Date">@Client.BirthDate.ToString("yyyy-MM-dd")</MudField>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public Client Client { get; set; } = null!;
+}

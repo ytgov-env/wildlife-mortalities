@@ -69,10 +69,7 @@ else if (_reportDetail is null)
         <MudItem xs="12" sm="4">
             <MudPaper Class="pa-4 flex-auto">
                 <MudText Typo="Typo.h6">Client</MudText>
-                <MudField Label="ENV Client ID">@Client.EnvPersonId</MudField>
-                <MudField Label="First Name">@Client.FirstName</MudField>
-                <MudField Label="Last Name">@Client.LastName</MudField>
-                <MudField Label="Birth Date">@Client.BirthDate.ToString("yyyy-MM-dd")</MudField>
+                <ClientDetails Client="@Client" />
             </MudPaper>
         </MudItem>
     }
