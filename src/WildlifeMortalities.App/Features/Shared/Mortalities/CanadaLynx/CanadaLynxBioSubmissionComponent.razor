@@ -7,8 +7,7 @@
 <MudNumericField Label="Pelt width" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.PeltWidthMillimetres" For="() => BioSubmission.PeltWidthMillimetres" Disabled="IsReadOnly"/>
 
-<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"
-    Mask="@(new PatternMask("00000"))" />
+<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"/>
 
 @code {
 
@@ -25,7 +24,9 @@
         {
             RuleFor(x => x.PeltLengthMillimetres).NotNull().GreaterThan(400).LessThan(2000);
             RuleFor(x => x.PeltWidthMillimetres).NotNull().GreaterThan(100).LessThan(1000);
-            RuleFor(x => x.FurbearerSealNumber).NotEmpty().Length(5);
+            RuleFor(x => x.FurbearerSealNumber)
+                .Matches(@"^\d{5}$")
+                .WithMessage("Furbearer seal must be exactly 5 digits.");
         }
     }
 

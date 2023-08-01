@@ -4,8 +4,7 @@
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 @using static WildlifeMortalities.App.Features.Shared.Mortalities.BioSubmissionAnalysisDialog;
 
-<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"
-              Mask="@(new PatternMask("00000"))" />
+<MudTextField @bind-Value="BioSubmission.FurbearerSealNumber" Label="Furbearer seal" For="() => BioSubmission.FurbearerSealNumber" Disabled="IsReadOnly"/>
 
 @code {
 
@@ -20,7 +19,9 @@
     {
         public WolverineBioSubmissionValidator()
         {
-            RuleFor(x => x.FurbearerSealNumber).NotEmpty().Length(5);
+            RuleFor(x => x.FurbearerSealNumber)
+                .Matches(@"^\d{5}$")
+                .WithMessage("Furbearer seal must be exactly 5 digits.");
         }
     }
 }
