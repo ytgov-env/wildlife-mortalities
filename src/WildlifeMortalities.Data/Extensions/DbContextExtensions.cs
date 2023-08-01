@@ -12,56 +12,57 @@ public static class DbContextExtensions
         IHasBioSubmission item
     )
     {
+        var query = bioSubmissions.Include(x => x.LastModifiedBy);
         return item switch
         {
             AmericanBlackBearMortality
-                => await bioSubmissions
+                => await query
                     .OfType<AmericanBlackBearBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             CanadaLynxMortality
-                => await bioSubmissions
+                => await query
                     .OfType<CanadaLynxBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             CaribouMortality
-                => await bioSubmissions
+                => await query
                     .OfType<CaribouBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             ElkMortality
-                => await bioSubmissions
+                => await query
                     .OfType<ElkBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             GreyWolfMortality
-                => await bioSubmissions
+                => await query
                     .OfType<GreyWolfBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             GrizzlyBearMortality
-                => await bioSubmissions
+                => await query
                     .OfType<GrizzlyBearBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             MountainGoatMortality
-                => await bioSubmissions
+                => await query
                     .OfType<MountainGoatBioSubmission>()
                     .Include(x => x.HornMeasurementEntries)
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             MuleDeerMortality
-                => await bioSubmissions
+                => await query
                     .OfType<MuleDeerBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             ThinhornSheepMortality
-                => await bioSubmissions
+                => await query
                     .OfType<ThinhornSheepBioSubmission>()
                     .Include(x => x.HornMeasurementEntries)
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             WhiteTailedDeerMortality
-                => await bioSubmissions
+                => await query
                     .OfType<WhiteTailedDeerBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             WolverineMortality
-                => await bioSubmissions
+                => await query
                     .OfType<WolverineBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             WoodBisonMortality
-                => await bioSubmissions
+                => await query
                     .OfType<WoodBisonBioSubmission>()
                     .FirstOrDefaultAsync(x => x.MortalityId == item.Id),
             _ => throw new InvalidOperationException()
