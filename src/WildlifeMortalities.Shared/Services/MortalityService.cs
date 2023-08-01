@@ -27,10 +27,9 @@ public class MortalityService : IMortalityService
 
         using var context = _dbContextFactory.CreateDbContext();
 
-        var user =
-            await context.Users.FindAsync(userId)
+        report.CreatedById =
+            (await context.Users.FindAsync(userId))?.Id
             ?? throw new Exception($"User {userId} not found.");
-        report.CreatedBy = user;
         var now = DateTimeOffset.Now;
         report.DateCreated = now;
         report.DateSubmitted = now;
@@ -438,13 +437,13 @@ public class MortalityService : IMortalityService
         await strategy.Execute(async () =>
         {
             using var transaction = context.Database.BeginTransaction();
-
             await RulesSummary.ResetAllRules(report, context);
             updater();
 
-            bioSubmission.LastModifiedById =
-                (await context.Users.FindAsync(userId))?.Id
+            bioSubmission.LastModifiedBy =
+                (await context.Users.FindAsync(userId))
                 ?? throw new Exception($"User {userId} not found.");
+
             bioSubmission.DateModified = DateTimeOffset.Now;
 
             if (submissionFromDb != null)
