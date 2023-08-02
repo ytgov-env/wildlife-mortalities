@@ -166,7 +166,10 @@ public class BagLimitRule : Rule
                 continue;
             }
 
-            bagEntry.Decrease(activity, bagEntries);
+            if (bagEntry.BagLimitEntry.ActivityQueue.Any(x => x.Activity == activity))
+            {
+                bagEntry.Decrease(activity, bagEntries);
+            }
         }
     }
 }
