@@ -46,12 +46,12 @@ public static class Seeder
                 new AppConfiguration()
                 {
                     Key = Constants.AppConfigurationService.LastSuccessfulClientsSyncKey,
-                    Value = JsonSerializer.Serialize(new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero))
+                    Value = JsonSerializer.Serialize(new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7)))
                 },
                 new AppConfiguration()
                 {
                     Key = Constants.AppConfigurationService.LastSuccessfulAuthorizationsSyncKey,
-                    Value = JsonSerializer.Serialize(new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.Zero))
+                    Value = JsonSerializer.Serialize(new DateTimeOffset(1990, 1, 1, 0, 0, 0, TimeSpan.FromHours(-7)))
                 });
             context.SaveChanges();
             Console.WriteLine("Added posse sync k/v pairs");
