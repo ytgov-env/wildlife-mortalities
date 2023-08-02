@@ -39,60 +39,60 @@ public static class PermissionConstants
     [Display(Name = "Reports")]
     public static class Reports
     {
-        [Display(Name = "")]
+        [Display(Name = "View harvest report")]
         public const string ViewHarvest = "ViewHarvestReport";
 
-        [Display(Name = "")]
+        [Display(Name = "View human-wildlife conflict report")]
         public const string ViewHumanWildlifeConflict = "ViewHumanWildlifeConflictReport";
 
-        [Display(Name = "")]
+        [Display(Name = "Edit human-wildlife conflict report")]
         public const string EditHumanWildlifeConflict = "EditHumanWildlifeConflictReport";
 
-        [Display(Name = "")]
+        [Display(Name = "Create harvest report")]
         public const string CreateHarvest = "CreateHarvestReport";
 
-        [Display(Name = "")]
+        [Display(Name = "Edit harvest report")]
         public const string EditHarvest = "EditHarvestReport";
 
-        [Display(Name = "")]
+        [Display(Name = "Delete harvest report")]
         public const string DeleteHarvest = "DeleteHarvestReport";
 
-        [Display(Name = "")]
+        [Display(Name = "Suppress violation")]
         public const string SuppressViolation = "SuppressViolation";
 
-        [Display(Name = "")]
+        [Display(Name = "Change species")]
         public const string ChangeSpecies = "ChangeSpecies";
     }
 
     [Display(Name = "Bio submissions")]
     public static class BioSubmissions
     {
-        [Display(Name = "")]
+        [Display(Name = "Reset bio submission samples")]
         public const string ResetSamples = "ResetBioSubmissionSamples";
 
-        [Display(Name = "")]
+        [Display(Name = "Reset bio submission analysis")]
         public const string ResetAnalysis = "ResetBioSubmissionAnalysis";
 
-        [Display(Name = "")]
+        [Display(Name = "Edit bio submission samples")]
         public const string EditSamples = "EditBioSubmissionSamples";
 
-        [Display(Name = "")]
+        [Display(Name = "Edit bio submission analysis")]
         public const string EditAnalysis = "EditBioSubmissionAnalysis";
 
-        [Display(Name = "")]
+        [Display(Name = "Edit bio submission analysis age (for species aside for sheep and goat)")]
         public const string EditAnalysisAgeForNonSheepAndGoat = "EditAnalysisAgeForNonSheepAndGoat";
     }
 
     [Display(Name = "Bag limits")]
     public static class BagLimits
     {
-        [Display(Name = "")]
+        [Display(Name = "Initialize new season")]
         public const string InitializeNewSeason = "InitializeNewSeason";
 
-        [Display(Name = "")]
+        [Display(Name = "Edit current season")]
         public const string EditCurrentSeason = "EditCurrentSeason";
 
-        [Display(Name = "")]
+        [Display(Name = "Edit past season")]
         public const string EditPastSeason = "EditPastSeason";
     }
 }
