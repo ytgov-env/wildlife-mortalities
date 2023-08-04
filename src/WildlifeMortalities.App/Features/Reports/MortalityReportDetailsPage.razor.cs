@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.App.Features.Shared;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
@@ -49,23 +50,31 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
             return null;
         }
 
-        var (mortalityId, submission) = _reportDetail.BioSubmissions.MaxBy(
-            x => x.submission.DateModified
-        );
+        BioSubmission? bioSubmission = null;
+        if (_reportDetail.BioSubmissions.Any())
+        {
+            bioSubmission = _reportDetail.BioSubmissions
+                .MaxBy(x => x.submission.DateModified)
+                .submission;
+        }
 
         if (
-            (_reportDetail.Report.LastModifiedBy is not null && submission.LastModifiedBy is null)
+            (
+                _reportDetail.Report.LastModifiedBy is not null
+                && bioSubmission?.LastModifiedBy is null
+            )
             || (
-                _reportDetail.Report.DateModified > submission.DateModified
+                bioSubmission is not null
+                && _reportDetail.Report.DateModified > bioSubmission.DateModified
                 && _reportDetail.Report.LastModifiedBy is not null
             )
         )
         {
             return $"{_reportDetail.Report.LastModifiedBy.FullName} on {_reportDetail.Report.DateModified?.ToString("D")}";
         }
-        else if (submission.LastModifiedBy is not null)
+        else if (bioSubmission?.LastModifiedBy is not null)
         {
-            return $"{submission.LastModifiedBy.FullName} on {submission.DateModified?.ToString("D")}";
+            return $"{bioSubmission.LastModifiedBy.FullName} on {bioSubmission.DateModified?.ToString("D")}";
         }
         else
         {
