@@ -198,7 +198,7 @@ public partial class MortalityReportComponent : DbContextAwareComponent
         var personId = _personId!.Value;
         var report = _vm.ReportViewModel.GetReport(personId);
         Log.Information("Creating report");
-        await MortalityService.CreateReport(report, AppParameters.UserId);
+        await MortalityService.CreateReport(report, AppParameters.UserId, DraftId);
         Log.Information("Created report");
         NavigationManager.NavigateTo(
             Constants.Routes.GetReportDetailsPageLink(HumanReadablePersonId, report.Id)

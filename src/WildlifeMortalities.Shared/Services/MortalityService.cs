@@ -21,11 +21,22 @@ public class MortalityService : IMortalityService
     public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) =>
         _dbContextFactory = dbContextFactory;
 
-    public async Task CreateReport(Report report, int userId)
+    public async Task CreateReport(Report report, int userId, int? draftReportId)
     {
         SetReportNavigationPropertyForActivities(report, report);
 
         using var context = _dbContextFactory.CreateDbContext();
+
+        if (draftReportId != null)
+        {
+            var draftReport =
+                await context.DraftReports.FindAsync(draftReportId)
+                ?? throw new ArgumentException(
+                    $"Draft report {draftReportId} not found.",
+                    nameof(draftReportId)
+                );
+            context.Remove(draftReport);
+        }
 
         report.CreatedById =
             (await context.Users.FindAsync(userId))?.Id

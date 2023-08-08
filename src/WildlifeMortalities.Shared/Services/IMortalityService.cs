@@ -11,7 +11,7 @@ public record ReportDetail(
 
 public interface IMortalityService
 {
-    Task CreateReport(Report report, int userId);
+    Task CreateReport(Report report, int userId, int? draftReportId);
     Task UpdateReport(Report report, int userId);
     Task CreateDraftReport(string reportType, string reportContent, int personId);
     Task UpdateDraftReport(string report, int reportId);
