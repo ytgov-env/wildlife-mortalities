@@ -88,28 +88,18 @@ public class OutfitterGuideValidator : AbstractValidator<OutfitterGuide?>
 {
     public OutfitterGuideValidator(bool? isRequired = null)
     {
+        RuleFor(x => x!.FirstName)
+            .NotEmpty()
+            .When(x => !string.IsNullOrWhiteSpace(x!.LastName))
+            .WithMessage("First name cannot be empty when last name is not empty.");
+        RuleFor(x => x!.LastName)
+            .NotEmpty()
+            .When(x => !string.IsNullOrWhiteSpace(x!.FirstName))
+            .WithMessage("Last name cannot be empty when first name is not empty.");
         if (isRequired == true)
         {
-            When(
-                x => x is not null,
-                () =>
-                {
-                    if (isRequired == true)
-                    {
-                        RuleFor(x => x!.FirstName).NotEmpty();
-                        RuleFor(x => x!.LastName).NotEmpty();
-                    }
-                    RuleFor(x => x!.FirstName)
-                        .NotEmpty()
-                        .When(x => !string.IsNullOrWhiteSpace(x!.LastName))
-                        .WithMessage("First name cannot be empty when last name is not empty.");
-                    RuleFor(x => x!.LastName)
-                        .NotEmpty()
-                        .When(x => !string.IsNullOrWhiteSpace(x!.FirstName))
-                        .WithMessage("Last name cannot be empty when first name is not empty.");
-                    ;
-                }
-            );
+            RuleFor(x => x!.FirstName).NotEmpty();
+            RuleFor(x => x!.LastName).NotEmpty();
         }
     }
 }
@@ -119,10 +109,23 @@ public class OutfitterGuidedHuntReportViewModelValidator
 {
     public OutfitterGuidedHuntReportViewModelValidator()
     {
-        RuleFor(x => x.ChiefGuide).NotNull().SetValidator((_) => new OutfitterGuideValidator(true));
-        RuleForEach(x => x.AssistantGuides)
-            .SetValidator((x, y) => new OutfitterGuideValidator(x.AssistantGuides.First() == y));
-
+        When(x => string.IsNullOrWhiteSpace(x.ChiefGuide?.FirstName), () => { });
+        RuleFor(x => x.ChiefGuide)
+            .SetValidator(
+                (x) =>
+                    new OutfitterGuideValidator(
+                        string.IsNullOrWhiteSpace(x.AssistantGuides[0]?.FirstName)
+                    )
+            );
+        RuleFor(x => x.AssistantGuides[0])
+            .SetValidator(
+                (x) =>
+                    new OutfitterGuideValidator(
+                        string.IsNullOrWhiteSpace(x.ChiefGuide?.FirstName)
+                            || !string.IsNullOrWhiteSpace(x.AssistantGuides[1]?.FirstName)
+                    )
+            );
+        RuleFor(x => x.AssistantGuides[1]).SetValidator((_) => new OutfitterGuideValidator());
         RuleFor(x => x.OutfitterArea).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
         RuleFor(x => x.HuntingDateRange)
