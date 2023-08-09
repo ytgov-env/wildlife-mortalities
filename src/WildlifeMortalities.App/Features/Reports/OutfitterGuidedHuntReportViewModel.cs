@@ -109,7 +109,6 @@ public class OutfitterGuidedHuntReportViewModelValidator
 {
     public OutfitterGuidedHuntReportViewModelValidator()
     {
-        When(x => string.IsNullOrWhiteSpace(x.ChiefGuide?.FirstName), () => { });
         RuleFor(x => x.ChiefGuide)
             .SetValidator(
                 (x) =>
