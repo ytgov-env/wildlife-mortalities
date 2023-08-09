@@ -1,19 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor;
-using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.App.Features.Reports.Activities;
 using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities;
-using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports
 {
     public partial class OutfitterGuidedHuntReportComponent : DbContextAwareComponent
     {
-        private const int _maxAssistantGuides = 2;
         private IEnumerable<OutfitterArea> _outfitterAreas = Array.Empty<OutfitterArea>();
 
         [Parameter]
@@ -24,16 +20,13 @@ namespace WildlifeMortalities.App.Features.Reports
         public MortalityReportViewModel ReportViewModel { get; set; } = null!;
 
         [CascadingParameter(Name = Constants.CascadingValues.EditMode)]
-        public bool EditMode { get; set; } = false;
+        public bool EditMode { get; set; }
 
         [CascadingParameter]
         public EditContext EditContext { get; set; } = null!;
 
         [Inject]
         private IDialogService DialogService { get; set; } = null!;
-
-        [Inject]
-        private ISnackbar SnackBar { get; set; } = null!;
 
         [Inject]
         private IMortalityService MortalityService { get; set; } = null!;
@@ -83,18 +76,6 @@ namespace WildlifeMortalities.App.Features.Reports
         private void Delete(HuntedActivityViewModel viewModel)
         {
             ViewModel.HuntedActivityViewModels.Remove(viewModel);
-        }
-
-        private async Task<IEnumerable<Client>> SearchClientByEnvClientIdOrLastName(
-            string searchTerm
-        )
-        {
-            using var context = GetContext();
-
-            return await context.People
-                .OfType<Client>()
-                .SearchByEnvClientIdOrLastName(searchTerm)
-                .ToArrayAsync();
         }
 
         private async Task<IEnumerable<OutfitterArea>> SearchOutfitterAreas(string input)

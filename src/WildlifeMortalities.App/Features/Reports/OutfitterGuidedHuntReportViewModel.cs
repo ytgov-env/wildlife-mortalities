@@ -2,7 +2,6 @@
 using MudBlazor;
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.People;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Enums;
 
@@ -31,7 +30,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
 
     public DateRange HuntingDateRange { get; set; } = new();
     public OutfitterGuide? SelectedAssistantGuide { get; set; }
-    public OutfitterGuide? ChiefGuide { get; set; } = new();
+    public OutfitterGuide ChiefGuide { get; set; } = new();
     public OutfitterGuide[] AssistantGuides { get; } =
         new[] { new OutfitterGuide(), new OutfitterGuide() };
     public OutfitterArea? OutfitterArea { get; set; }
@@ -84,23 +83,41 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
     }
 }
 
-public class OutfitterGuideValidator : AbstractValidator<OutfitterGuide?>
+public class OutfitterGuideValidator : AbstractValidator<OutfitterGuide>
 {
-    public OutfitterGuideValidator(bool? isRequired = null)
+    public OutfitterGuideValidator() { }
+
+    public OutfitterGuideValidator(OutfitterGuidedHuntReportViewModel reportViewModel)
     {
-        RuleFor(x => x!.FirstName)
+        When(
+            x =>
+                reportViewModel.ChiefGuide == x
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[0].FirstName)
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[0].LastName),
+            SetRuleForRequiredFirstname
+        );
+
+        When(
+            x =>
+                reportViewModel.AssistantGuides[0] == x
+                && string.IsNullOrWhiteSpace(reportViewModel.ChiefGuide.FirstName)
+                && string.IsNullOrWhiteSpace(reportViewModel.ChiefGuide.LastName),
+            SetRuleForRequiredFirstname
+        );
+
+        RuleFor(x => x.FirstName)
             .NotEmpty()
             .When(x => !string.IsNullOrWhiteSpace(x!.LastName))
             .WithMessage("First name cannot be empty when last name is not empty.");
-        RuleFor(x => x!.LastName)
+        RuleFor(x => x.LastName)
             .NotEmpty()
             .When(x => !string.IsNullOrWhiteSpace(x!.FirstName))
             .WithMessage("Last name cannot be empty when first name is not empty.");
-        if (isRequired == true)
-        {
-            RuleFor(x => x!.FirstName).NotEmpty();
-            RuleFor(x => x!.LastName).NotEmpty();
-        }
+    }
+
+    private void SetRuleForRequiredFirstname()
+    {
+        RuleFor(x => x.FirstName).NotEmpty();
     }
 }
 
@@ -109,22 +126,9 @@ public class OutfitterGuidedHuntReportViewModelValidator
 {
     public OutfitterGuidedHuntReportViewModelValidator()
     {
-        RuleFor(x => x.ChiefGuide)
-            .SetValidator(
-                (x) =>
-                    new OutfitterGuideValidator(
-                        string.IsNullOrWhiteSpace(x.AssistantGuides[0]?.FirstName)
-                    )
-            );
-        RuleFor(x => x.AssistantGuides[0])
-            .SetValidator(
-                (x) =>
-                    new OutfitterGuideValidator(
-                        string.IsNullOrWhiteSpace(x.ChiefGuide?.FirstName)
-                            || !string.IsNullOrWhiteSpace(x.AssistantGuides[1]?.FirstName)
-                    )
-            );
-        RuleFor(x => x.AssistantGuides[1]).SetValidator((_) => new OutfitterGuideValidator());
+        RuleFor(x => x.ChiefGuide).SetValidator((x) => new OutfitterGuideValidator(x));
+        RuleForEach(x => x.AssistantGuides).SetValidator(x => new OutfitterGuideValidator(x));
+
         RuleFor(x => x.OutfitterArea).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
         RuleFor(x => x.HuntingDateRange)

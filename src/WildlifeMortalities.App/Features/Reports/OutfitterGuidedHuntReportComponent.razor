@@ -9,13 +9,17 @@
 
 <DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)"/>
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />
 
 <MudPaper Class="pa-4 my-4">
-    <OutfitterGuideComponent Label="Chief guide" Guide="ViewModel.ChiefGuide" ReadOnly="false" />
+    <MudText Typo="Typo.h6">Guides</MudText>
+    <MudAlert Severity="Severity.Info" Class="my-2">A chief guide or at least one assistant guide is required.</MudAlert>
+    <OutfitterGuideComponent Label="Chief guide" Guide="ViewModel.ChiefGuide" ReportViewModel="ViewModel" IsChiefGuide="true" ReadOnly="false" />
     <MudStack>
-        <OutfitterGuideComponent Label="Assistant guide #1" Guide="ViewModel.AssistantGuides[0]" ReadOnly="false" />
-        <OutfitterGuideComponent Label="Assistant guide #2" Guide="ViewModel.AssistantGuides[1]" ReadOnly="false" />
+        @foreach (var (item, index) in ViewModel.AssistantGuides.Select((x, index) => (x, index)))
+        {
+            <OutfitterGuideComponent Label="@($"Assistant guide #{index+1}")" Guide="item" ReportViewModel="ViewModel" IsFirstAssistantGuide="@(index == 0)" ReadOnly="false" />
+        }
     </MudStack>
 </MudPaper>
 
@@ -34,17 +38,17 @@
                 <ActivityCardComponent EnableBioSubmission="false"
                                        OnEditClicked="@(() => Edit(item))" EnableDelete="true" EnableEdit="true"
                                        ActivityViewModel="item"
-                                       OnDeleteClicked="@(() => Delete(item))"/>
+                                       OnDeleteClicked="@(() => Delete(item))" />
             </MudItem>
         }
     </MudGrid>
     <MudStack Row="true">
-        <MudSpacer/>
+        <MudSpacer />
         <MudItem>
             <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="Add" Size="Size.Medium" Color="Color.Tertiary">Add mortality</MudButton>
             <ValidationMessage For="@(() => ViewModel.HuntedActivityViewModels)" Style="font-size: 12px; color: var(--mud-palette-error);" />
         </MudItem>
-        <MudSpacer/>
+        <MudSpacer />
     </MudStack>
 }
 

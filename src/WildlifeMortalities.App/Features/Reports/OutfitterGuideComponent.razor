@@ -7,7 +7,7 @@ else
 {
     <MudText>@Label</MudText>
     <MudStack Row="true">
-        <MudTextField Label="First name" @bind-Value="@Guide.FirstName" For="(() => Guide.FirstName)" Class="mb-2" />
+        <MudTextField Label="First name" @bind-Value="@Guide.FirstName" @bind-Value:after="Revalidate" For="(() => Guide.FirstName)" Class="mb-2" />
         <MudTextField Label="Last name" @bind-Value="@Guide.LastName" For="(() => Guide.LastName)" />
     </MudStack>
 }
@@ -23,4 +23,32 @@ else
 
     [Parameter]
     public bool ReadOnly { get; set; } = true;
+
+    [Parameter] 
+    public bool IsChiefGuide { get; set; } = false;
+
+    [Parameter] 
+    public bool IsFirstAssistantGuide { get; set; } = false;
+
+    [Parameter, EditorRequired] 
+    public OutfitterGuidedHuntReportViewModel ReportViewModel { get; set; } = null!;
+
+    [CascadingParameter] 
+    protected EditContext Context { get; set; } = null!;
+
+    private void Revalidate()
+    {
+        if (IsChiefGuide == false && IsFirstAssistantGuide == false) { return; }
+
+        if (IsChiefGuide == false)
+        {
+            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.ChiefGuide.FirstName));
+        }
+        else
+        {
+            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.AssistantGuides.First().FirstName));
+        }
+
+
+    }
 }
