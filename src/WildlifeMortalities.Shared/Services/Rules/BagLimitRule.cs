@@ -129,7 +129,7 @@ public class BagLimitRule : Rule
                         activity,
                         RuleType.BagLimitExceeded,
                         SeverityType.Illegal,
-                        $"Bag limit exceeded for {string.Join(" and ", bagEntry.GetSpeciesDescriptions())} in {activity.GetAreaName(report)} for {bagEntry.BagLimitEntry.GetSeason()} season."
+                        $"Bag limit exceeded for {string.Join(" and ", bagEntry.GetSpeciesDescriptions())} in {(activity is HuntedActivity ? "area" : "concession")} {activity.GetAreaName(report)} for {bagEntry.BagLimitEntry.GetSeason()} season."
                     )
                 );
             }
