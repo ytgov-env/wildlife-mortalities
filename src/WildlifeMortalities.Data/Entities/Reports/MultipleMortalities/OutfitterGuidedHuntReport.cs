@@ -16,7 +16,7 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
     [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(HuntEndDate)}")]
     public DateTime? HuntEndDate { get; set; }
 
-    public OutfitterGuide ChiefGuide { get; set; } = null!;
+    public OutfitterGuide? ChiefGuide { get; set; }
     public List<OutfitterGuide> AssistantGuides { get; set; } = null!;
 
     [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(OutfitterAreaId)}")]

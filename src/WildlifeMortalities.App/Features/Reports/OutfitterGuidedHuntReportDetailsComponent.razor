@@ -8,17 +8,14 @@
         <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small"/> @Report.HuntEndDate?.ToString("D")</MudField>
     }
     <MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>
-    <MudList Dense="true" Class="ml-n4">
-        <MudListItem>
-            <OutfitterGuideComponent Guide="@Report.ChiefGuide" Label="Chief guide"/>
-        </MudListItem>
-        @foreach (var item in Report.AssistantGuides)
-        {
-            <MudListItem>
-                <OutfitterGuideComponent Guide="item" Label="Assistant guide" />
-            </MudListItem>
-        }
-    </MudList>
+    @if(Report.ChiefGuide != null)
+    {
+        <OutfitterGuideComponent Guide="@Report.ChiefGuide" Label="Chief guide" />
+    }
+    @foreach (var guide in Report.AssistantGuides)
+    {
+        <OutfitterGuideComponent Guide="guide" Label="Assistant guide" />
+    }
     <MudField Label="Hunt result" DisableUnderLine="true">@Report.Result.GetDisplayName()</MudField>
 </MudItem>
 @code {

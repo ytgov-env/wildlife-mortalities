@@ -13,13 +13,11 @@
 
 <MudPaper Class="pa-4 my-4">
     <MudText Typo="Typo.h6">Guides</MudText>
-    <MudAlert Severity="Severity.Info" Class="my-2">A chief guide or at least one assistant guide is required.</MudAlert>
+    <MudAlert Severity="Severity.Info" Class="my-2">At least one guide is required.</MudAlert>
     <OutfitterGuideComponent Label="Chief guide" Guide="ViewModel.ChiefGuide" ReportViewModel="ViewModel" IsChiefGuide="true" ReadOnly="false" />
     <MudStack>
-        @foreach (var (item, index) in ViewModel.AssistantGuides.Select((x, index) => (x, index)))
-        {
-            <OutfitterGuideComponent Label="@($"Assistant guide #{index+1}")" Guide="item" ReportViewModel="ViewModel" IsFirstAssistantGuide="@(index == 0)" ReadOnly="false" />
-        }
+        <OutfitterGuideComponent Label="Assistant guide" Guide="ViewModel.AssistantGuides[0]" ReportViewModel="ViewModel" IsFirstAssistantGuide="true" ReadOnly="false" />
+        <OutfitterGuideComponent Label="Assistant guide" Guide="ViewModel.AssistantGuides[1]" ReportViewModel="ViewModel" IsSecondAssistantGuide="true" ReadOnly="false" />
     </MudStack>
 </MudPaper>
 

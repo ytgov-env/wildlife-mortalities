@@ -16,7 +16,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
     {
         HuntingDateRange.Start = report.HuntStartDate;
         HuntingDateRange.End = report.HuntEndDate;
-        ChiefGuide = report.ChiefGuide;
+        ChiefGuide = report.ChiefGuide ??= new();
         AssistantGuides = report.AssistantGuides
             .Union(Enumerable.Range(0, 2).Select(_ => new OutfitterGuide()))
             .Take(2)
@@ -29,7 +29,6 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
     }
 
     public DateRange HuntingDateRange { get; set; } = new();
-    public OutfitterGuide? SelectedAssistantGuide { get; set; }
     public OutfitterGuide ChiefGuide { get; set; } = new();
     public OutfitterGuide[] AssistantGuides { get; } =
         new[] { new OutfitterGuide(), new OutfitterGuide() };
@@ -48,7 +47,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
 
         var report = new OutfitterGuidedHuntReport
         {
-            ChiefGuide = ChiefGuide!.Id == 0 ? ChiefGuide : null!,
+            ChiefGuide = ChiefGuide,
             AssistantGuides = AssistantGuides.ToList(),
             OutfitterArea = OutfitterArea!,
             Result = Result!.Value,
@@ -93,13 +92,27 @@ public class OutfitterGuideValidator : AbstractValidator<OutfitterGuide>
             x =>
                 reportViewModel.ChiefGuide == x
                 && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[0].FirstName)
-                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[0].LastName),
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[0].LastName)
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[1].FirstName)
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[1].LastName),
             SetRuleForRequiredFirstname
         );
 
         When(
             x =>
                 reportViewModel.AssistantGuides[0] == x
+                && string.IsNullOrWhiteSpace(reportViewModel.ChiefGuide.FirstName)
+                && string.IsNullOrWhiteSpace(reportViewModel.ChiefGuide.LastName)
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[1].FirstName)
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[1].LastName),
+            SetRuleForRequiredFirstname
+        );
+
+        When(
+            x =>
+                reportViewModel.AssistantGuides[1] == x
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[0].FirstName)
+                && string.IsNullOrWhiteSpace(reportViewModel.AssistantGuides[0].LastName)
                 && string.IsNullOrWhiteSpace(reportViewModel.ChiefGuide.FirstName)
                 && string.IsNullOrWhiteSpace(reportViewModel.ChiefGuide.LastName),
             SetRuleForRequiredFirstname

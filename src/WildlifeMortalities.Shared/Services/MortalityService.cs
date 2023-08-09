@@ -116,37 +116,43 @@ public class MortalityService : IMortalityService
         report.Client = await context.People
             .OfType<Client>()
             .FirstAsync(x => x.Id == report.ClientId);
-        report.AssistantGuides = report.AssistantGuides
-            .Where(x => string.IsNullOrEmpty(x.FirstName) == false)
-            .ToList();
-
-        var inputAssistantGuideIds = report.AssistantGuides.ConvertAll(x => x.Id);
-
-        var assistantGuides = await context.OutfitterGuides
-            .Where(x => inputAssistantGuideIds.Contains(x.Id))
-            .ToListAsync();
 
         if (existingReport != null)
         {
-            var existingAssistantGuideIds =
-                existingReport.AssistantGuides.Select(y => y.Id) ?? new List<int>();
-
-            var idsToAdd = inputAssistantGuideIds
-                .Except(inputAssistantGuideIds.Intersect(existingAssistantGuideIds))
-                .ToArray();
+            var existingChiefGuide = existingReport.ChiefGuide;
+            if (
+                existingChiefGuide != null
+                && string.IsNullOrWhiteSpace(report.ChiefGuide!.FirstName)
+            )
+            {
+                context.OutfitterGuides.Remove(existingChiefGuide);
+            }
+            else if (!string.IsNullOrWhiteSpace(report.ChiefGuide!.FirstName))
+            {
+                existingReport.ChiefGuide ??= new();
+                existingReport.ChiefGuide.FirstName = report.ChiefGuide.FirstName;
+                existingReport.ChiefGuide.LastName = report.ChiefGuide.LastName;
+            }
 
             existingReport.AssistantGuides.AddRange(
-                assistantGuides.Where(x => idsToAdd.Contains(x.Id)).ToArray()
+                report.AssistantGuides.Where(
+                    x => x.Id == 0 && !string.IsNullOrWhiteSpace(x.FirstName)
+                )
             );
-
-            var idsToRemove = existingAssistantGuideIds
-                .Except(existingAssistantGuideIds.Intersect(inputAssistantGuideIds))
-                .ToArray();
-
-            foreach (var id in idsToRemove)
+            foreach (var guide in report.AssistantGuides.Where(x => x.Id != 0))
             {
-                var existingGuide = existingReport.AssistantGuides.First(x => x.Id == id);
-                existingReport.AssistantGuides.Remove(existingGuide);
+                var existingAssistantGuide = existingReport.AssistantGuides.Single(
+                    x => x.Id == guide.Id
+                );
+                if (string.IsNullOrWhiteSpace(guide.FirstName))
+                {
+                    context.OutfitterGuides.Remove(existingAssistantGuide);
+                }
+                else
+                {
+                    existingAssistantGuide.FirstName = guide.FirstName;
+                    existingAssistantGuide.LastName = guide.LastName;
+                }
             }
         }
 

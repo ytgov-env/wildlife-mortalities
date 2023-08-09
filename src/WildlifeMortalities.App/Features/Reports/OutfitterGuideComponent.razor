@@ -30,7 +30,10 @@ else
     [Parameter] 
     public bool IsFirstAssistantGuide { get; set; } = false;
 
-    [Parameter, EditorRequired] 
+    [Parameter]
+    public bool IsSecondAssistantGuide { get; set; } = false;
+
+    [Parameter] 
     public OutfitterGuidedHuntReportViewModel ReportViewModel { get; set; } = null!;
 
     [CascadingParameter] 
@@ -38,17 +41,20 @@ else
 
     private void Revalidate()
     {
-        if (IsChiefGuide == false && IsFirstAssistantGuide == false) { return; }
-
-        if (IsChiefGuide == false)
+        if (IsChiefGuide)
+        {
+            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.AssistantGuides[0].FirstName));
+            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.AssistantGuides[1].FirstName));
+        }
+        else if(IsFirstAssistantGuide)
         {
             Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.ChiefGuide.FirstName));
+            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.AssistantGuides[1].FirstName));
         }
         else
         {
-            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.AssistantGuides.First().FirstName));
+            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.ChiefGuide.FirstName));
+            Context.NotifyFieldChanged(FieldIdentifier.Create(() => ReportViewModel.AssistantGuides[0].FirstName));
         }
-
-
     }
 }
