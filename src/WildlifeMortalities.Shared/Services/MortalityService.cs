@@ -21,7 +21,7 @@ public class MortalityService : IMortalityService
     public MortalityService(IDbContextFactory<AppDbContext> dbContextFactory) =>
         _dbContextFactory = dbContextFactory;
 
-    public async Task CreateReport(Report report, int userId, int? draftReportId)
+    public async Task<int> CreateReport(Report report, int userId, int? draftReportId = null)
     {
         SetReportNavigationPropertyForActivities(report, report);
 
@@ -92,6 +92,7 @@ public class MortalityService : IMortalityService
         await RulesSummary.GenerateAll(report, context);
 
         await context.SaveChangesAsync();
+        return report.Id;
     }
 
     private static async Task CreateOrUpdateReport(
@@ -367,7 +368,7 @@ public class MortalityService : IMortalityService
         }
     }
 
-    public async Task CreateDraftReport(string reportType, string report, int personId)
+    public async Task<int> CreateDraftReport(string reportType, string report, int personId)
     {
         var now = DateTimeOffset.Now;
         var draftReport = new DraftReport
@@ -382,6 +383,7 @@ public class MortalityService : IMortalityService
         using var context = _dbContextFactory.CreateDbContext();
         context.Add(draftReport);
         await context.SaveChangesAsync();
+        return draftReport.Id;
     }
 
     public async Task UpdateDraftReport(string report, int reportId)

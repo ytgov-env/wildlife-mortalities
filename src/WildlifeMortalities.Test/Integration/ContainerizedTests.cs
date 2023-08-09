@@ -18,6 +18,9 @@ using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports;
 using static WildlifeMortalities.Data.Entities.Violation;
 using WildlifeMortalities.Data.Entities;
+using WildlifeMortalities.App.Features.Shared.Mortalities.Caribou;
+using Bogus;
+using System.Text.Json;
 
 namespace WildlifeMortalities.Test.Integration;
 
@@ -657,5 +660,97 @@ public class ContainerizedTests : IAsyncLifetime
                     "Threshold exceeded for moose in 2-56, 2-58, 2-59, 2-62, 2-63, 4-04, 4-05, 4-06. Threshold of 11 was reached on 2023-10-13."
                 );
         }
+    }
+
+    [Fact]
+    public async Task DraftOutfitterGuidedReport_CanConverToRealReport()
+    {
+        var hunter = new Client
+        {
+            BirthDate = new DateTime(1990, 1, 1, 0, 0, 0),
+            FirstName = "Test",
+            LastName = "User",
+            EnvPersonId = "410302"
+        };
+
+        _context.People.Add(hunter);
+        await _context.SaveChangesAsync();
+
+        var outfitterArea = await _context.OutfitterAreas.FirstAsync();
+        var gma = await _context.GameManagementAreas.FirstAsync();
+        var reportViewModel = new OutfitterGuidedHuntReportViewModel()
+        {
+            ChiefGuide = new() { FirstName = "Test", LastName = "User" },
+            OutfitterArea = outfitterArea,
+            Result = GuidedHuntResult.WentHuntingAndKilledWildlife,
+            HuntedActivityViewModels = new()
+            {
+                new()
+                {
+                    GameManagementArea = gma,
+                    HrbsNumber = "50503",
+                    Seal = "4020",
+                    MortalityWithSpeciesSelectionViewModel = new()
+                    {
+                        MortalityViewModel = new CaribouMortalityViewModel()
+                        {
+                            BioSubmission = null,
+                            DateOfDeath = null,
+                            Sex = Sex.Male,
+                            IsDraft = true,
+                            LegalHerd = CaribouMortality.CaribouHerd.Porcupine
+                        },
+                        Species = Species.Caribou
+                    }
+                }
+            }
+        };
+
+        var contextFactory = new Mock<IDbContextFactory<AppDbContext>>();
+        contextFactory
+            .Setup(contextFactory => contextFactory.CreateDbContext())
+            .Returns(GetContext);
+        var service = new MortalityService(contextFactory.Object);
+        var content = JsonSerializer.Serialize(
+            new MortalityReportPageViewModel
+            {
+                ReportType = ReportType.OutfitterGuidedHuntReport,
+                ReportViewModel = reportViewModel,
+            }
+        );
+
+        var draftReportId = await service.CreateDraftReport(
+            nameof(OutfitterGuidedHuntReport),
+            content,
+            1
+        );
+
+        var draft = await _context.DraftReports.FirstOrDefaultAsync(x => x.Id == draftReportId);
+        if (draft == null)
+        {
+            return;
+        }
+
+        var reportPageViewModel = JsonSerializer.Deserialize<MortalityReportPageViewModel>(
+            draft.SerializedData
+        )!;
+
+        reportViewModel = (OutfitterGuidedHuntReportViewModel)reportPageViewModel.ReportViewModel;
+
+        reportViewModel.HuntingDateRange = new MudBlazor.DateRange(
+            new DateTime(2023, 8, 1),
+            new DateTime(2023, 8, 6)
+        );
+        foreach (var item in reportViewModel.HuntedActivityViewModels)
+        {
+            item.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.DateOfDeath =
+                new DateTime(2023, 8, 3);
+        }
+
+        var report = reportPageViewModel.ReportViewModel.GetReport(hunter.Id);
+        var reportId = await service.CreateReport(report, _seedUser.Id, draftReportId);
+
+        _context.DraftReports.Should().BeEmpty();
+        _context.Reports.Should().ContainSingle();
     }
 }
