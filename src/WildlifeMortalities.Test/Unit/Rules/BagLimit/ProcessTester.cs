@@ -176,7 +176,7 @@ public class ProcessTester
 
         violation.Description
             .Should()
-            .BeEquivalentTo("Bag limit exceeded for Caribou in 4-03 for 23/24 season.");
+            .BeEquivalentTo("Bag limit exceeded for Caribou in area 4-03 for 23/24 season.");
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
         violation.Rule.Should().Be(RuleType.BagLimitExceeded);
@@ -228,7 +228,7 @@ public class ProcessTester
         violation.Description
             .Should()
             .BeEquivalentTo(
-                "Bag limit exceeded for caribou and black bear in 4-03 for 23/24 season."
+                "Bag limit exceeded for caribou and black bear in area 4-03 for 23/24 season."
             );
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
@@ -413,7 +413,7 @@ public class ProcessTester
 
             violation.Description
                 .Should()
-                .BeEquivalentTo("Bag limit exceeded for caribou in 4-03 for 23/24 season.");
+                .BeEquivalentTo("Bag limit exceeded for caribou in area 4-03 for 23/24 season.");
             violation.Activity.Should().Be(report.GetActivities().ElementAt(1));
             violation.Severity.Should().Be(SeverityType.Illegal);
             violation.Rule.Should().Be(RuleType.BagLimitExceeded);
@@ -423,7 +423,7 @@ public class ProcessTester
 
             violation.Description
                 .Should()
-                .BeEquivalentTo("Bag limit exceeded for caribou in 4-03 for 23/24 season.");
+                .BeEquivalentTo("Bag limit exceeded for caribou in area 4-03 for 23/24 season.");
             violation.Activity.Should().Be(report.GetActivities().Last());
             violation.Severity.Should().Be(SeverityType.Illegal);
             violation.Rule.Should().Be(RuleType.BagLimitExceeded);

@@ -246,7 +246,9 @@ public class CaribouTester
 
                 violation.Description
                     .Should()
-                    .BeEquivalentTo("Bag limit exceeded for caribou in 2-16 for 23/24 season.");
+                    .BeEquivalentTo(
+                        "Bag limit exceeded for caribou in area 2-16 for 23/24 season."
+                    );
                 violation.Activity.Should().Be(reportToTest.Activity);
                 violation.Severity.Should().Be(SeverityType.Illegal);
                 violation.Rule.Should().Be(RuleType.BagLimitExceeded);
