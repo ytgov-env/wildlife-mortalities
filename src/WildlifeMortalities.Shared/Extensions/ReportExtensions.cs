@@ -29,14 +29,43 @@ internal static class ReportExtensions
 
                     for (var annulus = 1; annulus < firstAnnulusFound; annulus++)
                     {
-                        sheepSubmission.HornMeasurementEntries.Insert(
-                            annulus - 1,
-                            new ThinhornSheepHornMeasurementEntry
+                        if (annulus == 1)
+                        {
+                            if (
+                                sheepSubmission.BroomedStatus == BroomedStatus.NotBroomed
+                                || (
+                                    sheepSubmission.BroomedStatus == BroomedStatus.LeftHornBroomed
+                                    && sheepSubmission.HornMeasured == HornMeasured.RightHorn
+                                )
+                                || (
+                                    sheepSubmission.BroomedStatus == BroomedStatus.RightHornBroomed
+                                    && sheepSubmission.HornMeasured == HornMeasured.LeftHorn
+                                )
+                            )
                             {
-                                IsBroomed = true,
-                                Annulus = annulus
+                                sheepSubmission.HornMeasurementEntries.Insert(
+                                    annulus - 1,
+                                    new ThinhornSheepHornMeasurementEntry
+                                    {
+                                        IsBroomed = false,
+                                        IsIndiscernible = true,
+                                        Annulus = annulus
+                                    }
+                                );
                             }
-                        );
+                        }
+                        else
+                        {
+                            sheepSubmission.HornMeasurementEntries.Insert(
+                                annulus - 1,
+                                new ThinhornSheepHornMeasurementEntry
+                                {
+                                    IsBroomed = true,
+                                    IsIndiscernible = false,
+                                    Annulus = annulus
+                                }
+                            );
+                        }
                     }
 
                     sheepSubmission.HornMeasurementEntries =

@@ -79,6 +79,7 @@ public class ThinhornSheepBioSubmissionConfig : IEntityTypeConfiguration<Thinhor
             ownedNavigationBuilder =>
             {
                 ownedNavigationBuilder.Ignore(h => h.IsBroomed);
+                ownedNavigationBuilder.Ignore(h => h.IsIndiscernible);
                 ownedNavigationBuilder.ToJson("ThinhornSheepBioSubmission_HornMeasurementEntries");
             }
         );
@@ -94,6 +95,7 @@ public class ThinhornSheepHornMeasurementEntry
     public int LengthMillimetres { get; set; }
     public int CircumferenceMillimetres { get; set; }
     public bool IsBroomed { get; set; }
+    public bool IsIndiscernible { get; set; }
 }
 
 public enum BroomedStatus

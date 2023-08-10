@@ -18,7 +18,7 @@
                  @bind-Value="BioSubmission.HornBaseCircumferenceMillimetres" For="() => BioSubmission.HornBaseCircumferenceMillimetres" Disabled="IsReadOnly" />
     <MudNumericField Label="Tip spread" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.HornTipSpreadMillimetres" For="() => BioSubmission.HornTipSpreadMillimetres" Disabled="IsReadOnly" />
-    <MudSelect @bind-Value="BioSubmission.BroomedStatus" Label="Broomed?" For="() => BioSubmission.BroomedStatus" Disabled="IsReadOnly">
+    <MudSelect @bind-Value="BioSubmission.BroomedStatus" @bind-Value:after="ResetIsBroomedForAllHornMeasurementEntries" Label="Broomed?" For="() => BioSubmission.BroomedStatus" Disabled="IsReadOnly">
         @foreach (var item in Enum.GetValues<BroomedStatus>())
         {
             <MudSelectItem T="BroomedStatus?" Value="item">@item.GetDisplayName()</MudSelectItem>
@@ -64,16 +64,20 @@
                 <MudListItem>
                     <MudStack Row="true">
                         <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true" />
-                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0" />
-                        <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@(() => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" Disabled="item.IsBroomed" Min="0" />
-                        @if (ShowAnnuliBroomedCheckbox(item))
+                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Disabled="IsEntryDisabled(item)" Min="0" />
+                        <MudNumericField @bind-Value="@item.CircumferenceMillimetres" For="@(() => item.CircumferenceMillimetres)" Label="Circumference" Adornment="Adornment.End" AdornmentText="mm" Disabled="IsEntryDisabled(item)" Min="0" />
+                        @if (ShowAnnulusIsBroomedCheckbox(item))
                         {
                             @if (BioSubmission.HornMeasurementEntries.First().Equals(item))
                             {
                                 item.IsBroomed = true;
                             }
                             <MudCheckBox Label="Broomed" @bind-Checked="@item.IsBroomed" @bind-Checked:after="(() => ResetHornMeasurementEntryValues(item))"
-                         Disabled="IsAnnuliBroomedCheckboxDisabled(item)" />
+                         Disabled="IsAnnulusBroomedCheckboxDisabled(item)" />
+                        }
+                        @if (ShowAnnulusIsIndiscernibleCheckbox(item))
+                        {
+                            <MudCheckBox Label="Indiscernible" @bind-Checked="@item.IsIndiscernible" @bind-Checked:after="(() => ResetHornMeasurementEntryValues(item))" />
                         }
                     </MudStack>
                 </MudListItem>

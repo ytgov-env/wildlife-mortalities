@@ -59,7 +59,18 @@ public partial class ThinhornSheepBioSubmissionComponent
         }
     }
 
-    private bool ShowAnnuliBroomedCheckbox(ThinhornSheepHornMeasurementEntry entry)
+    private bool ShowAnnulusIsIndiscernibleCheckbox(ThinhornSheepHornMeasurementEntry entry)
+    {
+        if (AnnuliCanBeBroomed())
+        {
+            return false;
+        }
+
+        var entries = BioSubmission.HornMeasurementEntries;
+        return entries.IndexOf(entry) == 0;
+    }
+
+    private bool ShowAnnulusIsBroomedCheckbox(ThinhornSheepHornMeasurementEntry entry)
     {
         if (!AnnuliCanBeBroomed())
         {
@@ -67,7 +78,6 @@ public partial class ThinhornSheepBioSubmissionComponent
         }
 
         var entries = BioSubmission.HornMeasurementEntries;
-        // Show checkbox if this is the first annulus
         if (entries.IndexOf(entry) == 0)
         {
             return true;
@@ -78,11 +88,10 @@ public partial class ThinhornSheepBioSubmissionComponent
             return false;
         }
 
-        // Show checkbox if the previous annulus was missing AND (this is the last annulus OR the annulus was marked as missing)
         return entries[BioSubmission.HornMeasurementEntries.IndexOf(entry) - 1].IsBroomed;
     }
 
-    private bool IsAnnuliBroomedCheckboxDisabled(ThinhornSheepHornMeasurementEntry entry)
+    private bool IsAnnulusBroomedCheckboxDisabled(ThinhornSheepHornMeasurementEntry entry)
     {
         var entries = BioSubmission.HornMeasurementEntries;
         if (entries[0].Equals(entry))
@@ -104,6 +113,26 @@ public partial class ThinhornSheepBioSubmissionComponent
         }
 
         return true;
+    }
+
+    private static bool IsEntryDisabled(ThinhornSheepHornMeasurementEntry entry)
+    {
+        return entry.IsBroomed || entry.IsIndiscernible;
+    }
+
+    private void ResetIsBroomedForAllHornMeasurementEntries()
+    {
+        if (!AnnuliCanBeBroomed())
+        {
+            foreach (var entry in BioSubmission.HornMeasurementEntries)
+            {
+                entry.IsBroomed = false;
+            }
+        }
+        if (HasAttemptedFormSubmission)
+        {
+            Context.Validate();
+        }
     }
 
     private void ResetHornMeasurementEntryValues(ThinhornSheepHornMeasurementEntry entry)
@@ -173,7 +202,7 @@ public class ThinhornSheepBioSubmissionValidator
         public ThinhornSheepHornMeasurementEntryValidator(ThinhornSheepBioSubmission bioSubmission)
         {
             When(
-                entry => !entry.IsBroomed,
+                entry => !entry.IsBroomed && !entry.IsIndiscernible,
                 () =>
                 {
                     RuleFor(entry => entry.LengthMillimetres)
