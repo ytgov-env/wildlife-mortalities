@@ -43,6 +43,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
                             DateSubmitted = x.DateSubmitted
                         }
                 )
+                .OrderBy(x => x.DateLastModified)
                 .ToArrayAsync();
         }
         else
@@ -60,6 +61,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
                             DateSubmitted = x.DateSubmitted
                         }
                 )
+                .OrderBy(x => x.DateLastModified)
                 .ToArrayAsync();
         }
     }
