@@ -57,6 +57,15 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
             _ => throw new Exception($"no viewmodel mapping found for type {item.GetType().Name}")
         };
 
+    private string GetCreatedBy()
+    {
+        if (_reportDetail is null)
+        {
+            return string.Empty;
+        }
+        return $"{_reportDetail.Report.CreatedBy.FullName} on {_reportDetail.Report.DateCreated.ToString("D")}";
+    }
+
     private string? GetLastModifiedBy()
     {
         if (_reportDetail is null)
@@ -72,6 +81,7 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
                 .submission;
         }
 
+        var result = string.Empty;
         if (
             (
                 _reportDetail.Report.LastModifiedBy is not null
@@ -84,16 +94,20 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
             )
         )
         {
-            return $"{_reportDetail.Report.LastModifiedBy.FullName} on {_reportDetail.Report.DateModified?.ToString("D")}";
+            result =
+                $"{_reportDetail.Report.LastModifiedBy.FullName} on {_reportDetail.Report.DateModified?.ToString("D")}";
         }
         else if (bioSubmission?.LastModifiedBy is not null)
         {
-            return $"{bioSubmission.LastModifiedBy.FullName} on {bioSubmission.DateModified?.ToString("D")}";
+            result =
+                $"{bioSubmission.LastModifiedBy.FullName} on {bioSubmission.DateModified?.ToString("D")}";
         }
         else
         {
-            return null;
+            result = null;
         }
+
+        return result != GetCreatedBy() ? result : null;
     }
 
     private async Task Delete()
