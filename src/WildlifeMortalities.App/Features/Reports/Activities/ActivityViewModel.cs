@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.Validators;
 using WildlifeMortalities.App.Features.Shared.Mortalities;
@@ -19,6 +20,7 @@ public abstract class ActivityViewModel
     public bool HasOnlyPotentiallyIllegalViolations { get; }
     public bool HasIllegalViolations { get; }
 
+    [JsonIgnore]
     public Activity? Activity { get; }
 
     protected ActivityViewModel(Activity activity, ReportDetail? reportDetail = null)

@@ -80,6 +80,9 @@ else if (_reportDetail is null)
         <MudStack Row="true">
             <MudSpacer />
             <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="@Constants.Routes.GetEditReportPageLink(HumanReadablePersonId, ReportId)">Edit report</MudButton>
+            <AuthorizeView Roles="@PermissionConstants.Reports.DeleteHarvest">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete">Delete report</MudButton>
+            </AuthorizeView>
         </MudStack>
     </MudItem>
 </MudGrid>

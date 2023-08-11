@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using WildlifeMortalities.App.Features.Shared;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.People;
@@ -23,7 +25,19 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
     [Parameter]
     public string HumanReadablePersonId { get; set; } = null!;
 
+    [CascadingParameter]
+    public AppParameters AppParameters { get; set; } = null!;
+
     private Client? Client { get; set; }
+
+    [Inject]
+    public IDialogService DialogService { get; set; } = null!;
+
+    [Inject]
+    public IMortalityService MortalityService { get; set; } = null!;
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,6 +93,32 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
         else
         {
             return null;
+        }
+    }
+
+    private async Task Delete()
+    {
+        var parameters = new DialogParameters
+        {
+            [nameof(DeleteHarvestReportDialog.HumanReadableId)] = _reportDetail!
+                .Report
+                .HumanReadableId
+        };
+
+        var dialog = DialogService.Show<DeleteHarvestReportDialog>("", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            var reportViewModel = new MortalityReportPageViewModel(_reportDetail);
+
+            var report = JsonSerializer.Serialize(reportViewModel);
+            await MortalityService.SoftDeleteReport(
+                report,
+                _reportDetail.Report.Id,
+                AppParameters.UserId,
+                (string)result.Data
+            );
+            NavigationManager.NavigateTo(Constants.Routes.ReportsOverviewPage);
         }
     }
 }

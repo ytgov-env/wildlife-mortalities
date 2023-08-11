@@ -18,5 +18,8 @@ public class DraftReport
 public class DraftReportConfig : IEntityTypeConfiguration<DraftReport>
 {
     public void Configure(EntityTypeBuilder<DraftReport> builder) =>
-        builder.Property(d => d.SerializedData).HasColumnType("nvarchar(4000)").HasMaxLength(4000);
+        builder
+            .Property(d => d.SerializedData)
+            .HasColumnType("nvarchar(MAX)")
+            .HasMaxLength(1_073_741_824);
 }

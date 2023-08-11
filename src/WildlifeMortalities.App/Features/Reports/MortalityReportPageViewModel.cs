@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 using FluentValidation;
-using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data;
-using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
@@ -23,33 +22,43 @@ public class MortalityReportPageViewModel
         ReportType = ReportType.IndividualHuntedMortalityReport;
     }
 
-    public MortalityReportPageViewModel(Report report)
+    public MortalityReportPageViewModel(ReportDetail reportDetail)
     {
         IsUpdate = true;
-        switch (report)
+        switch (reportDetail.Report)
         {
             case IndividualHuntedMortalityReport individualHuntedMortalityReport:
                 ReportType = ReportType.IndividualHuntedMortalityReport;
                 ReportViewModel = new IndividualHuntedMortalityReportViewModel(
-                    individualHuntedMortalityReport
+                    individualHuntedMortalityReport,
+                    reportDetail
                 );
                 break;
             case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
                 ReportType = ReportType.OutfitterGuidedHuntReport;
-                ReportViewModel = new OutfitterGuidedHuntReportViewModel(outfitterGuidedHuntReport);
+                ReportViewModel = new OutfitterGuidedHuntReportViewModel(
+                    outfitterGuidedHuntReport,
+                    reportDetail
+                );
                 break;
             case SpecialGuidedHuntReport specialGuidedHuntReport:
                 ReportType = ReportType.SpecialGuidedHuntReport;
-                ReportViewModel = new SpecialGuidedHuntReportViewModel(specialGuidedHuntReport);
+                ReportViewModel = new SpecialGuidedHuntReportViewModel(
+                    specialGuidedHuntReport,
+                    reportDetail
+                );
                 break;
             case TrappedMortalitiesReport trappedMortalitiesReport:
                 ReportType = ReportType.TrappedMortalitiesReport;
-                ReportViewModel = new TrappedReportViewModel(trappedMortalitiesReport);
+                ReportViewModel = new TrappedReportViewModel(
+                    trappedMortalitiesReport,
+                    reportDetail
+                );
                 break;
             default:
                 throw new NotImplementedException();
         }
-        DateSubmitted = report.DateSubmitted.DateTime;
+        DateSubmitted = reportDetail.Report.DateSubmitted.DateTime;
     }
 
     public ReportType ReportType { get; set; }

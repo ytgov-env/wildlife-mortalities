@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildlifeMortalities.Data;
 
@@ -11,9 +12,11 @@ using WildlifeMortalities.Data;
 namespace WildlifeMortalities.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230811193917_AddDeletedReportEntity")]
+    partial class AddDeletedReportEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -576,8 +579,8 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.Property<string>("SerializedData")
                         .IsRequired()
-                        .HasMaxLength(1073741824)
-                        .HasColumnType("nvarchar(MAX)");
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<string>("Type")
                         .IsRequired()

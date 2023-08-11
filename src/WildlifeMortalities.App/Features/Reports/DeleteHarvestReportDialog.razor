@@ -1,0 +1,52 @@
+﻿@using FluentValidation;
+<EditForm Model="_model" OnValidSubmit="@(() => MudDialog.Close(_model.Reason))">
+    <FluentValidationValidator />
+    <MudDialog>
+        <DialogContent>
+            Are you sure you want to delete the harvest report with Id <strong>@HumanReadableId</strong>?
+            <MudTextField Label="Reason for deletion" @bind-Value="_model.Reason" For="@( () => _model.Reason)" />
+            <MudTextField Label="Enter the Id to confirm" @bind-Value="_model.EnteredId" For="@( () => _model.EnteredId)" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton Color="Color.Primary" OnClick="@MudDialog.Cancel">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Secondary" >Delete</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+@code {
+    private DeleteHarvestViewModel _model = null!;
+
+    protected override void OnInitialized()
+    {
+        _model = new(HumanReadableId);
+        base.OnInitialized();
+    }
+
+    [Parameter]
+    public string HumanReadableId { get; set; } = null!;
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; } = null!;
+
+    public class DeleteHarvestViewModel
+    {
+        public string HumanReadableId { get; }
+        public string EnteredId { get; set; } = string.Empty;
+        public string Reason { get; set; } = string.Empty;
+
+        public DeleteHarvestViewModel(string humanReadableId)
+        {
+            HumanReadableId = humanReadableId;
+        }
+    }
+
+    public class DeleteHarvestViewModelValidator : AbstractValidator<DeleteHarvestViewModel>
+    {
+        public DeleteHarvestViewModelValidator()
+        {
+            RuleFor(x => x.EnteredId).Equal(x => x.HumanReadableId);
+            RuleFor(x => x.Reason).NotEmpty().MinimumLength(5);
+        }
+    }
+}

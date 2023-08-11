@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using WildlifeMortalities.App.Extensions;
 using WildlifeMortalities.App.Features.Shared;
+using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Shared.Services;
 using WildlifeMortalities.Shared.Services.Reports.Single;
@@ -103,7 +104,9 @@ public partial class MortalityReportComponent : DbContextAwareComponent
                 return;
             }
 
-            _vm = new MortalityReportPageViewModel(report);
+            _vm = new MortalityReportPageViewModel(
+                new ReportDetail(report, Array.Empty<(int, BioSubmission)>())
+            );
             CreateNewEditContext();
         }
     }

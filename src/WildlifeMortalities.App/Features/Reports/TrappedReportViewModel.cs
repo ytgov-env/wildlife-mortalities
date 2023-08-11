@@ -2,6 +2,7 @@
 using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
@@ -9,11 +10,11 @@ public class TrappedReportViewModel : MortalityReportViewModel
 {
     public TrappedReportViewModel() { }
 
-    public TrappedReportViewModel(TrappedMortalitiesReport report)
+    public TrappedReportViewModel(TrappedMortalitiesReport report, ReportDetail reportDetail)
         : base(report)
     {
         TrappedActivityViewModels = report.TrappedActivities
-            .Select(x => new TrappedActivityViewModel(x, report))
+            .Select(x => new TrappedActivityViewModel(x, reportDetail))
             .ToList();
         RegisteredTrappingConcession = report.RegisteredTrappingConcession;
     }

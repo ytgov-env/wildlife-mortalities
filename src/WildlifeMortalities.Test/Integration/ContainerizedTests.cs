@@ -114,7 +114,8 @@ public class ContainerizedTests : IAsyncLifetime
             .FirstAsync(x => x.Id == report.Id);
 
         var secondReportViewModel = new IndividualHuntedMortalityReportViewModel(
-            (IndividualHuntedMortalityReport)reportFromDb
+            (IndividualHuntedMortalityReport)reportFromDb,
+            new ReportDetail(reportFromDb, Array.Empty<(int, BioSubmission)>())
         );
         var secondReport = secondReportViewModel.GetReport(hunter.Id);
 
@@ -213,7 +214,8 @@ public class ContainerizedTests : IAsyncLifetime
         _context.BioSubmissions.Should().HaveCount(1);
 
         var secondReportViewModel = new SpecialGuidedHuntReportViewModel(
-            (SpecialGuidedHuntReport)reportFromDb
+            (SpecialGuidedHuntReport)reportFromDb,
+            new ReportDetail(reportFromDb, Array.Empty<(int, BioSubmission)>())
         );
         secondReportViewModel.HuntedActivityViewModels.RemoveAt(0);
 
@@ -372,7 +374,8 @@ public class ContainerizedTests : IAsyncLifetime
             .FirstAsync(x => x.Id == report.Id);
 
         var secondReportViewModel = new IndividualHuntedMortalityReportViewModel(
-            (IndividualHuntedMortalityReport)reportFromDb
+            (IndividualHuntedMortalityReport)reportFromDb,
+            new ReportDetail(reportFromDb, Array.Empty<(int, BioSubmission)>())
         );
 
         secondReportViewModel.SpeciesChanged(

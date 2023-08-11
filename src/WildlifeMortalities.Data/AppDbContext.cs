@@ -33,6 +33,7 @@ public class AppDbContext : DbContext
         Set<Entities.Reports.SingleMortality.Activity>();
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<DraftReport> DraftReports => Set<DraftReport>();
+    public DbSet<DeletedReport> DeletedReports => Set<DeletedReport>();
     public DbSet<Violation> Violations => Set<Violation>();
     public DbSet<BioSubmission> BioSubmissions => Set<BioSubmission>();
 

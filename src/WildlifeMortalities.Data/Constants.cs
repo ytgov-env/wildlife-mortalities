@@ -15,6 +15,7 @@ public static class Constants
         public const string BigGameHuntingLicenceOutfitterArea =
             "BigGameHuntingLicenceOutfitterArea";
         public const string BioSubmissions = "BioSubmissions";
+        public const string DeletedReports = "DeletedReports";
         public const string DraftReports = "DraftReports";
         public const string GameManagementAreas = "GameManagementAreas";
         public const string GameManagementAreaHuntingBagLimitEntry =

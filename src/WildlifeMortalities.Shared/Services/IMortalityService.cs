@@ -15,7 +15,7 @@ public interface IMortalityService
     Task UpdateReport(Report report, int userId);
     Task<int> CreateDraftReport(string reportType, string reportContent, int personId);
     Task UpdateDraftReport(string report, int reportId);
-
+    Task SoftDeleteReport(string report, int reportId, int userId, string reason);
     Task<ReportDetail> UpdateBioSubmissionAnalysis(
         BioSubmission bioSubmission,
         int reportId,

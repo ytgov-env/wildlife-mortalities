@@ -4,6 +4,7 @@ using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
@@ -11,7 +12,10 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
 {
     public OutfitterGuidedHuntReportViewModel() { }
 
-    public OutfitterGuidedHuntReportViewModel(OutfitterGuidedHuntReport report)
+    public OutfitterGuidedHuntReportViewModel(
+        OutfitterGuidedHuntReport report,
+        ReportDetail reportDetail
+    )
         : base(report)
     {
         HuntingDateRange.Start = report.HuntStartDate;
@@ -24,7 +28,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
         OutfitterArea = report.OutfitterArea;
         Result = report.Result;
         HuntedActivityViewModels = report.HuntedActivities
-            .Select(x => new HuntedActivityViewModel(x, report))
+            .Select(x => new HuntedActivityViewModel(x, reportDetail))
             .ToList();
     }
 

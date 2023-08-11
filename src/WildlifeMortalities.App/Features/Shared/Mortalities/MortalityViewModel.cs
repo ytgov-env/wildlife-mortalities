@@ -1,10 +1,12 @@
-﻿using FluentValidation;
+﻿using System.Text.Json.Serialization;
+using FluentValidation;
 using WildlifeMortalities.App.Features.Shared.Mortalities.AmericanBlackBear;
 using WildlifeMortalities.App.Features.Shared.Mortalities.Caribou;
 using WildlifeMortalities.App.Features.Shared.Mortalities.Elk;
 using WildlifeMortalities.App.Features.Shared.Mortalities.GrizzlyBear;
 using WildlifeMortalities.App.Features.Shared.Mortalities.ThinhornSheep;
 using WildlifeMortalities.App.Features.Shared.Mortalities.WoodBison;
+using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using WildlifeMortalities.Data.Enums;
@@ -66,6 +68,7 @@ public class MortalityViewModel
 
     public MortalityViewModel(Species species) => Species = species;
 
+    [JsonConverter(typeof(MostConcreteClassJsonConverter<BioSubmission>))]
     public BioSubmission? BioSubmission { get; set; }
 
     public int? Id { get; private set; }

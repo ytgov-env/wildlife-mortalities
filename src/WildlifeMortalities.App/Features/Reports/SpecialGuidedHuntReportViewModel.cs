@@ -3,6 +3,7 @@ using MudBlazor;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Enums;
+using WildlifeMortalities.Shared.Services;
 
 namespace WildlifeMortalities.App.Features.Reports;
 
@@ -10,7 +11,10 @@ public class SpecialGuidedHuntReportViewModel : MortalityReportViewModel
 {
     public SpecialGuidedHuntReportViewModel() { }
 
-    public SpecialGuidedHuntReportViewModel(SpecialGuidedHuntReport report)
+    public SpecialGuidedHuntReportViewModel(
+        SpecialGuidedHuntReport report,
+        ReportDetail reportDetail
+    )
         : base(report)
     {
         HuntingDateRange.Start = report.HuntStartDate;
@@ -18,7 +22,7 @@ public class SpecialGuidedHuntReportViewModel : MortalityReportViewModel
         Guide = report.Guide;
         Result = report.Result;
         HuntedActivityViewModels = report.HuntedActivities
-            .Select(x => new HuntedActivityViewModel(x, report))
+            .Select(x => new HuntedActivityViewModel(x, reportDetail))
             .ToList();
     }
 
