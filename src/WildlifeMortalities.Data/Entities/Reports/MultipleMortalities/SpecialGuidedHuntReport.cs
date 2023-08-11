@@ -53,6 +53,10 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport
 
     public override void OverrideActivity(IDictionary<Activity, Activity> replacements)
     {
+        if (HuntedActivities == null)
+        {
+            return;
+        }
         HuntedActivities = HuntedActivities.ConvertAll(
             x => replacements.TryGetValue(x, out var activity) ? (HuntedActivity)activity : x
         );
