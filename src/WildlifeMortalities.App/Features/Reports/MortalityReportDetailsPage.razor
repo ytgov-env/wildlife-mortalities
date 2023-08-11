@@ -52,7 +52,7 @@ else if (_reportDetail is null)
     }
 </MudItem>
 
-@if (_reportDetail.Report is not IndividualHuntedMortalityReport)
+@if (_reportDetail.Report.GetMortalities().Any())
 {
     <MudText Typo="Typo.h5" Class="my-2">Mortalities</MudText>
 }
