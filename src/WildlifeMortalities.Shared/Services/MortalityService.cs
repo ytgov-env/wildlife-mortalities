@@ -155,6 +155,10 @@ public class MortalityService : IMortalityService
                 }
             }
         }
+        else
+        {
+            report.AssistantGuides.RemoveAll(x => string.IsNullOrWhiteSpace(x.FirstName));
+        }
 
         var area = await context.OutfitterAreas.FirstOrDefaultAsync(
             x => x.Area == report.OutfitterArea.Area
@@ -401,6 +405,35 @@ public class MortalityService : IMortalityService
             ?? throw new ArgumentException($"Draft report {reportId} not found.", nameof(reportId));
         reportFromDatabase.SerializedData = report;
         reportFromDatabase.DateLastModified = DateTimeOffset.Now;
+
+        await context.SaveChangesAsync();
+    }
+
+    public async Task SoftDeleteReport(string report, int reportId, int userId, string reason)
+    {
+        using var context = _dbContextFactory.CreateDbContext();
+
+        var existingReport = await context.Reports
+            .WithEntireGraph()
+            .FirstAsync(x => x.Id == reportId);
+
+        var deletedReport = new DeletedReport
+        {
+            PersonId = existingReport.GetPerson().Id,
+            HumanReadableId = existingReport.HumanReadableId,
+            Season = existingReport.Season,
+            DateLastModified = existingReport.DateModified,
+            DateSubmitted = existingReport.DateSubmitted,
+            DateDeleted = DateTimeOffset.Now,
+            Reason = reason,
+            DeletedById = userId,
+            SerializedData = report,
+        };
+
+        context.Add(deletedReport);
+
+        await RulesSummary.ResetAllRules(existingReport, context);
+        context.Remove(existingReport);
 
         await context.SaveChangesAsync();
     }
