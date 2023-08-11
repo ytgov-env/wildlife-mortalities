@@ -43,7 +43,10 @@ try
     builder.Services.AddMudServices();
     builder.Services.AddLocalization();
 
-    builder.Services.AddHostedService<PosseSyncService>();
+    if (!builder.Environment.IsDevelopment())
+    {
+        builder.Services.AddHostedService<PosseSyncService>();
+    }
     builder.Services.AddHttpClient<IPosseService, PosseService>(client =>
     {
         client.Timeout = TimeSpan.FromMinutes(20);
