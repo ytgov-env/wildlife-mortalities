@@ -1,4 +1,5 @@
-﻿@using WildlifeMortalities.Shared.Services;
+﻿@using Humanizer;
+@using WildlifeMortalities.Shared.Services;
 @attribute [Route(Constants.Routes.HomePage)]
 @inject IJSRuntime JsRuntime
 
@@ -9,10 +10,10 @@
         <MudText Typo="Typo.h5">Status</MudText>
         <MudText Typo="Typo.h6">Posse sync service</MudText>
         <MudAlert Severity="GetSeverity(_lastSuccessfulClientsSync)" Dense="true">
-            <MudText Typo="Typo.subtitle1">Last successful clients sync: @_lastSuccessfulClientsSync</MudText>
+            <MudText Typo="Typo.subtitle1">Last successful clients sync: @_lastSuccessfulClientsSync.Humanize()</MudText>
         </MudAlert>
         <MudAlert Severity="GetSeverity(_lastSuccessfulAuthorizationsSync)" Dense="true" Class="mt-1">
-            <MudText Typo="Typo.subtitle1">Last successful authorizations sync: @_lastSuccessfulAuthorizationsSync</MudText>
+            <MudText Typo="Typo.subtitle1">Last successful authorizations sync: @_lastSuccessfulAuthorizationsSync.Humanize()</MudText>
         </MudAlert>
     </MudPaper>
     @if (_isTestEnvironment)
@@ -94,7 +95,7 @@
         {
             return Severity.Error;
         }
-        else if (timeSinceLastSync.TotalHours > 1)
+        else if (timeSinceLastSync.TotalMinutes > 30)
         {
             return Severity.Warning;
         }
