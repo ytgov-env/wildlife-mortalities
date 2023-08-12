@@ -23,8 +23,8 @@
             <MudTd>@((context.Person as Client)!.EnvPersonId)</MudTd>
         }
         <MudTd>@context.Type.GetReportTypeDisplayName()</MudTd>
-        <MudTd>@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
-        <MudTd>@context.DateLastModified.ToString("MMM dd, yyyy")</MudTd>
+        <MudTd>@context.DateSubmitted.ToString(Constants.FormatStrings.StandardDateFormat)</MudTd>
+        <MudTd>@context.DateLastModified.ToString(Constants.FormatStrings.StandardDateFormat)</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

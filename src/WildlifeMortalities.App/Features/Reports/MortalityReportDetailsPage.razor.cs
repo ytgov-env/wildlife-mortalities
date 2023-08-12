@@ -63,7 +63,7 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
         {
             return string.Empty;
         }
-        return $"{_reportDetail.Report.CreatedBy.FullName} on {_reportDetail.Report.DateCreated.ToString("D")}";
+        return $"{_reportDetail.Report.CreatedBy.FullName} on {_reportDetail.Report.DateCreated.ToString(Constants.FormatStrings.StandardDateFormat)}";
     }
 
     private string? GetLastModifiedBy()
@@ -95,12 +95,12 @@ public partial class MortalityReportDetailsPage : DbContextAwareComponent
         )
         {
             result =
-                $"{_reportDetail.Report.LastModifiedBy.FullName} on {_reportDetail.Report.DateModified?.ToString("D")}";
+                $"{_reportDetail.Report.LastModifiedBy.FullName} on {_reportDetail.Report.DateModified?.ToString(Constants.FormatStrings.StandardDateFormat)}";
         }
         else if (bioSubmission?.LastModifiedBy is not null)
         {
             result =
-                $"{bioSubmission.LastModifiedBy.FullName} on {bioSubmission.DateModified?.ToString("D")}";
+                $"{bioSubmission.LastModifiedBy.FullName} on {bioSubmission.DateModified?.ToString(Constants.FormatStrings.StandardDateFormat)}";
         }
         else
         {

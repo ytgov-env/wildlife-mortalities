@@ -70,7 +70,7 @@
                     break;
             }
         </MudTd>
-        <MudTd DataLabel="@DateSubmitted">@context.DateSubmitted.ToString("MMM dd, yyyy")</MudTd>
+        <MudTd DataLabel="@DateSubmitted">@context.DateSubmitted.ToString(Constants.FormatStrings.StandardDateFormat)</MudTd>
         <BioSubmissionStatusComponent ReportId="context.Id" @key="context.Id" />
         <MudTd DataLabel="@Violations">
             <ViolationSummaryComponent ReportId="context.Id" @key="context.Id"/>

@@ -5,7 +5,7 @@
     <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
     @if(Report.Result != Data.Enums.GuidedHuntResult.DidNotHunt)
     {
-        <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString("D") <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small"/> @Report.HuntEndDate?.ToString("D")</MudField>
+        <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString(Constants.FormatStrings.StandardDateFormat) <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" /> @Report.HuntEndDate?.ToString(Constants.FormatStrings.StandardDateFormat)</MudField>
     }
     <MudField Label="Outfitter area" DisableUnderLine="true">@Report.OutfitterArea.Area</MudField>
     @if(Report.ChiefGuide != null)

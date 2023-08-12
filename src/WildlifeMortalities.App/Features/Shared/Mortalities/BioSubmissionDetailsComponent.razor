@@ -41,7 +41,7 @@
 </MudStack>
 @if(BioSubmission.DateSubmitted != null)
 {
-    <MudField Label="Date submitted" DisableUnderLine="true">@BioSubmission.DateSubmitted?.ToString("D")</MudField>
+    <MudField Label="Date submitted" DisableUnderLine="true">@BioSubmission.DateSubmitted?.ToString(Constants.FormatStrings.StandardDateFormat)</MudField>
 }
 @if(BioSubmission.RequiredOrganicMaterialsStatus != BioSubmissionRequiredOrganicMaterialsStatus.NotStarted){
     @*This component is read-only, but it requires an EditForm as the child components contain input components which have a dependancy on EditContext*@

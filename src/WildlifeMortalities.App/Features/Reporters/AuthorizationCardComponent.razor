@@ -30,7 +30,7 @@
             <MudField Label="Registered trapping concession" DisableUnderLine="true">@trappingLicence.RegisteredTrappingConcession.Concession</MudField>
         }
         <MudField Label="Validity" DisableUnderLine="true">
-            @Authorization.ValidFromDateTime.ToString("M") - @Authorization.ValidToDateTime.ToString("M")
+            @Authorization.ValidFromDateTime.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear) - @Authorization.ValidToDateTime.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)
         </MudField>
     </MudCardContent>
 </MudCard>

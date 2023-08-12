@@ -28,7 +28,7 @@
                             <MudText Typo="Typo.h6">Samples</MudText>
                             @if (BioSubmission.DateSubmitted != null)
                             {
-                                <MudField Label="Date submitted" DisableUnderLine="true">@BioSubmission.DateSubmitted?.ToString("D")</MudField>
+                                <MudField Label="Date submitted" DisableUnderLine="true">@BioSubmission.DateSubmitted?.ToString(Constants.FormatStrings.StandardDateFormat)</MudField>
                             }
                         </MudItem>
                         @foreach (var item in _viewModel.RequiredOrganicMaterial)

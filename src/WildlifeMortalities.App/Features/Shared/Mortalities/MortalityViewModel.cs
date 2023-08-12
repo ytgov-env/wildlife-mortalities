@@ -86,7 +86,7 @@ public class MortalityViewModel
 
         if (DateOfDeath.HasValue)
         {
-            result.Add("Date of death", DateOfDeath.Value.Date.ToString());
+            result.Add("Date of death", DateOfDeath.Value.Date.ToString(Constants.FormatStrings.StandardDateFormat));
         }
 
         if (Latitude.HasValue)
