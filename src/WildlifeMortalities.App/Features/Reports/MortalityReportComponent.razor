@@ -17,13 +17,21 @@
 }
 
 
-<MudText Typo="Typo.h3" Class="mb-8">@_vm.ReportType.GetDisplayName() report</MudText>
+<MudText Typo="Typo.h3" Class="mb-4">@_vm.ReportType.GetDisplayName() report</MudText>
 
 <MudGrid>
     <MudItem xs="12" sm="9">
         <EditForm OnValidSubmit="SubmitReport" OnInvalidSubmit="@(() => _invalidSubmitDetected = true)" EditContext="_editContext" onkeypress="preventEnterFromSubmitting(event)">
             <FluentValidationValidator />
-            @if (_vm.IsUpdate == false)
+            @if (_vm.IsUpdate)
+            {
+                if (!string.IsNullOrWhiteSpace(_vm.ReportViewModel.HumanReadableId))
+                {
+                    <MudText Typo="Typo.h5" Class="mb-2">@_vm.ReportViewModel.HumanReadableId</MudText>
+                }
+                <MudDatePicker @bind-Date="_vm.DateSubmitted" Label="Date submitted" For="(() => _vm.DateSubmitted)" />
+            }
+             else
             {
                 <MudSelect T="ReportType" Value="_vm.ReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.ReportType)" Label="Mortality report type">
                     @foreach (ReportType reportType in Enum.GetValues<ReportType>().Where(x => x.IsCreatable()))
@@ -31,10 +39,6 @@
                         <MudSelectItem Value="@reportType" T="ReportType">@reportType.GetDisplayName()</MudSelectItem>
                     }
                 </MudSelect>
-            }
-            else
-            {
-                <MudDatePicker @bind-Date="_vm.DateSubmitted" Label="Date submitted" For="(() => _vm.DateSubmitted)" />
             }
             <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="@_vm.IsUpdate" IsFixed="true">
                 <CascadingValue Name="@Constants.CascadingValues.ReportViewModel" Value="_vm.ReportViewModel">
