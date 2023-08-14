@@ -27,6 +27,9 @@ public class OutfitterGuidedHuntReport : Report, IMultipleMortalitiesReport
     public GuidedHuntResult Result { get; set; }
     public List<HuntedActivity> HuntedActivities { get; set; } = null!;
 
+    [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(OheNumber)}")]
+    public string OheNumber { get; set; } = string.Empty;
+
     [Column($"{nameof(OutfitterGuidedHuntReport)}_{nameof(ClientId)}")]
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;

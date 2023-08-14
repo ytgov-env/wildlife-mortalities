@@ -7,6 +7,7 @@
 @using WildlifeMortalities.Shared.Services
 @inherits DbContextAwareComponent
 
+<MudTextField @bind-Value="ViewModel.OheNumber" For="(() => ViewModel.OheNumber)" Label="OHE number" />
 <DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />

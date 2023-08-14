@@ -24,6 +24,9 @@ public class SpecialGuidedHuntReport : Report, IMultipleMortalitiesReport
     public GuidedHuntResult Result { get; set; }
     public List<HuntedActivity> HuntedActivities { get; set; } = null!;
 
+    [Column($"{nameof(SpecialGuidedHuntReport)}_{nameof(OheNumber)}")]
+    public string OheNumber { get; set; } = string.Empty;
+
     [Column($"{nameof(SpecialGuidedHuntReport)}_{nameof(ClientId)}")]
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;

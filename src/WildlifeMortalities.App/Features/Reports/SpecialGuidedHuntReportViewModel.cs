@@ -21,6 +21,7 @@ public class SpecialGuidedHuntReportViewModel : MortalityReportViewModel
         HuntingDateRange.End = report.HuntEndDate;
         Guide = report.Guide;
         Result = report.Result;
+        OheNumber = report.OheNumber;
         HuntedActivityViewModels = report.HuntedActivities
             .Select(x => new HuntedActivityViewModel(x, reportDetail))
             .ToList();
@@ -29,6 +30,7 @@ public class SpecialGuidedHuntReportViewModel : MortalityReportViewModel
     public DateRange HuntingDateRange { get; set; } = new();
     public Client? Guide { get; set; }
     public GuidedHuntResult? Result { get; set; }
+    public string OheNumber { get; set; } = string.Empty;
 
     public List<HuntedActivityViewModel> HuntedActivityViewModels { get; set; } = new();
 
@@ -40,24 +42,22 @@ public class SpecialGuidedHuntReportViewModel : MortalityReportViewModel
             HuntedActivityViewModels.Clear();
         }
 
-        var report = Result is not GuidedHuntResult.DidNotHunt
-            ? new SpecialGuidedHuntReport
-            {
-                Id = ReportId,
-                ClientId = personId,
-                HuntStartDate = (DateTime)HuntingDateRange!.Start!,
-                HuntEndDate = (DateTime)HuntingDateRange.End!,
-                GuideId = Guide!.Id,
-                Result = Result!.Value,
-                HuntedActivities = HuntedActivityViewModels.Select(x => x.GetActivity()).ToList(),
-            }
-            : new SpecialGuidedHuntReport
-            {
-                Id = ReportId,
-                ClientId = personId,
-                GuideId = Guide!.Id,
-                Result = Result!.Value,
-            };
+        var report = new SpecialGuidedHuntReport
+        {
+            Id = ReportId,
+            GuideId = Guide!.Id,
+            ClientId = personId,
+            Result = Result!.Value,
+            OheNumber = OheNumber,
+        };
+
+        if (Result is not GuidedHuntResult.DidNotHunt)
+        {
+            report.HuntStartDate = (DateTime)HuntingDateRange!.Start!;
+            report.HuntEndDate = (DateTime)HuntingDateRange.End!;
+            report.HuntedActivities = HuntedActivityViewModels
+                .ConvertAll(x => x.GetActivity());
+        }
 
         SetReportBaseValues(report);
         return report;
@@ -115,7 +115,10 @@ public class SpecialGuidedHuntReportViewModelValidator
             .WithMessage(
                 "The date of death for each mortality must be between the specified hunting dates"
             );
-
+        RuleFor(x => x.OheNumber)
+            .NotNull()
+            .Matches(@"^\d{5}$")
+            .WithMessage("OHE number must be exactly 5 digits.");
         RuleFor(x => x.HuntedActivityViewModels)
             .NotEmpty()
             .When(x => x.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)

@@ -27,6 +27,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
             .ToArray();
         OutfitterArea = report.OutfitterArea;
         Result = report.Result;
+        OheNumber = report.OheNumber;
         HuntedActivityViewModels = report.HuntedActivities
             .Select(x => new HuntedActivityViewModel(x, reportDetail))
             .ToList();
@@ -38,6 +39,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
         new[] { new OutfitterGuide(), new OutfitterGuide() };
     public OutfitterArea? OutfitterArea { get; set; }
     public GuidedHuntResult? Result { get; set; }
+    public string OheNumber { get; set; } = string.Empty;
 
     public List<HuntedActivityViewModel> HuntedActivityViewModels { get; set; } = new();
 
@@ -51,12 +53,13 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
 
         var report = new OutfitterGuidedHuntReport
         {
+            Id = ReportId,
             ChiefGuide = ChiefGuide,
+            ClientId = personId,
             AssistantGuides = AssistantGuides.ToList(),
             OutfitterArea = OutfitterArea!,
             Result = Result!.Value,
-            ClientId = personId,
-            Id = ReportId,
+            OheNumber = OheNumber,
         };
 
         if (Result is not GuidedHuntResult.DidNotHunt)
@@ -64,8 +67,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
             report.HuntStartDate = (DateTime)HuntingDateRange!.Start!;
             report.HuntEndDate = (DateTime)HuntingDateRange.End!;
             report.HuntedActivities = HuntedActivityViewModels
-                .Select(x => x.GetActivity())
-                .ToList();
+                .ConvertAll(x => x.GetActivity());
         }
 
         SetReportBaseValues(report);
@@ -178,6 +180,10 @@ public class OutfitterGuidedHuntReportViewModelValidator
             .WithMessage(
                 "The date of death for each mortality must be between the specified hunting dates"
             );
+        RuleFor(x => x.OheNumber)
+            .NotNull()
+            .Matches(@"^\d{5}$")
+            .WithMessage("OHE number must be exactly 5 digits.");
         RuleFor(x => x.HuntedActivityViewModels)
             .NotEmpty()
             .When(x => x.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)

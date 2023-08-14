@@ -3,6 +3,10 @@
 @using WildlifeMortalities.Shared.Extensions;
 <MudItem xs="12" sm="4">
     <MudText Typo="Typo.h5">@Report.HumanReadableId</MudText>
+    @if (!string.IsNullOrWhiteSpace(Report.OheNumber))
+    {
+        <MudField Label="OHE number" DisableUnderLine="true">@Report.OheNumber</MudField>
+    }
     @if (Report.Result != Data.Enums.GuidedHuntResult.DidNotHunt)
     {
         <MudField Label="Hunting dates" DisableUnderLine="true">@Report.HuntStartDate?.ToString(Constants.FormatStrings.StandardDateFormat) <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" /> @Report.HuntEndDate?.ToString(Constants.FormatStrings.StandardDateFormat)</MudField>
