@@ -13,8 +13,8 @@ public interface IMortalityService
 {
     Task<int> CreateReport(Report report, int userId, int? draftReportId = null);
     Task UpdateReport(Report report, int userId);
-    Task<int> CreateDraftReport(string reportType, string reportContent, int personId);
-    Task UpdateDraftReport(string report, int reportId);
+    Task<int> CreateDraftReport(string reportType, string reportContent, int personId, int userId);
+    Task UpdateDraftReport(string report, int reportId, int userId);
     Task SoftDeleteReport(string report, int reportId, int userId, string reason);
     Task<ReportDetail> UpdateBioSubmissionAnalysis(
         BioSubmission bioSubmission,

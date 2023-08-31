@@ -378,13 +378,19 @@ public class MortalityService : IMortalityService
         }
     }
 
-    public async Task<int> CreateDraftReport(string reportType, string report, int personId)
+    public async Task<int> CreateDraftReport(string reportType, string report, int personId, int userId)
     {
-        var now = DateTimeOffset.Now;
+        using var context = _dbContextFactory.CreateDbContext();
+
+        var createdById =
+        (await context.Users.FindAsync(userId))?.Id
+            ?? throw new Exception($"User {userId} not found.");
         var draftReport = new DraftReport
         {
-            DateLastModified = now,
-            DateSubmitted = now,
+            Type = reportType,
+            PersonId = personId,
+            DateCreated = DateTimeOffset.Now,
+            CreatedById = createdById,
             SerializedData = report,
             Type = reportType,
             PersonId = personId
@@ -396,7 +402,7 @@ public class MortalityService : IMortalityService
         return draftReport.Id;
     }
 
-    public async Task UpdateDraftReport(string report, int reportId)
+    public async Task UpdateDraftReport(string report, int reportId, int userId)
     {
         using var context = _dbContextFactory.CreateDbContext();
 
@@ -404,6 +410,9 @@ public class MortalityService : IMortalityService
             await context.DraftReports.FindAsync(reportId)
             ?? throw new ArgumentException($"Draft report {reportId} not found.", nameof(reportId));
         reportFromDatabase.SerializedData = report;
+        reportFromDatabase.LastModifiedById =
+            (await context.Users.FindAsync(userId))?.Id
+            ?? throw new Exception($"User {userId} not found.");
         reportFromDatabase.DateLastModified = DateTimeOffset.Now;
 
         await context.SaveChangesAsync();

@@ -10,12 +10,12 @@
     <HeaderContent>
         @if(EnvClientId == null)
         {
-            <MudTh>Client Id</MudTh>
+            <MudTh><MudTableSortLabel SortLabel="ENV Client Id" T="DraftReportDto">ENV Client Id</MudTableSortLabel></MudTh>
         }
-        <MudTh>Type</MudTh>
-        <MudTh>Date Submitted</MudTh>
-        <MudTh>Last Modified</MudTh>
-        <MudTh></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@Type" T="DraftReportDto">@Type</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@CreatedBy" T="DraftReportDto">@CreatedBy</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@DateCreated" T="DraftReportDto">@DateCreated</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="@DateLastModified" T="DraftReportDto">@DateLastModified</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         @if (EnvClientId == null)
@@ -23,8 +23,9 @@
             <MudTd>@((context.Person as Client)!.EnvPersonId)</MudTd>
         }
         <MudTd>@context.Type.GetReportTypeDisplayName()</MudTd>
-        <MudTd>@context.DateSubmitted.ToString(Constants.FormatStrings.StandardDateFormat)</MudTd>
-        <MudTd>@context.DateLastModified.ToString(Constants.FormatStrings.StandardDateFormat)</MudTd>
+        <MudTd>@context.CreatedBy.FullName</MudTd>
+        <MudTd>@context.DateCreated.ToString(Constants.FormatStrings.StandardDateFormat)</MudTd>
+        <MudTd>@context.DateLastModified?.ToString(Constants.FormatStrings.StandardDateFormat)</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No matching records found</MudText>

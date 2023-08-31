@@ -725,7 +725,8 @@ public class ContainerizedTests : IAsyncLifetime
         var draftReportId = await service.CreateDraftReport(
             nameof(OutfitterGuidedHuntReport),
             content,
-            1
+            1,
+            _seedUser.Id
         );
 
         var draft = await _context.DraftReports.FirstOrDefaultAsync(x => x.Id == draftReportId);

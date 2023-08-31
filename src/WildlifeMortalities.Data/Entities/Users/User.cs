@@ -16,6 +16,8 @@ public class User
     public UserSettings Settings { get; set; } = null!;
     public List<Report> CreatedReports { get; set; } = null!;
     public List<Report> ModifiedReports { get; set; } = null!;
+    public List<DraftReport> CreatedDraftReports { get; set; } = null!;
+    public List<DraftReport> ModifiedDraftReports { get; set; } = null!;
 
     public List<Permission> Permissions { get; set; } = null!;
 }
@@ -31,6 +33,14 @@ public class UserConfig : IEntityTypeConfiguration<User>
             .OnDelete(DeleteBehavior.NoAction);
         builder
             .HasMany(x => x.ModifiedReports)
+            .WithOne(x => x.LastModifiedBy)
+            .OnDelete(DeleteBehavior.NoAction);
+        builder
+            .HasMany(x => x.CreatedDraftReports)
+            .WithOne(x => x.CreatedBy)
+            .OnDelete(DeleteBehavior.NoAction);
+        builder
+            .HasMany(x => x.ModifiedDraftReports)
             .WithOne(x => x.LastModifiedBy)
             .OnDelete(DeleteBehavior.NoAction);
     }

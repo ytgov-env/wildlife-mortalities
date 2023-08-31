@@ -4,10 +4,15 @@ using MudBlazor;
 using WildlifeMortalities.App.Features.Reports;
 using WildlifeMortalities.Data.Entities.People;
 
-namespace WildlifeMortalities.App.Features.Shared.Mortalities;
+namespace WildlifeMortalities.App.Features.Shared;
 
 public partial class DraftReportsTableComponent : DbContextAwareComponent
 {
+    private const string Type = "Type";
+    private const string CreatedBy = "Created By";
+    private const string DateCreated = "Date Created";
+    private const string DateLastModified = "Date Last Modified";
+
     [Parameter]
     public string? EnvClientId { get; set; }
 
@@ -26,9 +31,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
                 .OfType<Client>()
                 .FirstOrDefaultAsync(x => x.EnvPersonId == EnvClientId);
             if (client == null)
-            {
                 throw new ArgumentException($"Client {EnvClientId} not found.", nameof(client));
-            }
             DraftReports = await context.DraftReports
                 .Where(x => x.PersonId == client.Id)
                 .Select(
@@ -39,8 +42,10 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
                             PersonId = x.PersonId,
                             Person = x.Person,
                             Type = x.Type,
-                            DateLastModified = x.DateLastModified,
-                            DateSubmitted = x.DateSubmitted
+                            CreatedById = x.CreatedById,
+                            CreatedBy = x.CreatedBy,
+                            DateCreated = x.DateCreated,
+                            DateLastModified = x.DateLastModified
                         }
                 )
                 .OrderBy(x => x.DateLastModified)
@@ -57,8 +62,10 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
                             PersonId = x.PersonId,
                             Person = x.Person,
                             Type = x.Type,
-                            DateLastModified = x.DateLastModified,
-                            DateSubmitted = x.DateSubmitted
+                            CreatedById = x.CreatedById,
+                            CreatedBy = x.CreatedBy,
+                            DateCreated = x.DateCreated,
+                            DateLastModified = x.DateLastModified
                         }
                 )
                 .OrderBy(x => x.DateLastModified)
@@ -69,9 +76,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
     public void GotoEdit(TableRowClickEventArgs<DraftReportDto> args)
     {
         if (args.Item.Person is not Client)
-        {
             throw new InvalidOperationException("Draft report must be for a client.");
-        }
         NavigationManager.NavigateTo(
             Constants.Routes.GetEditDraftReportPageLink(
                 EnvClientId ?? (args.Item.Person as Client)!.EnvPersonId,

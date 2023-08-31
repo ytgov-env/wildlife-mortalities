@@ -179,14 +179,15 @@ public partial class MortalityReportComponent : DbContextAwareComponent
 
             if (DraftId != null)
             {
-                await MortalityService.UpdateDraftReport(content, (int)DraftId);
+                await MortalityService.UpdateDraftReport(content, (int)DraftId, AppParameters.UserId);
             }
             else
             {
                 await MortalityService.CreateDraftReport(
                     _vm.ReportType.GetReportType(),
                     content,
-                    personId
+                    personId,
+                    AppParameters.UserId
                 );
             }
             NavigationManager.NavigateTo(
