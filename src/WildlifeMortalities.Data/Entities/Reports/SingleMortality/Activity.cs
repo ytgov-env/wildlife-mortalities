@@ -13,7 +13,6 @@ public abstract class Activity
 
     [JsonConverter(typeof(MostConcreteClassJsonConverter<Mortality>))]
     public Mortality Mortality { get; set; } = null!;
-    public List<Authorization> Authorizations { get; set; } = null!;
     public List<Violation> Violations { get; set; } = null!;
     public string Comment { get; set; } = string.Empty;
     public DateTimeOffset CreatedTimestamp { get; set; }

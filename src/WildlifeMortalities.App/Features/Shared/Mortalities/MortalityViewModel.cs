@@ -55,6 +55,7 @@ public class MortalityViewModel
         Longitude = mortality.Longitude;
         Sex = mortality.Sex;
         Species = mortality.Species;
+        BodyConditionScale = mortality.BodyConditionScale;
 
         _existingMortality = mortality;
         Id = mortality.Id;
@@ -77,26 +78,31 @@ public class MortalityViewModel
     public decimal? Longitude { get; set; }
     public decimal? Latitude { get; set; }
     public Sex? Sex { get; set; }
+    public BodyConditionScale? BodyConditionScale { get; set; }
 
     public bool IsDraft { get; set; }
 
     public virtual Dictionary<string, string?> GetProperties()
     {
-        var result = new Dictionary<string, string?> { { "Sex", Sex?.GetDisplayName() } };
+        Dictionary<string, string?> result = new();
 
         if (DateOfDeath.HasValue)
         {
             result.Add("Date of death", DateOfDeath.Value.Date.ToString(Constants.FormatStrings.StandardDateFormat));
         }
 
+        result.Add("Sex", Sex?.GetDisplayName());
+        result.Add("Body condition scale", BodyConditionScale?.GetDisplayName());
+
         if (Latitude.HasValue)
         {
-            result.Add("Latitude", Latitude.Value.ToString());
+
+            result.Add("Latitude", $"{Latitude.Value:###.#####} degrees");
         }
 
         if (Longitude.HasValue)
         {
-            result.Add("Longitude", Longitude.Value.ToString());
+            result.Add("Longitude", $"{Longitude.Value:###.#####} degrees");
         }
 
         return result;
@@ -128,6 +134,7 @@ public class MortalityViewModel
         derivatingMortality.Latitude = Latitude;
         derivatingMortality.Longitude = Longitude;
         derivatingMortality.Sex = Sex;
+        derivatingMortality.BodyConditionScale = BodyConditionScale ?? 0;
     }
 
     internal static MortalityViewModel Create(Mortality mortality, ReportDetail? reportDetail) =>
@@ -142,6 +149,7 @@ public class MortalityViewModel
             result.Latitude = previous.Latitude;
             result.Longitude = previous.Longitude;
             result.Sex = previous.Sex;
+            result.BodyConditionScale = previous.BodyConditionScale;
         }
 
         return result;
@@ -198,6 +206,16 @@ public class MortalityViewModel
                     : new MortalityViewModel(mortality, reportDetail),
         };
     }
+
+    public string GetBodyConditionScalePlaceholder()
+    {
+        if (Species == null)
+        {
+            return string.Empty;
+        }
+
+        return $"What was the condition of the {Species.GetDisplayName().ToLower()}?";
+    }
 }
 
 public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
@@ -241,6 +259,9 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
             .Must(x => x <= DateTime.Now)
             .When(m => m.DateOfDeath is not null)
             .WithMessage("The date of death cannot occur in the future.");
+
+        RuleFor(m => m.BodyConditionScale).NotNull().IsInEnum()
+            .WithMessage("Body condition scale must be set.");
     }
 }
 

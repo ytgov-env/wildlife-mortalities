@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using static WildlifeMortalities.Data.Constants;
 using System.ComponentModel.DataAnnotations.Schema;
+using WildlifeMortalities.Data.Entities.Authorizations;
 
 namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -10,6 +11,8 @@ public abstract class HarvestActivity : Activity
 {
     [Column($"{nameof(HarvestActivity)}_{nameof(HrbsNumber)}")]
     public string HrbsNumber { get; set; } = string.Empty;
+    public List<Authorization> Authorizations { get; set; } = null!;
+
     public ActivityQueueItem ActivityQueueItem { get; set; } = null!;
 
     public abstract string GetAreaName(Report report);

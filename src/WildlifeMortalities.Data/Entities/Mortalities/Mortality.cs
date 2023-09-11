@@ -22,6 +22,7 @@ public abstract class Mortality
     public Sex? Sex { get; set; }
     public Family? Family { get; protected set; }
     public abstract Species Species { get; }
+    public BodyConditionScale BodyConditionScale { get; set; }
 }
 
 public class MortalityConfig<T> : IEntityTypeConfiguration<T>

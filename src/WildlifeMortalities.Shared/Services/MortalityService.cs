@@ -339,8 +339,10 @@ public class MortalityService : IMortalityService
                     activity.PreserveImmutableValues(existingActivity);
 
                     context.Entry(existingActivity).CurrentValues.SetValues(activity);
-
-                    existingActivity.Authorizations.Clear();
+                    if(existingActivity is HarvestActivity existingHarvestActivity)
+                    {
+                        existingHarvestActivity.Authorizations.Clear();
+                    }
                     activityIdsToDelete.Remove(activity.Id);
                     replacements.Add(activity, existingActivity);
                 }
@@ -392,11 +394,8 @@ public class MortalityService : IMortalityService
             DateCreated = DateTimeOffset.Now,
             CreatedById = createdById,
             SerializedData = report,
-            Type = reportType,
-            PersonId = personId
         };
 
-        using var context = _dbContextFactory.CreateDbContext();
         context.Add(draftReport);
         await context.SaveChangesAsync();
         return draftReport.Id;

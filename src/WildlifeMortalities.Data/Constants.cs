@@ -5,9 +5,9 @@ public static class Constants
     public static class TableNameConstants
     {
         public const string Activities = "Activities";
-        public const string ActivityAuthorization = "ActivityAuthorization";
         public const string ActivityQueueItems = "ActivityQueueItems";
         public const string AppConfigurations = "AppConfigurations";
+        public const string AuthorizationHarvestActivity = "AuthorizationHarvestActivity";
         public const string Authorizations = "Authorizations";
         public const string BagEntries = "BagEntries";
         public const string BagLimitEntries = "BagLimitEntries";

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WildlifeMortalities.Data;
 
@@ -11,9 +12,11 @@ using WildlifeMortalities.Data;
 namespace WildlifeMortalities.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230831035816_AddCreatedByPropertyToDraftReport")]
+    partial class AddCreatedByPropertyToDraftReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -399,7 +402,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable("Mortalities", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1593,7 +1596,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1613,7 +1616,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable("Mortalities", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1629,7 +1632,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1645,7 +1648,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1661,7 +1664,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1677,7 +1680,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1693,7 +1696,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1709,7 +1712,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1733,7 +1736,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable("Mortalities", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1753,7 +1756,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1769,7 +1772,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1785,7 +1788,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1801,7 +1804,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1821,7 +1824,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable("Mortalities", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1839,7 +1842,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1855,7 +1858,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1871,7 +1874,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1891,7 +1894,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable("Mortalities", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1907,7 +1910,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1923,7 +1926,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1939,7 +1942,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1955,7 +1958,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1971,7 +1974,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -1987,7 +1990,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2003,7 +2006,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2019,7 +2022,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2035,7 +2038,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2051,7 +2054,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2067,7 +2070,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2083,7 +2086,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2099,7 +2102,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2115,7 +2118,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2131,7 +2134,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2147,7 +2150,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2163,7 +2166,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2179,7 +2182,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2195,7 +2198,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2211,7 +2214,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2227,7 +2230,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2243,7 +2246,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2259,7 +2262,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2275,7 +2278,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2291,7 +2294,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2307,7 +2310,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2323,7 +2326,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2347,7 +2350,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2367,7 +2370,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2383,7 +2386,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2399,7 +2402,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2415,7 +2418,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2431,7 +2434,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2455,7 +2458,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 
@@ -2473,7 +2476,7 @@ namespace WildlifeMortalities.Data.Migrations
 
                     b.ToTable(t =>
                         {
-                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, 70, -1)");
+                            t.HasCheckConstraint("CK_Mortalities_BodyConditionScale_Enum", "[BodyConditionScale] IN (10, 20, 30, 40, 50, 60, -1)");
 
                             t.HasCheckConstraint("CK_Mortalities_Family_Enum", "[Family] IN (10)");
 

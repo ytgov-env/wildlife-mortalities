@@ -15,11 +15,8 @@ using WildlifeMortalities.Data.Enums;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
-using WildlifeMortalities.Data.Entities.Reports;
 using static WildlifeMortalities.Data.Entities.Violation;
-using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.App.Features.Shared.Mortalities.Caribou;
-using Bogus;
 using System.Text.Json;
 
 namespace WildlifeMortalities.Test.Integration;
@@ -92,7 +89,8 @@ public class ContainerizedTests : IAsyncLifetime
                 {
                     DateOfDeath = new DateTimeOffset(2023, 10, 12, 0, 0, 0, TimeSpan.FromHours(-7)),
                     LegalHerd = CaribouMortality.CaribouHerd.Porcupine,
-                    Sex = Sex.Male
+                    Sex = Sex.Male,
+                    BodyConditionScale = BodyConditionScale.NotSpecified
                 },
                 GameManagementAreaId = gma.Id,
             },
@@ -171,7 +169,8 @@ public class ContainerizedTests : IAsyncLifetime
                             TimeSpan.FromHours(-7)
                         ),
                         LegalHerd = CaribouMortality.CaribouHerd.Fortymile,
-                        Sex = Sex.Male
+                        Sex = Sex.Male,
+                        BodyConditionScale = BodyConditionScale.NotSpecified
                     },
                     GameManagementAreaId = gma.Id,
                 },
@@ -188,7 +187,8 @@ public class ContainerizedTests : IAsyncLifetime
                             0,
                             TimeSpan.FromHours(-7)
                         ),
-                        Sex = Sex.Male
+                        Sex = Sex.Male,
+                        BodyConditionScale = BodyConditionScale.NotSpecified
                     },
                     GameManagementAreaId = gma.Id,
                 }
@@ -249,7 +249,8 @@ public class ContainerizedTests : IAsyncLifetime
                 {
                     DateOfDeath = new DateTimeOffset(2023, 10, 12, 0, 0, 0, TimeSpan.FromHours(-7)),
                     LegalHerd = CaribouMortality.CaribouHerd.Porcupine,
-                    Sex = Sex.Male
+                    Sex = Sex.Male,
+                    BodyConditionScale = BodyConditionScale.NotSpecified
                 },
                 GameManagementAreaId = porcupineGma.Id,
             },
@@ -299,7 +300,8 @@ public class ContainerizedTests : IAsyncLifetime
                 {
                     DateOfDeath = new DateTimeOffset(2023, 10, 12, 0, 0, 0, TimeSpan.FromHours(-7)),
                     LegalHerd = CaribouMortality.CaribouHerd.Fortymile,
-                    Sex = Sex.Male
+                    Sex = Sex.Male,
+                    BodyConditionScale = BodyConditionScale.NotSpecified
                 },
                 GameManagementAreaId = fortyMileGma.Id,
             },
@@ -348,7 +350,8 @@ public class ContainerizedTests : IAsyncLifetime
                 {
                     DateOfDeath = new DateTimeOffset(2023, 10, 12, 0, 0, 0, TimeSpan.FromHours(-7)),
                     LegalHerd = CaribouMortality.CaribouHerd.Porcupine,
-                    Sex = Sex.Male
+                    Sex = Sex.Male,
+                    BodyConditionScale = BodyConditionScale.NotSpecified
                 },
                 GameManagementAreaId = area.Id,
             },
@@ -427,7 +430,8 @@ public class ContainerizedTests : IAsyncLifetime
                 {
                     DateOfDeath = new DateTimeOffset(2023, 5, 1, 0, 0, 0, TimeSpan.FromHours(-7)),
                     LegalHerd = CaribouMortality.CaribouHerd.Fortymile,
-                    Sex = Sex.Male
+                    Sex = Sex.Male,
+                    BodyConditionScale = BodyConditionScale.NotSpecified
                 },
                 GameManagementAreaId = fortyMileGma.Id,
             },
@@ -497,7 +501,8 @@ public class ContainerizedTests : IAsyncLifetime
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Sex = Sex.Male
+                                Sex = Sex.Male,
+                                BodyConditionScale = BodyConditionScale.NotSpecified
                             },
                             GameManagementAreaId = gma.Id
                         },
@@ -525,7 +530,8 @@ public class ContainerizedTests : IAsyncLifetime
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Sex = Sex.Male
+                                Sex = Sex.Male,
+                                BodyConditionScale = BodyConditionScale.NotSpecified
                             },
                             GameManagementAreaId = gma.Id
                         },
@@ -553,7 +559,8 @@ public class ContainerizedTests : IAsyncLifetime
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Sex = Sex.Male
+                                Sex = Sex.Male,
+                                BodyConditionScale = BodyConditionScale.NotSpecified
                             },
                             GameManagementAreaId = gma.Id
                         },
@@ -581,7 +588,8 @@ public class ContainerizedTests : IAsyncLifetime
                                     0,
                                     TimeSpan.FromHours(-7)
                                 ),
-                                Sex = Sex.Male
+                                Sex = Sex.Male,
+                                BodyConditionScale = BodyConditionScale.NotSpecified
                             },
                             GameManagementAreaId = gma.Id
                         },
@@ -701,7 +709,8 @@ public class ContainerizedTests : IAsyncLifetime
                             DateOfDeath = null,
                             Sex = Sex.Male,
                             IsDraft = true,
-                            LegalHerd = CaribouMortality.CaribouHerd.Porcupine
+                            LegalHerd = CaribouMortality.CaribouHerd.Porcupine,
+                            BodyConditionScale = BodyConditionScale.NotSpecified
                         },
                         Species = Species.Caribou
                     }

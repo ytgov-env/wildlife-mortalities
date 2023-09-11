@@ -1,4 +1,5 @@
 ﻿@using WildlifeMortalities.Data.Enums
+@using WildlifeMortalities.Data.Extensions;
 @namespace WildlifeMortalities.App.Features.Shared.Mortalities
 
 <MudDatePicker @bind-Date="ViewModel.DateOfDeath" For="@(() => ViewModel.DateOfDeath)" Label="Date of death"
@@ -8,6 +9,16 @@
     {
         <MudSelectItem T="Sex?" Value="@item">@item</MudSelectItem>
     }
+</MudSelect>
+<MudSelect T="BodyConditionScale?" @bind-Value="@ViewModel.BodyConditionScale" Label="Body condition scale" For="@(() => ViewModel.BodyConditionScale)" 
+    Dense="true" HelperText="Feel the spine, hips, and ribs" Placeholder="@ViewModel.GetBodyConditionScalePlaceholder()">
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.OneEmaciated">@BodyConditionScale.OneEmaciated.GetDisplayName()</MudSelectItem>
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.TwoThin">@BodyConditionScale.TwoThin.GetDisplayName()</MudSelectItem>
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.ThreeMedium">@BodyConditionScale.ThreeMedium.GetDisplayName()</MudSelectItem>
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.FourFat">@BodyConditionScale.FourFat.GetDisplayName()</MudSelectItem>
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.FiveObese">@BodyConditionScale.FiveObese.GetDisplayName()</MudSelectItem>
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.Unsure">@BodyConditionScale.Unsure.GetDisplayName()</MudSelectItem>
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.NotSpecified">Digitizing a paper HRBS, and BCS was not specified</MudSelectItem>
 </MudSelect>
 <MudStack Row="true">
     <MudNumericField T="decimal?" @bind-Value="ViewModel.Latitude" For="@(() => ViewModel.Latitude)" HideSpinButtons="true" Label="Latitude"/>
