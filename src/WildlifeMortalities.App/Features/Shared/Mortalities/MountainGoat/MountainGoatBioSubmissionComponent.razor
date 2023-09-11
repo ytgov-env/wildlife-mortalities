@@ -10,7 +10,7 @@
 </MudSelect>
 @if (BioSubmission.HornMeasured is not null)
 {
-    <MudNumericField Label="Total length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+    <MudNumericField Label="Total length" Min="0" Max="1500" Adornment="Adornment.End" AdornmentText="mm"
     @bind-Value="BioSubmission.HornTotalLengthMillimetres" For="() => BioSubmission.HornTotalLengthMillimetres" Disabled="IsReadOnly" />
     <MudNumericField Label="Base circumference" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
     @bind-Value="BioSubmission.HornBaseCircumferenceMillimetres" For="() => BioSubmission.HornBaseCircumferenceMillimetres" Disabled="IsReadOnly" />
@@ -43,8 +43,8 @@
             <RowTemplate>
                 <MudTd DataLabel="Annulus">@context.Annulus</MudTd>
                 <MudTd DataLabel="Length">@(context.LengthMillimetres == 0 ? string.Empty : $"{context.LengthMillimetres} mm")</MudTd>
-                </RowTemplate>
-            </MudTable>
+            </RowTemplate>
+        </MudTable>
     }
     else
     {

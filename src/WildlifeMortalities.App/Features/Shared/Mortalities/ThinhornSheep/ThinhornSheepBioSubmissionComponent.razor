@@ -11,7 +11,7 @@
 </MudSelect>
 @if (BioSubmission.HornMeasured is not null)
 {
-    <MudNumericField Label="Total length" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"
+    <MudNumericField Label="Total length" Min="0" Max="1500" Adornment="Adornment.End" AdornmentText="mm"
                  @bind-Value="BioSubmission.HornTotalLengthMillimetres" For="() => BioSubmission.HornTotalLengthMillimetres" Disabled="IsReadOnly" />
     <MudCheckBox Label="Full curl?" @bind-Checked="BioSubmission.IsFullCurl" For="() => BioSubmission.IsFullCurl" Disabled="IsReadOnly" />
     <MudNumericField Label="Base circumference" Min="0" Max="1000" Adornment="Adornment.End" AdornmentText="mm"

@@ -78,7 +78,7 @@ public class MountainGoatBioSubmissionValidator : BioSubmissionValidator<Mountai
         public MountainGoatHornMeasurementEntryValidator(MountainGoatBioSubmission bioSubmission)
         {
             RuleFor(entry => entry.LengthMillimetres)
-                .InclusiveBetween(10, 1000)
+                .InclusiveBetween(10, 1500)
                 .GreaterThanOrEqualTo(
                     entry =>
                         bioSubmission.HornMeasurementEntries[

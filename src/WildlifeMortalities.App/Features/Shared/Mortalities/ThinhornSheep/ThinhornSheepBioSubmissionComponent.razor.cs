@@ -206,7 +206,7 @@ public class ThinhornSheepBioSubmissionValidator
                 () =>
                 {
                     RuleFor(entry => entry.LengthMillimetres)
-                        .InclusiveBetween(10, 1000)
+                        .InclusiveBetween(10, 1500)
                         .GreaterThanOrEqualTo(
                             entry =>
                                 bioSubmission.HornMeasurementEntries[
