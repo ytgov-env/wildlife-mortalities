@@ -35,22 +35,21 @@
         <MudTd DataLabel="@Id">@context.HumanReadableId</MudTd>
         <MudTd DataLabel="@Type">
             @{
-                var type = context.Type.GetReportTypeDisplayName();
+                var reportType = context.Type.GetReportTypeDisplayName();
+                // Trim " report" from the end of the display name
+                var trimmedReportType = reportType.Substring(0, reportType.Length - 7);
             }
-
             @switch (context.Type)
             {
                 case nameof(OutfitterGuidedHuntReport):
-                    <span>@type - @context.OutfitterGuidedHuntResult?.ToLower()</span>
+                    <span>@trimmedReportType - @context.OutfitterGuidedHuntResult?.ToLower()</span>
                     break;
                 case nameof(SpecialGuidedHuntReport):
-                    <span>@type - @context.SpecialGuidedHuntResult?.ToLower()</span>
-                break;
-                case nameof(IndividualHuntedMortalityReport):
-                case nameof(TrappedMortalitiesReport):
-
-                    <span>@type</span>
-                break;
+                    <span>@trimmedReportType - @context.SpecialGuidedHuntResult?.ToLower()</span>
+                    break;
+                default:
+                    <span>@trimmedReportType</span>
+                    break;
             }
         </MudTd>
         <MudTd DataLabel="@Species">@string.Join(", ", context.SpeciesCollection.Select(x => x.GetDisplayName())

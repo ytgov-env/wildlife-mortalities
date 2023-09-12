@@ -20,34 +20,34 @@ public class IsCreatable : Attribute { }
 
 public enum ReportType
 {
-    [Display(Name = "Collared")]
+    [Display(Name = "Collared report")]
     [ReportType(typeof(CollaredMortalityReport))]
     CollaredMortalityReport = 10,
 
-    [Display(Name = "Human-wildlife conflict")]
+    [Display(Name = "Human-wildlife conflict report")]
     [ReportType(typeof(HumanWildlifeConflictMortalityReport))]
     HumanWildlifeConflictMortalityReport,
 
-    [Display(Name = "Hunting (resident)")]
+    [Display(Name = "Resident hunt report")]
     [IsCreatable]
     [ReportType(typeof(IndividualHuntedMortalityReport))]
     IndividualHuntedMortalityReport,
 
-    [Display(Name = "Hunting (outfitted)")]
+    [Display(Name = "Outfitter guided hunt report")]
     [IsCreatable]
     [ReportType(typeof(OutfitterGuidedHuntReport))]
     OutfitterGuidedHuntReport,
 
-    [Display(Name = "Research")]
+    [Display(Name = "Research report")]
     [ReportType(typeof(ResearchMortalityReport))]
     ResearchMortalityReport,
 
-    [Display(Name = "Hunting (special guided)")]
+    [Display(Name = "Special guided hunt report")]
     [IsCreatable]
     [ReportType(typeof(SpecialGuidedHuntReport))]
     SpecialGuidedHuntReport,
 
-    [Display(Name = "Trapping")]
+    [Display(Name = "Trapping report")]
     // Todo: re-enable trapping after it's complete
     //[IsCreatable]
     [ReportType(typeof(TrappedMortalitiesReport))]

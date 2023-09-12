@@ -3,6 +3,7 @@
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality
 @using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities
 @using WildlifeMortalities.App.Features.Reports
+@using WildlifeMortalities.Data.Extensions;
 @attribute [Authorize(Roles = PermissionConstants.Reports.ViewHarvest)]
 @inherits DbContextAwareComponent
 
@@ -22,22 +23,22 @@ else if (_reportDetail is null)
 @switch (_reportDetail.Report)
 {
     case HumanWildlifeConflictMortalityReport report:
-        <MudText Typo="Typo.h3" Class="mb-4">Human-wildlife conflict report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">@ReportType.HumanWildlifeConflictMortalityReport.GetDisplayName()</MudText>
         break;
     case IndividualHuntedMortalityReport report:
-        <MudText Typo="Typo.h3" Class="mb-4">Resident hunt report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">@ReportType.IndividualHuntedMortalityReport.GetDisplayName()</MudText>
         <IndividualHuntedMortalityReportDetailsComponent Report="@report" />
         break;
     case OutfitterGuidedHuntReport report:
-        <MudText Typo="Typo.h3" Class="mb-4">Outfitter guided hunt report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">@ReportType.OutfitterGuidedHuntReport.GetDisplayName()</MudText>
         <OutfitterGuidedHuntReportDetailsComponent Report="@report" />
         break;
     case SpecialGuidedHuntReport report:
-        <MudText Typo="Typo.h3" Class="mb-4">Special guided hunt report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">@ReportType.SpecialGuidedHuntReport.GetDisplayName()</MudText>
         <SpecialGuidedHuntReportDetailsComponent Report="@report" />
         break;
     case TrappedMortalitiesReport report:
-        <MudText Typo="Typo.h3" Class="mb-4">Trapped report</MudText>
+        <MudText Typo="Typo.h3" Class="mb-4">@ReportType.TrappedMortalitiesReport.GetDisplayName()</MudText>
         <TrappedReportDetailsComponent Report="@report" />
         break;
 }
