@@ -34,6 +34,7 @@ public abstract class ActivityViewModel
         };
 
         Comment = activity.Comment;
+        OccurrenceNumber = activity.OccurrenceNumber;
 
         HasNoViolations = activity.Violations.Count == 0;
         HasOnlyPotentiallyIllegalViolations = activity.Violations.All(
@@ -48,6 +49,7 @@ public abstract class ActivityViewModel
     {
         Activity = viewModel.Activity;
         Comment = viewModel.Comment;
+        OccurrenceNumber = viewModel.OccurrenceNumber;
 
         MortalityWithSpeciesSelectionViewModel = new MortalityWithSpeciesSelectionViewModel
         {
@@ -86,6 +88,7 @@ public abstract class ActivityViewModel
     }
 
     public string Comment { get; set; } = string.Empty;
+    public string OccurrenceNumber { get; set; } = string.Empty;
 
     public MortalityWithSpeciesSelectionViewModel MortalityWithSpeciesSelectionViewModel { get; set; }
 }
@@ -100,7 +103,12 @@ public abstract class ActivityViewModelValidator<T> : AbstractValidator<T>
         RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.Species)
             .NotNull()
             .WithMessage("Please select a species.");
-
+        RuleFor(x => x.OccurrenceNumber)
+            .Matches(@"^(CM|DA|FA|HJ|MA|RR|TE|WH|WL)-\d{2}-\d{3}$")
+            .When(x => !string.IsNullOrWhiteSpace(x.OccurrenceNumber))
+            .WithMessage(
+                "Occurrence number must empty or match pattern AA-00-000. Example: WH-23-049"
+            );
         RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
             .NotNull()
             .When(x => x.MortalityWithSpeciesSelectionViewModel.Species != null)

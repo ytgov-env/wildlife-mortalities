@@ -99,6 +99,10 @@
                 case TrappedActivityViewModel vm:
                     break;
             }
+            @if (!string.IsNullOrWhiteSpace(ActivityViewModel.OccurrenceNumber))
+            {
+                <MudField DisableUnderLine="true" Label="Occurrence number">@ActivityViewModel.OccurrenceNumber</MudField>
+            }
             @if (!string.IsNullOrWhiteSpace(ActivityViewModel.Comment))
             {
                 <MudField Style="white-space: pre-wrap" DisableUnderLine="true" Label="Comment">@ActivityViewModel.Comment</MudField>

@@ -1,7 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WildlifeMortalities.Data.Entities.Authorizations;
 using WildlifeMortalities.Data.Entities.Mortalities;
 using static WildlifeMortalities.Data.Constants;
 
@@ -15,6 +14,7 @@ public abstract class Activity
     public Mortality Mortality { get; set; } = null!;
     public List<Violation> Violations { get; set; } = null!;
     public string Comment { get; set; } = string.Empty;
+    public string OccurrenceNumber { get; set; } = string.Empty;
     public DateTimeOffset CreatedTimestamp { get; set; }
 
     public void PreserveImmutableValues(Activity existingActivity)

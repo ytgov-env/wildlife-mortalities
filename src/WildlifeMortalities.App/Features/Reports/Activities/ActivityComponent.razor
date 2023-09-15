@@ -11,6 +11,7 @@
         break;
 }
 
+<MudTextField @bind-Value="ViewModel.OccurrenceNumber" For="(() => ViewModel.OccurrenceNumber)" Label="Occurrence number"/>
 <MudTextField @bind-Value="ViewModel.Comment" For="@(() => ViewModel.Comment)" Label="Comment" Lines="4"/>
 
 @code {

@@ -1,7 +1,6 @@
 ﻿@implements IDisposable
 
 <EditForm EditContext="_context" OnInvalidSubmit="@(() => _invalidSubmissionDetected = true)" OnValidSubmit="Add" onkeypress="preventEnterFromSubmitting(event)">
-
     <MudDialog>
         <TitleContent>
             <MudText Typo="Typo.h6">

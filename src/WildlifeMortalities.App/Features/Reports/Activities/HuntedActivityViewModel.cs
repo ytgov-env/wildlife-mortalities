@@ -21,11 +21,11 @@ public class HuntedActivityViewModel : ActivityViewModel
     public HuntedActivityViewModel(HuntedActivity activity, ReportDetail? reportDetail = null)
         : base(activity, reportDetail)
     {
+        _id = activity.Id;
         HrbsNumber = activity.HrbsNumber;
         Seal = activity.Seal;
         Landmark = activity.Landmark;
         Comment = activity.Comment;
-        _id = activity.Id;
         GameManagementArea = activity.GameManagementArea;
         _reportDetail = reportDetail;
     }
@@ -56,6 +56,7 @@ public class HuntedActivityViewModel : ActivityViewModel
             Seal = Seal,
             Landmark = Landmark,
             GameManagementAreaId = GameManagementArea?.Id ?? 0,
+            OccurrenceNumber = OccurrenceNumber,
             Comment = Comment,
             Id = _id,
         };
