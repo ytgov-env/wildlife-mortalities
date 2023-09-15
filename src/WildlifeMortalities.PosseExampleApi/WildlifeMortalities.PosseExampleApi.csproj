@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastEndpoints.Swagger" Version="5.15.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.19.0" />
+    <PackageReference Include="FastEndpoints.Swagger" Version="5.17.1.1" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.20.0" />
   </ItemGroup>
 
   <ItemGroup>
