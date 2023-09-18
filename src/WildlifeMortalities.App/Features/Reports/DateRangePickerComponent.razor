@@ -1,5 +1,5 @@
 ﻿@using System.Linq.Expressions;
-<MudDateRangePicker Label="Hunting dates" DateRange="DateRange" DateRangeChanged="OnDateRangeChanged"
+<MudDateRangePicker Label="Hunting dates" DateRange="DateRange" DateRangeChanged="OnDateRangeChanged" DateFormat="@Constants.FormatStrings.StandardDateFormat"
                     Error="@HasRangeError()" ErrorText="@GetRangeError()" StartMonth="@(DateRange?.Start ?? DateTime.Now.AddMonths(-1))"/>
 
 @code {
