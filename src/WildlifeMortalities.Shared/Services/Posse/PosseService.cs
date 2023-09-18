@@ -714,10 +714,6 @@ public class PosseService : IPosseService
                     or BigGameHuntingLicence.LicenceType.NonResident
             }
                 => (BigGameHuntingLicence)authorization,
-            // Todo: does small game hunting licence actually require outfitter areas?
-            SmallGameHuntingLicence
-            and { Type: SmallGameHuntingLicence.LicenceType.NonResident }
-                => (SmallGameHuntingLicence)authorization,
             OutfitterChiefGuideLicence licence => licence,
             OutfitterAssistantGuideLicence licence => licence,
             _ => null
