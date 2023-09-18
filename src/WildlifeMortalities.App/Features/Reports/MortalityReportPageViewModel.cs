@@ -17,9 +17,7 @@ public class MortalityReportPageViewModel
     {
         IsUpdate = false;
 
-        // Most reports are individual hunt, so we set it as the default
         ReportViewModel = new IndividualHuntedMortalityReportViewModel();
-        ReportType = ReportType.IndividualHuntedMortalityReport;
     }
 
     public MortalityReportPageViewModel(ReportDetail reportDetail)
@@ -28,28 +26,28 @@ public class MortalityReportPageViewModel
         switch (reportDetail.Report)
         {
             case IndividualHuntedMortalityReport individualHuntedMortalityReport:
-                ReportType = ReportType.IndividualHuntedMortalityReport;
+                SelectedReportType = ReportType.IndividualHuntedMortalityReport;
                 ReportViewModel = new IndividualHuntedMortalityReportViewModel(
                     individualHuntedMortalityReport,
                     reportDetail
                 );
                 break;
             case OutfitterGuidedHuntReport outfitterGuidedHuntReport:
-                ReportType = ReportType.OutfitterGuidedHuntReport;
+                SelectedReportType = ReportType.OutfitterGuidedHuntReport;
                 ReportViewModel = new OutfitterGuidedHuntReportViewModel(
                     outfitterGuidedHuntReport,
                     reportDetail
                 );
                 break;
             case SpecialGuidedHuntReport specialGuidedHuntReport:
-                ReportType = ReportType.SpecialGuidedHuntReport;
+                SelectedReportType = ReportType.SpecialGuidedHuntReport;
                 ReportViewModel = new SpecialGuidedHuntReportViewModel(
                     specialGuidedHuntReport,
                     reportDetail
                 );
                 break;
             case TrappedMortalitiesReport trappedMortalitiesReport:
-                ReportType = ReportType.TrappedMortalitiesReport;
+                SelectedReportType = ReportType.TrappedMortalitiesReport;
                 ReportViewModel = new TrappedReportViewModel(
                     trappedMortalitiesReport,
                     reportDetail
@@ -61,7 +59,7 @@ public class MortalityReportPageViewModel
         DateSubmitted = reportDetail.Report.DateSubmitted.DateTime;
     }
 
-    public ReportType ReportType { get; set; }
+    public ReportType? SelectedReportType { get; set; }
 
     public DateTime? DateSubmitted
     {
@@ -81,22 +79,22 @@ public class MortalityReportPageViewModelValidator : AbstractValidator<Mortality
 {
     public MortalityReportPageViewModelValidator()
     {
-        RuleFor(x => x.ReportType).NotEmpty();
+        RuleFor(x => x.SelectedReportType).NotEmpty();
 
         RuleFor(x => x.ReportViewModel as IndividualHuntedMortalityReportViewModel)
             .SetValidator(new IndividualHuntedMortalityReportViewModelValidator())
-            .When(x => x.ReportType == ReportType.IndividualHuntedMortalityReport);
+            .When(x => x.SelectedReportType == ReportType.IndividualHuntedMortalityReport);
 
         RuleFor(x => x.ReportViewModel as OutfitterGuidedHuntReportViewModel)
             .SetValidator(new OutfitterGuidedHuntReportViewModelValidator())
-            .When(x => x.ReportType == ReportType.OutfitterGuidedHuntReport);
+            .When(x => x.SelectedReportType == ReportType.OutfitterGuidedHuntReport);
 
         RuleFor(x => x.ReportViewModel as SpecialGuidedHuntReportViewModel)
             .SetValidator(new SpecialGuidedHuntReportViewModelValidator())
-            .When(x => x.ReportType == ReportType.SpecialGuidedHuntReport);
+            .When(x => x.SelectedReportType == ReportType.SpecialGuidedHuntReport);
 
         RuleFor(x => x.ReportViewModel as TrappedReportViewModel)
             .SetValidator(new TrappedReportViewModelValidator())
-            .When(x => x.ReportType == ReportType.TrappedMortalitiesReport);
+            .When(x => x.SelectedReportType == ReportType.TrappedMortalitiesReport);
     }
 }

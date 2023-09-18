@@ -49,6 +49,13 @@ public abstract class Authorization
     {
         return PosseId ?? $"{GetNormalizedNumber()}-{GetAuthorizationType()}-{Person.Id}-{0}";
     }
+
+    public bool IsValid(DateTimeOffset timestamp)
+    {
+        return timestamp >= ValidFromDateTime && timestamp <= ValidToDateTime;
+    }
+
+    public virtual bool IsAYukonResident() => false;
 }
 
 public class AuthorizationConfig : IEntityTypeConfiguration<Authorization>

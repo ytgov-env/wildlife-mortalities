@@ -1,4 +1,5 @@
 ﻿@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Data.Entities.Authorizations;
 @using WildlifeMortalities.Data.Entities.Users;
 @using WildlifeMortalities.Shared.Extensions;
 @inherits DbContextAwareComponent
@@ -17,7 +18,7 @@
 }
 
 
-<MudText Typo="Typo.h3" Class="mb-4">@_vm.ReportType.GetDisplayName()</MudText>
+<MudText Typo="Typo.h3" Class="mb-4">@_vm.SelectedReportType?.GetDisplayName()</MudText>
 
 <MudGrid>
     <MudItem xs="12" sm="9">
@@ -33,16 +34,28 @@
             }
              else
             {
-                <MudSelect T="ReportType" Value="_vm.ReportType" ValueChanged="ReportTypeChanged" For="@(() => _vm.ReportType)" Label="Mortality report type">
+                <MudSelect T="ReportType?" @bind-Value="_vm.SelectedReportType" @bind-Value:after="ReportTypeChanged" For="@(() => _vm.SelectedReportType)" Label="Mortality report type" Placeholder="Select a report type">
                     @foreach (ReportType reportType in Enum.GetValues<ReportType>().Where(x => x.IsCreatable()))
                     {
-                        <MudSelectItem Value="@reportType" T="ReportType">@reportType.GetDisplayName()</MudSelectItem>
+                        <MudSelectItem Value="@reportType" T="ReportType?">@reportType.GetDisplayName()</MudSelectItem>
                     }
                 </MudSelect>
+                @if(_vm.SelectedReportType is ReportType.IndividualHuntedMortalityReport && _client!.IsCurrentlyAYukonResident() == false)
+                {
+                    <MudAlert Severity="Severity.Warning">This client does not have a valid Yukon resident hunting licence. If you didn't intend to create a resident hunt report, please change the report type above.</MudAlert>
+                } else if (_vm.SelectedReportType is ReportType.SpecialGuidedHuntReport && _client!.Authorizations.OfType<BigGameHuntingLicence>().Any(a => a.IsValid(DateTimeOffset.Now) && a.Type is BigGameHuntingLicence.LicenceType.CanadianResidentSpecialGuided) == false){
+                    <MudAlert Severity="Severity.Warning">This client does not have a valid Canadian resident special guided hunting licence. If you didn't intend to create a special guided hunt report, please change the report type above.</MudAlert>
+                }
             }
+
+            @if(_vm.SelectedReportType == null)
+            {
+                return;
+            }
+
             <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="@_vm.IsUpdate" IsFixed="true">
                 <CascadingValue Name="@Constants.CascadingValues.ReportViewModel" Value="_vm.ReportViewModel">
-                    @switch (_vm.ReportType)
+                    @switch (_vm.SelectedReportType)
                     {
                         case ReportType.IndividualHuntedMortalityReport:
                             <IndividualHuntedMortalityReportComponent ViewModel="@(_vm.ReportViewModel as IndividualHuntedMortalityReportViewModel)" />

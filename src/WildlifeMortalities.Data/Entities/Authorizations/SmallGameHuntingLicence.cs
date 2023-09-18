@@ -60,6 +60,15 @@ public class SmallGameHuntingLicence : Authorization, IHasOutfitterAreas
         Type = smallGameHuntingLicence.Type;
         OutfitterAreas = smallGameHuntingLicence.OutfitterAreas;
     }
+
+    public override bool IsAYukonResident()
+    {
+        return Type
+            is LicenceType.YukonResident
+                or LicenceType.YukonResidentSenior
+                or LicenceType.YukonResidentFirstNationsOrInuit
+                or LicenceType.YukonResidentFirstNationsOrInuitSenior;
+    }
 }
 
 public class SmallGameHuntingLicenceConfig : IEntityTypeConfiguration<SmallGameHuntingLicence>

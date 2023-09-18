@@ -83,6 +83,11 @@ public class Client : PersonWithAuthorizations
 
         return true;
     }
+
+    public bool IsCurrentlyAYukonResident()
+    {
+        return Authorizations.Any(a => a.IsValid(DateTimeOffset.Now) && a.IsAYukonResident());
+    }
 }
 
 public class ClientConfig : IEntityTypeConfiguration<Client>

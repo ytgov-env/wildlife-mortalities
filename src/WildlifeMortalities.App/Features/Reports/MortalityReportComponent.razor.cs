@@ -73,6 +73,7 @@ public partial class MortalityReportComponent : DbContextAwareComponent
         _client = await context.People
             .OfType<Client>()
             .Where(c => c.EnvPersonId == HumanReadablePersonId)
+            .Include(c => c.Authorizations)
             .SingleOrDefaultAsync();
 
         _personId = _client?.Id;
@@ -122,12 +123,16 @@ public partial class MortalityReportComponent : DbContextAwareComponent
         StateHasChanged();
     }
 
-    private void ReportTypeChanged(ReportType type)
+    private void ReportTypeChanged()
     {
-        CreateNewEditContext();
-        _vm.ReportType = type;
+        if (!_vm.SelectedReportType.HasValue)
+        {
+            return;
+        }
 
-        _vm.ReportViewModel = _vm.ReportType switch
+        CreateNewEditContext();
+
+        _vm.ReportViewModel = _vm.SelectedReportType switch
         {
             ReportType.IndividualHuntedMortalityReport
                 => new IndividualHuntedMortalityReportViewModel(),
@@ -165,6 +170,11 @@ public partial class MortalityReportComponent : DbContextAwareComponent
             return;
         }
 
+        if (_vm.SelectedReportType == null)
+        {
+            return;
+        }
+
         _isSaving = true;
         if (_editContext.GetValidationMessages().Any())
         {
@@ -179,12 +189,16 @@ public partial class MortalityReportComponent : DbContextAwareComponent
 
             if (DraftId != null)
             {
-                await MortalityService.UpdateDraftReport(content, (int)DraftId, AppParameters.UserId);
+                await MortalityService.UpdateDraftReport(
+                    content,
+                    (int)DraftId,
+                    AppParameters.UserId
+                );
             }
             else
             {
                 await MortalityService.CreateDraftReport(
-                    _vm.ReportType.GetReportType(),
+                    _vm.SelectedReportType.Value.GetReportType(),
                     content,
                     personId,
                     AppParameters.UserId
