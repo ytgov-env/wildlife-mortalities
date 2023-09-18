@@ -10,41 +10,61 @@ namespace WildlifeMortalities.DataSeeder;
 internal class BagLimitSeeder
 {
     private readonly AppDbContext _context;
+    private readonly DataSeederVersion _version;
     private Dictionary<string, GameManagementArea>? _areas;
     private Dictionary<string, HuntingSeason>? _huntingSeasons;
 
-    public BagLimitSeeder(AppDbContext context)
+    public BagLimitSeeder(AppDbContext context, DataSeederVersion version)
     {
         _context = context;
+        _version = version;
     }
 
     internal async Task AddAllBagLimitEntries()
     {
-        //if (!context.BagLimitEntries.Any())
-        //{
-        await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE BagLimitEntryBagLimitEntry");
-        _context.BagEntries.RemoveRange(await _context.BagEntries.ToListAsync());
-        _context.BagLimitEntries.RemoveRange(await _context.BagLimitEntries.ToListAsync());
-
-        _context.SaveChanges();
-
-        _areas = await _context.GameManagementAreas.ToDictionaryAsync(x => x.Area, x => x);
+        
         _huntingSeasons = await _context.Seasons
             .OfType<HuntingSeason>()
             .ToDictionaryAsync(x => x.FriendlyName, x => x);
+        _areas = await _context.GameManagementAreas.ToDictionaryAsync(x => x.Area, x => x);
 
-        AddAllHuntingBagLimitEntries2023To2024(_context, _huntingSeasons["23/24"], _areas);
 
-        _context.SaveChanges();
-        Console.WriteLine("Added BagLimitEntries");
-        //}
-        //else
-        //{
-        //    Console.WriteLine("BagLimitEntries already exist");
-        //}
+        if (_version == DataSeederVersion.AddingMissingCaribouBagLimits)
+        {
+            var season = _huntingSeasons["23/24"];
+            var caribouHartRiver = new CaribouBagLimitEntry(GetGameManagementAreasFromIntegerArray(
+            new int[] { 225, 229, 240, 241, 246, 247, 248, 249, 250, 251, 260, 261 }), season, GetSeasonStart(season, 8, 1),
+            GetSeasonEnd(season, 10, 31), 1, Sex.Male);
+
+
+            var existingCaribouBagLimitEntries = await _context.BagLimitEntries.OfType<CaribouBagLimitEntry>().Where(x => x.SeasonId == season.Id).Include(x=> x.MaxValuePerPersonSharedWith).ToListAsync();
+
+            caribouHartRiver.MaxValuePerPersonSharedWith.AddRange(existingCaribouBagLimitEntries);
+
+            foreach(var entry in existingCaribouBagLimitEntries)
+            {
+                entry.MaxValuePerPersonSharedWith.Add(caribouHartRiver);
+            }
+
+            await _context.SaveChangesAsync();
+            Console.WriteLine($"Added {_version}");
+            return;
+        }
+
+        if (!_context.BagLimitEntries.Any() && _version == DataSeederVersion.All)
+        {
+            AddAllHuntingBagLimitEntries2023To2024(_context, _huntingSeasons["23/24"], _areas);
+
+            await _context.SaveChangesAsync();
+            Console.WriteLine("Added BagLimitEntries");
+        }
+        else
+        {
+            Console.WriteLine("BagLimitEntries already exist");
+        }
     }
 
-    private void AddAllHuntingBagLimitEntries2023To2024(
+        private void AddAllHuntingBagLimitEntries2023To2024(
         AppDbContext context,
         HuntingSeason season,
         Dictionary<string, GameManagementArea> areas
@@ -125,7 +145,7 @@ internal class BagLimitSeeder
             GetGameManagementAreasFromIntegerArray(
                 new int[]
                 {
-                    245, 252, 253, 254, 255, 256, 257, 258, 259, 265, 270, 271, 272, 273, 274, 275, 276, 277, 278,
+                    245, 252, 253, 254, 255, 256, 257, 258, 259, 262, 263, 264, 265, 270, 271, 272, 273, 274, 275, 276, 277, 278,
                     279, 280, 281, 282, 283, 284, 285, 286, 287, 289, 290, 291, 292, 293, 401, 402, 404, 405, 406,
                     407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425,
                     426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444,
@@ -168,6 +188,10 @@ internal class BagLimitSeeder
                 new int[] { 216, 223, 227, 228, 239 }), season, GetSeasonStart(season, 8, 1),
             GetSeasonEnd(season, 10, 31), 1, Sex.Male);
 
+        var caribouHartRiver = new CaribouBagLimitEntry(GetGameManagementAreasFromIntegerArray(
+            new int[] { 225, 229, 240, 241, 246, 247, 248, 249, 250, 251, 260, 261 }), season, GetSeasonStart(season, 8, 1),
+            GetSeasonEnd(season, 10, 31), 1, Sex.Male);
+
         var caribouFortymileSummerThreshold = new CaribouBagLimitEntry(GetGameManagementAreasFromIntegerArray(
                 new int[] { 301, 302, 304 }), season, GetSeasonStart(season, 8, 1),
             GetSeasonEnd(season, 9, 9), 1, Sex.Male, 89);
@@ -177,45 +201,51 @@ internal class BagLimitSeeder
             GetSeasonStart(season, 12, 1),
             GetSeasonEnd(season, 3, 31), 1, Sex.Male, 29);
 
+        caribouHartRiver.MaxValuePerPersonSharedWith.AddRange(new[]
+        {
+            caribou, caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold
+        });
+
         caribou.MaxValuePerPersonSharedWith.AddRange(new[]
         {
             caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
-            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold, caribouHartRiver
         });
         caribouPhaWithShortSeason.MaxValuePerPersonSharedWith.AddRange(new[]
         {
             caribou, caribouPorcupine, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
-            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold, caribouHartRiver
         });
         caribouPorcupine.MaxValuePerPersonSharedWith.AddRange(new[]
         {
             caribouPhaWithShortSeason, caribou, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
-            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold, caribouHartRiver
         });
         caribouPorcupineOverlapAreas.MaxValuePerPersonSharedWith.AddRange(new[]
         {
             caribouPhaWithShortSeason, caribouPorcupine, caribou, caribouHartRiverOverlapAreas,
-            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold, caribouHartRiver
         });
         caribouHartRiverOverlapAreas.MaxValuePerPersonSharedWith.AddRange(new[]
         {
             caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas, caribou,
-            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold, caribouHartRiver
         });
         caribouFortymileSummerThreshold.MaxValuePerPersonSharedWith.AddRange(new[]
         {
             caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
-            caribou, caribouFortymileWinterThreshold
+            caribou, caribouFortymileWinterThreshold, caribouHartRiver
         });
         caribouFortymileWinterThreshold.MaxValuePerPersonSharedWith.AddRange(new[]
         {
             caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas, caribouHartRiverOverlapAreas,
-            caribouFortymileSummerThreshold, caribou
+            caribouFortymileSummerThreshold, caribou, caribouHartRiver
         });
 
         context.AddRange(caribou, caribouPhaWithShortSeason, caribouPorcupine, caribouPorcupineOverlapAreas,
             caribouHartRiverOverlapAreas,
-            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold);
+            caribouFortymileSummerThreshold, caribouFortymileWinterThreshold, caribouHartRiver);
 
         var bison = new HuntingBagLimitEntry(
             GetGameManagementAreasFromIntegerArray(

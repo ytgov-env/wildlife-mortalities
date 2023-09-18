@@ -8,14 +8,14 @@ namespace WildlifeMortalities.DataSeeder;
 
 public static class Seeder
 {
-    public static async Task Seed(AppDbContext context)
+    public static async Task Seed(AppDbContext context, DataSeederVersion version)
     {
         AddPosseSyncKeys(context);
         AddAllSeasons(context);
         AreaSeeder.AddAllGameManagementAreas(context);
         AreaSeeder.AddAllOutfitterAreas(context);
         AreaSeeder.AddAllRegisteredTrappingConcessions(context);
-        await new BagLimitSeeder(context).AddAllBagLimitEntries();
+        await new BagLimitSeeder(context, version).AddAllBagLimitEntries();
     }
 
     private static void AddAllSeasons(AppDbContext context)

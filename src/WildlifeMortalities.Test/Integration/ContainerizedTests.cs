@@ -46,7 +46,7 @@ public class ContainerizedTests : IAsyncLifetime
 
         _context = GetContext();
         await _context.Database.MigrateAsync();
-        await Seeder.Seed(_context);
+        await Seeder.Seed(_context, DataSeederVersion.All);
 
         _seedUser = new User
         {
@@ -726,7 +726,7 @@ public class ContainerizedTests : IAsyncLifetime
         var content = JsonSerializer.Serialize(
             new MortalityReportPageViewModel
             {
-                ReportType = ReportType.OutfitterGuidedHuntReport,
+                SelectedReportType = ReportType.OutfitterGuidedHuntReport,
                 ReportViewModel = reportViewModel,
             }
         );
