@@ -107,7 +107,7 @@ public abstract class ActivityViewModelValidator<T> : AbstractValidator<T>
             .Matches(@"^(CM|DA|FA|HJ|MA|RR|TE|WH|WL)-\d{2}-\d{3}$")
             .When(x => !string.IsNullOrWhiteSpace(x.OccurrenceNumber))
             .WithMessage(
-                "Occurrence number must empty or match pattern AA-00-000. Example: WH-23-049"
+                "Occurrence number must be left empty or match pattern AA-00-000. Example: WH-23-049"
             );
         RuleFor(x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel)
             .NotNull()
