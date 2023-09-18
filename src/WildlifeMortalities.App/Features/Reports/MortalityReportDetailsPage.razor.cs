@@ -7,6 +7,7 @@ using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.People;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Shared.Services.Files;
 using WildlifeMortalities.Shared.Services.Reports.Single;
 
 namespace WildlifeMortalities.App.Features.Reports;

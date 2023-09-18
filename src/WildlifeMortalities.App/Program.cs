@@ -10,6 +10,7 @@ using WildlifeMortalities.App.Features.Auth;
 using WildlifeMortalities.App.HostedServices;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Shared.Services;
+using WildlifeMortalities.Shared.Services.Files;
 using WildlifeMortalities.Shared.Services.Posse;
 using WildlifeMortalities.Shared.Services.Reports;
 
@@ -59,6 +60,7 @@ try
     builder.Services.AddScoped<ReportService>();
     builder.Services.AddSingleton<IAppConfigurationService, AppConfigurationService>();
     builder.Services.AddScoped<IClaimsTransformation, AddRoleClaimsTransformation>();
+    builder.Services.Configure<FileServiceOptions>(configuration.GetSection("FileService"));
 
     // Add authentication services
     var isAuthConfigurationMissingValues = configuration

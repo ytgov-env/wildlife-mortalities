@@ -4,7 +4,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using WildlifeMortalities.Data;
 
-namespace WildlifeMortalities.Shared.Services;
+namespace WildlifeMortalities.Shared.Services.Files;
 
 public class PdfService
 {
