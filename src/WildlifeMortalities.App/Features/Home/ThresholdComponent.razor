@@ -1,0 +1,50 @@
+﻿@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+@using WildlifeMortalities.Data.Extensions;
+@inherits DbContextAwareComponent
+
+@if(BagLimitEntries == null)
+{
+    return;
+}
+@* @foreach(var threshold in BagLimitEntries)
+{
+    <MudTimeline>
+        @foreach(var entry in threshold.ActivityQueue)
+        {
+            <MudTimelineItem Color="Color.Info">
+                <MudText>@entry.Activity.Mortality.DateOfDeath!.Value.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)</MudText>
+            </MudTimelineItem>
+        }
+    </MudTimeline>
+} *@
+
+@if(BagLimitEntries != null)
+{
+    <MudPaper Class="pl-3 py-2">
+        <MudText Typo="Typo.h5">Thresholds</MudText>
+        @{var threshold = BagLimitEntries.MaxBy(x => x.ActivityQueue.Count);}
+        <MudText Typo="Typo.h6" Class="ml-4">@threshold.Species.GetDisplayName()</MudText>
+        <MudTimeline TimelineOrientation="TimelineOrientation.Vertical" TimelineAlign="TimelineAlign.Start" TimelinePosition="TimelinePosition.Left">
+            <MudTimelineItem Color="Color.Success">
+                <MudText>@threshold.PeriodStart.ToString(Constants.FormatStrings.StandardDateFormat)</MudText>
+                <MudText>Hunt open</MudText>
+            </MudTimelineItem>
+            @foreach (var entry in threshold.ActivityQueue.GroupBy(x => x.Activity.Mortality.DateOfDeath).OrderBy(x => x.Key))
+            {
+                <MudTimelineItem Color="Color.Default">
+                    <MudText>@entry.Key!.Value.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)</MudText>
+                    @foreach(var queueItem in entry)
+                    {
+                        var huntedActivity = queueItem.Activity as HuntedActivity;
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@GetReport(huntedActivity).HumanReadableId</MudText>
+                    }
+                </MudTimelineItem>
+            }
+            <MudTimelineItem Color="Color.Error">
+                <MudText>@threshold.PeriodEnd.ToString(Constants.FormatStrings.StandardDateFormat)</MudText>
+                <MudText>Hunt closed</MudText>
+            </MudTimelineItem>
+        </MudTimeline>
+    </MudPaper>
+}
+
