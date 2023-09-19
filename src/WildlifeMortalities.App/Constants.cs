@@ -16,8 +16,11 @@ public static class Constants
 
     public static class FormatStrings
     {
-        public const string StandardDateFormat = "MMM d, yyyy";
-        public const string StandardDateFormatWithoutYear = "MMM d";
+        public const string StandardDateFormat = Shared.Constants.FormatStrings.StandardDateFormat;
+        public const string StandardDateFormatWithoutYear = Shared
+            .Constants
+            .FormatStrings
+            .StandardDateFormatWithoutYear;
     }
 
     public static class Routes

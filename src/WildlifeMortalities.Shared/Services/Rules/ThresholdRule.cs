@@ -128,8 +128,8 @@ internal class ThresholdRule : Rule
                                         bagLimitEntry
                                             .GetType()
                                             .IsAssignableTo(typeof(HuntingBagLimitEntry))
-                                            ? $"Threshold exceeded for {y.Activity.Mortality.Species.GetDisplayName().ToLower()} in {((HuntingBagLimitEntry)bagLimitEntry).Areas.AreasToString()}. Threshold of {bagLimitEntry.MaxValueForThreshold} was reached on {dayThresholdWasMet:yyyy-MM-dd}."
-                                            : $"Threshold exceeded for {y.Activity.Mortality.Species.GetDisplayName().ToLower()} in {((TrappingBagLimitEntry)bagLimitEntry).Concessions.ConcessionsToString()}. Threshold of {bagLimitEntry.MaxValueForThreshold} was reached on {dayThresholdWasMet:yyyy-MM-dd}."
+                                            ? $"Threshold exceeded for {y.Activity.Mortality.Species.GetDisplayName().ToLower()} in {((HuntingBagLimitEntry)bagLimitEntry).Areas.AreasToString()}. Threshold of {bagLimitEntry.MaxValueForThreshold} was reached on {dayThresholdWasMet.ToString(Constants.FormatStrings.StandardDateFormat)}."
+                                            : $"Threshold exceeded for {y.Activity.Mortality.Species.GetDisplayName().ToLower()} in {((TrappingBagLimitEntry)bagLimitEntry).Concessions.ConcessionsToString()}. Threshold of {bagLimitEntry.MaxValueForThreshold} was reached on {dayThresholdWasMet.ToString(Constants.FormatStrings.StandardDateFormat)}."
                                     )
                             )
                     )

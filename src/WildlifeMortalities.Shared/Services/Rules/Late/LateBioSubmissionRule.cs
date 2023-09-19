@@ -103,7 +103,7 @@ public class LateBioSubmissionRule : LateRule<HarvestActivity>
             activity,
             RuleType.LateBioSubmission,
             SeverityType.Illegal,
-            $"Biological submission was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
+            $"Biological submission was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. The deadline was {deadlineTimestamp.ToString(Constants.FormatStrings.StandardDateFormat)}."
         );
     }
 

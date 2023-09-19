@@ -9,4 +9,10 @@ public static class Constants
         public const string LastSuccessfulAuthorizationsSyncKey =
             "PosseSyncService.LastSuccessfulAuthorizationsSync";
     }
+
+    public static class FormatStrings
+    {
+        public const string StandardDateFormat = "MMM d, yyyy";
+        public const string StandardDateFormatWithoutYear = "MMM d";
+    }
 }

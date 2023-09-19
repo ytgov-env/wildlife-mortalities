@@ -34,7 +34,7 @@ public class BigGameHuntingLicenceRulePipelineItem : AuthorizationRulePipelineIt
                         activity,
                         Violation.RuleType.NoValidBigGameHuntingLicence,
                         Violation.SeverityType.Illegal,
-                        $"Does not have a valid big game hunting licence on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+                        $"Does not have a valid big game hunting licence on {activity.Mortality.DateOfDeath!.Value.ToString(Constants.FormatStrings.StandardDateFormat)}."
                     )
                 );
             }

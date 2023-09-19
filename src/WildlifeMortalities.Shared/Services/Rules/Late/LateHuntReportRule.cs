@@ -83,7 +83,7 @@ internal class LateHuntReportRule : LateRule<HuntedActivity>
             activity,
             RuleType.LateHuntReport,
             SeverityType.Illegal,
-            $"Report was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. Deadline was {deadlineTimestamp:yyyy-MM-dd}."
+            $"Report was submitted late for {activity.Mortality.Species.GetDisplayName().ToLower()}. The deadline was {deadlineTimestamp.ToString(Constants.FormatStrings.StandardDateFormat)}."
         );
     }
 

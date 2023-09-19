@@ -103,8 +103,8 @@ public class BagLimitRule : Rule
                             RuleType.HarvestPeriod,
                             SeverityType.Illegal,
                             activity.Mortality.Sex is Sex.Unknown
-                                ? $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Species.GetDisplayName().ToLower()} of {activity.Mortality.Sex!.GetDisplayName().ToLower()} sex on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
-                                : $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Sex!.GetDisplayName().ToLower()} {activity.Mortality.Species.GetDisplayName().ToLower()} on {activity.Mortality.DateOfDeath:yyyy-MM-dd}."
+                                ? $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Species.GetDisplayName().ToLower()} of {activity.Mortality.Sex!.GetDisplayName().ToLower()} sex on {activity.Mortality.DateOfDeath!.Value.ToString(Constants.FormatStrings.StandardDateFormat)}."
+                                : $"{(activity is HuntedActivity ? "Area" : "Concession")} {activity.GetAreaName(report)} is closed to {(activity is HuntedActivity ? "hunting" : "trapping")} for {activity.Mortality.Sex!.GetDisplayName().ToLower()} {activity.Mortality.Species.GetDisplayName().ToLower()} on {activity.Mortality.DateOfDeath!.Value.ToString(Constants.FormatStrings.StandardDateFormat)}."
                         )
                     );
                     continue;
