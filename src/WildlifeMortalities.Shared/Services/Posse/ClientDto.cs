@@ -8,5 +8,6 @@ public record ClientDto(
     string LastName,
     DateOnly BirthDate,
     DateTimeOffset LastModifiedDateTime,
-    IEnumerable<string> PreviousEnvClientIds
+    IEnumerable<string> PreviousEnvClientIds,
+    Uri StaffUiUrl
 );

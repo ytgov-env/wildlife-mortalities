@@ -337,7 +337,8 @@ public class PosseService : IPosseService
                 FirstName = recentlyModifiedClient.FirstName,
                 LastName = recentlyModifiedClient.LastName,
                 BirthDate = recentlyModifiedClient.BirthDate.ToDateTime(new TimeOnly()),
-                LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime
+                LastModifiedDateTime = recentlyModifiedClient.LastModifiedDateTime,
+                StaffUiUrl = recentlyModifiedClient.StaffUiUrl
             };
 
             if (_isAnonymized)

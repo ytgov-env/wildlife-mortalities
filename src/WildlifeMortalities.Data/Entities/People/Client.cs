@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WildlifeMortalities.Data.Entities.Authorizations;
-using WildlifeMortalities.Data.Entities.BiologicalSubmissions;
 using WildlifeMortalities.Data.Entities.Reports.MultipleMortalities;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 
@@ -41,6 +40,7 @@ public class Client : PersonWithAuthorizations
         LastName = client.LastName;
         BirthDate = client.BirthDate;
         LastModifiedDateTime = client.LastModifiedDateTime;
+        StaffUiUrl = client.StaffUiUrl;
     }
 
     public override string ToString() => $"{FirstName} {LastName} ({EnvPersonId})";

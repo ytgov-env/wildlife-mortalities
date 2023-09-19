@@ -16,6 +16,7 @@ public class Organization : PersonWithAuthorizations
     public void Update(Organization organization)
     {
         LastModifiedDateTime = organization.LastModifiedDateTime;
+        StaffUiUrl = organization.StaffUiUrl;
     }
 
     public override bool Merge(PersonWithAuthorizations person)

@@ -1,5 +1,15 @@
 ﻿@using WildlifeMortalities.Data.Entities.People;
-<MudField Label="ENV Client ID">@Client.EnvPersonId</MudField>
+<MudField Label="ENV Client ID">
+    <MudStack Row="true">
+        @Client.EnvPersonId 
+        <MudSpacer/>
+        @if (ShowOverviewButton)
+        {
+            <MudButton Class="mt-n3" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Info" EndIcon="@Icons.Material.Filled.Visibility" Href="@Constants.Routes.GetClientOverviewPageLink(Client.EnvPersonId)">Overview</MudButton>
+        }
+        <MudButton Class="mt-n3" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Secondary" EndIcon="@Icons.Material.Filled.OpenInNew" Href="@Client.StaffUiUrl?.ToString()" Disabled="@(Client.StaffUiUrl is null)">POSSE</MudButton>
+    </MudStack>
+</MudField>
 <MudField Label="First Name">@Client.FirstName</MudField>
 <MudField Label="Last Name">@Client.LastName</MudField>
 <MudField Label="Birth Date">@Client.BirthDate.ToString(Constants.FormatStrings.StandardDateFormat)</MudField>
@@ -8,4 +18,7 @@
     [Parameter]
     [EditorRequired]
     public Client Client { get; set; } = null!;
+    
+    [Parameter]
+    public bool ShowOverviewButton { get; set; } = true;
 }
