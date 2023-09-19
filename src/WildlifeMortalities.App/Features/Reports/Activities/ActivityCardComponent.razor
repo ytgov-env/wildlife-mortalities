@@ -1,13 +1,15 @@
-﻿@using Microsoft.EntityFrameworkCore;
+﻿@using Humanizer;
+@using Microsoft.EntityFrameworkCore;
 @using WildlifeMortalities.App.Extensions
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions
 @using WildlifeMortalities.Data.Entities.BiologicalSubmissions.Shared;
 @using WildlifeMortalities.Data.Entities.Reports;
 @using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
-@using WildlifeMortalities.Data.Enums
-@using WildlifeMortalities.Shared.Extensions;
-@using WildlifeMortalities.Shared.Services
+@using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+@using WildlifeMortalities.Data.Enums;
+@using WildlifeMortalities.Data.Extensions;
+@using WildlifeMortalities.Shared.Services;
 @using static WildlifeMortalities.Data.Entities.Violation;
 @using WildlifeMortalities.Shared.Services.Reports.Single;
 @inherits DbContextAwareComponent
@@ -18,14 +20,31 @@
             @{
                 var mortalityName = MortalityViewModel.Species?.GetDisplayName();
             }
-            @if (MortalityViewModel.IsDraft)
-            {
-                <MudText Typo="Typo.h6" Color="Color.Warning">Draft: @mortalityName </MudText>
-            }
-            else
-            {
-                <MudText Typo="Typo.h6">@mortalityName</MudText>
-            }
+            <MudStack Row="true" Class="d-flex justify-space-between">
+                @if (MortalityViewModel.IsDraft)
+                {
+                    <MudText Typo="Typo.h6" Color="Color.Warning">Draft: @mortalityName </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">@mortalityName</MudText>
+                }
+                @if (activityQueueItem != null && activityQueueItem.BagLimitEntry.IsThreshold)
+                {
+                    var huntingBagLimitEntry = (HuntingBagLimitEntry)activityQueueItem.BagLimitEntry;
+                    var tooltipText = $"Areas {huntingBagLimitEntry.Areas.AreasToString()} have a threshold of {activityQueueItem.BagLimitEntry.MaxValueForThreshold} {MortalityViewModel.Species?.GetDisplayName().ToLower()} between {activityQueueItem.BagLimitEntry.PeriodStart.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)} and {activityQueueItem.BagLimitEntry.PeriodEnd.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)}";
+                    <MudTooltip Text="@tooltipText">
+                        <MudStack Row="true" Class="mt-n1">
+                            <MudText Class="mt-3" Typo="Typo.body1">Threshold</MudText>
+                            <MudStack>
+                                <MudText>@(activityQueueItem.Position.Ordinalize()) kill</MudText>
+                                <MudDivider Class="my-n3" Light="true"/>
+                                <MudText>@activityQueueItem.BagLimitEntry.MaxValueForThreshold allowed</MudText>
+                            </MudStack>
+                        </MudStack>
+                    </MudTooltip>
+                }
+            </MudStack>
         </CardHeaderContent>
         @*<CardHeaderActions>
         @if (ActivityViewModel.Activity != null && ActivityViewModel.Activity.Authorizations.Any())
@@ -50,7 +69,7 @@
                     <MudAlert Severity="@GetAlertSeverity(violations.Key)" Class="my-1">
                         @foreach (var violation in violations)
                         {
-                            <MudText Typo="Typo.body2" Class="my-1">@violation.Description</MudText>
+                            <MudText Typo="Typo.body2" Class="@(violation == violations.Last() ? "" : "mb-3")">@violation.Description</MudText>
                         }
                     </MudAlert>
                 }
@@ -130,6 +149,16 @@
 </MudCard>
 
 @code {
+    private ActivityQueueItem? activityQueueItem;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(ActivityViewModel.Activity != null)
+        {
+            var context = GetContext();
+            activityQueueItem = await context.ActivityQueueItems.Include(x => x.BagLimitEntry).ThenInclude(x => ((HuntingBagLimitEntry)x).Areas).SingleOrDefaultAsync(x => x.ActivityId == ActivityViewModel.Activity.Id);
+        }
+    }
 
     [Parameter]
     public EventCallback ChangeSpeciesClicked { get; set; }
