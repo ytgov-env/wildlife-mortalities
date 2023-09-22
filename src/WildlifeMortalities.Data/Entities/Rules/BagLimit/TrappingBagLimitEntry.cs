@@ -21,7 +21,8 @@ public class TrappingBagLimitEntry : BagLimitEntry
         DateTimeOffset periodEnd,
         int maxValuePerPerson,
         Sex? sex = null,
-        int? maxValueForThreshold = null
+        int? maxValueForThreshold = null,
+        string? thresholdName = null
     )
         : base(
             species,
@@ -30,7 +31,8 @@ public class TrappingBagLimitEntry : BagLimitEntry
             periodEnd,
             maxValuePerPerson,
             sex,
-            maxValueForThreshold
+            maxValueForThreshold,
+            thresholdName
         )
     {
         Concessions = concessions.ToList();

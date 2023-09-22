@@ -19,7 +19,8 @@ public class NeckSnaredGreyWolfTrappingBagLimitEntry : TrappingBagLimitEntry
         DateTimeOffset periodEnd,
         int maxValuePerPerson,
         Sex? sex = null,
-        int? maxValueForThreshold = null
+        int? maxValueForThreshold = null,
+        string? thresholdName = null
     )
         : base(
             concessions,
@@ -29,10 +30,11 @@ public class NeckSnaredGreyWolfTrappingBagLimitEntry : TrappingBagLimitEntry
             periodEnd,
             maxValuePerPerson,
             sex,
-            maxValueForThreshold
+            maxValueForThreshold,
+            thresholdName
         ) { }
 
-    override public bool Matches(HarvestActivity activity, Report report)
+    public override bool Matches(HarvestActivity activity, Report report)
     {
         var baseResult = base.Matches(activity, report);
         if (!baseResult)

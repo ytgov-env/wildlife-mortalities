@@ -21,7 +21,8 @@ public class HuntingBagLimitEntry : BagLimitEntry
         DateTimeOffset periodEnd,
         int maxValuePerPerson,
         Sex? sex = null,
-        int? maxValueForThreshold = null
+        int? maxValueForThreshold = null,
+        string? thresholdName = null
     )
         : base(
             species,
@@ -30,7 +31,8 @@ public class HuntingBagLimitEntry : BagLimitEntry
             periodEnd,
             maxValuePerPerson,
             sex,
-            maxValueForThreshold
+            maxValueForThreshold,
+            thresholdName
         )
     {
         Areas = areas.ToList();

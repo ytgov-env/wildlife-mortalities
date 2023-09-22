@@ -19,7 +19,8 @@ public abstract class BagLimitEntry
         DateTimeOffset periodEnd,
         int maxValuePerPerson,
         Sex? sex = null,
-        int? maxValueForThreshold = null
+        int? maxValueForThreshold = null,
+        string? thresholdName = null
     )
     {
         Species = species;
@@ -28,6 +29,7 @@ public abstract class BagLimitEntry
         MaxValuePerPerson = maxValuePerPerson;
         Sex = sex;
         MaxValueForThreshold = maxValueForThreshold;
+        ThresholdName = thresholdName;
 
         if (!season.IsValidSubset(periodStart, periodEnd))
         {
@@ -58,8 +60,9 @@ public abstract class BagLimitEntry
     public List<BagEntry> BagEntries { get; init; } = null!;
     public List<ActivityQueueItem> ActivityQueue { get; init; } = null!;
     public int MaxValuePerPerson { get; set; }
-    public int? MaxValueForThreshold { get; set; }
     public bool IsThreshold => MaxValueForThreshold.HasValue;
+    public int? MaxValueForThreshold { get; set; }
+    public string? ThresholdName { get; set; }
 
     public virtual bool Matches(HarvestActivity activity, Report report)
     {

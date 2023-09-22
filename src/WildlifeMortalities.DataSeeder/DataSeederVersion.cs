@@ -3,5 +3,6 @@ public enum DataSeederVersion
 {
     None = 0,
     All = 1,
-    AddingMissingCaribouBagLimits = 2,
+    Initial = 2,
+    AddingMissingCaribouBagLimits = 3,
 }

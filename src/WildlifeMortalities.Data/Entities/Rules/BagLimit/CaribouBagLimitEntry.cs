@@ -23,7 +23,8 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
         DateTimeOffset periodEnd,
         int maxValuePerPerson,
         Sex? sex = null,
-        int? maxValueForThreshold = null
+        int? maxValueForThreshold = null,
+        string? thresholdName = null
     )
         : base(
             areas,
@@ -33,7 +34,8 @@ public class CaribouBagLimitEntry : HuntingBagLimitEntry
             periodEnd,
             maxValuePerPerson,
             sex,
-            maxValueForThreshold
+            maxValueForThreshold,
+            thresholdName
         )
     {
         bool? isPorcupineHerd = null;
