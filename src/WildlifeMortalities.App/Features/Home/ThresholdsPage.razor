@@ -1,0 +1,105 @@
+﻿@attribute [Route(Constants.Routes.ThresholdsPage)]
+@using Humanizer;
+@using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
+@using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+@using WildlifeMortalities.Data.Extensions;
+@using WildlifeMortalities.Data.Entities.Seasons;
+@inherits DbContextAwareComponent
+
+@if (BagLimitEntries != null)
+{
+    <MudText Typo="Typo.h3" GutterBottom="true">Threshold harvests</MudText>
+    <MudItem sm="12" md="6">
+        <MudPaper>
+            <MudToolBar>
+                <MudSwitch Color="Color.Primary" Label="@(_showOnlyOpen ? "Open" : "All")" @bind-Checked="_showOnlyOpen" />
+                <MudSelect @bind-Value="_selectedHarvestType" Label="Harvest type">
+                    @foreach(var type in Enum.GetValues<HarvestType>())
+                    {
+                        <MudSelectItem Value="type">@type.ToString()</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSelect @bind-Value="_selectedSeason" Label="Season">
+                    @foreach (var season in BagLimitEntries.GroupBy(x => x.GetSeason().FriendlyName).Select(x => x.Key))
+                    {
+                        <MudSelectItem Value="season">@season</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudToolBar>
+        </MudPaper>
+    </MudItem>
+
+    <MudGrid Class="mt-3">
+        @foreach (var threshold in BagLimitEntries
+            .OrderBy(x => x.PeriodStart)
+            .ThenBy(x => x.PeriodEnd)
+            .Where(x => _selectedSeason == null || x.GetSeason().FriendlyName == _selectedSeason)
+            .Where(x => _selectedHarvestType == HarvestType.All || (_selectedHarvestType == HarvestType.Hunting && x is HuntingBagLimitEntry) || (_selectedHarvestType == HarvestType.Trapping && x is TrappingBagLimitEntry)))
+        {
+            var isOpen = DateTime.Now > threshold.PeriodStart && DateTime.Now < threshold.PeriodEnd;
+            @if (_showOnlyOpen && !isOpen)
+            {
+                continue;
+            }
+            <MudItem Class="mx-n1 pr-6" sm="12" md="4" lg="3">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudStack Spacing="3" AlignItems="AlignItems.Start">
+                                <MudText Typo="Typo.h6">@threshold.ThresholdName</MudText>
+                                <MudProgressLinear Size="Size.Large" Min="0" Max="threshold.MaxValueForThreshold!.Value" Style="height: 20px" Value="threshold.ActivityQueue.Count"
+                                                   Color="@(threshold.ActivityQueue.Count == 0 ? Color.Default : threshold.ActivityQueue.Count <= threshold.MaxValueForThreshold ? Color.Success : Color.Warning)">
+                                    <MudText>@threshold.ActivityQueue.Count / @threshold.MaxValueForThreshold</MudText>
+                                </MudProgressLinear>
+                            </MudStack>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudStack>
+                            <MudAlert Icon="@Icons.Material.Filled.CalendarMonth">
+                                @threshold.PeriodStart.ToString(Constants.FormatStrings.StandardDateFormat) - @threshold.PeriodEnd.ToString(Constants.FormatStrings.StandardDateFormat)
+                            </MudAlert>
+                            <MudAlert Icon="@Icons.Material.Filled.Map">
+                                <MudText>@GetAreas(threshold)</MudText>
+                            </MudAlert>
+                            <MudAlert Icon="@Icons.Material.Filled.Pets">
+                                @threshold.Species.GetDisplayName()
+                            </MudAlert>
+                            <MudDivider />
+                            <MudTimeline TimelineOrientation="TimelineOrientation.Vertical" TimelineAlign="TimelineAlign.Start" TimelinePosition="TimelinePosition.Left">
+                                <MudTimelineItem Color="Color.Success">
+                                    <MudText>@threshold.PeriodStart.ToString(Constants.FormatStrings.StandardDateFormat)</MudText>
+                                    <MudText>Hunt open</MudText>
+                                </MudTimelineItem>
+                                @if (threshold.ActivityQueue.Any())
+                                {
+                                    @foreach (var entry in threshold.ActivityQueue.GroupBy(x => x.Activity.Mortality.DateOfDeath).OrderBy(x => x.Key))
+                                    {
+                                        <MudTimelineItem Color="Color.Default">
+                                            <MudText>@entry.Key!.Value.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)</MudText>
+                                            <MudStack>
+                                                @foreach (var queueItem in entry)
+                                                {
+                                                    var huntedActivity = (HuntedActivity)queueItem.Activity;
+                                                    var report = GetReport(huntedActivity);
+                                                    <MudLink Href="@Constants.Routes.GetReportDetailsPageLink(report.GetPerson().EnvPersonId, report.Id)" Typo="Typo.body2" Class="mud-text-secondary mb-n1">@GetReport(huntedActivity).HumanReadableId</MudLink>
+                                                }
+                                            </MudStack>
+                                        </MudTimelineItem>
+                                    }
+                                }
+                                <MudTimelineItem Color="Color.Error">
+                                    <MudText>@threshold.PeriodEnd.ToString(Constants.FormatStrings.StandardDateFormat)</MudText>
+                                    <MudText>Hunt closed</MudText>
+                                </MudTimelineItem>
+                            </MudTimeline>
+                        </MudStack>
+                    </MudCardContent>
+
+                </MudCard>
+
+            </MudItem>
+        }
+    </MudGrid>
+}
+

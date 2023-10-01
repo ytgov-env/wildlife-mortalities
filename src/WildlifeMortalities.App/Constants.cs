@@ -29,6 +29,10 @@ public static class Constants
 
         public static string GetHomePageLink() => HomePage;
 
+        public const string ThresholdsPage = "thresholds";
+
+        public static string GetThresholdsPageLink() => ThresholdsPage;
+
         #region report routes
         public const string ReportsOverviewPage = "reports";
 

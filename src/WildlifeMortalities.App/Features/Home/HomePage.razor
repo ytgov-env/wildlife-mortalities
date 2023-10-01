@@ -6,7 +6,7 @@
 <MudText Typo="Typo.h3" GutterBottom="true">Home</MudText>
 <MudText Typo="Typo.h5" Class="mb-4">Welcome to the wildlife mortalities app!</MudText>
 <MudGrid>
-    <MudPaper Elevation="2" Class="pa-4 mb-5">
+    <MudPaper Elevation="2" Class="pa-4 mb-5 ml-3">
         <MudText Typo="Typo.h5">Status</MudText>
         <MudText Typo="Typo.h6">Posse sync service</MudText>
         <MudAlert Severity="GetSeverity(_lastSuccessfulClientsSync)" Dense="true">
@@ -57,9 +57,6 @@
         </MudItem>
     }
 </MudGrid>
-
-<ThresholdComponent />
-
 
 @code {
     private bool _isTestEnvironment = false;

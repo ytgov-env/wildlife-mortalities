@@ -1,0 +1,52 @@
+﻿@using Humanizer;
+@using System.Diagnostics;
+@using WildlifeMortalities.Data.Entities.Rules.BagLimit;
+@using WildlifeMortalities.Data.Extensions;
+
+@if (ActivityQueueItem == null || !ActivityQueueItem.BagLimitEntry.IsThreshold)
+{
+    return;
+}
+
+<MudTooltip Text="@_tooltipText">
+    <MudStack Class="mt-n1" AlignItems="AlignItems.Center">
+            <MudText Class="smaller-h6" Typo="Typo.h6">Threshold</MudText>
+            <MudProgressLinear Class="mt-n3" Size="Size.Large" Min="0" Max="ActivityQueueItem.BagLimitEntry.MaxValueForThreshold!.Value" Style="min-width:120px; height:17px" Value="ActivityQueueItem.Position"
+                               Color="@(ActivityQueueItem.Position <= ActivityQueueItem.BagLimitEntry.MaxValueForThreshold ? Color.Success : Color.Warning)">
+                <MudText>@ActivityQueueItem.Position / @ActivityQueueItem.BagLimitEntry.MaxValueForThreshold</MudText>
+            </MudProgressLinear>
+    </MudStack>
+</MudTooltip>
+
+@code {
+    private string _tooltipText = string.Empty;
+
+    [Parameter]
+    [EditorRequired]
+    public ActivityQueueItem ActivityQueueItem { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        if(ActivityQueueItem == null || ActivityQueueItem.BagLimitEntry == null)
+        {
+            throw new UnreachableException();
+        }
+
+        if (ActivityQueueItem.BagLimitEntry is HuntingBagLimitEntry huntingBagLimitEntry)
+        {
+            _tooltipText = $"Areas {huntingBagLimitEntry.Areas.AreasToString()} have a threshold of {huntingBagLimitEntry.MaxValueForThreshold} {huntingBagLimitEntry.Species.GetDisplayName().ToLower()} between {huntingBagLimitEntry.PeriodStart.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)} and {huntingBagLimitEntry.PeriodEnd.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)}";
+        }
+        else if (ActivityQueueItem.BagLimitEntry is TrappingBagLimitEntry trappingBagLimitEntry)
+        {
+            _tooltipText = $"Concessions {trappingBagLimitEntry.Concessions.ConcessionsToString()} have a threshold of {trappingBagLimitEntry.MaxValueForThreshold} {trappingBagLimitEntry.Species.GetDisplayName().ToLower()} between {trappingBagLimitEntry.PeriodStart.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)} and {trappingBagLimitEntry.PeriodEnd.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)}";
+        } else
+        {
+            throw new UnreachableException();
+        }
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+}

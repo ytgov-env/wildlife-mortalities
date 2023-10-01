@@ -29,20 +29,8 @@
                 {
                     <MudText Typo="Typo.h6">@mortalityName</MudText>
                 }
-                @if (activityQueueItem != null && activityQueueItem.BagLimitEntry.IsThreshold)
-                {
-                    var huntingBagLimitEntry = (HuntingBagLimitEntry)activityQueueItem.BagLimitEntry;
-                    var tooltipText = $"Areas {huntingBagLimitEntry.Areas.AreasToString()} have a threshold of {activityQueueItem.BagLimitEntry.MaxValueForThreshold} {MortalityViewModel.Species?.GetDisplayName().ToLower()} between {activityQueueItem.BagLimitEntry.PeriodStart.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)} and {activityQueueItem.BagLimitEntry.PeriodEnd.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)}";
-                    <MudTooltip Text="@tooltipText">
-                        <MudStack Row="true" Class="mt-n1">
-                            <MudText Class="mt-3" Typo="Typo.body1">Threshold</MudText>
-                            <MudStack>
-                                <MudText>@(activityQueueItem.Position.Ordinalize()) kill</MudText>
-                                <MudDivider Class="my-n3" Light="true"/>
-                                <MudText>@activityQueueItem.BagLimitEntry.MaxValueForThreshold allowed</MudText>
-                            </MudStack>
-                        </MudStack>
-                    </MudTooltip>
+                @if(activityQueueItem != null){
+                    <ThresholdComponent ActivityQueueItem="activityQueueItem"/>
                 }
             </MudStack>
         </CardHeaderContent>

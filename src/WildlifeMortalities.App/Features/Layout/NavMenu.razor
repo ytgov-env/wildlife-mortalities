@@ -3,6 +3,7 @@
 
 <MudNavMenu>
     <MudNavLink Href="@Constants.Routes.GetHomePageLink()" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+    <MudNavLink Href="@Constants.Routes.GetThresholdsPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.DataThresholding">Threshold harvests</MudNavLink>
     <MudNavLink Href="@Constants.Routes.GetClientLookupPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Client overview</MudNavLink>
     @*<MudNavLink Href="@Constants.Routes.GetConservationOfficerLookupPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.LocalPolice">Conservation officer overview</MudNavLink>*@
     <MudNavLink Href="@Constants.Routes.GetReportsOverviewPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CrueltyFree">All reports</MudNavLink>
@@ -23,7 +24,7 @@
 @code {
     // These deep links will silently fail if the user does not have the relevant app installed (i.e. the URI scheme has no registered handler),
     //  but users should have the apps installed in virtually all cases. 
-    // Unfortunately, there is no way for a web app to verify whether a handler is registered (standard browser security feature), 
+    // Unfortunately, there is no way for a web app to verify whether a handler is registered (this is a standard browser security feature), 
     //  so therefore we cannot provide a fallback experience.
     // The alternative would be to send the user to an intermediate URL (ex: https://survey123.arcgis.app?itemID=d07322e663294b9b92e60f674e8f45e4), 
     //  but this has a worse UX as the user now has to close a tab in order to get back to wildlife mortalities.
