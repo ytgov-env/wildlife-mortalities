@@ -42,7 +42,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Annulus">@context.Annulus</MudTd>
-                <MudTd DataLabel="Length">@(context.LengthMillimetres == 0 ? string.Empty : $"{context.LengthMillimetres} mm")</MudTd>
+                <MudTd DataLabel="Length">@(context.Annulus == 1 ? "Not measured" : context.LengthMillimetres == 0 ? string.Empty : $"{context.LengthMillimetres} mm")</MudTd>
             </RowTemplate>
         </MudTable>
     }
@@ -54,7 +54,7 @@
                 <MudListItem>
                     <MudStack Row="true">
                         <MudTextField Label="Annulus #" Value="@item.Annulus" Disabled="true" />
-                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Min="0" />
+                        <MudNumericField @bind-Value="@item.LengthMillimetres" For="@(() => item.LengthMillimetres)" Label="Length (from tip)" Adornment="Adornment.End" AdornmentText="mm" Min="0" Disabled="@(item.Annulus == 1)" Text="@(item.Annulus == 1 ? "Not measured" : item.LengthMillimetres.ToString())"  />
                     </MudStack>
                 </MudListItem>
             }
