@@ -122,7 +122,10 @@ public class MortalityService : IMortalityService
             var existingChiefGuide = existingReport.ChiefGuide;
             if (
                 existingChiefGuide != null
-                && string.IsNullOrWhiteSpace(report.ChiefGuide!.FirstName)
+                && (
+                    string.IsNullOrWhiteSpace(report.ChiefGuide!.FirstName)
+                    || report.Result is Data.Enums.GuidedHuntResult.DidNotHunt
+                )
             )
             {
                 context.OutfitterGuides.Remove(existingChiefGuide);
@@ -144,7 +147,10 @@ public class MortalityService : IMortalityService
                 var existingAssistantGuide = existingReport.AssistantGuides.Single(
                     x => x.Id == guide.Id
                 );
-                if (string.IsNullOrWhiteSpace(guide.FirstName))
+                if (
+                    string.IsNullOrWhiteSpace(guide.FirstName)
+                    || report.Result is Data.Enums.GuidedHuntResult.DidNotHunt
+                )
                 {
                     context.OutfitterGuides.Remove(existingAssistantGuide);
                 }
@@ -157,7 +163,21 @@ public class MortalityService : IMortalityService
         }
         else
         {
-            report.AssistantGuides.RemoveAll(x => string.IsNullOrWhiteSpace(x.FirstName));
+            if (report.Result is Data.Enums.GuidedHuntResult.DidNotHunt)
+            {
+                report.ChiefGuide = null;
+                report.AssistantGuides.Clear();
+            }
+            else
+            {
+                report.AssistantGuides.RemoveAll(x => string.IsNullOrWhiteSpace(x.FirstName));
+            }
+        }
+
+        if (report.Result is Data.Enums.GuidedHuntResult.DidNotHunt)
+        {
+            report.HuntStartDate = null;
+            report.HuntEndDate = null;
         }
 
         var area = await context.OutfitterAreas.FirstOrDefaultAsync(
@@ -339,7 +359,7 @@ public class MortalityService : IMortalityService
                     activity.PreserveImmutableValues(existingActivity);
 
                     context.Entry(existingActivity).CurrentValues.SetValues(activity);
-                    if(existingActivity is HarvestActivity existingHarvestActivity)
+                    if (existingActivity is HarvestActivity existingHarvestActivity)
                     {
                         existingHarvestActivity.Authorizations.Clear();
                     }
@@ -380,12 +400,17 @@ public class MortalityService : IMortalityService
         }
     }
 
-    public async Task<int> CreateDraftReport(string reportType, string report, int personId, int userId)
+    public async Task<int> CreateDraftReport(
+        string reportType,
+        string report,
+        int personId,
+        int userId
+    )
     {
         using var context = _dbContextFactory.CreateDbContext();
 
         var createdById =
-        (await context.Users.FindAsync(userId))?.Id
+            (await context.Users.FindAsync(userId))?.Id
             ?? throw new Exception($"User {userId} not found.");
         var draftReport = new DraftReport
         {

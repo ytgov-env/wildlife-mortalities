@@ -8,26 +8,28 @@
 @inherits DbContextAwareComponent
 
 <MudTextField @bind-Value="ViewModel.OheNumber" For="(() => ViewModel.OheNumber)" Label="OHE number" />
-<DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
-<MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
-                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />
-
-<MudPaper Class="pa-4 my-4">
-    <MudText Typo="Typo.h6">Guides</MudText>
-    <MudAlert Severity="Severity.Info" Class="my-2">At least one guide is required.</MudAlert>
-    <OutfitterGuideComponent Label="Chief guide" Guide="ViewModel.ChiefGuide" ReportViewModel="ViewModel" IsChiefGuide="true" ReadOnly="false" />
-    <MudStack>
-        <OutfitterGuideComponent Label="Assistant guide" Guide="ViewModel.AssistantGuides[0]" ReportViewModel="ViewModel" IsFirstAssistantGuide="true" ReadOnly="false" />
-        <OutfitterGuideComponent Label="Assistant guide" Guide="ViewModel.AssistantGuides[1]" ReportViewModel="ViewModel" IsSecondAssistantGuide="true" ReadOnly="false" />
-    </MudStack>
-</MudPaper>
-
 <MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result" For="@(() => ViewModel.Result)">
     @foreach (var item in Enum.GetValues<GuidedHuntResult>())
     {
         <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
     }
 </MudSelect>
+<MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
+                 ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />
+@if(ViewModel.Result is GuidedHuntResult.WentHuntingAndDidntKillWildlife or GuidedHuntResult.WentHuntingAndKilledWildlife)
+{
+    <DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
+    <MudPaper Class="pa-4 my-4">
+        <MudText Typo="Typo.h6">Guides</MudText>
+        <MudAlert Severity="Severity.Info" Class="my-2">At least one guide is required.</MudAlert>
+        <OutfitterGuideComponent Label="Chief guide" Guide="ViewModel.ChiefGuide" ReportViewModel="ViewModel" IsChiefGuide="true" ReadOnly="false" />
+        <MudStack>
+            <OutfitterGuideComponent Label="Assistant guide" Guide="ViewModel.AssistantGuides[0]" ReportViewModel="ViewModel" IsFirstAssistantGuide="true" ReadOnly="false" />
+            <OutfitterGuideComponent Label="Assistant guide" Guide="ViewModel.AssistantGuides[1]" ReportViewModel="ViewModel" IsSecondAssistantGuide="true" ReadOnly="false" />
+        </MudStack>
+    </MudPaper>
+}
+
 @if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
     <MudGrid Class="my-3">
