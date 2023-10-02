@@ -71,11 +71,7 @@ public class OrganicMaterialForBioSubmissionDialogViewModelValidator
                 (viewModel, dateSubmitted) =>
                     dateSubmitted!.Value.Date >= viewModel.DateReportSubmitted.Date
             )
-            .When(
-                x =>
-                    x.DateSubmitted.HasValue
-                    && x.RequiredOrganicMaterial.All(x => x.IsChecked == true)
-            )
+            .When(x => x.RequiredOrganicMaterial.All(x => x.IsChecked == true))
             .WithMessage(
                 "The bio submission date submitted cannot occur before the date the report was submitted."
             );

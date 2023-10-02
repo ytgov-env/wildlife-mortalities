@@ -9,14 +9,11 @@ namespace WildlifeMortalities.App.Features.Reports;
 
 public class MortalityReportPageViewModel
 {
-    private DateTime? _dateSubmitted;
-
     public bool IsUpdate { get; }
 
     public MortalityReportPageViewModel()
     {
         IsUpdate = false;
-
         ReportViewModel = new IndividualHuntedMortalityReportViewModel();
     }
 
@@ -56,20 +53,9 @@ public class MortalityReportPageViewModel
             default:
                 throw new NotImplementedException();
         }
-        DateSubmitted = reportDetail.Report.DateSubmitted.DateTime;
     }
 
     public ReportType? SelectedReportType { get; set; }
-
-    public DateTime? DateSubmitted
-    {
-        get { return _dateSubmitted; }
-        set
-        {
-            _dateSubmitted = value;
-            ReportViewModel.DateSubmitted = value;
-        }
-    }
 
     [JsonConverter(typeof(MostConcreteClassJsonConverter<MortalityReportViewModel>))]
     public MortalityReportViewModel ReportViewModel { get; set; }

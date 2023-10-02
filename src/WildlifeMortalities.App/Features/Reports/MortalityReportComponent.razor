@@ -30,7 +30,6 @@
                 {
                     <MudText Typo="Typo.h5" Class="mb-2">@_vm.ReportViewModel.HumanReadableId</MudText>
                 }
-                <MudDatePicker @bind-Date="_vm.DateSubmitted" Label="Date submitted" For="(() => _vm.DateSubmitted)" />
             }
              else
             {
@@ -53,6 +52,7 @@
                 return;
             }
 
+            <MudDatePicker @bind-Date="_vm.ReportViewModel.DateSubmitted" Label="Date submitted" For="(() => _vm.ReportViewModel.DateSubmitted)" DateFormat="@Constants.FormatStrings.StandardDateFormat" />
             <CascadingValue Name="@Constants.CascadingValues.EditMode" Value="@_vm.IsUpdate" IsFixed="true">
                 <CascadingValue Name="@Constants.CascadingValues.ReportViewModel" Value="_vm.ReportViewModel">
                     @switch (_vm.SelectedReportType)

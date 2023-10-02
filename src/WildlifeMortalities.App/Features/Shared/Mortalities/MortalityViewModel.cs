@@ -88,7 +88,10 @@ public class MortalityViewModel
 
         if (DateOfDeath.HasValue)
         {
-            result.Add("Date of death", DateOfDeath.Value.Date.ToString(Constants.FormatStrings.StandardDateFormat));
+            result.Add(
+                "Date of death",
+                DateOfDeath.Value.Date.ToString(Constants.FormatStrings.StandardDateFormat)
+            );
         }
 
         result.Add("Sex", Sex?.GetDisplayName());
@@ -96,7 +99,6 @@ public class MortalityViewModel
 
         if (Latitude.HasValue)
         {
-
             result.Add("Latitude", $"{Latitude.Value:###.#####} degrees");
         }
 
@@ -260,7 +262,9 @@ public abstract class MortalityViewModelBaseValidator<T> : AbstractValidator<T>
             .When(m => m.DateOfDeath is not null)
             .WithMessage("The date of death cannot occur in the future.");
 
-        RuleFor(m => m.BodyConditionScale).NotNull().IsInEnum()
+        RuleFor(m => m.BodyConditionScale)
+            .NotNull()
+            .IsInEnum()
             .WithMessage("Body condition scale must be set.");
     }
 }

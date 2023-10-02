@@ -15,9 +15,10 @@
             </MudText>
         </TitleContent>
         <DialogContent>
-            @if (_viewModel.DateSubmitted != null && _viewModel.RequiredOrganicMaterial.All(x => x.IsChecked == true))
+            @if (_viewModel.RequiredOrganicMaterial.All(x => x.IsChecked == true))
             {
-                <MudDatePicker @bind-Date="_viewModel.DateSubmitted" Label="Date submitted" For="(() => _viewModel.DateSubmitted)" DateFormat="@Constants.FormatStrings.StandardDateFormat" />
+                _viewModel.DateSubmitted ??= DateTime.Now.Date;
+                <MudDatePicker  @bind-Date="_viewModel.DateSubmitted" Label="Date submitted" For="(() => _viewModel.DateSubmitted)" DateFormat="@Constants.FormatStrings.StandardDateFormat" />
             }
             @foreach (var item in _viewModel.RequiredOrganicMaterial)
             {

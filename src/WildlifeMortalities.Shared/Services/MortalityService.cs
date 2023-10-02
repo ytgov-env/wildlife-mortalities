@@ -43,7 +43,6 @@ public class MortalityService : IMortalityService
             ?? throw new Exception($"User {userId} not found.");
         var now = DateTimeOffset.Now;
         report.DateCreated = now;
-        report.DateSubmitted = now;
 
         foreach (var activity in report.GetActivities())
         {
@@ -563,12 +562,8 @@ public class MortalityService : IMortalityService
                 bioSubmission.UpdateRequiredOrganicMaterialsStatus();
                 if (
                     bioSubmission.RequiredOrganicMaterialsStatus
-                    == BioSubmissionRequiredOrganicMaterialsStatus.Submitted
+                    != BioSubmissionRequiredOrganicMaterialsStatus.Submitted
                 )
-                {
-                    bioSubmission.DateSubmitted ??= DateTimeOffset.Now;
-                }
-                else
                 {
                     bioSubmission.DateSubmitted = null;
                 }
