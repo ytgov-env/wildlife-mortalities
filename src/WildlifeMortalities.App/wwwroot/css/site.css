@@ -45,3 +45,7 @@ div.mud-dialog-actions > div {
     .mud-dialog-actions .mud-button .mud-button-label {
         white-space: nowrap;
     }
+
+.mud-typography-h6.smaller-h6 {
+    font-size: 1.25em;
+}
