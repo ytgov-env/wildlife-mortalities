@@ -55,7 +55,7 @@ public class IndividualHuntedMortalityReportViewModelValidator
                             .HuntedActivityViewModel
                             .MortalityWithSpeciesSelectionViewModel
                             ?.MortalityViewModel
-                            ?.DateOfDeath ?? DateTimeOffset.MaxValue
+                            ?.DateOfDeath ?? DateTimeOffset.MinValue
                     )
             )
             .WithMessage("Date submitted cannot occur before date of death.");
