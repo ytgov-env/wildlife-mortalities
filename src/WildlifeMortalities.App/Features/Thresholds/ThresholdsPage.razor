@@ -9,16 +9,16 @@
 @if (BagLimitEntries != null)
 {
     <MudText Typo="Typo.h3" GutterBottom="true">Threshold harvests</MudText>
-    <MudItem sm="12" md="6">
+    <MudItem sm="12" md="3">
         <MudPaper>
             <MudToolBar>
                 <MudSwitch Color="Color.Primary" Label="@(_showOnlyOpen ? "Open" : "All")" @bind-Checked="_showOnlyOpen" />
-                <MudSelect @bind-Value="_selectedHarvestType" Label="Harvest type">
+                @* <MudSelect @bind-Value="_selectedHarvestType" Label="Harvest type">
                     @foreach(var type in Enum.GetValues<HarvestType>())
                     {
                         <MudSelectItem Value="type">@type.ToString()</MudSelectItem>
                     }
-                </MudSelect>
+                </MudSelect> *@
                 <MudSelect @bind-Value="_selectedSeason" Label="Season">
                     @foreach (var season in BagLimitEntries.GroupBy(x => x.GetSeason().FriendlyName).Select(x => x.Key))
                     {
