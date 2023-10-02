@@ -58,10 +58,10 @@ internal class BagLimitSeeder
     {
         var season = _huntingSeasons!["23/24"];
 
-        var existingCaribouBagLimitEntries = await _context.BagLimitEntries.OfType<CaribouBagLimitEntry>().Where(x => x.SeasonId == season.Id).Include(x => x.MaxValuePerPersonSharedWith).ToListAsync();
+        var existingCaribouBagLimitEntries = await _context.BagLimitEntries.OfType<CaribouBagLimitEntry>().Where(x => x.SeasonId == season.Id).Include(x => x.MaxValuePerPersonSharedWith).Include(x => x.Areas).ToListAsync();
 
         var caribou = existingCaribouBagLimitEntries.Single(x => x.Areas.Any(x => x.Area == "2-45"));
-        caribou.Areas.AddRange(GetGameManagementAreasFromIntegerArray(new int[] { 262, 263, 264 }));
+        caribou.Areas.AddRange(GetGameManagementAreasFromIntegerArray(new int[] { 262, 263, 264, 539 }));
 
         var caribouHartRiver = new CaribouBagLimitEntry(GetGameManagementAreasFromIntegerArray(
             new int[] { 225, 229, 240, 241, 246, 247, 248, 249, 250, 251, 260, 261 }), season, GetSeasonStart(season, 8, 1),
