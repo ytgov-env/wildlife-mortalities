@@ -23,7 +23,7 @@ public class CaribouTester
         IndividualHuntedMortalityReport
     ) GetReports(AppDbContext context)
     {
-        var person = new Client { Id = 4 };
+        var person = new Client { Id = 4, StaffUiUrl = new Uri("https://example.com") };
         var season = new HuntingSeason(2023);
         context.People.Add(person);
 

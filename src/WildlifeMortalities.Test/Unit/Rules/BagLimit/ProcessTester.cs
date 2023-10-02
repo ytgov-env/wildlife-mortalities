@@ -31,7 +31,7 @@ public class ProcessTester
     )
     {
         context = GetContext();
-        var person = new Client { Id = 4 };
+        var person = new Client { Id = 4, StaffUiUrl = new Uri("https://example.com") };
         var season = new HuntingSeason(2023);
 
         var area = new GameManagementArea
@@ -143,7 +143,7 @@ public class ProcessTester
         violation.Description
             .Should()
             .BeEquivalentTo(
-                "Area 4-03 is closed to hunting for caribou of unknown sex on 2023-04-01."
+                "Area 4-03 is closed to hunting for caribou of unknown sex on Apr. 1, 2023."
             );
         violation.Activity.Should().Be(report.Activity);
         violation.Severity.Should().Be(SeverityType.Illegal);
@@ -455,7 +455,7 @@ public class ProcessTester
             }
         };
 
-        var person = new Client { Id = 4 };
+        var person = new Client { Id = 4, StaffUiUrl = new Uri("https://example.com") };
         var concession = new RegisteredTrappingConcession { Id = 10, Concession = "15" };
         report =
             reportModifier?.Invoke(concession, season, person)
@@ -533,7 +533,7 @@ public class ProcessTester
 
         violation.Description
             .Should()
-            .BeEquivalentTo("Concession 15 is closed to trapping for male beaver on 2023-07-01.");
+            .BeEquivalentTo("Concession 15 is closed to trapping for male beaver on Jul. 1, 2023.");
         violation.Activity.Should().Be(report.GetActivities().First());
         violation.Severity.Should().Be(SeverityType.Illegal);
         violation.Rule.Should().Be(RuleType.HarvestPeriod);

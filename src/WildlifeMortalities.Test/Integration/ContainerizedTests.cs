@@ -646,7 +646,7 @@ public class ContainerizedTests : IAsyncLifetime
             violation.Description
                 .Should()
                 .Be(
-                    "Threshold exceeded for moose in 2-56, 2-58, 2-59, 2-62, 2-63, 4-04, 4-05, 4-06. Threshold of 11 was reached on 2023-10-13."
+                    "Threshold exceeded for moose in 2-56, 2-58, 2-59, 2-62, 2-63, 4-04, 4-05, 4-06. Threshold of 11 was reached on Oct. 13, 2023."
                 );
         }
 
@@ -668,7 +668,7 @@ public class ContainerizedTests : IAsyncLifetime
             violation.Description
                 .Should()
                 .Be(
-                    "Threshold exceeded for moose in 2-56, 2-58, 2-59, 2-62, 2-63, 4-04, 4-05, 4-06. Threshold of 11 was reached on 2023-10-13."
+                    "Threshold exceeded for moose in 2-56, 2-58, 2-59, 2-62, 2-63, 4-04, 4-05, 4-06. Threshold of 11 was reached on Oct. 13, 2023."
                 );
         }
     }

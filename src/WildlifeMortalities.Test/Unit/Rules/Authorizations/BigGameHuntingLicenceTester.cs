@@ -87,7 +87,7 @@ public class BigGameHuntingLicenceTester
                     report.GetActivities().First(),
                     RuleType.NoValidBigGameHuntingLicence,
                     SeverityType.Illegal,
-                    "Does not have a valid big game hunting licence on 2023-04-01."
+                    "Does not have a valid big game hunting licence on Apr. 1, 2023."
                 )
             );
 
