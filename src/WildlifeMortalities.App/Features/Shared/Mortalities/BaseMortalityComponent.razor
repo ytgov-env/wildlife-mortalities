@@ -18,7 +18,7 @@
     <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.FourFat">@BodyConditionScale.FourFat.GetDisplayName()</MudSelectItem>
     <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.FiveObese">@BodyConditionScale.FiveObese.GetDisplayName()</MudSelectItem>
     <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.Unsure">@BodyConditionScale.Unsure.GetDisplayName()</MudSelectItem>
-    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.NotSpecified">Digitizing a paper HRBS, and BCS was not specified</MudSelectItem>
+    <MudSelectItem T="BodyConditionScale?" Value="@BodyConditionScale.NotSpecified">Digitizing a paper HRBS, and BCS was not recorded</MudSelectItem>
 </MudSelect>
 <MudStack Row="true">
     <MudNumericField T="decimal?" @bind-Value="ViewModel.Latitude" For="@(() => ViewModel.Latitude)" HideSpinButtons="true" Label="Latitude"/>
