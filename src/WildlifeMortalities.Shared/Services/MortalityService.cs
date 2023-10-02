@@ -251,7 +251,7 @@ public class MortalityService : IMortalityService
             .WithEntireGraph()
             .FirstAsync(x => x.Id == report.Id);
 
-        await RulesSummary.ResetAllRules(existingReport, context);
+        await RulesSummary.ResetAll(existingReport, context);
 
         SetReportNavigationPropertyForActivities(report, existingReport);
 
@@ -465,7 +465,7 @@ public class MortalityService : IMortalityService
 
         context.Add(deletedReport);
 
-        await RulesSummary.ResetAllRules(existingReport, context);
+        await RulesSummary.ResetAll(existingReport, context);
         context.Remove(existingReport);
 
         await context.SaveChangesAsync();
@@ -522,7 +522,7 @@ public class MortalityService : IMortalityService
         await strategy.Execute(async () =>
         {
             using var transaction = context.Database.BeginTransaction();
-            await RulesSummary.ResetAllRules(report, context);
+            await RulesSummary.ResetAll(report, context);
             updater();
 
             bioSubmission.LastModifiedBy =

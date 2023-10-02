@@ -33,11 +33,7 @@ public class RulesSummary
     public static async Task GenerateAll(Report report, AppDbContext context) =>
         await Generate(report, RulesEngine.Rules, context);
 
-    public static async Task ResetRules(
-        Report report,
-        IEnumerable<Rule> rules,
-        AppDbContext context
-    )
+    public static async Task Reset(Report report, IEnumerable<Rule> rules, AppDbContext context)
     {
         var existingViolation = report.GetActivities().SelectMany(x => x.Violations).ToArray();
         var applicableTypes = rules.SelectMany(x => x.ApplicableRuleTypes);
@@ -50,6 +46,6 @@ public class RulesSummary
         }
     }
 
-    public static async Task ResetAllRules(Report report, AppDbContext context) =>
-        await ResetRules(report, RulesEngine.Rules, context);
+    public static async Task ResetAll(Report report, AppDbContext context) =>
+        await Reset(report, RulesEngine.Rules, context);
 }

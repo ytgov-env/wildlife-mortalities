@@ -37,7 +37,7 @@ public class PeriodicRuleService : TimerBasedHostedService
 
         foreach (var report in reports)
         {
-            await RulesSummary.ResetRules(report, RulesEngine.PeriodicRules, context);
+            await RulesSummary.Reset(report, RulesEngine.PeriodicRules, context);
             await RulesSummary.Generate(report, RulesEngine.PeriodicRules, context);
         }
 
