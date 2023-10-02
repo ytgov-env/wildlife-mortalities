@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WildlifeMortalities.App.Features.Shared;
-using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data.Entities.Reports;
 using WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 using WildlifeMortalities.Data.Entities.Rules.BagLimit;
 using WildlifeMortalities.Data.Extensions;
 
-namespace WildlifeMortalities.App.Features.Home;
+namespace WildlifeMortalities.App.Features.Thresholds;
 
 public partial class ThresholdsPage : DbContextAwareComponent
 {

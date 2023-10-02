@@ -73,7 +73,7 @@
                                 </MudTimelineItem>
                                 @if (threshold.ActivityQueue.Any())
                                 {
-                                    @foreach (var entry in threshold.ActivityQueue.GroupBy(x => x.Activity.Mortality.DateOfDeath).OrderBy(x => x.Key))
+                                    @foreach (var entry in threshold.ActivityQueue.OrderBy(x => x.Position).GroupBy(x => x.Activity.Mortality.DateOfDeath).OrderBy(x => x.Key))
                                     {
                                         <MudTimelineItem Color="Color.Default">
                                             <MudText>@entry.Key!.Value.ToString(Constants.FormatStrings.StandardDateFormatWithoutYear)</MudText>
