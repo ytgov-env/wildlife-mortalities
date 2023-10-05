@@ -66,8 +66,7 @@ public class OutfitterGuidedHuntReportViewModel : MortalityReportViewModel
         {
             report.HuntStartDate = (DateTime)HuntingDateRange!.Start!;
             report.HuntEndDate = (DateTime)HuntingDateRange.End!;
-            report.HuntedActivities = HuntedActivityViewModels
-                .ConvertAll(x => x.GetActivity());
+            report.HuntedActivities = HuntedActivityViewModels.ConvertAll(x => x.GetActivity());
         }
 
         SetReportBaseValues(report);
@@ -145,8 +144,18 @@ public class OutfitterGuidedHuntReportViewModelValidator
 {
     public OutfitterGuidedHuntReportViewModelValidator()
     {
-        RuleFor(x => x.ChiefGuide).SetValidator((x) => new OutfitterGuideValidator(x));
-        RuleForEach(x => x.AssistantGuides).SetValidator(x => new OutfitterGuideValidator(x));
+        When(
+            x =>
+                x.Result
+                    is GuidedHuntResult.WentHuntingAndDidntKillWildlife
+                        or GuidedHuntResult.WentHuntingAndKilledWildlife,
+            () =>
+            {
+                RuleFor(x => x.ChiefGuide).SetValidator((x) => new OutfitterGuideValidator(x));
+                RuleForEach(x => x.AssistantGuides)
+                    .SetValidator(x => new OutfitterGuideValidator(x));
+            }
+        );
 
         RuleFor(x => x.OutfitterArea).NotNull();
         RuleFor(x => x.Result).IsInEnum().NotNull();
