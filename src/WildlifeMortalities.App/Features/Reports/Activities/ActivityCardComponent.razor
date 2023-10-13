@@ -116,7 +116,7 @@
             }
         </MudStack>
         <MudSpacer />
-        @if (MortalityViewModel.GetMortality() is IHasBioSubmission)
+        @if (MortalityViewModel.IsDraft == false && MortalityViewModel.GetMortality() is IHasBioSubmission)
         {
             <BioSubmissionDetailsComponent BioSubmission="@MortalityViewModel.BioSubmission" Report="Report" BioSubmissionUpdated="@RefreshViolations" />
         }
