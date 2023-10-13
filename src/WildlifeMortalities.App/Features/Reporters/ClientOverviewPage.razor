@@ -6,6 +6,8 @@
 
 @namespace WildlifeMortalities.App.Features.Reporters
 
+<PageTitle>Client Overview@(_selectedClientViewModel.SelectedClient is not null ? $": {_selectedClientViewModel.SelectedClient.EnvPersonId}" : string.Empty)</PageTitle>
+
 <MudText Typo="Typo.h3" Class="mb-8">Client overview</MudText>
 
 <MudGrid>
