@@ -16,7 +16,7 @@
 </MudSelect>
 <MudAutocomplete T="OutfitterArea" Label="Outfitter Area" @bind-Value="ViewModel.OutfitterArea" SearchFunc="SearchOutfitterAreas"
                  ToStringFunc="@(x => x == null ? string.Empty : x.Area)" MaxItems="null" Placeholder="Select an outfitter area" For="@(() => ViewModel.OutfitterArea)" />
-@if(ViewModel.Result is GuidedHuntResult.WentHuntingAndDidntKillWildlife or GuidedHuntResult.WentHuntingAndKilledWildlife)
+@if (ViewModel.Result is GuidedHuntResult.WentHuntingAndDidntKillWildlife or GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
     <DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
     <MudPaper Class="pa-4 my-4">
@@ -32,17 +32,15 @@
 
 @if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
-    <MudGrid Class="my-3">
+    <MudStack Row="true" Class="my-3 flex-wrap">
         @foreach (var item in ViewModel.HuntedActivityViewModels)
         {
-            <MudItem md="2" xs="6">
-                <ActivityCardComponent EnableBioSubmission="false"
-                                       OnEditClicked="@(() => Edit(item))" EnableDelete="true" EnableEdit="true"
-                                       ActivityViewModel="item"
-                                       OnDeleteClicked="@(() => Delete(item))" />
-            </MudItem>
+            <ActivityCardComponent EnableBioSubmission="false"
+                                   OnEditClicked="@(() => Edit(item))" EnableDelete="true" EnableEdit="true"
+                                   ActivityViewModel="item"
+                                   OnDeleteClicked="@(() => Delete(item))" />
         }
-    </MudGrid>
+    </MudStack>
     <MudStack Row="true">
         <MudSpacer />
         <MudItem>
