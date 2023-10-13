@@ -55,8 +55,7 @@ public class SpecialGuidedHuntReportViewModel : MortalityReportViewModel
         {
             report.HuntStartDate = (DateTime)HuntingDateRange!.Start!;
             report.HuntEndDate = (DateTime)HuntingDateRange.End!;
-            report.HuntedActivities = HuntedActivityViewModels
-                .ConvertAll(x => x.GetActivity());
+            report.HuntedActivities = HuntedActivityViewModels.ConvertAll(x => x.GetActivity());
         }
 
         SetReportBaseValues(report);
@@ -103,14 +102,14 @@ public class SpecialGuidedHuntReportViewModelValidator
         RuleFor(x => x.HuntingDateRange)
             .Must(
                 (model, _) =>
-                    model.HuntedActivityViewModels.Any(
+                    !model.HuntedActivityViewModels.Any(
                         y =>
                             y.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.DateOfDeath
                                 > model.HuntingDateRange.End
                             || y.MortalityWithSpeciesSelectionViewModel
                                 .MortalityViewModel
                                 .DateOfDeath < model.HuntingDateRange.Start
-                    ) == false
+                    )
             )
             .WithMessage(
                 "The date of death for each mortality must be between the specified hunting dates"
@@ -125,6 +124,14 @@ public class SpecialGuidedHuntReportViewModelValidator
             .WithMessage(
                 x =>
                     $"Please add at least one mortality, or change the {nameof(x.Result).ToLower()}."
+            );
+        RuleForEach(x => x.HuntedActivityViewModels)
+            .ChildRules(
+                x =>
+                    x.RuleFor(
+                            x => x.MortalityWithSpeciesSelectionViewModel.MortalityViewModel.IsDraft
+                        )
+                        .Equal(false)
             );
     }
 

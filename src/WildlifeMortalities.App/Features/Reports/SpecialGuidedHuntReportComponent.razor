@@ -7,7 +7,16 @@
 @inherits DbContextAwareComponent
 
 <MudTextField @bind-Value="ViewModel.OheNumber" For="(() => ViewModel.OheNumber)" Label="OHE number" />
-<DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
+<MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result" For="@(() => ViewModel.Result)">
+    @foreach (var item in Enum.GetValues<GuidedHuntResult>())
+    {
+        <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
+    }
+</MudSelect>
+@if (ViewModel.Result is GuidedHuntResult.WentHuntingAndDidntKillWildlife or GuidedHuntResult.WentHuntingAndKilledWildlife)
+{
+    <DateRangePickerComponent Label="Hunting dates" @bind-DateRange="ViewModel.HuntingDateRange" For="@( () => ViewModel.HuntingDateRange)" />
+}
 <MudPaper Class="pa-4 my-4">
     <MudAutocomplete T="Client" For="@(() => ViewModel.Guide)" Label="Guide" Placeholder="Search by client id or last name" MinCharacters="2"
     @bind-Value="ViewModel.Guide" ToStringFunc="@(x => x is null ? "" : $"{x.EnvPersonId} | {x.FirstName} {x.LastName}")" SearchFunc="@SearchClientByEnvClientIdOrLastName"
@@ -15,15 +24,9 @@
     </MudAutocomplete>
 </MudPaper>
 
-<MudSelect T="GuidedHuntResult?" @bind-Value="@ViewModel.Result" Label="Result" Placeholder="Select a result" For="@(() => ViewModel.Result)">
-    @foreach (var item in Enum.GetValues<GuidedHuntResult>())
-    {
-        <MudSelectItem T="GuidedHuntResult?" Value="@item">@item.GetDisplayName()</MudSelectItem>
-    }
-</MudSelect>
 @if (ViewModel.Result is GuidedHuntResult.WentHuntingAndKilledWildlife)
 {
-    <MudGrid Class="my-3">
+    <MudStack Row="true" Class="my-3 flex-wrap">
         @foreach (var item in ViewModel.HuntedActivityViewModels)
         {
             <MudItem md="2" xs="6">
@@ -33,7 +36,7 @@
                                        OnDeleteClicked="@(() => Delete(item))"/>
             </MudItem>
         }
-    </MudGrid>
+    </MudStack>
     <MudStack Row="true">
         <MudSpacer/>
         <MudItem>
