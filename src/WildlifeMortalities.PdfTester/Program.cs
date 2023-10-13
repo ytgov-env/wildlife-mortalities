@@ -1,14 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QRCoder;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
+using SkiaSharp;
 using WildlifeMortalities.Data;
 using WildlifeMortalities.Data.Entities.People;
+using WildlifeMortalities.Data.Entities.Reports;
 
 using var context = new AppDbContext();
 
 var client = await context.People.OfType<Client>().FirstOrDefaultAsync();
+
+var qrGenerator = new QRCodeGenerator();
+var qrCodeData = qrGenerator.CreateQrCode(
+    "The text which should be encoded.",
+    QRCodeGenerator.ECCLevel.Q
+);
+var qrCode = new PngByteQRCode(qrCodeData);
+var qrCodeImage = qrCode.GetGraphic(20);
 
 var document = Document.Create(container =>
 {
@@ -26,8 +37,7 @@ var document = Document.Create(container =>
                     .Item()
                     .Row(row =>
                     {
-                        row.RelativeItem()
-                            .Image("Resources\\GYWordmark_2018_RGB.png", ImageScaling.FitHeight);
+                        row.RelativeItem().Image("Resources\\GYWordmark_2018_RGB.png").FitHeight();
                         row.RelativeItem()
                             .Column(column =>
                             {
@@ -61,12 +71,97 @@ var document = Document.Create(container =>
                     columns.RelativeColumn();
                 });
 
-                table.Cell().Row(1).Column(1).Component(new ClientComponent(client));
-                table.Cell().Row(1).Column(3).Element(Block).Text("A");
-                table.Cell().Row(2).Column(2).Element(Block).Text("B");
-                table.Cell().Row(3).Column(3).Element(Block).Text("C");
+                table
+                    .Cell()
+                    .ColumnSpan(3)
+                    .Layers(layers =>
+                    {
+                        layers
+                            .PrimaryLayer()
+                            .Canvas(
+                                (canvas, size) =>
+                                {
+                                    DrawRoundedRectangle("#e7e8e8", false);
+
+                                    void DrawRoundedRectangle(string color, bool isStroke)
+                                    {
+                                        using var paint = new SKPaint
+                                        {
+                                            Color = SKColor.Parse(color),
+                                            IsStroke = isStroke,
+                                            StrokeWidth = 2,
+                                            IsAntialias = true
+                                        };
+
+                                        canvas.DrawRoundRect(
+                                            0,
+                                            0,
+                                            size.Width,
+                                            size.Height / 3,
+                                            20,
+                                            20,
+                                            paint
+                                        );
+                                    }
+                                }
+                            );
+
+                        table
+                            .Cell()
+                            .Row(1)
+                            .Column(3)
+                            .PaddingLeft(8)
+                            .Component(new ClientComponent(client));
+
+                        layers
+                            .Layer()
+                            .Canvas(
+                                (canvas, size) =>
+                                {
+                                    using var paint = new SKPaint
+                                    {
+                                        Color = SKColor.Parse("#636466"),
+                                        IsAntialias = true
+                                    };
+
+                                    canvas.DrawRect(
+                                        -43,
+                                        30,
+                                        (float)(size.Width / 2.1),
+                                        size.Height / 8,
+                                        paint
+                                    );
+                                }
+                            );
+
+                        layers
+                            .Layer()
+                            .Canvas(
+                                (canvas, size) =>
+                                {
+                                    using var paint = new SKPaint
+                                    {
+                                        Color = SKColor.Parse("#ffffff"),
+                                        IsAntialias = true
+                                    };
+
+                                    canvas.DrawRect(
+                                        200,
+                                        30,
+                                        (float)(size.Width / 6),
+                                        size.Height / 8,
+                                        paint
+                                    );
+                                }
+                            );
+                    });
+
+                //table.Cell().Row(1).Column(3).Element(Block).Text("A");
+                //table.Cell().Row(2).Column(2).Element(Block).Text("B");
+                //table.Cell().Row(3).Column(3).Element(Block).Text("C");
 
                 table.Cell().ColumnSpan(3).Image("Resources\\YG_Wildlife_Lichen_RGB.png");
+                table.Cell().Column(1).Image(qrCodeImage);
 
                 static IContainer Block(IContainer container)
                 {
@@ -107,9 +202,36 @@ public class ClientComponent : IComponent
     {
         container.Column(column =>
         {
-            column.Item().Text($"Client Id: {_client.EnvPersonId}");
-            column.Item().Text($"Name: {_client.FirstName} {_client.LastName}");
-            column.Item().Text($"Date of birth: {_client.BirthDate.ToShortDateString()}");
+            column.Item().Text("Client information").SemiBold().FontSize(16).FontColor("#3d0237");
+            column.Item().Text("Client id").Bold();
+            column.Item().Text(_client.EnvPersonId);
+            column.Item().Text("First name").Bold();
+            column.Item().Text(_client.FirstName);
+            column.Item().Text("Last name").Bold();
+            column.Item().Text(_client.LastName);
+            column.Item().Text("Date of birth").Bold();
+            column
+                .Item()
+                .Text(
+                    _client.BirthDate.ToString(
+                        WildlifeMortalities.Shared.Constants.FormatStrings.StandardDateFormat
+                    )
+                );
         });
+    }
+}
+
+public class ReportBaseComponent : IComponent
+{
+    private readonly Report _report;
+
+    public ReportBaseComponent(Report report)
+    {
+        _report = report;
+    }
+
+    public void Compose(IContainer container)
+    {
+        throw new NotImplementedException();
     }
 }
