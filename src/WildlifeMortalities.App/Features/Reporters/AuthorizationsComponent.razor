@@ -51,31 +51,31 @@
                             <MudGrid>
                                 @foreach (var authorization in bigGameHuntingLicences.OrderBy(x => x.Type.GetDisplayName()))
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
                                 @foreach (var authorization in smallGameHuntingLicences.OrderBy(x => x.Type.GetDisplayName()))
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
                                 @foreach (var authorization in outfitterChiefGuideLicences)
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
                                 @foreach (var authorization in outfitterAssistantGuideLicences)
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
                                 @foreach (var authorization in specialGuideLicences)
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
@@ -92,7 +92,7 @@
                             <MudGrid>
                                 @foreach (var authorization in huntingSeals.OrderBy(x => x.Type.GetDisplayName()))
                                 {
-                                    <MudItem xs="12" md="6" lg="4" xxl="4">
+                                    <MudItem xs="12" sm="3">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
@@ -109,7 +109,7 @@
                             <MudGrid>
                                 @foreach (var authorization in phaHuntingPermits.OrderBy(x => x.Type.GetDisplayName()))
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
@@ -126,7 +126,7 @@
                             <MudGrid>
                                 @foreach (var authorization in huntingPermits.OrderBy(x => x.Type.GetDisplayName()))
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
@@ -143,7 +143,7 @@
                             <MudGrid>
                                 @foreach (var authorization in trappingLicences.OrderBy(x => x.Type.GetDisplayName()))
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
@@ -160,7 +160,7 @@
                             <MudGrid>
                                 @foreach (var authorization in customWildlifeActPermits)
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <AuthorizationCardComponent Authorization="@authorization" />
                                     </MudItem>
                                 }
@@ -177,7 +177,7 @@
                             <MudGrid>
                                 @foreach (var authorization in invalidAuthorizations)
                                 {
-                                    <MudItem xs="12" md="6" xxl="4">
+                                    <MudItem xs="12" sm="6" md="4">
                                         <MudCard Outlined="true">
                                             <MudCardHeader Class="ml-n1">
                                                 <CardHeaderAvatar>
