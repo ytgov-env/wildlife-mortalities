@@ -24,8 +24,8 @@
         (BioSubmission.RequiredOrganicMaterialsStatus != BioSubmissionRequiredOrganicMaterialsStatus.NotStarted))
     {
         <MudMenu Label="Update" Color="Color.Secondary" Variant="Variant.Outlined">
-            <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>
-            <MudMenuItem OnClick="OpenBioSubmissionAnalysisDialog">Analysis</MudMenuItem>
+            <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog" OnTouch="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>
+            <MudMenuItem OnClick="OpenBioSubmissionAnalysisDialog" OnTouch="OpenBioSubmissionAnalysisDialog">Analysis</MudMenuItem>
         </MudMenu>
     } else
     {
