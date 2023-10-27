@@ -13,6 +13,7 @@ public static class Seeder
         AddPosseSyncKeys(context);
         AddAllSeasons(context);
         AreaSeeder.AddAllGameManagementAreas(context);
+        AreaSeeder.AddAllGameManagementSubAreas(context);
         AreaSeeder.AddAllOutfitterAreas(context);
         AreaSeeder.AddAllRegisteredTrappingConcessions(context);
         await new BagLimitSeeder(context, version).AddAllBagLimitEntries();

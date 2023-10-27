@@ -1,5 +1,6 @@
 ﻿using WildlifeMortalities.Data.Entities;
 using WildlifeMortalities.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WildlifeMortalities.DataSeeder;
 
@@ -94,6 +95,39 @@ internal static class AreaSeeder
                 context.GameManagementAreas.Add(
                     new GameManagementArea { Zone = zone.ToString(), Subzone = subzone }
                 );
+            }
+        }
+    }
+
+    internal static void AddAllGameManagementSubAreas(AppDbContext context)
+    {
+        if (!context.GameManagementSubAreas.Any())
+        {
+            var areaEightTwoFour = context.GameManagementAreas.Single(x => x.Area == "8-24");
+            var areaEightTwoFive = context.GameManagementAreas.Single(x => x.Area == "8-25");
+            var areaEightTwoSix = context.GameManagementAreas.Single(x => x.Area == "8-26");
+            var areaEightTwoSeven = context.GameManagementAreas.Single(x => x.Area == "8-27");
+
+            AddSubAreas(context, areaEightTwoFour, 7);
+            AddSubAreas(context, areaEightTwoFive, 4);
+            AddSubAreas(context, areaEightTwoSix, 4);
+            AddSubAreas(context, areaEightTwoSeven, 8);
+            context.SaveChanges();
+            Console.WriteLine("Added GameManagementSubAreas");
+        }
+        else
+        {
+            Console.WriteLine("GameManagementSubAreas already exist");
+        }
+
+        static void AddSubAreas(AppDbContext context, GameManagementArea area, int maxSubArea)
+        {
+            for (var i = 1; i <= maxSubArea; i++)
+            {
+                var subArea = i < 10 ? $"0{i}" : i.ToString();
+                context.GameManagementSubAreas.Add(
+                                       new GameManagementSubArea { SubArea = subArea, GameManagementArea = area }
+                                                      );
             }
         }
     }

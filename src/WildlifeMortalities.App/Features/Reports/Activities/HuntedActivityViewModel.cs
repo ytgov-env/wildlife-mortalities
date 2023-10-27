@@ -46,6 +46,7 @@ public class HuntedActivityViewModel : ActivityViewModel
     public string Seal { get; set; } = string.Empty;
     public string Landmark { get; set; } = string.Empty;
     public GameManagementArea? GameManagementArea { get; set; }
+    public GameManagementSubArea? GameManagementSubArea { get; set; }
 
     public HuntedActivity GetActivity()
     {
