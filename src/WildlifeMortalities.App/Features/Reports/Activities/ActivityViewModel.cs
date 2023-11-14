@@ -104,7 +104,7 @@ public abstract class ActivityViewModelValidator<T> : AbstractValidator<T>
             .NotNull()
             .WithMessage("Please select a species.");
         RuleFor(x => x.OccurrenceNumber)
-            .Matches(@"^(CM|DA|FA|HJ|MA|RR|TE|WH|WL)-\d{2}-\d{3}$")
+            .Matches(@"^(CM|DA|FA|HJ|HQ|MA|RR|TE|WH|WL)-\d{2}-\d{3}$")
             .When(x => !string.IsNullOrWhiteSpace(x.OccurrenceNumber))
             .WithMessage(
                 "Occurrence number must be left empty or match pattern AA-00-000. Example: WH-23-049"
