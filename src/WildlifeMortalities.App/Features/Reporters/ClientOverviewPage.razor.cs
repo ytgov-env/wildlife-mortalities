@@ -13,6 +13,8 @@ public partial class ClientOverviewPage : DbContextAwareComponent, IDisposable
 
     private SelectClientViewModel _selectedClientViewModel = default!;
 
+    private int? _draftReportCount;
+
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
 
@@ -77,4 +79,7 @@ public partial class ClientOverviewPage : DbContextAwareComponent, IDisposable
             _editContext.OnFieldChanged -= Context_OnFieldChanged;
         }
     }
+
+    public async Task HandleDraftReportCount(int count) =>
+        await Task.FromResult(_draftReportCount = count);
 }

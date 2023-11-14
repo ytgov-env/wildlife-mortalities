@@ -37,12 +37,12 @@
             <AuthorizationsComponent PersonId="@_selectedClientViewModel.SelectedClient.Id"/>
         </MudItem>
         <MudItem xs="12">
-            <MudTabs Color="Color.Info">
+            <MudTabs Color="Color.Info" KeepPanelsAlive="true">
                 <MudTabPanel Text="Submitted">
                     <ReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvPersonId"/>
                 </MudTabPanel>
-                <MudTabPanel Text="Drafts">
-                    <DraftReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvPersonId" />
+                <MudTabPanel Text="@($"Drafts{(_draftReportCount != null ? $" ({_draftReportCount})" : string.Empty)}")">
+                    <DraftReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvPersonId" DraftReportCount="HandleDraftReportCount" />
                 </MudTabPanel>
             </MudTabs>
         </MudItem>

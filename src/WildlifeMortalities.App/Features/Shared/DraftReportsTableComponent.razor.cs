@@ -18,6 +18,9 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
 
     public IEnumerable<DraftReportDto> DraftReports { get; set; } = null!;
 
+    [Parameter]
+    public EventCallback<int> DraftReportCount { get; set; }
+
     [Inject]
     public NavigationManager NavigationManager { get; set; } = null!;
 
@@ -71,6 +74,8 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
                 .OrderBy(x => x.DateLastModified)
                 .ToArrayAsync();
         }
+        var draftReportCount = DraftReports.Count();
+        await DraftReportCount.InvokeAsync(draftReportCount);
     }
 
     public void GotoEdit(TableRowClickEventArgs<DraftReportDto> args)
