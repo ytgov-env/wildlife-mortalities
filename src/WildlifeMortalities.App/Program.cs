@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using MudBlazor.Services;
@@ -61,6 +62,12 @@ try
     builder.Services.AddSingleton<IAppConfigurationService, AppConfigurationService>();
     builder.Services.AddScoped<IClaimsTransformation, AddRoleClaimsTransformation>();
     builder.Services.Configure<FileServiceOptions>(configuration.GetSection("FileService"));
+
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
 
     // Add authentication services
     var isAuthConfigurationMissingValues = configuration
@@ -196,12 +203,12 @@ try
 
     var app = builder.Build();
 
+    app.UseForwardedHeaders();
+
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-        app.UseHsts();
     }
 
     app.UseHttpsRedirection();
