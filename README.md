@@ -11,6 +11,18 @@ This service is used to manage wildlife mortality data collected by Yukon's Depa
 * Data Store: SQL Server
 * Logging: [Serilog](https://github.com/serilog/serilog)
 
+## Deployments
+
+### Production environment
+App: https://wildlifemortalities.ynet.gov.yk.ca
+
+Database: [sql-apps4-prd.ynet.gov.yk.ca].[EnvWildlifeMortalities]
+  
+### Test environment
+App: https://wildlifemortalities-test.ynet.gov.yk.ca
+
+Database: [sql-apps4-tst.ynet.gov.yk.ca].[EnvWildlifeMortalities]
+
 ## How do I run this?
 
 See <https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations> if you are new to Entity Framework Core.
