@@ -9,13 +9,6 @@
         "launchUrl": "reporters/clients/549048",
         "applicationUrl": "https://localhost:5003;http://localhost:5002",
         "dotnetRunMessages": true
-      },
-        "Docker": {
-            "commandName": "Docker",
-            "launchBrowser": true,
-            "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-            "publishAllPorts": true,
-            "useSSL": true
-        }
+      }
     }
 }
