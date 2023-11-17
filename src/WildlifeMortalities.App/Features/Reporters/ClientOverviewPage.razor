@@ -1,5 +1,6 @@
 ﻿@attribute [Route(Constants.Routes.ClientLookupPage)]
 @attribute [Route(Constants.Routes.ClientOverviewPage)]
+@using WildlifeMortalities.App.Features.Reports
 @using WildlifeMortalities.Data.Entities.People
 @using WildlifeMortalities.App.Features.Shared.Mortalities
 @inherits DbContextAwareComponent
@@ -13,7 +14,7 @@
 <MudGrid>
     <MudItem sm="12" md="4" lg="3">
         <EditForm EditContext="_editContext">
-            <FluentValidationValidator Validator="new SelectClientViewModelValidator()"/>
+            <FluentValidationValidator Validator="new SelectClientViewModelValidator()" />
             <MudItem>
                 <MudPaper Class="pa-4 mb-4">
                     <MudAutocomplete T="Client" For="@(() => _selectedClientViewModel.SelectedClient)" Label="Search by client id or last name"
@@ -34,15 +35,20 @@
     @if (_selectedClientViewModel.SelectedClient is not null)
     {
         <MudItem sm="12" md="8" lg="9">
-            <AuthorizationsComponent PersonId="@_selectedClientViewModel.SelectedClient.Id"/>
+            <AuthorizationsComponent PersonId="@_selectedClientViewModel.SelectedClient.Id" />
         </MudItem>
         <MudItem xs="12">
-            <MudTabs Color="Color.Info" KeepPanelsAlive="true">
+            <MudTabs Color="Color.Info" KeepPanelsAlive="true" @key="@($"{_draftCounter.Count}-{_selectedClientViewModel.SelectedClient.EnvPersonId}")">
                 <MudTabPanel Text="Submitted">
-                    <ReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvPersonId"/>
+                    <ReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvPersonId" />
                 </MudTabPanel>
-                <MudTabPanel Text="@($"Drafts{(_draftReportCount != null ? $" ({_draftReportCount})" : string.Empty)}")">
-                    <DraftReportsTableComponent EnvClientId="@_selectedClientViewModel.SelectedClient.EnvPersonId" DraftReportCount="HandleDraftReportCount" />
+                <MudTabPanel Disabled="@(_draftCounter.Count == 0)">
+                    <TabContent>
+                        <DraftPanelHeader Counter="_draftCounter" />
+                    </TabContent>
+                    <ChildContent>
+                        <DraftReportsTableComponent Counter="_draftCounter" EnvClientId="@_selectedClientViewModel.SelectedClient.EnvPersonId" />
+                    </ChildContent>
                 </MudTabPanel>
             </MudTabs>
         </MudItem>

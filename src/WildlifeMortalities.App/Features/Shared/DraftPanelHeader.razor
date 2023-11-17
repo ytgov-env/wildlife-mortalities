@@ -1,0 +1,26 @@
+@using WildlifeMortalities.App.Features.Shared
+@implements IDisposable
+
+@($"Drafts{(Counter != null ? $" ({Counter.Count})" : string.Empty)}")
+
+@code {
+    [Parameter, EditorRequired] public DraftCounter Counter { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        Counter.CountChanged += CounterChanged;
+    }
+
+    private void CounterChanged(object? _, EventArgs __)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        if(Counter != null)
+        {
+            Counter.CountChanged -= CounterChanged;
+        }
+    }
+}

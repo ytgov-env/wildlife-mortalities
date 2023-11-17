@@ -16,66 +16,67 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
     [Parameter]
     public string? EnvClientId { get; set; }
 
-    public IEnumerable<DraftReportDto> DraftReports { get; set; } = null!;
+    public IEnumerable<DraftReportDto>? DraftReports { get; set; }
 
-    [Parameter]
-    public EventCallback<int> DraftReportCount { get; set; }
+    [Parameter, EditorRequired]
+    public DraftCounter Counter { get; set; } = null!;
 
     [Inject]
     public NavigationManager NavigationManager { get; set; } = null!;
 
     protected override async Task OnParametersSetAsync()
     {
-        using var context = GetContext();
-
-        if (EnvClientId != null)
+        if (DraftReports == null)
         {
-            var client = await context.People
-                .OfType<Client>()
-                .FirstOrDefaultAsync(x => x.EnvPersonId == EnvClientId);
-            if (client == null)
-                throw new ArgumentException($"Client {EnvClientId} not found.", nameof(client));
-            DraftReports = await context.DraftReports
-                .Where(x => x.PersonId == client.Id)
-                .Select(
-                    x =>
-                        new DraftReportDto()
-                        {
-                            Id = x.Id,
-                            PersonId = x.PersonId,
-                            Person = x.Person,
-                            Type = x.Type,
-                            CreatedById = x.CreatedById,
-                            CreatedBy = x.CreatedBy,
-                            DateCreated = x.DateCreated,
-                            DateLastModified = x.DateLastModified
-                        }
-                )
-                .OrderBy(x => x.DateLastModified)
-                .ToArrayAsync();
+            using var context = GetContext();
+            if (EnvClientId != null)
+            {
+                var client = await context.People
+                    .OfType<Client>()
+                    .FirstOrDefaultAsync(x => x.EnvPersonId == EnvClientId);
+                if (client == null)
+                    throw new ArgumentException($"Client {EnvClientId} not found.", nameof(client));
+                DraftReports = await context.DraftReports
+                    .Where(x => x.PersonId == client.Id)
+                    .Select(
+                        x =>
+                            new DraftReportDto()
+                            {
+                                Id = x.Id,
+                                PersonId = x.PersonId,
+                                Person = x.Person,
+                                Type = x.Type,
+                                CreatedById = x.CreatedById,
+                                CreatedBy = x.CreatedBy,
+                                DateCreated = x.DateCreated,
+                                DateLastModified = x.DateLastModified
+                            }
+                    )
+                    .OrderBy(x => x.DateLastModified)
+                    .ToArrayAsync();
+            }
+            else
+            {
+                DraftReports = await context.DraftReports
+                    .Select(
+                        x =>
+                            new DraftReportDto()
+                            {
+                                Id = x.Id,
+                                PersonId = x.PersonId,
+                                Person = x.Person,
+                                Type = x.Type,
+                                CreatedById = x.CreatedById,
+                                CreatedBy = x.CreatedBy,
+                                DateCreated = x.DateCreated,
+                                DateLastModified = x.DateLastModified
+                            }
+                    )
+                    .OrderBy(x => x.DateLastModified)
+                    .ToArrayAsync();
+            }
+            Counter.SetCounter(DraftReports.Count());
         }
-        else
-        {
-            DraftReports = await context.DraftReports
-                .Select(
-                    x =>
-                        new DraftReportDto()
-                        {
-                            Id = x.Id,
-                            PersonId = x.PersonId,
-                            Person = x.Person,
-                            Type = x.Type,
-                            CreatedById = x.CreatedById,
-                            CreatedBy = x.CreatedBy,
-                            DateCreated = x.DateCreated,
-                            DateLastModified = x.DateLastModified
-                        }
-                )
-                .OrderBy(x => x.DateLastModified)
-                .ToArrayAsync();
-        }
-        var draftReportCount = DraftReports.Count();
-        await DraftReportCount.InvokeAsync(draftReportCount);
     }
 
     public void GotoEdit(TableRowClickEventArgs<DraftReportDto> args)
@@ -84,7 +85,7 @@ public partial class DraftReportsTableComponent : DbContextAwareComponent
             throw new InvalidOperationException("Draft report must be for a client.");
         NavigationManager.NavigateTo(
             Constants.Routes.GetEditDraftReportPageLink(
-                EnvClientId ?? (args.Item.Person as Client)!.EnvPersonId,
+                (args.Item.Person as Client)!.EnvPersonId,
                 args.Item.Id
             )
         );

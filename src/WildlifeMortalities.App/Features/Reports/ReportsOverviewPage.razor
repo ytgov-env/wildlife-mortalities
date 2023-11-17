@@ -8,13 +8,35 @@
     <MudTabPanel Text="Submitted">
         <ReportsTableComponent />
     </MudTabPanel>
-    <MudTabPanel Text="@($"Drafts{(_draftReportCount != null ? $" ({_draftReportCount})" : string.Empty)}")">
-        <DraftReportsTableComponent DraftReportCount="HandleDraftReportCount" />
+    <MudTabPanel>
+        <TabContent>
+            <DraftPanelHeader Counter="_draftCounter" />
+        </TabContent>
+        <ChildContent>
+            <DraftReportsTableComponent Counter="_draftCounter"  />
+        </ChildContent>
     </MudTabPanel>
 </MudTabs>
 
-@code {
-    private int? _draftReportCount;
 
-    public async Task HandleDraftReportCount(int count) => await Task.FromResult(_draftReportCount = count);
+@code {
+    private readonly DraftCounter _draftCounter = new();
+
+    protected override void OnInitialized()
+    {
+        _draftCounter.CountChanged += CounterChanged;
+    }
+
+    private void CounterChanged(object? _, EventArgs __)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        if (_draftCounter != null)
+        {
+            _draftCounter.CountChanged -= CounterChanged;
+        }
+    }
 }

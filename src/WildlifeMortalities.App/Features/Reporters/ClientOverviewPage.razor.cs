@@ -24,6 +24,13 @@ public partial class ClientOverviewPage : DbContextAwareComponent, IDisposable
     [Parameter]
     public string? EnvClientId { get; set; }
 
+    private readonly DraftCounter _draftCounter = new();
+
+    private void CounterChanged(object? _, EventArgs __)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
     protected override async Task OnParametersSetAsync()
     {
         if (EnvClientId != null)
@@ -44,6 +51,7 @@ public partial class ClientOverviewPage : DbContextAwareComponent, IDisposable
         _selectedClientViewModel = new SelectClientViewModel();
         _editContext = new EditContext(_selectedClientViewModel);
         _editContext.OnFieldChanged += Context_OnFieldChanged;
+        _draftCounter.CountChanged += CounterChanged;
 
         base.OnInitialized();
     }
@@ -77,6 +85,11 @@ public partial class ClientOverviewPage : DbContextAwareComponent, IDisposable
         if (_editContext is not null)
         {
             _editContext.OnFieldChanged -= Context_OnFieldChanged;
+        }
+
+        if (_draftCounter != null)
+        {
+            _draftCounter.CountChanged -= CounterChanged;
         }
     }
 
