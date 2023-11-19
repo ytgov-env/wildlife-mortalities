@@ -1,8 +1,0 @@
-@startuml etl
-!theme spacelab
-
-actor FME
-participant POSSE
-participant WildlifeMortalities
-
-@enduml
