@@ -33,6 +33,10 @@ public static class Constants
 
         public static string GetThresholdsPageLink() => ThresholdsPage;
 
+        public static string GetUserAuthorizationsPageLink() => UserAuthorizationsPage;
+
+        public const string UserAuthorizationsPage = "user-authorizations";
+
         #region report routes
         public const string ReportsOverviewPage = "reports";
 

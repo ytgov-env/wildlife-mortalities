@@ -1,0 +1,128 @@
+﻿@attribute [Route(Constants.Routes.UserAuthorizationsPage)]
+@attribute [Authorize(Roles = PermissionConstants.UserManagement.Create)]
+@inherits DbContextAwareComponent
+@using Microsoft.EntityFrameworkCore;
+@using WildlifeMortalities.App.Extensions
+@using WildlifeMortalities.Shared.Services
+
+@if (Users == null || Permissions == null)
+{
+    return;
+}
+
+<MudTable Items="Users">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Users</MudText>
+        <MudSpacer />
+        <MudSpacer />
+        <MudSpacer />
+        <MudSpacer />
+        <MudSpacer />
+        <MudTextField Label="Email" @bind-Value="newUserEmail" Immediate="true"/>
+        <MudButton OnClick="CreateUser" Disabled="@(string.IsNullOrWhiteSpace(newUserEmail))" Color="Color.Success" Variant="Variant.Outlined">Create user</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>User</MudTh>
+        @foreach (var permission in Permissions)
+        {
+            <MudTh>@permission.Name</MudTh>
+        }
+        <MudTh/>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.User.EmailAddress</MudTd>
+            @foreach (var permission in context.Permissions)
+        {
+            <MudTd>
+            <AuthorizeView Roles="@PermissionConstants.UserManagement.Edit" Context="_">
+                <Authorized>
+                    <MudCheckBox @bind-Checked="permission.IsSelected" @bind-Checked:after="(() => UpdatePermission(context, permission))" />
+                </Authorized>
+                <NotAuthorized>
+                    <MudCheckBox @bind-Checked="permission.IsSelected" Disabled="true"/>
+                </NotAuthorized>
+            </AuthorizeView>
+            </MudTd>
+        }
+        <MudTd>
+            <AuthorizeView Roles="@PermissionConstants.UserManagement.Delete" Context="_">
+                <Authorized>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="(() => DeleteUser(context))" />
+                </Authorized>
+                <NotAuthorized>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Disabled="true" />
+                </NotAuthorized>
+            </AuthorizeView>
+        </MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private List<UserViewModel>? Users { get; set; }
+    private List<PermissionView>? Permissions { get; set; }
+    private string newUserEmail = string.Empty;
+
+    [Inject]
+    private IUserAuthorizationService UserAuthorizationService { get; set; } = null!;
+
+    [Inject]
+    private ISnackbar SnackbarService { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var permissions = PermissionsHelper.GetPermissions();
+        Permissions = permissions.SelectMany(x => x.Permissions).ToList();
+
+        await GetUsers();
+    }
+
+    private async Task GetUsers()
+    {
+        using var context = GetContext();
+
+        var users = await context.Users.Include(x => x.Permissions).OrderBy(x => x.EmailAddress).ToListAsync();
+        Users = users.Select(x => new UserViewModel(x, Permissions)).ToList();
+    }
+
+    private async Task UpdatePermission(UserViewModel userViewModel, Selectable<PermissionView> permission)
+    {
+        await UserAuthorizationService.UpdatePermission(userViewModel.User.Id, permission.Value.Value, permission.IsSelected);
+    }
+
+    private async Task CreateUser()
+    {
+        var isSuccess = await UserAuthorizationService.CreateUser(newUserEmail);
+        if (isSuccess)
+        {
+            newUserEmail = string.Empty;
+            await GetUsers();
+            SnackbarService.Add($"User {newUserEmail} created.", Severity.Success);
+        }
+        else
+        {
+            SnackbarService.Add($"User {newUserEmail} already exists.", Severity.Error);
+        }
+    }
+
+    private async Task DeleteUser(UserViewModel userViewModel)
+    {
+        var isSuccess = await UserAuthorizationService.DeleteUser(userViewModel.User.Id);
+        if (isSuccess)
+        {
+            await GetUsers();
+            SnackbarService.Add($"User {userViewModel.User.EmailAddress} deleted.", Severity.Success);
+        } else
+        {
+            SnackbarService.Add($"User {userViewModel.User.EmailAddress} cannot be deleted. You can only delete users that have never created or modified a report.", Severity.Error);
+        }
+    }
+}

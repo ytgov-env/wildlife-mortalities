@@ -57,6 +57,7 @@ try
     });
     builder.Services.AddHostedService<PeriodicRuleService>();
     builder.Services.AddScoped<IMortalityService, MortalityService>();
+    builder.Services.AddScoped<IUserAuthorizationService, UserAuthorizationService>();
     builder.Services.AddScoped<PdfService>();
     builder.Services.AddScoped<ReportService>();
     builder.Services.AddSingleton<IAppConfigurationService, AppConfigurationService>();
