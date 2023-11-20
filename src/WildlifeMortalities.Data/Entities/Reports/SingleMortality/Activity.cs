@@ -9,6 +9,7 @@ namespace WildlifeMortalities.Data.Entities.Reports.SingleMortality;
 public abstract class Activity
 {
     public int Id { get; set; }
+    public string HumanReadableId { get; set; } = string.Empty;
 
     [JsonConverter(typeof(MostConcreteClassJsonConverter<Mortality>))]
     public Mortality Mortality { get; set; } = null!;
@@ -20,6 +21,16 @@ public abstract class Activity
     public void PreserveImmutableValues(Activity existingActivity)
     {
         CreatedTimestamp = existingActivity.CreatedTimestamp;
+        HumanReadableId = existingActivity.HumanReadableId;
+    }
+
+    public void GenerateHumanReadableId()
+    {
+        var rand = new Random();
+        const string EligibleChars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+        HumanReadableId = new string(
+            Enumerable.Repeat(EligibleChars, 5).Select(s => s[rand.Next(s.Length)]).ToArray()
+        );
     }
 }
 
@@ -32,5 +43,6 @@ public class ActivityConfig : IEntityTypeConfiguration<Activity>
             .HasMany(x => x.Violations)
             .WithOne(x => x.Activity)
             .HasForeignKey(x => x.ActivityId);
+        //builder.HasIndex(a => a.HumanReadableId).IsUnique();
     }
 }
