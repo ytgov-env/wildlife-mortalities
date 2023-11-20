@@ -20,17 +20,21 @@
 <MudStack Row="true" Class="mb-1">
     <MudText Typo="Typo.h6">Biological submission</MudText>
     <MudSpacer />
-    @if (BioSubmission.CanBeAnalysed && BioSubmission.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() && 
-        (BioSubmission.RequiredOrganicMaterialsStatus != BioSubmissionRequiredOrganicMaterialsStatus.NotStarted))
-    {
-        <MudMenu Label="Update" Color="Color.Secondary" Variant="Variant.Outlined">
-            <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog" OnTouch="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>
-            <MudMenuItem OnClick="OpenBioSubmissionAnalysisDialog" OnTouch="OpenBioSubmissionAnalysisDialog">Analysis</MudMenuItem>
-        </MudMenu>
-    } else
-    {
-        <MudButton OnClick="OpenOrganicMaterialForBioSubmissionDialog" Color="Color.Secondary" Variant="Variant.Outlined">Update</MudButton>
-    }
+    <AuthorizeView Roles="@PermissionConstants.BioSubmissions.EditSamples">
+        @if (BioSubmission.CanBeAnalysed && BioSubmission.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis() && 
+            (BioSubmission.RequiredOrganicMaterialsStatus != BioSubmissionRequiredOrganicMaterialsStatus.NotStarted))
+        {
+            <MudMenu Label="Update" Color="Color.Secondary" Variant="Variant.Outlined">
+                <MudMenuItem OnClick="OpenOrganicMaterialForBioSubmissionDialog" OnTouch="OpenOrganicMaterialForBioSubmissionDialog">Samples</MudMenuItem>
+                <AuthorizeView Roles="@PermissionConstants.BioSubmissions.EditAnalysis" Context="_">
+                    <MudMenuItem OnClick="OpenBioSubmissionAnalysisDialog" OnTouch="OpenBioSubmissionAnalysisDialog">Analysis</MudMenuItem>
+                </AuthorizeView>
+            </MudMenu>
+        } else
+        {
+            <MudButton OnClick="OpenOrganicMaterialForBioSubmissionDialog" Color="Color.Secondary" Variant="Variant.Outlined">Update</MudButton>
+        }
+    </AuthorizeView>
 </MudStack>
 <MudStack Row="true">
     <MudText>Samples: <MudChip Color="@BioSubmission.RequiredOrganicMaterialsStatus.GetChipColor()">@BioSubmission.RequiredOrganicMaterialsStatus.GetDisplayName().ToLower()</MudChip></MudText>

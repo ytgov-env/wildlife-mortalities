@@ -30,10 +30,12 @@
             <MudButton OnClick="Cancel">Cancel</MudButton>
             <MudSpacer/>
             <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="@(() => _result = BioSubmissionDialogResult.SubmitAndClose)">Submit and close</MudButton>
-            @if (_viewModel.CanBeAnalysed)
-            {
-                <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="@(() => _result = BioSubmissionDialogResult.SubmitAndProceedToAnalysis)" Disabled="!_viewModel.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis">Proceed to analysis</MudButton>
-            }
+            <AuthorizeView Roles="@PermissionConstants.BioSubmissions.EditAnalysis" Context="_">
+                @if (_viewModel.CanBeAnalysed)
+                {
+                    <MudButton Color="Color.Error" ButtonType="ButtonType.Submit" OnClick="@(() => _result = BioSubmissionDialogResult.SubmitAndProceedToAnalysis)" Disabled="!_viewModel.HasSubmittedAllRequiredOrganicMaterialPrerequisitesForAnalysis">Proceed to analysis</MudButton>
+                }
+            </AuthorizeView>
         </DialogActions>
     </MudDialog>
 </EditForm>
