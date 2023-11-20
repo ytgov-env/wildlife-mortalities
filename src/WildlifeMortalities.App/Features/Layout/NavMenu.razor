@@ -7,6 +7,9 @@
     <MudNavLink Href="@Constants.Routes.GetClientLookupPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Client overview</MudNavLink>
     @*<MudNavLink Href="@Constants.Routes.GetConservationOfficerLookupPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.LocalPolice">Conservation officer overview</MudNavLink>*@
     <MudNavLink Href="@Constants.Routes.GetReportsOverviewPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CrueltyFree">All reports</MudNavLink>
+    <AuthorizeView Roles="@PermissionConstants.UserManagement.Create">
+        <MudNavLink Href="@Constants.Routes.GetUserAuthorizationsPageLink()" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PeopleAlt">Users</MudNavLink>
+    </AuthorizeView>    
     <MudNavGroup Icon="@Icons.Material.Filled.Help" Title="Help">
         <MudNavLink Href="@_teamsHelpChannelUri">Questions/feedback</MudNavLink>
         <MudNavLink Href="@_teamsIssueTrackerUri">Issue tracker</MudNavLink>
