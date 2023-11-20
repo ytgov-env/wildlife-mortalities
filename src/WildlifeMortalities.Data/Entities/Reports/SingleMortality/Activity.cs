@@ -43,6 +43,6 @@ public class ActivityConfig : IEntityTypeConfiguration<Activity>
             .HasMany(x => x.Violations)
             .WithOne(x => x.Activity)
             .HasForeignKey(x => x.ActivityId);
-        //builder.HasIndex(a => a.HumanReadableId).IsUnique();
+        builder.HasIndex(a => a.HumanReadableId).IsUnique();
     }
 }

@@ -77,7 +77,11 @@ public class MortalityService : IMortalityService
 
         foreach (var activity in report.GetActivities())
         {
-            activity.GenerateHumanReadableId();
+            do
+            {
+                activity.GenerateHumanReadableId();
+            } while (await context.Activities.AnyAsync(x => x.HumanReadableId == activity.HumanReadableId));
+
             if (activity is HuntedActivity huntedActivity)
             {
                 huntedActivity.GameManagementArea ??= await context.GameManagementAreas.FirstAsync(
@@ -369,7 +373,10 @@ public class MortalityService : IMortalityService
                 else
                 {
                     activity.CreatedTimestamp = now;
-                    activity.GenerateHumanReadableId();
+                    do
+                    {
+                        activity.GenerateHumanReadableId();
+                    } while (await context.Activities.AnyAsync(x => x.HumanReadableId == activity.HumanReadableId));
                     context.Add(activity);
                 }
             }
